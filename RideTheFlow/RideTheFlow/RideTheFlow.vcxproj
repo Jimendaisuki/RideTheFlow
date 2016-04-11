@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B718B5BE-0681-4710-94F1-6EF3FE4C9C13}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RideTheFlow</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\Dxlib;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Dxlib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\Dxlib;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Dxlib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\actor\Actor.cpp" />
+    <ClCompile Include="src\actor\ActorManager.cpp" />
+    <ClCompile Include="src\actor\Enemy.cpp" />
+    <ClCompile Include="src\actor\Player.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\math\MathUtility.cpp" />
+    <ClCompile Include="src\math\Matrix4.cpp" />
+    <ClCompile Include="src\math\MatrixUtility.cpp" />
+    <ClCompile Include="src\math\Quaternion.cpp" />
+    <ClCompile Include="src\math\Vector2.cpp" />
+    <ClCompile Include="src\math\Vector2Utility.cpp" />
+    <ClCompile Include="src\math\Vector3.cpp" />
+    <ClCompile Include="src\math\Vector3Utility.cpp" />
+    <ClCompile Include="src\scene\GamePlayScene.cpp" />
+    <ClCompile Include="src\scene\SceneManager.cpp" />
+    <ClCompile Include="src\scene\TitleScene.cpp" />
+    <ClCompile Include="src\world\World.cpp" />
+    <ClCompile Include="src\world\WorldActor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\actor\Actor.h" />
+    <ClInclude Include="src\actor\ActorID.h" />
+    <ClInclude Include="src\actor\ActorManager.h" />
+    <ClInclude Include="src\actor\ActorPtr.h" />
+    <ClInclude Include="src\actor\Enemy.h" />
+    <ClInclude Include="src\actor\Player.h" />
+    <ClInclude Include="src\AllInclude.h" />
+    <ClInclude Include="src\math\MathUtility.h" />
+    <ClInclude Include="src\math\Matrix4.h" />
+    <ClInclude Include="src\math\MatrixUtility.h" />
+    <ClInclude Include="src\math\Quaternion.h" />
+    <ClInclude Include="src\math\Vector2.h" />
+    <ClInclude Include="src\math\Vector2Utility.h" />
+    <ClInclude Include="src\math\Vector3.h" />
+    <ClInclude Include="src\math\Vector3Utility.h" />
+    <ClInclude Include="src\scene\GamePlayScene.h" />
+    <ClInclude Include="src\scene\IScene.h" />
+    <ClInclude Include="src\scene\ISceneMediator.h" />
+    <ClInclude Include="src\scene\IScenePtr.h" />
+    <ClInclude Include="src\scene\Scene.h" />
+    <ClInclude Include="src\scene\SceneManager.h" />
+    <ClInclude Include="src\scene\TitleScene.h" />
+    <ClInclude Include="src\world\IWorld.h" />
+    <ClInclude Include="src\world\World.h" />
+    <ClInclude Include="src\world\WorldActor.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
