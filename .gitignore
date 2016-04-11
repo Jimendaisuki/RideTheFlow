@@ -3,6 +3,7 @@
 *.cso
 RiguruLib/RiguruLib/Release/
 RiguruLib/Release/
+Dxlib/
 *.suo
 *.sdf
 *.user
