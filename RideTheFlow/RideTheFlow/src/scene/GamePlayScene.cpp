@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "../actor/Player.h"
 
+#include "../math/Vector2.h"
 
 //コンストラクタ
 GamePlayScene::GamePlayScene()

@@ -1,0 +1,572 @@
+#include "Model.h"
+#include "../game/WorkFolder.h"
+#include "../math/Point.h"
+#include <Dxlib.h>
+#include <sstream>
+#include <algorithm>
+
+#define PI 3.14159265358979f
+
+Model::ModelHandle::ModelHandle(int cmp) :
+param(cmp), handle(0),
+isInit(false), isCol(false), isRef(false)
+{
+
+}
+Model::ModelHandle::~ModelHandle()
+{
+	Delete();
+}
+
+void Model::Initialize()
+{
+	MV1InitModel();
+	m_models.clear();
+	m_sprites.clear();
+}
+
+void Model::ModelHandle::Load(const std::string& filename, bool async, bool collinfo, bool reference, std::function<void(int)> end)
+{
+	handle = MV1LoadModel((WorkFolder::Name + filename).c_str());
+	endcallback = end;
+
+	if (!async)
+	{
+		if (handle == -1)
+			throw std::string(filename + "の読み込みに失敗しました\n");
+
+		MV1SetMaterialDrawAlphaTestAll(handle, TRUE, DX_CMP_GREATER, param);
+
+		if (collinfo)
+		{
+			DxLib::MV1SetupCollInfo(handle, 0);
+		}
+
+		if (reference)
+		{
+			DxLib::MV1SetupReferenceMesh(handle, 0, FALSE);
+		}
+	}
+	else
+	{
+		isCol = collinfo;
+		isRef = reference;
+	}
+}
+void Model::ModelHandle::Draw()
+{
+	MV1DrawModel(handle);
+}
+void Model::ModelHandle::Delete()
+{
+	if (handle != 0 || handle != -1)
+	{
+		MV1DeleteModel(handle);
+		handle = 0;
+	}
+}
+void Model::ModelHandle::Enable()
+{
+	if (!isInit)
+	{
+		MV1SetMaterialDrawAlphaTestAll(handle, TRUE, DX_CMP_GREATER, param);
+
+		if (isCol)
+		{
+			DxLib::MV1SetupCollInfo(handle, 0);
+		}
+		if (isRef)
+		{
+			DxLib::MV1SetupReferenceMesh(handle, 0, FALSE);
+		}
+
+		if (endcallback != nullptr)
+		{
+			endcallback(handle);
+		}
+	}
+}
+bool Model::ModelHandle::CheckASync()
+{
+	return CheckHandleASyncLoad(handle) == FALSE;
+}
+
+Model::~Model()
+{
+	m_sprites.clear();
+	m_models.clear();
+	MV1InitModel();
+}
+
+// ３Ｄモデルを読み込む（アセット名）
+void Model::Load(const std::string& filename, bool async, int param, bool colinfo, bool reference, std::function<void(int)> end)
+{
+	std::string assetname = Split(filename);
+	auto model = std::make_shared<ModelHandle>(param);
+	model->Load(filename, async, colinfo, reference, end);
+	m_models[assetname] = model;
+}
+
+// ２Ｄ画像を読み込む（アセット名）
+void Model::Load2D(const std::string& filename)
+{
+	std::string assetname = Split(filename);
+	m_sprites[assetname].push_back(LoadGraph((WorkFolder::Name + filename).c_str()));
+	if (m_sprites[assetname][0] == -1)
+		throw std::string(assetname + "の読み込みに失敗しました\n");
+}
+
+// 分割２Ｄ画像の読み込み(アセット名、分割数、横と縦の分割数、1コマの大きさ)
+void Model::Load2D(const std::string& filename, int allnum, const Point& splitnum, const Point& size)
+{
+	int* handle = new int[allnum];
+	LoadDivGraph((WorkFolder::Name + filename).c_str(), allnum, splitnum.x, splitnum.y, size.x, size.y, handle);
+	for (int i = 0; i < allnum; ++i)
+	{
+		m_sprites[Split(filename)].emplace_back(handle[i]);
+	}
+	delete[] handle;
+}
+
+// ３Ｄモデルを描画する（アセット名、座標）
+void Model::Draw(const std::string& assetname, const Vector3& position)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、回転量）
+void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率）
+void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, const Vector3& scale)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー）
+void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー）
+void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, bool trans)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, bool trans)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、回転量、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, bool trans)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, bool trans)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, bool trans)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
+{
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
+void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
+{
+	rotate = rotate * PI / 180.0f;
+	WorkFolder::CheckName(assetname, m_models);
+	auto handle = m_models.at(assetname)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
+void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size)
+{
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, 0.0f, m_sprites[assetname][frame], true);
+}
+
+// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標）
+void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin)
+{
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, 0.0f, m_sprites[assetname][frame], true);
+}
+
+// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量）
+void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle)
+{
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], true);
+}
+
+// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度）
+void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha)
+{
+	AlphaBlend(alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], true);
+	DefaultBlend();
+}
+
+// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ）
+void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans)
+{
+	AlphaBlend(alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], trans);
+	DefaultBlend();
+}
+
+// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ、反転）
+void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn)
+{
+	AlphaBlend(alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], trans, turn);
+	DefaultBlend();
+}
+
+// モデルハンドルを受け取る
+int Model::GetHandle(const std::string& name)
+{
+	return m_models.at(name)->GetHangle();
+}
+
+// ３Ｄモデルの物理演算モードをセットする
+void Model::SetPhysics(int mode)
+{
+	MV1SetLoadModelUsePhysicsMode(mode);
+}
+
+// ファイル名の'.'から後を取り除く
+std::string Model::Split(std::string filename)
+{
+	std::string assetname;
+	std::getline(
+		std::stringstream(filename),
+		assetname,
+		'.'
+		);
+	return assetname;
+}
+
+// 画像にアルファブレンド処理を施す
+void Model::AlphaBlend(float alpha)
+{
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255.0f * alpha));
+}
+
+// 画像のブレンド処理をデフォルトにする
+void Model::DefaultBlend()
+{
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
+bool Model::CollisionLine(const std::string& name, const Vector3& start, const Vector3& end, Vector3* normal, Vector3* position)
+{
+	auto handle = m_models.at(name)->GetHangle();
+	auto info = DxLib::MV1CollCheck_Line(handle, 0, VGet(start.x, start.y, start.z), VGet(end.x, end.y, end.z));
+
+	if (info.HitFlag == TRUE)
+	{
+		if (normal != nullptr)
+		{
+			normal->x = info.Normal.x;
+			normal->y = info.Normal.y;
+			normal->z = info.Normal.z;
+		}
+
+		if (position != nullptr)
+		{
+			position->x = info.HitPosition.x;
+			position->y = info.HitPosition.y;
+			position->z = info.HitPosition.z;
+		}
+	}
+
+	return info.HitFlag == TRUE;
+}
+bool Model::CollisionSphere(const std::string& name, const Vector3& center, float radius, Vector3* position, Vector3* normal)
+{
+	auto V = VGet(center.x, center.y, center.z);
+	auto handle = m_models.at(name)->GetHangle();
+	auto info = DxLib::MV1CollCheck_Sphere(handle, 0, V, radius);
+
+	auto collide = info.HitNum > 0;
+
+	if (collide)
+	{
+		if (info.HitNum == 1)
+		{
+			const auto& Dim = info.Dim[0];
+			if (position != nullptr)
+			{
+				position->x = Dim.HitPosition.x;
+				position->y = Dim.HitPosition.y;
+				position->z = Dim.HitPosition.z;
+			}
+			if (normal != nullptr)
+			{
+				normal->x = Dim.Normal.x;
+				normal->y = Dim.Normal.y;
+				normal->z = Dim.Normal.z;
+			}
+		}
+		else
+		{
+			for (auto i = 0; i < info.HitNum; ++i)
+			{
+				const auto& Dim = info.Dim[i];
+				/* 中心位置、中間法線を求める */
+				if (i > 0)
+				{
+					if (position != nullptr)
+					{
+						*position += Vector3(Dim.HitPosition);
+						*position *= 0.5f;
+					}
+					if (normal != nullptr)
+					{
+						*normal += Vector3(Dim.Normal);
+						normal->Normalize();
+					}
+				}
+				/* 初期代入 */
+				else
+				{
+					if (position != nullptr)
+					{
+						position->x = Dim.HitPosition.x;
+						position->y = Dim.HitPosition.y;
+						position->z = Dim.HitPosition.z;
+					}
+					if (normal != nullptr)
+					{
+						normal->x = Dim.Normal.x;
+						normal->y = Dim.Normal.y;
+						normal->z = Dim.Normal.z;
+					}
+				}
+			}
+		}
+	}
+
+	/* 破棄 */
+	DxLib::MV1CollResultPolyDimTerminate(info);
+
+	return collide;
+}
+bool Model::RefreshInfo(const std::string& name, const Vector3& p, const Vector3& s)
+{
+	/* メッシュの情報を更新する（当たり判定対象ごと、回転はない） */
+	auto handle = m_models.at(name)->GetHangle();
+	DxLib::MV1SetPosition(handle, VGet(p.x, p.y, p.z));
+	DxLib::MV1SetScale(handle, VGet(s.x, s.y, s.z));
+	/* 衝突情報の更新 */
+	return DxLib::MV1RefreshCollInfo(handle, 0) == 0;
+}
+bool Model::CheckASyncModel()
+{
+	/* モデル */
+	return std::all_of(m_models.begin(), m_models.end(),
+		[] (const HandlePair& m)
+	{
+		/* ハンドルの非同期読み込みが完了しているか */
+		if (m.second->CheckASync())
+		{
+			/* 読み込みが完了していたらマテリアルのαテストを有効にする */
+			m.second->Enable();
+			m.second->End();
+			return true;
+		}
+		return false;
+	});
+}
+bool Model::CheckASyncBillboard()
+{
+	/* ビルボード */
+	return std::all_of(m_sprites.begin(), m_sprites.end(),
+		[] (const std::pair<std::string, std::vector<int>>& s)
+	{
+		return std::all_of(s.second.begin(), s.second.end(),
+			[] (int handle)
+		{
+			return CheckHandleASyncLoad(handle) == FALSE;
+		});
+	});
+}
+bool Model::IsASyncLoad(const std::string& name)
+{
+	return m_models.at(name)->CheckASync();
+}
+int Model::GetCount()
+{
+	return static_cast<int>(m_models.size());
+}
+VECTOR Model::GetMin(const std::string& name, int index)
+{
+	return MV1GetMeshMinPosition(m_models.at(name)->GetHangle(), index);
+}
+VECTOR Model::GetMax(const std::string& name, int index)
+{
+	return MV1GetMeshMaxPosition(m_models.at(name)->GetHangle(), index);
+}

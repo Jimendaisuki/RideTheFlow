@@ -19,6 +19,5 @@ void Actor::Collide(Actor& other){
 
 bool Actor::IsCollide(const Actor& other) const
 {
-	return RCVector3::distance_(RCMatrix4::getPosition(parameter.matrix), RCMatrix4::getPosition(other.parameter.matrix)) <=
-		parameter.radius + other.parameter.radius;
+	return true;
 }

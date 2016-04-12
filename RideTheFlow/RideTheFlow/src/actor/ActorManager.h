@@ -2,6 +2,8 @@
 #include "../AllInclude.h"
 
 #include"ActorPtr.h"
+#include "../graphic/Model.h"
+#include "../graphic/Sprite.h"
 #include<list>//シーケンスコンテナlistを実装する
 #include <functional>
 class ActorManager

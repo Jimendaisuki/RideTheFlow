@@ -1,18 +1,25 @@
 #include "Quaternion.h"
-#include "Vector3.h"
-#include "Matrix4.h"
-#include "MathUtility.h"
+#include "Math.h"
 #include <cmath>
 
-Quaternion quaternion(float x,float y,float z,float w){
-	Quaternion result = {x,y,z,w};
-	return result;
+Quaternion::Quaternion(float x, float y, float z, float w)
+: x(x), y(y), z(z), w(w)
+{
+
 }
-Quaternion quaternion(const Vector3& v,float angle){
-	float sin = Math::sin(angle / 2.0f);
-	return quaternion(sin * v.x,sin * v.y,sin * v.z,Math::cos(angle / 2.0f));
+
+Quaternion::Quaternion(const Vector3& v, float angle)
+{
+	float sin = Math::Sin(angle / 2.0f);
+	Quaternion q = Quaternion(sin * v.x, sin * v.y, sin * v.z, Math::Cos(angle / 2.0f));
+	x = q.x;
+	y = q.y;
+	z = q.z;
+	w = q.w;
 }
-Quaternion quaternion(const Matrix4& m){
+
+Quaternion::Quaternion(const Matrix4& m)
+{
 	Quaternion result;
 	float tr = m.m[0][0] + m.m[1][1] + m.m[2][2] + m.m[3][3];
 	if (tr >= 1.0f){
@@ -21,119 +28,59 @@ Quaternion quaternion(const Matrix4& m){
 		result.y = (m.m[2][0] - m.m[0][2]) / fourD;
 		result.z = (m.m[0][1] - m.m[1][0]) / fourD;
 		result.w = fourD / 4.0f;
-		return result;
 	}
-	int i = 0;
-	if (m.m[0][0] <= m.m[1][1]){
-		i = 1;
+	else
+	{
+		int i = 0;
+		if (m.m[0][0] <= m.m[1][1]){
+			i = 1;
+		}
+		if (m.m[2][2] > m.m[i][i]){
+			i = 2;
+		}
+		int j = (i + 1) % 3;
+		int k = (j + 1) % 3;
+		tr = m.m[i][i] - m.m[j][j] - m.m[k][k] + 1.0f;
+		float fourD = 2.0f * std::sqrt(tr);
+		float qa[4];
+		qa[i] = fourD / 4.0f;
+		qa[j] = (m.m[j][i] + m.m[i][j]) / fourD;
+		qa[k] = (m.m[k][i] + m.m[i][k]) / fourD;
+		qa[3] = (m.m[j][k] - m.m[k][j]) / fourD;
+		result.x = qa[0];
+		result.y = qa[1];
+		result.z = qa[2];
+		result.w = qa[3];
 	}
-	if (m.m[2][2] > m.m[i][i]){
-		i = 2;
-	}
-	int j = (i + 1) % 3;
-	int k = (j + 1) % 3;
-	tr = m.m[i][i] - m.m[j][j] - m.m[k][k] + 1.0f;
-	float fourD = 2.0f * std::sqrt(tr);
-	float qa[4];
-	qa[i] = fourD / 4.0f;
-	qa[j] = (m.m[j][i] + m.m[i][j]) / fourD;
-	qa[k] = (m.m[k][i] + m.m[i][k]) / fourD;
-	qa[3] = (m.m[j][k] - m.m[k][j]) / fourD;
-	result.x = qa[0];
-	result.y = qa[1];
-	result.z = qa[2];
-	result.w = qa[3];
-	return result;
+	x = result.x;
+	y = result.y;
+	z = result.z;
+	w = result.w;
 }
-float RCQuaternion::dot(const Quaternion& q1,const Quaternion& q2){
+
+float Quaternion::Dot(const Quaternion& q1, const Quaternion& q2)
+{
 	return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 }
-float RCQuaternion::length(const Quaternion& q){
-	return (float)std::sqrt(dot(q,q));
+
+float Quaternion::Length(const Quaternion& q)
+{
+	return (float)std::sqrt(Dot(q, q));
 }
-Quaternion RCQuaternion::normalize(const Quaternion & q)
+
+Quaternion Quaternion::Normalize(const Quaternion & q)
 {
 	Quaternion result = q;
-	float len = length( result );
-	if ( len != 0 ) {
+	float len = Length(result);
+	if (len != 0) {
 		result /= len;
 	}
 	return result;
 }
-Quaternion operator+(const Quaternion& q){
-	return q;
-}
-Quaternion operator-(const Quaternion& q){
-	Quaternion result = {-q.x,-q.y,-q.z,-q.w};
-	return result;
-}
-Quaternion& operator += ( Quaternion& q1, const Quaternion& q2 )
+
+Quaternion Quaternion::Slerp(const Quaternion& q1, const Quaternion& q2, float t)
 {
-	q1.x += q2.x;
-	q1.y += q2.y;
-	q1.z += q2.z;
-	q1.w += q2.w;
-	return q1;
-}
-Quaternion& operator -= ( Quaternion& q1, const Quaternion& q2 )
-{
-	q1.x -= q2.x;
-	q1.y -= q2.y;
-	q1.z -= q2.z;
-	q1.w -= q2.w;
-	return q1;
-}
-Quaternion& operator *= ( Quaternion& q1, const Quaternion& q2 )
-{
-	Quaternion result = {
-		 q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x,
-		-q1.x * q2.z + q1.y * q2.w + q1.z * q2.x + q1.w * q2.y,
-		 q1.x * q2.y - q1.y * q2.x + q1.z * q2.w + q1.w * q2.z,
-		-q1.x * q2.x - q1.y * q2.y - q1.z * q2.z + q1.w * q2.w
-	};
-	q1 = result;;
-	return q1;
-}
-Quaternion& operator *= (Quaternion& q1,float s){
-	q1.x *= s;
-	q1.y *= s;
-	q1.z *= s;
-	q1.w *= s;
-	return q1;
-}
-Quaternion& operator /= (Quaternion& q,float s){
-	return q *= 1.0f / s;
-}
-Quaternion operator + (const Quaternion& q1,const Quaternion& q2){
-	Quaternion result = q1;
-	return result += q2;
-}
-Quaternion operator -(const Quaternion& q1,const Quaternion& q2){
-	Quaternion result = q1;
-	return result -= q2;
-}
-Quaternion operator * (const Quaternion& q1,const Quaternion& q2){
-	Quaternion result = q1;
-	return result *= q2;
-}
-Quaternion operator * ( const Quaternion& q, float s )
-{
-	Quaternion result = q;
-	return result *= s;
-}
-Quaternion operator * ( float s, const Quaternion& q )
-{
-	Quaternion result = q;
-	return result *= s;
-}
-Quaternion operator / ( const Quaternion & q, float s )
-{
-	Quaternion result = q;
-	return result /= s;
-}
-//クォータニオンを球面線形補間する
-Quaternion RCQuaternion::slerp(const Quaternion& q1, const Quaternion& q2, float t) {
-	float cos = dot(q1, q2);
+	float cos = Dot(q1, q2);
 	Quaternion t2 = q2;
 	if (cos < 0.0f) {
 		cos = -cos;
@@ -148,7 +95,9 @@ Quaternion RCQuaternion::slerp(const Quaternion& q1, const Quaternion& q2, float
 	}
 	return q1*k0 + t2*k1;
 }
-Matrix4 RCQuaternion::rotate(const Quaternion& q) {
+
+Matrix4 Quaternion::Rotate(const Quaternion& q)
+{
 	float xx = q.x * q.x * 2.0f;
 	float yy = q.y * q.y * 2.0f;
 	float zz = q.z * q.z * 2.0f;
@@ -159,14 +108,89 @@ Matrix4 RCQuaternion::rotate(const Quaternion& q) {
 	float wy = q.w * q.y * 2.0f;
 	float wz = q.w * q.z * 2.0f;
 	Matrix4 result = {
-		1.0f-yy-zz, xy+wz, xz-wy, 0.0f,
-		xy-wz, 1.0f-xx-zz, yz+wx, 0.0f,
-		xz+wy, yz-wx, 1.0f-xx-yy, 0.0f,
+		1.0f - yy - zz, xy + wz, xz - wy, 0.0f,
+		xy - wz, 1.0f - xx - zz, yz + wx, 0.0f,
+		xz + wy, yz - wx, 1.0f - xx - yy, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 	return result;
 }
-//任意軸まわりの回転行列を求める関数
-Matrix4 RCQuaternion::rotate(const Vector3& v, float angle){
-	return rotate(quaternion(v,angle));
+
+Matrix4 Quaternion::Rotate(const Vector3& v, float angle)
+{
+	return Rotate(Quaternion(v, angle));
+}
+
+
+
+Quaternion operator+(const Quaternion& q){
+	return q;
+}
+Quaternion operator-(const Quaternion& q){
+	Quaternion result = { -q.x, -q.y, -q.z, -q.w };
+	return result;
+}
+Quaternion& operator += (Quaternion& q1, const Quaternion& q2)
+{
+	q1.x += q2.x;
+	q1.y += q2.y;
+	q1.z += q2.z;
+	q1.w += q2.w;
+	return q1;
+}
+Quaternion& operator -= (Quaternion& q1, const Quaternion& q2)
+{
+	q1.x -= q2.x;
+	q1.y -= q2.y;
+	q1.z -= q2.z;
+	q1.w -= q2.w;
+	return q1;
+}
+Quaternion& operator *= (Quaternion& q1, const Quaternion& q2)
+{
+	Quaternion result = {
+		q1.x * q2.w + q1.y * q2.z - q1.z * q2.y + q1.w * q2.x,
+		-q1.x * q2.z + q1.y * q2.w + q1.z * q2.x + q1.w * q2.y,
+		q1.x * q2.y - q1.y * q2.x + q1.z * q2.w + q1.w * q2.z,
+		-q1.x * q2.x - q1.y * q2.y - q1.z * q2.z + q1.w * q2.w
+	};
+	q1 = result;;
+	return q1;
+}
+Quaternion& operator *= (Quaternion& q1, float s){
+	q1.x *= s;
+	q1.y *= s;
+	q1.z *= s;
+	q1.w *= s;
+	return q1;
+}
+Quaternion& operator /= (Quaternion& q, float s){
+	return q *= 1.0f / s;
+}
+Quaternion operator + (const Quaternion& q1, const Quaternion& q2){
+	Quaternion result = q1;
+	return result += q2;
+}
+Quaternion operator -(const Quaternion& q1, const Quaternion& q2){
+	Quaternion result = q1;
+	return result -= q2;
+}
+Quaternion operator * (const Quaternion& q1, const Quaternion& q2){
+	Quaternion result = q1;
+	return result *= q2;
+}
+Quaternion operator * (const Quaternion& q, float s)
+{
+	Quaternion result = q;
+	return result *= s;
+}
+Quaternion operator * (float s, const Quaternion& q)
+{
+	Quaternion result = q;
+	return result *= s;
+}
+Quaternion operator / (const Quaternion & q, float s)
+{
+	Quaternion result = q;
+	return result /= s;
 }

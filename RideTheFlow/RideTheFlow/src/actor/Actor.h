@@ -1,15 +1,11 @@
 #pragma once
 #include "../AllInclude.h"
 #include "ActorID.h"
-#include "../math/Matrix4.h"
-#include "../math/Vector3.h"
-#include "../math/Vector3Utility.h"
-#include "../math/MatrixUtility.h"
+#include "../graphic/Sprite.h"
 
 struct ActorParameter
 {
 	ACTOR_ID id;
-	Matrix4 matrix;
 	bool isDead;
 	float radius;
 };

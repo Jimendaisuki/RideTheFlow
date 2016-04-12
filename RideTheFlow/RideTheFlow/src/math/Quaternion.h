@@ -1,33 +1,56 @@
 #pragma once
-struct Quaternion {
-	float x; // x成分
-	float y; // y成分
-	float z; // z成分
-	float w; // w成分
-};
-struct Vector3;
-struct Matrix4;
-// クオータニオンを作成
-Quaternion quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);
-Quaternion quaternion(const Vector3& v, float angle);
-//回転行列からクォータニオンを求める
-Quaternion quaternion(const Matrix4& m);
-namespace RCQuaternion{
-	// 内積を求める
-	float dot(const Quaternion& q1, const Quaternion& q2);
-	// ノルムを求める
-	float length(const Quaternion& q);
-	// 正規化する
-	Quaternion normalize(const Quaternion& q);
 
-	//便利関数
-	//クォータニオンを球面線形補間
-	Quaternion slerp(const Quaternion& q1, const Quaternion& q2, float t);
-	//クォータニオンから回転行列へ
-	Matrix4 rotate(const Quaternion& q);
-	//任意軸周りの回転行列を求める関数(glRotatefと同様)
-	Matrix4 rotate(const Vector3& v, float angle);
-}
+#include "Vector3.h"
+#include "Matrix4.h"
+
+class Quaternion
+{
+public:
+	float x;
+	float y;
+	float z;
+	float w;
+
+public:
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	Quaternion(float x = 0.0f, float y = 0.0f, float z = 0.0f, float w = 1.0f);
+	///<summary>
+	/// コンストラクタ
+	///</summary>
+	Quaternion(const Vector3& v, float angle);
+	///<summary>
+	/// コンストラクタ(回転行列からクウォータニオンを作成)
+	///</summary>
+	Quaternion(const Matrix4& m);
+
+public:
+	///<summary>
+	/// 内積を返す
+	///</summary>
+	static float Dot(const Quaternion& q1, const Quaternion& q2);
+	///<summary>
+	/// 大きさ（長さ）を返す
+	///</summary>
+	static float Length(const Quaternion& q);
+	///<summary>
+	/// 正規化をする
+	///</summary>
+	static Quaternion Normalize(const Quaternion& q);
+	///<summary>
+	/// 球面線形補間
+	///</summary>
+	static Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t);
+	///<summary>
+	/// クォータニオンを回転行列にして返す
+	///</summary>
+	static Matrix4 Rotate(const Quaternion& q);
+	///<summary>
+	/// 任意軸周りの回転行列を返す
+	///</summary>
+	static Matrix4 Rotate(const Vector3& v, float angle);
+};
 
 // 単項演算子オーバーロード
 Quaternion operator + (const Quaternion& q);

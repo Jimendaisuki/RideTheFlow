@@ -17,7 +17,9 @@ void ActorManager::Update(){
 
 void ActorManager::Draw() const{
 	std::for_each(actorPtr.begin(), actorPtr.end(),
-		[](ActorPtr actor){ actor->Draw(); });
+		[](ActorPtr actor){
+		actor->Draw();
+	});
 }
 
 void ActorManager::Add(ActorPtr actor){
