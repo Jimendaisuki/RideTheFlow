@@ -4,25 +4,26 @@
 
 class Camera
 {
-public:
-	Camera();
+private:
+	Camera() = default;
 	~Camera() = default;
 
-	///<summary>
-	/// カメラの描画距離を設定する（手前距離、奥距離）
-	///</summary>
-	void SetRange(float Near, float Far);
+public:
+	static Camera &GetInstance(){
+		static Camera c;
+		return c;
+	}
 
 	///<summary>
 	/// カメラの視点座標関係
 	///</summary>
 	class CPosition
 	{
-	public:
+	private:
 		Vector3 m_position;
-
-		Vector3 get() const { return m_position; }
-		void set(Vector3 position){ m_position = position; }
+	public:
+		Vector3 Get() const { return m_position; }
+		void Set(Vector3 position){ m_position = position; }
 	};
 
 	///<summary>
@@ -30,11 +31,12 @@ public:
 	///</summary>
 	class CTarget
 	{
-	public:
+	private:
 		Vector3 m_target;
 
-		Vector3 get() const { return m_target; }
-		void set(Vector3 target){ m_target = target; }
+	public:
+		Vector3 Get() const { return m_target; }
+		void Set(Vector3 target){ m_target = target; }
 	};
 
 	///<summary>
@@ -42,22 +44,28 @@ public:
 	///</summary>
 	class CUp
 	{
-	public:
+	private:
 		Vector3 m_up;
-
-		Vector3 get() const { return m_up; }
-		void set(Vector3 up){ m_up = up; }
+	public:
+		Vector3 Get() const { return m_up; }
+		void Set(Vector3 up){ m_up = up; }
 	};
 
-	///<summary>
-	/// カメラの回転角度を設定する（座標、垂直回転角度・水平回転角度・捻り回転角度）
-	///</summary>
-	void SetRotation(Vector3 rotate);
 
 	///<summary>
 	/// カメラの更新処理
 	///</summary>
 	void Update();
+
+	///<summary>
+	/// カメラの描画距離を設定する（手前距離、奥距離）
+	///</summary>
+	void SetRange(float Near, float Far);
+
+	///<summary>
+	/// カメラの回転角度を設定する（座標、垂直回転角度・水平回転角度・捻り回転角度）
+	///</summary>
+	void SetRotation(Vector3 rotate);
 
 	///<summary>
 	/// 指定した座標がカメラの視界に入っているか否か
@@ -68,5 +76,4 @@ public:
 	CPosition Position;// 視点の座標
 	CTarget Target;	// 注視点の座標
 	CUp Up;			// 上方向
-
 };

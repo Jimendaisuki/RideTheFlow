@@ -19,9 +19,10 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 // ‚R‚cƒ‚ƒfƒ‹‚ğ“Ç‚İ‚Ş
 void Content::LoadModel(Model& model, bool async)
 {
-	WorkFolder::SetWorkFolder("Resources/Model/");
+	WorkFolder::SetWorkFolder("res/Model/");
 
-	//model.Load("X-G1.x", async);
+	model.Load("Plane.x", async, 0, true);
+	model.Load("X-G1.x", async);
 
 	//model.Load("m1.pmx", async);
 

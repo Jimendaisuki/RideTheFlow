@@ -25,6 +25,7 @@ public:
 	virtual void End()override;
 
 private:
+	Vector3 cameraPos;
 	bool mIsEnd;
 	World wa;
 };

@@ -1,9 +1,10 @@
 #include "Player.h"
 #include "Collision.h"
 #include "../world/IWorld.h"
+#include "../graphic/Sprite.h"
+#include "../graphic/Model.h"
 
 Player::Player(IWorld& world):Actor(world){
-	tex = LoadGraph("res/body.jpg");
 	parameter.isDead = false;
 }
 Player::~Player(){
@@ -12,7 +13,7 @@ Player::~Player(){
 void Player::Update() {
 }
 void Player::Draw() const{
-	DrawGraph(0, 0, tex, TRUE);
+	Model::GetInstance().Draw("X-G1", Vector3::Zero);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara){
 

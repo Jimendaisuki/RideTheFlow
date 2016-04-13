@@ -29,7 +29,6 @@ private:
 	Content mContent;
 	Keyboard mKeyboard;
 	GamePad mGamepad;
-	Camera mCamera;
 
 	SceneManager mSceneManager;
 
