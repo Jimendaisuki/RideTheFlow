@@ -1,10 +1,15 @@
 #pragma once
-#include"../AllInclude.h"
 #include "../actor/ActorPtr.h"
 #include "../actor/ActorManager.h"
 #include <map>
+#include <vector>
 
 enum ACTOR_ID;
+
+struct CollideSelect{
+	ACTOR_ID otherID;
+	COL_ID colID;
+};
 
 class WorldActor{
 public:
@@ -14,10 +19,15 @@ public:
 	void Draw() const;
 	void Add(ACTOR_ID id, ActorPtr actor);
 	void Clear();
+	void SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID);
+
+	//子オブジェクトを巡回
+	void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func);
 
 private:
 	typedef std::shared_ptr<ActorManager> ActorManagerPtr;
-	typedef std::map<ACTOR_ID,ActorManagerPtr> ActorManagerPtrMap;
+	typedef std::map<ACTOR_ID, ActorManagerPtr> ActorManagerPtrMap;
 	typedef std::pair<ACTOR_ID, ActorManagerPtr> ActorManagerPair;
 	ActorManagerPtrMap managers;
+	std::map<ActorPtr, std::vector<CollideSelect>> colselect;
 };

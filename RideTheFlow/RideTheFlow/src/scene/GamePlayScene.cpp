@@ -22,7 +22,7 @@ GamePlayScene::~GamePlayScene()
 void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::PLAYER,std::make_shared<Player>());
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 }
 
 void GamePlayScene::Update()

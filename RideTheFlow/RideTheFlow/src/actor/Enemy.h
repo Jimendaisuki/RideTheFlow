@@ -4,11 +4,11 @@
 class Enemy :public Actor
 {
 public:
-	Enemy();
+	Enemy(IWorld& world);
 	~Enemy();
 	virtual void Update() override;
 	virtual void Draw() const override;
-	virtual void OnCollide(Actor& other) override;
+	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
 	int tex;

@@ -32,11 +32,18 @@ void ActorManager::Clear(){
 void ActorManager::Remove(){
 	actorPtr.remove_if([](ActorPtr actor){return actor->IsDead(); });
 }
-void ActorManager::Collide(Actor& other){
+void ActorManager::Collide(COL_ID id, Actor& other){
 	std::for_each(actorPtr.begin(), actorPtr.end(),
-		[&](ActorPtr actor){actor->Collide(other); });
+		[&](ActorPtr actor){other.Collide(id, *actor); });
 }
-void ActorManager::Collide(ActorManager& other){
+void ActorManager::Collide(COL_ID id, ActorManager& other){
 	std::for_each(actorPtr.begin(), actorPtr.end(),
-		[&](ActorPtr actor){other.Collide(*actor); });
+		[&](ActorPtr actor){other.Collide(id, *actor); });
+}
+
+//éqÇèÑâÒ
+void ActorManager::EachActor(std::function<void(Actor&)> func)
+{
+	std::for_each(actorPtr.begin(), actorPtr.end(),
+		[&](const ActorPtr& actor) {func(*actor); });
 }

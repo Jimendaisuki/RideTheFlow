@@ -21,7 +21,7 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::ENEMY, std::make_shared<Enemy>());
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Enemy>(wa));
 }
 
 void TitleScene::Update()

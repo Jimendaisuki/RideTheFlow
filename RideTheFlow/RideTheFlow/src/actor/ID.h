@@ -1,0 +1,14 @@
+#pragma once
+
+enum ACTOR_ID{
+	BEGIN_ACTOR,
+	PLAYER_ACTOR,
+	ENEMY_ACTOR,
+	END_ACTOR
+};
+
+enum COL_ID{
+	BEGIN_COL,
+	SPHERE_SPHERE_COL,
+	END_COL
+};
