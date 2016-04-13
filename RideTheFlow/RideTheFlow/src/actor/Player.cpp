@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include "../world/IWorld.h"
+#include "../math/Vector3.h"
 
 Player::Player(IWorld& world):Actor(world){
 	tex = LoadGraph("res/body.jpg");

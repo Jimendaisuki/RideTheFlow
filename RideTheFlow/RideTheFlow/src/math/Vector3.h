@@ -158,7 +158,9 @@ public:
 
 public:
 	Vector3& operator = (const Vector3& v);
+	Vector3& operator = (const VECTOR& v);
 	operator std::string() const;
+	operator VECTOR() const;
 };
 
 Vector3 operator + (const Vector3& v1, const Vector3& v2);
@@ -176,3 +178,5 @@ Vector3 operator / (const Vector3& v1, const Vector3& v2);
 Vector3& operator /= (Vector3& v, const float f);
 Vector3 operator - (const Vector3& v);
 bool operator != (const Vector3& v1, const Vector3& v2);
+
+VECTOR& operator += (const VECTOR& v1, const Vector3& v2);

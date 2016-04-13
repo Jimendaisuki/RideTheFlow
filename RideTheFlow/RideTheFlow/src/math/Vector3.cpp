@@ -216,12 +216,19 @@ VECTOR Vector3::ToVECTOR()
 	return ToVECTOR(*this);
 }
 
+Vector3& Vector3::operator = (const VECTOR& v){
+	x = v.x;
+	y = v.y;
+	z = v.z;
+	return *this;
+}
+
 Vector3& Vector3::operator = (const Vector3& v)
 {
 	x = v.x;
 	y = v.y;
 	z = v.z;
-	return *this;
+ 	return *this;
 }
 
 Vector3::operator std::string() const
@@ -229,6 +236,10 @@ Vector3::operator std::string() const
 	std::stringstream ss;
 	ss << "(" << x << "," << y << "," << z << " )";
 	return ss.str();
+}
+
+Vector3::operator VECTOR() const{
+	return VGet((float)x, (float)y, (float)z);
 }
 
 Vector3 operator + (const Vector3& v1, const Vector3& v2)
