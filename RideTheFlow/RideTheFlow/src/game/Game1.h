@@ -4,9 +4,6 @@
 #include "Content.h"
 #include "../input/Keyboard.h"
 #include "../input/GamePad.h"
-#include "../graphic/Model.h"
-#include "../graphic/Anime.h"
-#include "../graphic/Sprite.h"
 #include "../sound/Sound.h"
 #include "../time/Time.h"
 #include "../camera/Camera.h"
@@ -32,11 +29,6 @@ private:
 	Content mContent;
 	Keyboard mKeyboard;
 	GamePad mGamepad;
-
-	Model mModel;
-	Sound mSound;
-	Sprite mSprite;
-	Anime mAnime;
 	Camera mCamera;
 
 	SceneManager mSceneManager;

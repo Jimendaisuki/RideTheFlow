@@ -2,7 +2,6 @@
 #include "../game/WorkFolder.h"
 #include "../Def.h"
 #include "../math/Math.h"
-#include <Dxlib.h>
 #include <sstream>
 
 Sound::Sound():
@@ -61,7 +60,7 @@ void Sound::PlayBGM(const std::string& assetname, int playtype = DX_PLAYTYPE_BAC
 }
 
 // SE‚ð–Â‚ç‚·
-void Sound::PlaySE(const std::string& assetname, int playtype = DX_PLAYTYPE_BACK)
+void Sound::PlaySE(const std::string& assetname, int playtype)
 {
 	WorkFolder::CheckName(assetname, m_SEs);
 	if (IsPlaySE(assetname) && playtype == DX_PLAYTYPE_LOOP)

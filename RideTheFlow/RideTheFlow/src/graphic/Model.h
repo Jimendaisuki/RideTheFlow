@@ -13,9 +13,15 @@ class Point;
 
 class Model
 {
-public:
+private:
 	Model() = default;
 	~Model();
+
+public:
+	static Model &GetInstance(){
+		static Model m;
+		return m;
+	}
 
 	///<summary>
 	/// ‰Šú‰»ˆ—

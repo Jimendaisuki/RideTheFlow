@@ -1,13 +1,20 @@
 #pragma once
 
+#include <Dxlib.h>
 #include <string>
 #include <unordered_map>
 
 class Sound
 {
-public:
+private:
 	Sound();
 	~Sound();
+
+public:
+	static Sound &GetInstance(){
+		static Sound s;
+		return s;
+	}
 
 	///<summary>
 	/// ‰Šú‰»ˆ—
@@ -29,7 +36,7 @@ public:
 	///<summary>
 	/// SE‚ğ–Â‚ç‚·
 	///</summary>
-	void PlaySE(const std::string& assetname, int playtype);
+	void PlaySE(const std::string& assetname, int playtype = DX_PLAYTYPE_BACK);
 	///<summary>
 	/// BGM‚ğ~‚ß‚é
 	///</summary>

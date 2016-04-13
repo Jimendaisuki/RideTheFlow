@@ -4,13 +4,15 @@
 #include "../scene/TitleScene.h"
 #include "../scene/GamePlayScene.h"
 #include "../Def.h"
+#include "../graphic/Model.h"
+#include "../graphic/Anime.h"
+#include "../graphic/Sprite.h"
 #include <thread>
 
 Game1::Game1() :
 mKeyboard(), 
 mGamepad(),
 effectTime(0.0f),
-mAnime(mModel),
 mPixelShader(-1), 
 mRenderTarget(-1),
 mIsLoaded(false)
@@ -21,14 +23,14 @@ mIsLoaded(false)
 void Game1::Initialize()
 {
 	mIsLoaded = false;
-	mModel.Initialize();
-	mSprite.Initialize();
-	mSound.Initialize();
+	Model::GetInstance().Initialize();
+	Sprite::GetInstance().Initialize();
+	Sound::GetInstance().Initialize();
 
 	// ÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-	mContent.LoadSprite(mSprite, mModel);
-	//mContent.LoadSound(mSound);
-	//mContent.LoadModel(mModel,false);
+	mContent.LoadSprite(Sprite::GetInstance(), Model::GetInstance());
+	mContent.LoadSound(Sound::GetInstance());
+	mContent.LoadModel(Model::GetInstance(),false);
 
 	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());

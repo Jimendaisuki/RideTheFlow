@@ -1,16 +1,17 @@
 #include "Player.h"
+#include "../graphic/Sprite.h"
 
 Player::Player(){
-	tex = LoadGraph("res/body.jpg");
 	parameter.isDead = false;
 }
 Player::~Player(){
 
 }
-void Player::Update() {
+void Player::Update(){
+
 }
 void Player::Draw() const{
-	DrawGraph(0, 0, tex, TRUE);
+	Sprite::GetInstance().Draw("images", Vector2(100, 100));
 }
 void Player::OnCollide(Actor& other){
 

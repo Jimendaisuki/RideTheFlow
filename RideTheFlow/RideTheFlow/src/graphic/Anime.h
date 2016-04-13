@@ -1,13 +1,18 @@
 #pragma once
 
 #include <unordered_map>
-class Model;
 
 class Anime
 {
-public:
-	Anime(Model& model);
+private:
+	Anime() = default;
 	~Anime() = default;
+
+public:
+	static Anime &GetInstance(){
+		static Anime a;
+		return a;
+	}
 
 	///<summary>
 	/// 使用するアニメーションをアタッチする
@@ -39,6 +44,4 @@ public:
 
 private:
 	std::unordered_map<std::string, std::unordered_map<int, int>> m_animes;
-
-	Model& m_model;
 };

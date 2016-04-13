@@ -8,10 +8,14 @@
 
 class Sprite
 {
-public:
+private:
 	Sprite() = default;
-
 	~Sprite();
+public:
+	static Sprite &GetInstance(){
+		static Sprite s;
+		return s;
+	}
 
 	///<summary>
 	/// ‰Šú‰»ˆ—

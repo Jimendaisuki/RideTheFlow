@@ -21,8 +21,10 @@ void Content::LoadModel(Model& model, bool async)
 {
 	WorkFolder::SetWorkFolder("Resources/Model/");
 
+	//model.Load("X-G1.x", async);
+
 	//model.Load("m1.pmx", async);
-	//model.Load("m2.x", async);
+
 	//model.Load("m3.pmd", async);
 }
 
@@ -31,8 +33,9 @@ void Content::LoadSound(Sound& sound)
 {
 	WorkFolder::SetWorkFolder("res/Sound/");
 
-	//sound.LoadBGM("title.mp3");
+	sound.LoadSE("button.mp3", 0.9f);
 
+	//sound.LoadBGM("title.mp3");
 	//sound.LoadSE("se.wav", 0.9f);
 
 	sound.SetAllBGMVolume(BGMVOLUME);
