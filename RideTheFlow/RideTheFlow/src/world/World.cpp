@@ -1,5 +1,5 @@
 #include "World.h"
-#include "../actor/ActorID.h"
+#include "../actor/ID.h"
 
 World::World(){
 
@@ -26,11 +26,17 @@ void World::Add(ACTOR_ID id, ActorPtr actor){
 	actors.Add(id, actor);
 }
 
-void World::Add(ActorPtr actor){
-	actors.Add(ACTOR_ID::PLAYER, actor);
-}
-
 bool World::IsEnd()const{
 	//とりあえず
 	return false;
+}
+
+void World::SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID){
+	actors.SetCollideSelect(thisActor, otherID, colID);
+}
+
+//子オブジェクトを巡回
+void World::EachActor(ACTOR_ID id, std::function<void(const Actor&)> func)
+{
+	actors.EachActor(id, func);
 }

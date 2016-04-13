@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="src\actor\Actor.cpp" />
     <ClCompile Include="src\actor\ActorManager.cpp" />
+    <ClCompile Include="src\actor\Collision.cpp" />
     <ClCompile Include="src\actor\Enemy.cpp" />
     <ClCompile Include="src\actor\Player.cpp" />
     <ClCompile Include="src\camera\Camera.cpp" />
@@ -119,7 +120,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\Actor.h" />
-    <ClInclude Include="src\actor\ActorID.h" />
+    <ClInclude Include="src\actor\Collision.h" />
+    <ClInclude Include="src\actor\ID.h" />
     <ClInclude Include="src\actor\ActorManager.h" />
     <ClInclude Include="src\actor\ActorPtr.h" />
     <ClInclude Include="src\actor\Enemy.h" />

@@ -1,18 +1,19 @@
 #include "Player.h"
-#include "../graphic/Sprite.h"
+#include "Collision.h"
+#include "../world/IWorld.h"
 
-Player::Player(){
+Player::Player(IWorld& world):Actor(world){
+	tex = LoadGraph("res/body.jpg");
 	parameter.isDead = false;
 }
 Player::~Player(){
 
 }
-void Player::Update(){
-
+void Player::Update() {
 }
 void Player::Draw() const{
-	Sprite::GetInstance().Draw("images", Vector2(100, 100));
+	DrawGraph(0, 0, tex, TRUE);
 }
-void Player::OnCollide(Actor& other){
+void Player::OnCollide(Actor& other, CollisionParameter colpara){
 
 }

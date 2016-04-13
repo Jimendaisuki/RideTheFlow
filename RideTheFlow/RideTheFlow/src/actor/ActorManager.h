@@ -6,6 +6,7 @@
 #include "../graphic/Sprite.h"
 #include<list>//シーケンスコンテナlistを実装する
 #include <functional>
+#include "ID.h"
 class ActorManager
 {
 public:
@@ -16,8 +17,11 @@ public:
 	void Add(ActorPtr actor);
 	void Clear();
 	void Remove();
-	void Collide(Actor& other);
-	void Collide(ActorManager& other);
+	void Collide(COL_ID id, Actor& other);
+	void Collide(COL_ID id, ActorManager& other);
+
+	//子を巡回
+	void EachActor(std::function<void(Actor&)> func);
 private:
 	std::list<ActorPtr> actorPtr;
 };
