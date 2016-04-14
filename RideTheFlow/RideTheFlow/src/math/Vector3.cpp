@@ -216,6 +216,18 @@ VECTOR Vector3::ToVECTOR()
 	return ToVECTOR(*this);
 }
 
+DWORD Vector3::ToColor(const Vector3& v)
+{
+	DWORD result;
+	result = GetColor((int)v.x, (int)v.y, (int)v.z);
+	return result;
+}
+
+DWORD Vector3::ToColor()
+{
+	return ToColor(*this);
+}
+
 Vector3& Vector3::operator = (const VECTOR& v){
 	x = v.x;
 	y = v.y;
@@ -234,7 +246,7 @@ Vector3& Vector3::operator = (const Vector3& v)
 Vector3::operator std::string() const
 {
 	std::stringstream ss;
-	ss << "(" << x << "," << y << "," << z << " )";
+	ss << "(" << x << " , " << y << " , " << z << ")";
 	return ss.str();
 }
 

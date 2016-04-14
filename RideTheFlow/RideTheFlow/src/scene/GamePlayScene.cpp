@@ -4,9 +4,10 @@
 #include <iomanip>
 #include "Scene.h"
 #include "../actor/Player.h"
+#include "../actor/CameraActor.h"
 
 #include "../math/Vector2.h"
-#include "../camera/Camera.h"
+#include "../input/Keyboard.h"
 
 //コンストラクタ
 GamePlayScene::GamePlayScene()
@@ -25,13 +26,12 @@ void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
 }
 
 void GamePlayScene::Update()
 {
-	Camera::GetInstance().Update();
-
-	if (CheckHitKeyAll()){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEY_INPUT_SPACE)){
 		mIsEnd = true;
 	}
 	wa.Update();

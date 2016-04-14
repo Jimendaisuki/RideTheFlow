@@ -12,9 +12,9 @@ Keyboard::Keyboard()
 }
 
 /// キーを押した時のトリガー判定
-bool Keyboard::KeyTriggerDown(int key)
+bool Keyboard::KeyTriggerDown(UINT keycode)
 {
-	if (m_onkey[key] == 1)
+	if (m_onkey[keycode] == 1)
 	{
 		return true;
 	}
@@ -22,9 +22,9 @@ bool Keyboard::KeyTriggerDown(int key)
 }
 
 /// キーを押した時のステート判定
-bool Keyboard::KeyStateDown(int key)
+bool Keyboard::KeyStateDown(UINT keycode)
 {
-	if (m_keycode[key] == 1)
+	if (m_keycode[keycode] == 1)
 	{
 		return true;
 	}
@@ -32,9 +32,9 @@ bool Keyboard::KeyStateDown(int key)
 }
 
 /// キーを離した時のトリガー判定
-bool Keyboard::KeyTriggerUp(int key)
+bool Keyboard::KeyTriggerUp(UINT keycode)
 {
-	if (m_offkey[key] == 1)
+	if (m_offkey[keycode] == 1)
 	{
 		return true;
 	}
@@ -42,9 +42,9 @@ bool Keyboard::KeyTriggerUp(int key)
 }
 
 /// キーを離した時のステート判定
-bool Keyboard::KeyStateUp(int key)
+bool Keyboard::KeyStateUp(UINT keycode)
 {
-	if (m_keycode[key] == 0)
+	if (m_keycode[keycode] == 0)
 	{
 		return true;
 	}

@@ -155,6 +155,14 @@ public:
 	/// ©g‚ğVECTORŒ^‚É•ÏŠ·‚µ‚½‚à‚Ì‚ğ•Ô‚·
 	///</summary>
 	VECTOR ToVECTOR();
+	///<summary>
+	/// Vector3Œ^‚ğDWORDŒ^‚É•ÏŠ·‚µ‚½‚à‚Ì‚ğ•Ô‚·
+	///</summary>
+	static DWORD ToColor(const Vector3& v);
+	///<summary>
+	/// ©g‚ğDWORDŒ^‚É•ÏŠ·‚µ‚½‚à‚Ì‚ğ•Ô‚·
+	///</summary>
+	DWORD ToColor();
 
 public:
 	Vector3& operator = (const Vector3& v);

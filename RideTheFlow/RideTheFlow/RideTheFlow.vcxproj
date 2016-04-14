@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="src\actor\Actor.cpp" />
     <ClCompile Include="src\actor\ActorManager.cpp" />
+    <ClCompile Include="src\actor\CameraActor.cpp" />
     <ClCompile Include="src\actor\Collision.cpp" />
     <ClCompile Include="src\actor\Enemy.cpp" />
     <ClCompile Include="src\actor\Player.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="src\graphic\ShadowMap.cpp" />
     <ClCompile Include="src\graphic\Sprite.cpp" />
     <ClCompile Include="src\game\WorkFolder.cpp" />
+    <ClCompile Include="src\graphic\TextDraw.cpp" />
     <ClCompile Include="src\input\GamePad.cpp" />
     <ClCompile Include="src\input\Keyboard.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -120,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\Actor.h" />
+    <ClInclude Include="src\actor\CameraActor.h" />
     <ClInclude Include="src\actor\Collision.h" />
     <ClInclude Include="src\actor\ID.h" />
     <ClInclude Include="src\actor\ActorManager.h" />
@@ -140,6 +143,7 @@
     <ClInclude Include="src\graphic\ShadowMap.h" />
     <ClInclude Include="src\graphic\Sprite.h" />
     <ClInclude Include="src\game\WorkFolder.h" />
+    <ClInclude Include="src\graphic\TextDraw.h" />
     <ClInclude Include="src\input\GamePad.h" />
     <ClInclude Include="src\input\Keyboard.h" />
     <ClInclude Include="src\math\Math.h" />
