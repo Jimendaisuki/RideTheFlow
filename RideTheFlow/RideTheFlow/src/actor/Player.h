@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "../math/Vector3.h"
 
 class Player :public Actor
 {
@@ -11,5 +12,6 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
-	int tex;
+	Vector3 position;
+	Vector3 cameraPos;
 };

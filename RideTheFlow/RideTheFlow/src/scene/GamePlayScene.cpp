@@ -10,12 +10,8 @@
 
 //コンストラクタ
 GamePlayScene::GamePlayScene()
-: cameraPos(0.0f, 0.0f, -100.0f)
 {
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(cameraPos);
-	Camera::GetInstance().Target.Set(Vector3::Zero);
-	Camera::GetInstance().Up.Set(Vector3::Up);
+
 	//mIsEnd = false;
 }
 

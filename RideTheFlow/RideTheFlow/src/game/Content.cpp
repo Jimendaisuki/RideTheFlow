@@ -10,8 +10,8 @@
 void Content::LoadSprite(Sprite& sprite, Model& model)
 {
 	WorkFolder::SetWorkFolder("res/Sprite/");
-	sprite.Load("body.png");
-	sprite.Load("images.png");
+	sprite.Load("body.png", SPRITE_ID::PLAYER_SPRITE);
+	sprite.Load("images.png", SPRITE_ID::ENEMY_SPRITE);
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");
 }
@@ -21,8 +21,8 @@ void Content::LoadModel(Model& model, bool async)
 {
 	WorkFolder::SetWorkFolder("res/Model/");
 
-	model.Load("Plane.x", async, 0, true);
-	model.Load("X-G1.x", async);
+	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
+	model.Load("X-G1.x", MODEL_ID::PLAYER_MODEL, async);
 
 	//model.Load("m1.pmx", async);
 
@@ -34,7 +34,7 @@ void Content::LoadSound(Sound& sound)
 {
 	WorkFolder::SetWorkFolder("res/Sound/");
 
-	sound.LoadSE("button.mp3", 0.9f);
+	sound.LoadSE("button.mp3", SE_ID::BUTTON_SE, 0.9f);
 
 	//sound.LoadBGM("title.mp3");
 	//sound.LoadSE("se.wav", 0.9f);

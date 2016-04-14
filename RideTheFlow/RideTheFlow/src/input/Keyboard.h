@@ -5,9 +5,16 @@
 
 class Keyboard
 {
-public:
+private:
 	Keyboard();
 	~Keyboard() = default;
+
+public:
+	static Keyboard &GetInstance(){
+		static Keyboard k;
+		return k;
+	}
+
 	/// <summary>
 	/// w’è‚³‚ê‚½ƒL[‚ª“ü—Í‚³‚ê‚½uŠÔ‚©’²‚×‚é
 	/// </summary>

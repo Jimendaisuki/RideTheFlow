@@ -99,71 +99,68 @@ Model::~Model()
 }
 
 // ３Ｄモデルを読み込む（アセット名）
-void Model::Load(const std::string& filename, bool async, int param, bool colinfo, bool reference, std::function<void(int)> end)
+void Model::Load(const std::string& filename, const MODEL_ID& id, bool async, int param, bool colinfo, bool reference, std::function<void(int)> end)
 {
-	std::string assetname = Split(filename);
 	auto model = std::make_shared<ModelHandle>(param);
 	model->Load(filename, async, colinfo, reference, end);
-	m_models[assetname] = model;
+	m_models[id] = model;
 }
 
 // ２Ｄ画像を読み込む（アセット名）
-void Model::Load2D(const std::string& filename)
+void Model::Load2D(const std::string& filename, const MODEL_ID& id)
 {
-	std::string assetname = Split(filename);
-	m_sprites[assetname].push_back(LoadGraph((WorkFolder::Name + filename).c_str()));
-	if (m_sprites[assetname][0] == -1)
-		throw std::string(assetname + "の読み込みに失敗しました\n");
+	m_sprites[id].push_back(LoadGraph((WorkFolder::Name + filename).c_str()));
+	if (m_sprites[id][0] == -1)
+		throw std::string(id + "の読み込みに失敗しました\n");
 }
 
 // 分割２Ｄ画像の読み込み(アセット名、分割数、横と縦の分割数、1コマの大きさ)
-void Model::Load2D(const std::string& filename, int allnum, const Point& splitnum, const Point& size)
+void Model::Load2D(const std::string& filename, const MODEL_ID& id, int allnum, const Point& splitnum, const Point& size)
 {
 	int* handle = new int[allnum];
 	LoadDivGraph((WorkFolder::Name + filename).c_str(), allnum, splitnum.x, splitnum.y, size.x, size.y, handle);
 	for (int i = 0; i < allnum; ++i)
 	{
-		m_sprites[Split(filename)].emplace_back(handle[i]);
+		m_sprites[id].emplace_back(handle[i]);
 	}
 	delete[] handle;
 }
 
 // ３Ｄモデルを描画する（アセット名、座標）
-void Model::Draw(const std::string& assetname, const Vector3& position)
+void Model::Draw(const MODEL_ID& id, const Vector3& position)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1DrawModel(handle);
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1DrawModel(handle);
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、回転量）
-void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
 	MV1DrawModel(handle);
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率）
-void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, const Vector3& scale)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
 	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
@@ -171,11 +168,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、回転量）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
@@ -183,11 +180,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
@@ -196,20 +193,18 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー）
-void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
 	MV1DrawModel(handle);
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー）
-void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
 	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
@@ -217,11 +212,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, const Ve
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
@@ -232,20 +227,18 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, bool trans)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetVisible(handle, trans);
 	MV1DrawModel(handle);
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, bool trans)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetVisible(handle, trans);
@@ -253,11 +246,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、回転量、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
 	MV1SetVisible(handle, trans);
@@ -265,11 +258,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
 	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
@@ -278,11 +271,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, Vector3 
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
@@ -291,11 +284,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
@@ -305,10 +298,9 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, bool trans)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
 	MV1SetVisible(handle, trans);
@@ -316,10 +308,9 @@ void Model::Draw(const std::string& assetname, const Vector3& position, const Ve
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
 {
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
 	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
@@ -328,11 +319,11 @@ void Model::Draw(const std::string& assetname, const Vector3& position, const Ve
 }
 
 // ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
-void Model::Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
+void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
-	WorkFolder::CheckName(assetname, m_models);
-	auto handle = m_models.at(assetname)->GetHangle();
+
+	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
@@ -344,51 +335,51 @@ void Model::Draw(const std::string& assetname, const Vector3& position, float al
 }
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
-void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size)
+void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size)
 {
-	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, 0.0f, m_sprites[assetname][frame], true);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, 0.0f, m_sprites[id][frame], true);
 }
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標）
-void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin)
+void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin)
 {
-	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, 0.0f, m_sprites[assetname][frame], true);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, 0.0f, m_sprites[id][frame], true);
 }
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量）
-void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle)
+void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle)
 {
-	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], true);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[id][frame], true);
 }
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度）
-void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha)
+void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha)
 {
 	AlphaBlend(alpha);
-	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], true);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[id][frame], true);
 	DefaultBlend();
 }
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ）
-void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans)
+void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans)
 {
 	AlphaBlend(alpha);
-	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], trans);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[id][frame], trans);
 	DefaultBlend();
 }
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ、反転）
-void Model::Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn)
+void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn)
 {
 	AlphaBlend(alpha);
-	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[assetname][frame], trans, turn);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), origin.x, origin.y, size, angle, m_sprites[id][frame], trans, turn);
 	DefaultBlend();
 }
 
 // モデルハンドルを受け取る
-int Model::GetHandle(const std::string& name)
+int Model::GetHandle(const MODEL_ID& id)
 {
-	return m_models.at(name)->GetHangle();
+	return m_models.at(id)->GetHangle();
 }
 
 // ３Ｄモデルの物理演算モードをセットする
@@ -400,13 +391,13 @@ void Model::SetPhysics(int mode)
 // ファイル名の'.'から後を取り除く
 std::string Model::Split(std::string filename)
 {
-	std::string assetname;
+	std::string name;
 	std::getline(
 		std::stringstream(filename),
-		assetname,
+		name,
 		'.'
 		);
-	return assetname;
+	return name;
 }
 
 // 画像にアルファブレンド処理を施す
@@ -421,9 +412,9 @@ void Model::DefaultBlend()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
-bool Model::CollisionLine(const std::string& name, const Vector3& start, const Vector3& end, Vector3* normal, Vector3* position)
+bool Model::CollisionLine(const MODEL_ID& id, const Vector3& start, const Vector3& end, Vector3* normal, Vector3* position)
 {
-	auto handle = m_models.at(name)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	auto info = DxLib::MV1CollCheck_Line(handle, 0, VGet(start.x, start.y, start.z), VGet(end.x, end.y, end.z));
 
 	if (info.HitFlag == TRUE)
@@ -445,10 +436,10 @@ bool Model::CollisionLine(const std::string& name, const Vector3& start, const V
 
 	return info.HitFlag == TRUE;
 }
-bool Model::CollisionSphere(const std::string& name, const Vector3& center, float radius, Vector3* position, Vector3* normal)
+bool Model::CollisionSphere(const MODEL_ID& id, const Vector3& center, float radius, Vector3* position, Vector3* normal)
 {
 	auto V = VGet(center.x, center.y, center.z);
-	auto handle = m_models.at(name)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	auto info = DxLib::MV1CollCheck_Sphere(handle, 0, V, radius);
 
 	auto collide = info.HitNum > 0;
@@ -515,10 +506,10 @@ bool Model::CollisionSphere(const std::string& name, const Vector3& center, floa
 
 	return collide;
 }
-bool Model::RefreshInfo(const std::string& name, const Vector3& p, const Vector3& s)
+bool Model::RefreshInfo(const MODEL_ID& id, const Vector3& p, const Vector3& s)
 {
 	/* メッシュの情報を更新する（当たり判定対象ごと、回転はない） */
-	auto handle = m_models.at(name)->GetHangle();
+	auto handle = m_models.at(id)->GetHangle();
 	DxLib::MV1SetPosition(handle, VGet(p.x, p.y, p.z));
 	DxLib::MV1SetScale(handle, VGet(s.x, s.y, s.z));
 	/* 衝突情報の更新 */
@@ -545,7 +536,7 @@ bool Model::CheckASyncBillboard()
 {
 	/* ビルボード */
 	return std::all_of(m_sprites.begin(), m_sprites.end(),
-		[] (const std::pair<std::string, std::vector<int>>& s)
+		[] (const std::pair<MODEL_ID, std::vector<int>>& s)
 	{
 		return std::all_of(s.second.begin(), s.second.end(),
 			[] (int handle)
@@ -554,19 +545,19 @@ bool Model::CheckASyncBillboard()
 		});
 	});
 }
-bool Model::IsASyncLoad(const std::string& name)
+bool Model::IsASyncLoad(const MODEL_ID& id)
 {
-	return m_models.at(name)->CheckASync();
+	return m_models.at(id)->CheckASync();
 }
 int Model::GetCount()
 {
 	return static_cast<int>(m_models.size());
 }
-VECTOR Model::GetMin(const std::string& name, int index)
+VECTOR Model::GetMin(const MODEL_ID& id, int index)
 {
-	return MV1GetMeshMinPosition(m_models.at(name)->GetHangle(), index);
+	return MV1GetMeshMinPosition(m_models.at(id)->GetHangle(), index);
 }
-VECTOR Model::GetMax(const std::string& name, int index)
+VECTOR Model::GetMax(const MODEL_ID& id, int index)
 {
-	return MV1GetMeshMaxPosition(m_models.at(name)->GetHangle(), index);
+	return MV1GetMeshMaxPosition(m_models.at(id)->GetHangle(), index);
 }

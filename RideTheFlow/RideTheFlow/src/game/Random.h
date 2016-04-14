@@ -4,10 +4,21 @@
 
 class Random
 {
-public:
+private:
 	Random();
 	Random(int seed);
 	~Random() = default;
+
+public:
+	static Random &GetInstance(){
+		static Random m;
+		return m;
+	}
+
+	///<summary>
+	/// シードをセットする
+	///</summary>
+	void SetSeed(int seed);
 
 	///<summary>
 	/// 整数型の乱数を生成する（最小値、最大値）

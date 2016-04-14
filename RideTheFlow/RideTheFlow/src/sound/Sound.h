@@ -3,6 +3,7 @@
 #include <Dxlib.h>
 #include <string>
 #include <unordered_map>
+#include "../actor/ID.h"
 
 class Sound
 {
@@ -24,19 +25,19 @@ public:
 	///<summary>
 	/// BGMを読み込む
 	///</summary>
-	void LoadBGM(const std::string& filename, float volume = 1.0f);
+	void LoadBGM(const std::string& filename, const BGM_ID& id, float volume = 1.0f);
 	///<summary>
 	/// SEを読み込む
 	///</summary>
-	void LoadSE(const std::string& filename, float volume = 1.0f);
+	void LoadSE(const std::string& filename, const SE_ID& id, float volume = 1.0f);
 	///<summary>
 	/// BGMを鳴らす
 	///</summary>
-	void PlayBGM(const std::string& assetname, int playtype);
+	void PlayBGM(const BGM_ID& id, int playtype);
 	///<summary>
 	/// SEを鳴らす
 	///</summary>
-	void PlaySE(const std::string& assetname, int playtype = DX_PLAYTYPE_BACK);
+	void PlaySE(const SE_ID& id, int playtype = DX_PLAYTYPE_BACK);
 	///<summary>
 	/// BGMを止める
 	///</summary>
@@ -44,7 +45,7 @@ public:
 	///<summary>
 	/// SEを止める
 	///</summary>
-	void StopSE(const std::string& assetname);
+	void StopSE(const SE_ID& id);
 
 	///<summary>
 	/// BGMが鳴っているかどうか調べる
@@ -53,24 +54,24 @@ public:
 	///<summary>
 	/// SEが鳴っているかどうか調べる
 	///</summary>
-	bool IsPlaySE(const std::string& assetname);
+	bool IsPlaySE(const SE_ID& id);
 
 	///<summary>
 	/// 各BGMのボリュームを設定する
 	///</summary>
-	void SetBGMVolume(const std::string& assetname, float volume);
+	void SetBGMVolume(const BGM_ID& id, float volume);
 	///<summary>
 	/// 各SEのボリュームを設定する
 	///</summary>
-	void SetSEVolume(const std::string& assetname, float volume);
+	void SetSEVolume(const SE_ID& id, float volume);
 	///<summary>
 	/// 各BGMのボリュームを受け取る
 	///</summary>
-	float IsBGMVolume(const std::string& assetname);
+	float IsBGMVolume(const BGM_ID& id);
 	///<summary>
 	/// 各SEのボリュームを受け取る
 	///</summary>
-	float IsSEVolume(const std::string& assetname);
+	float IsSEVolume(const SE_ID& id);
 
 	///<summary>
 	/// 全てのBGMのボリュームを設定する
@@ -105,14 +106,14 @@ private:
 	std::string Split(const std::string& filename);
 
 private:
-	void SettingBGM(const std::string& assetname);
+	void SettingBGM(const BGM_ID& id);
 
-	void SettingSE(const std::string& assetname);
+	void SettingSE(const SE_ID& id);
 
-	std::unordered_map<std::string, int> m_BGMs;			// BGMハンドル
-	std::unordered_map<std::string, int> m_SEs;				// SEハンドル
-	std::unordered_map<std::string, float> m_BGM_Volumes;	// 各BGMボリューム
-	std::unordered_map<std::string, float> m_SE_Volumes;	// 各SEボリューム
-	float m_bgm_volume;										// 全BGMボリューム
-	float m_se_volume;										// 全SEボリューム
+	std::unordered_map<BGM_ID, int> m_BGMs;				// BGMハンドル
+	std::unordered_map<SE_ID, int> m_SEs;				// SEハンドル
+	std::unordered_map<BGM_ID, float> m_BGM_Volumes;	// 各BGMボリューム
+	std::unordered_map<SE_ID, float> m_SE_Volumes;		// 各SEボリューム
+	float m_bgm_volume;									// 全BGMボリューム
+	float m_se_volume;									// 全SEボリューム
 };

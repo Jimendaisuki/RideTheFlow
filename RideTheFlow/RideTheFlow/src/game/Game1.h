@@ -27,12 +27,8 @@ public:
 private:
 	Time mTime;
 	Content mContent;
-	Keyboard mKeyboard;
-	GamePad mGamepad;
 
 	SceneManager mSceneManager;
-
-	Random mRandom;
 
 	float effectTime;
 	int mPixelShader; /* ピクセルシェーダーハンドル */

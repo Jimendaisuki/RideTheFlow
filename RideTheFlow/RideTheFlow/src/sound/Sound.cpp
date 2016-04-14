@@ -24,19 +24,19 @@ void Sound::Initialize()
 }
 
 // BGMを読み込む
-void Sound::LoadBGM(const std::string& filename, float volume)
+void Sound::LoadBGM(const std::string& filename, const BGM_ID& id, float volume)
 {
-	m_BGMs[Split(filename)] = LoadSoundMem((WorkFolder::Name + filename).c_str());
-	m_BGM_Volumes[Split(filename)] = volume;
-	SettingBGM(Split(filename));
+	m_BGMs[id] = LoadSoundMem((WorkFolder::Name + filename).c_str());
+	m_BGM_Volumes[id] = volume;
+	SettingBGM(id);
 }
 
 // SEを読み込む
-void Sound::LoadSE(const std::string& filename, float volume)
+void Sound::LoadSE(const std::string& filename, const SE_ID& id, float volume)
 {
-	m_SEs[Split(filename)] = LoadSoundMem((WorkFolder::Name + filename).c_str());
-	m_SE_Volumes[Split(filename)] = volume;
-	SettingSE(Split(filename));
+	m_SEs[id] = LoadSoundMem((WorkFolder::Name + filename).c_str());
+	m_SE_Volumes[id] = volume;
+	SettingSE(id);
 }
 
 // ファイル名の'.'から後を取り除く
@@ -52,22 +52,19 @@ std::string Sound::Split(const std::string& filename)
 }
 
 // BGMを鳴らす
-void Sound::PlayBGM(const std::string& assetname, int playtype = DX_PLAYTYPE_BACK)
+void Sound::PlayBGM(const BGM_ID& id, int playtype = DX_PLAYTYPE_BACK)
 {
-	WorkFolder::CheckName(assetname, m_BGMs);
-	
-	PlaySoundMem(m_BGMs[assetname], playtype);
+	PlaySoundMem(m_BGMs[id], playtype);
 }
 
 // SEを鳴らす
-void Sound::PlaySE(const std::string& assetname, int playtype)
+void Sound::PlaySE(const SE_ID& id, int playtype)
 {
-	WorkFolder::CheckName(assetname, m_SEs);
-	if (IsPlaySE(assetname) && playtype == DX_PLAYTYPE_LOOP)
+	if (IsPlaySE(id) && playtype == DX_PLAYTYPE_LOOP)
 		return;
 
-	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[assetname]) * 255), m_SEs[assetname]);
-	PlaySoundMem(m_SEs[assetname], playtype);
+	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[id]) * 255), m_SEs[id]);
+	PlaySoundMem(m_SEs[id], playtype);
 }
 
 // BGMを止める
@@ -80,10 +77,9 @@ void Sound::StopBGM()
 }
 
 // SEを止める
-void Sound::StopSE(const std::string& assetname)
+void Sound::StopSE(const SE_ID& id)
 {
-	WorkFolder::CheckName(assetname, m_SEs);
-	StopSoundMem(m_SEs[assetname]);
+	StopSoundMem(m_SEs[id]);
 }
 
 // BGMが鳴っているかどうか調べる
@@ -100,40 +96,35 @@ bool Sound::IsPlayBGM()
 }
 
 // SEが鳴っているかどうか調べる
-bool Sound::IsPlaySE(const std::string& assetname)
+bool Sound::IsPlaySE(const SE_ID& id)
 {
-	WorkFolder::CheckName(assetname, m_SEs);
-	return CheckSoundMem(m_SEs[assetname]) == 1;
+	return CheckSoundMem(m_SEs[id]) == 1;
 }
 
 // 各BGMのボリュームを設定する
-void Sound::SetBGMVolume(const std::string& assetname, float volume)
+void Sound::SetBGMVolume(const BGM_ID& id, float volume)
 {
-	WorkFolder::CheckName(assetname, m_BGMs);
-	m_BGM_Volumes[assetname] = volume;
-	SettingBGM(assetname);
+	m_BGM_Volumes[id] = volume;
+	SettingBGM(id);
 }
 
 // 各SEのボリュームを設定する
-void Sound::SetSEVolume(const std::string& assetname, float volume)
+void Sound::SetSEVolume(const SE_ID& id, float volume)
 {
-	WorkFolder::CheckName(assetname, m_SEs);
-	m_SE_Volumes[assetname] = volume;
-	SettingSE(assetname);
+	m_SE_Volumes[id] = volume;
+	SettingSE(id);
 }
 
 // 各BGMのボリュームを受け取る
-float Sound::IsBGMVolume(const std::string& assetname)
+float Sound::IsBGMVolume(const BGM_ID& id)
 {
-	WorkFolder::CheckName(assetname, m_BGMs);
-	return m_BGM_Volumes[assetname];
+	return m_BGM_Volumes[id];
 }
 
 // 各SEのボリュームを受け取る
-float Sound::IsSEVolume(const std::string& assetname)
+float Sound::IsSEVolume(const SE_ID& id)
 {
-	WorkFolder::CheckName(assetname, m_SEs);
-	return m_SE_Volumes[assetname];
+	return m_SE_Volumes[id];
 }
 
 // 全てのBGMのボリュームを設定する
@@ -166,12 +157,12 @@ float Sound::IsAllSEVolume()
 	return m_se_volume;
 }
 
-void Sound::SettingBGM(const std::string& assetname)
+void Sound::SettingBGM(const BGM_ID& id)
 {
-	ChangeVolumeSoundMem((int)((m_bgm_volume * m_BGM_Volumes[assetname]) * 255), m_BGMs[assetname]);
+	ChangeVolumeSoundMem((int)((m_bgm_volume * m_BGM_Volumes[id]) * 255), m_BGMs[id]);
 }
 
-void Sound::SettingSE(const std::string& assetname)
+void Sound::SettingSE(const SE_ID& id)
 {
-	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[assetname]) * 255), m_SEs[assetname]);
+	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[id]) * 255), m_SEs[id]);
 }

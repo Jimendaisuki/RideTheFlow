@@ -10,8 +10,6 @@
 #include <thread>
 
 Game1::Game1() :
-mKeyboard(), 
-mGamepad(),
 effectTime(0.0f),
 mPixelShader(-1), 
 mRenderTarget(-1),
@@ -43,11 +41,11 @@ void Game1::Update()
 	mTime.Update();
 
 	// 入力の更新
-	mKeyboard.Update();
-	mGamepad.Update();
+	Keyboard::GetInstance().Update();
+	GamePad::GetInstance().Update();
 	// Escキー入力で強制終了
-	if (mKeyboard.KeyTriggerDown(KEY_INPUT_ESCAPE) ||
-		(mGamepad.ButtonStateDown(PAD_INPUT_9) && mGamepad.ButtonStateDown(PAD_INPUT_10)))
+	if (Keyboard::GetInstance().KeyTriggerDown(KEY_INPUT_ESCAPE) ||
+		(GamePad::GetInstance().ButtonStateDown(PAD_INPUT_9) && GamePad::GetInstance().ButtonStateDown(PAD_INPUT_10)))
 	{
 		GameFrame::GameEnd();
 		return;

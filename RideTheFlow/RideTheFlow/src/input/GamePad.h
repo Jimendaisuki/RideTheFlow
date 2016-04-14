@@ -8,9 +8,15 @@
 
 class GamePad
 {
-public:
+private:
 	GamePad();
 	~GamePad() = default;
+public:
+	static GamePad &GetInstance(){
+		static GamePad g;
+		return g;
+	}
+
 	///<summary>
 	/// 指定のパッドの指定のボタンが入力された瞬間か調べる
 	///</summary>

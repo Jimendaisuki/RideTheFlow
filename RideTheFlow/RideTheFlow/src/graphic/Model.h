@@ -8,6 +8,7 @@
 #include "../math/Vector2.h"
 #include "../math/Vector3.h"
 #include "../math/Vector4.h"
+#include "../actor/ID.h"
 
 class Point;
 
@@ -31,133 +32,133 @@ public:
 	///<summary>
 	/// ３Ｄモデルを読み込む（アセット名）
 	///</summary>
-	void Load(const std::string& filename, bool async = false, int param = 0, bool collinfo = false, bool reference = false, std::function<void(int)> end = nullptr);
+	void Load(const std::string& filename, const MODEL_ID& id, bool async = false, int param = 0, bool collinfo = false, bool reference = false, std::function<void(int)> end = nullptr);
 	///<summary>
 	/// ２Ｄ画像を読み込む（アセット名）
 	///</summary>
-	void Load2D(const std::string& filename);
+	void Load2D(const std::string& filename, const MODEL_ID& id);
 	///<summary>
 	/// 分割２Ｄ画像を読み込む(アセット名、分割数、横と縦の分割数、1コマの大きさ)
 	///</summary>
-	void Load2D(const std::string& filename, int allnum, const Point& splitnum, const Point& size);
+	void Load2D(const std::string& filename, const MODEL_ID& id, int allnum, const Point& splitnum, const Point& size);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position);
+	void Draw(const MODEL_ID& id, const Vector3& position);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、回転量）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, Vector3 rotate);
+	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, const Vector3& scale);
+	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor);
+	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor);
+	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、回転量、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
 	///</summary>
-	void Draw(const std::string& assetname, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
+	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
 
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
 	///</summary>
-	void Draw2D(const std::string& assetname, const Vector3& position, int frame, float size);
+	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size);
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標）
 	///</summary>
-	void Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin);
+	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin);
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量）
 	///</summary>
-	void Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle);
+	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle);
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度）
 	///</summary>
-	void Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha);
+	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha);
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ）
 	///</summary>
-	void Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans);
+	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans);
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ、反転）
 	///</summary>
-	void Draw2D(const std::string& assetname, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn);
+	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn);
 	///<summary>
 	/// モデルハンドルを受け取る
 	///</summary>
-	int GetHandle(const std::string& name);
+	int GetHandle(const MODEL_ID& id);
 	///<summary>
 	/// ３Ｄモデルの物理演算モードをセットする
 	///</summary>
 	void SetPhysics(int mode);
 
-	bool CollisionLine(const std::string& name, const Vector3& start, const Vector3& end, Vector3* normal = nullptr, Vector3* position = nullptr);
-	bool CollisionSphere(const std::string& name, const Vector3& center, float radius, Vector3* position = nullptr, Vector3* normal = nullptr);
-	bool RefreshInfo(const std::string& name, const Vector3& p, const Vector3& s);
+	bool CollisionLine(const MODEL_ID& id, const Vector3& start, const Vector3& end, Vector3* normal = nullptr, Vector3* position = nullptr);
+	bool CollisionSphere(const MODEL_ID& id, const Vector3& center, float radius, Vector3* position = nullptr, Vector3* normal = nullptr);
+	bool RefreshInfo(const MODEL_ID& id, const Vector3& p, const Vector3& s);
 	/* 非同期時のロードチェック */
 	bool CheckASyncModel();
 	bool CheckASyncBillboard();
-	bool IsASyncLoad(const std::string& name);
+	bool IsASyncLoad(const MODEL_ID& id);
 
 	int GetCount();
 
-	VECTOR GetMin(const std::string& name, int index  = 0);
-	VECTOR GetMax(const std::string& name, int index = 0);
+	VECTOR GetMin(const MODEL_ID& id, int index  = 0);
+	VECTOR GetMax(const MODEL_ID& id, int index = 0);
 
 private:
 	std::string Split(std::string filename);
@@ -213,8 +214,8 @@ private:
 	};
 
 	using HandlePtr = std::shared_ptr < ModelHandle > ;
-	using HandlePair = std::pair < std::string, HandlePtr > ;
-	std::unordered_map<std::string, HandlePtr> m_models;
+	using HandlePair = std::pair < MODEL_ID, HandlePtr >;
+	std::unordered_map<MODEL_ID, HandlePtr> m_models;
 	
-	std::unordered_map<std::string, std::vector<int>> m_sprites;
+	std::unordered_map<MODEL_ID, std::vector<int>> m_sprites;
 };

@@ -8,6 +8,11 @@ Random::Random(int seed)
 	: m_mt(seed)
 {}
 
+void Random::SetSeed(int seed)
+{
+	m_mt.seed(seed);
+}
+
 // 整数型の乱数を生成する（最小値、最大値）
 int Random::Range(int min, int max)
 {
