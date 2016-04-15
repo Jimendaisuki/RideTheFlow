@@ -24,6 +24,9 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("X-G1.x", MODEL_ID::PLAYER_MODEL, async);
 
+	model.Load("X-G1.x", MODEL_ID::TORNADO_MODEL, async);
+	model.Load("X-G1.x", MODEL_ID::CASTLE_MODEL , async);
+
 	//model.Load("m1.pmx", async);
 
 	//model.Load("m3.pmd", async);

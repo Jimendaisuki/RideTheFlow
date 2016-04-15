@@ -4,5 +4,5 @@
 
 //あたり判定のパラメータ
 struct CollisionParameter{
-	bool colFlag = true;		//当ったかどうかのフラグ		//敵からの攻撃（罠）か？
+	bool colFlag = false;		//当ったかどうかのフラグ		//敵からの攻撃（罠）か？
 };

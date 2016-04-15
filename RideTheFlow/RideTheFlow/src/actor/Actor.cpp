@@ -24,5 +24,7 @@ void Actor::Collide(COL_ID id, Actor& other){
 //‹…‚Æ‹…‚Ì‚ ‚½‚è”»’è
 CollisionParameter Actor::SphereSphere(const Actor& other) const{
 	CollisionParameter colpara;
+	if (Vector3::Distance(Matrix4::GetPosition(parameter.mat), Matrix4::GetPosition(other.parameter.mat))
+		< (parameter.radius + other.parameter.radius))colpara.colFlag = true;
 	return colpara;
 }
