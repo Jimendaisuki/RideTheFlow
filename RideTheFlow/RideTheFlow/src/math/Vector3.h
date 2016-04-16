@@ -86,7 +86,7 @@ public:
 	///<summary>
 	/// 自身のベクトルの大きさ（長さ）を返す
 	///</summary>
-	float Length();
+	float Length() const;
 	///<summary>
 	/// 自身のベクトルを正規化する
 	///</summary>
@@ -94,7 +94,7 @@ public:
 	///<summary>
 	/// 自身の正規化されたベクトルを返す
 	///</summary>
-	Vector3 Normalized();
+	Vector3 Normalized() const;
 
 public:
 	///<summary>
@@ -154,7 +154,7 @@ public:
 	///<summary>
 	/// 自身をVECTOR型に変換したものを返す
 	///</summary>
-	VECTOR ToVECTOR();
+	VECTOR ToVECTOR() const;
 	///<summary>
 	/// Vector3型をDWORD型に変換したものを返す
 	///</summary>
@@ -162,7 +162,7 @@ public:
 	///<summary>
 	/// 自身をDWORD型に変換したものを返す
 	///</summary>
-	DWORD ToColor();
+	DWORD ToColor() const;
 
 public:
 	Vector3& operator = (const Vector3& v);

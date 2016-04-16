@@ -48,27 +48,27 @@ Matrix4::Matrix4(Vector3 scale, float rotateX, float rotateY, float rotateZ, Vec
 
 }
 
-Vector3 Matrix4::GetPosition()
+Vector3 Matrix4::GetPosition() const
 {
 	return GetPosition(*this);
 }
 
-Vector3 Matrix4::GetLeft()
+Vector3 Matrix4::GetLeft() const
 {
 	return GetLeft(*this);
 }
 
-Vector3 Matrix4::GetUp()
+Vector3 Matrix4::GetUp() const
 {
 	return GetUp(*this);
 }
 
-Vector3 Matrix4::GetFront()
+Vector3 Matrix4::GetFront() const
 {
 	return GetFront(*this);
 }
 
-Vector3 Matrix4::GetScale()
+Vector3 Matrix4::GetScale() const
 {
 	return GetScale(*this);
 }
@@ -468,7 +468,7 @@ MATRIX Matrix4::ToMATRIX(const Matrix4& m)
 	return result;
 }
 
-MATRIX Matrix4::ToMATRIX()
+MATRIX Matrix4::ToMATRIX() const
 {
 	return ToMATRIX(*this);
 }

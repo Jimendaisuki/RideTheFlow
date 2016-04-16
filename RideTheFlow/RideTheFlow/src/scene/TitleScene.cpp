@@ -5,7 +5,9 @@
 #include "Scene.h"
 #include "../actor/Player.h"
 #include "../actor/Enemy.h"
-
+#include "../actor/AnimTestActor.h"
+#include "../actor/CameraActor.h"
+#include "../input/Keyboard.h"
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -21,12 +23,13 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Enemy>(wa));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<AnimTestActor>(wa));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
 }
 
 void TitleScene::Update()
 {
-	if (CheckHitKeyAll()){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
 	wa.Update();

@@ -42,12 +42,12 @@ Point::Point(int s)
 
 }
 
-float Point::Length()
+float Point::Length() const
 {
 	return sqrtf(static_cast<float>(x * x + y * y));
 }
 
-float Point::LengthPow2()
+float Point::LengthPow2() const
 {
 	return static_cast<float>(x * x + y * y);
 }

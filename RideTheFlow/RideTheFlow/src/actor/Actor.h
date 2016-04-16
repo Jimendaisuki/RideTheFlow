@@ -25,7 +25,7 @@ public:
 	virtual void Draw() const = 0;
 	void Collide(COL_ID id, Actor& other);
 	virtual bool IsDead() const{ return parameter.isDead; }
-	ActorParameter GetParameter();
+	ActorParameter GetParameter() const;
 
 private:
 	std::map<COL_ID, std::function<CollisionParameter(const Actor&)>> colFunc;

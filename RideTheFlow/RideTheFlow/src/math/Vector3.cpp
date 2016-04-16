@@ -66,7 +66,7 @@ Vector3::Vector3(const VECTOR& vector)
 
 }
 
-float Vector3::Length()
+float Vector3::Length() const
 {
 	return sqrt(x * x + y * y + z * z);
 }
@@ -80,7 +80,7 @@ void Vector3::Normalize()
 	}
 }
 
-Vector3 Vector3::Normalized()
+Vector3 Vector3::Normalized() const
 {
 	return Vector3::Normalize(Vector3(x, y, z));
 }
@@ -211,7 +211,7 @@ VECTOR Vector3::ToVECTOR(const Vector3& v)
 	return result;
 }
 
-VECTOR Vector3::ToVECTOR()
+VECTOR Vector3::ToVECTOR() const
 {
 	return ToVECTOR(*this);
 }
@@ -223,7 +223,7 @@ DWORD Vector3::ToColor(const Vector3& v)
 	return result;
 }
 
-DWORD Vector3::ToColor()
+DWORD Vector3::ToColor() const
 {
 	return ToColor(*this);
 }

@@ -29,7 +29,7 @@ CollisionParameter Actor::SphereSphere(const Actor& other) const{
 	return colpara;
 }
 
-ActorParameter Actor::GetParameter()
+ActorParameter Actor::GetParameter() const
 {
 	return parameter;
 }

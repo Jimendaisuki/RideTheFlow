@@ -62,11 +62,11 @@ public:
 	/// <summary>
 	/// ’·‚³‚ğ•Ô‚µ‚Ü‚·
 	/// </summary>
-	float Length();
+	float Length() const;
 	/// <summary>
 	/// ’·‚³‚Ì“ñæ‚ğ•Ô‚µ‚Ü‚·
 	/// </summary>
-	float LengthPow2();
+	float LengthPow2() const;
 	/// <summary>
 	/// “ñ“_ŠÔ‚Ì‹——£‚ğ•Ô‚µ‚Ü‚·
 	/// </summary>

@@ -44,23 +44,23 @@ public:
 	/// <summary>
 	/// 自身の座標を返す
 	/// </summary>
-	Vector3 GetPosition();
+	Vector3 GetPosition() const;
 	/// <summary>
 	/// 自身の横を返す
 	/// </summary>
-	Vector3 GetLeft();
+	Vector3 GetLeft() const;
 	/// <summary>
 	/// 自身の上を返す
 	/// </summary>
-	Vector3 GetUp();
+	Vector3 GetUp() const;
 	/// <summary>
 	/// 自身の前を返す
 	/// </summary>
-	Vector3 GetFront();
+	Vector3 GetFront() const;
 	/// <summary>
 	/// 自身のスケールを返す
 	/// </summary>
-	Vector3 GetScale();
+	Vector3 GetScale() const;
 	/// <summary>
 	/// 座標をセットする
 	/// </summary>
@@ -230,7 +230,7 @@ public:
 	///<summary>
 	/// 自身をMATRIX型に変換したものを返す
 	///</summary>
-	MATRIX ToMATRIX();
+	MATRIX ToMATRIX() const;
 
 public:
 	Matrix4& operator = (const Matrix4& m_);

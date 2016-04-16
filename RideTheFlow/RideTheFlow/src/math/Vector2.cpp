@@ -1,6 +1,7 @@
 #include "Vector2.h"
 #include <cmath>
 #include <sstream>
+#include "Point.h"
 
 Vector2 Vector2::Zero = Vector2(0, 0);
 Vector2 Vector2::One = Vector2(1, 1);
@@ -58,12 +59,12 @@ Vector2::Vector2(int s)
 
 }
 
-float Vector2::Length()
+float Vector2::Length() const
 {
 	return sqrtf(x * x + y * y);
 }
 
-float Vector2::LengthPow2()
+float Vector2::LengthPow2() const
 {
 	return x * x + y * y;
 }
@@ -83,7 +84,7 @@ void Vector2::Normalize()
 	(*this) /= Length();
 }
 
-Vector2 Vector2::Normalized()
+Vector2 Vector2::Normalized() const
 {
 	return Normalize(Vector2(x, y));
 }
@@ -144,6 +145,19 @@ Vector2 Vector2::Lerp(const Vector2& start, const Vector2& end, float amount)
 		amount = 1.0f;
 	}
 	return start * (1.0f - amount) + end * amount;
+}
+
+Point Vector2::ToPoint(const Vector2& v)
+{
+	Point result;
+	result.x = (int)v.x;
+	result.y = (int)v.y;
+	return result;
+}
+
+Point Vector2::ToPoint() const
+{
+	return ToPoint(*this);
 }
 
 Vector2& Vector2::operator = (const Vector2& v)

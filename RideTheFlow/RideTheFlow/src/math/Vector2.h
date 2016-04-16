@@ -2,6 +2,7 @@
 
 #include <Dxlib.h>
 #include <string>
+class Point;
 
 class Vector2
 {
@@ -70,11 +71,11 @@ public:
 	/// <summary>
 	/// 自身のベクトルの大きさ（長さ）を返す
 	/// </summary>
-	float Length();
+	float Length() const;
 	/// <summary>
 	/// 自身のベクトルの大きさ（長さ）の二乗を返す
 	/// </summary>
-	float LengthPow2();
+	float LengthPow2() const;
 	/// <summary>
 	/// ２点間の距離を返す
 	/// </summary>
@@ -90,13 +91,13 @@ public:
 	/// <summary>
 	/// 自身の正規化されたベクトルを返す
 	/// </summary>
-	Vector2 Normalized();
+	Vector2 Normalized() const;
 	/// <summary>
-	/// ２つのベクトルの内積を返す
+	/// 自身と相手のベクトルの内積を返す
 	/// </summary>
 	float Dot(const Vector2& v) const;
 	/// <summary>
-	/// ２つのベクトルのなす角を返す
+	/// 自身と相手のベクトルのなす角を返す
 	/// </summary>
 	float Inner(const Vector2& v) const;
 public:
@@ -128,6 +129,17 @@ public:
 	/// 二つのベクトル間の線形補間する
 	///</summary>
 	static Vector2 Lerp(const Vector2& start, const Vector2& end, float amount);
+	
+public:
+	///<summary>
+	/// Vector2型をPoint型に変換して返す
+	///</summary>
+	static Point ToPoint(const Vector2& v);
+	///<summary>
+	/// 自身をVECTOR型に変換したものを返す
+	///</summary>
+	Point ToPoint() const;
+
 public:
 	Vector2& operator = (const Vector2& v);
 	operator std::string() const;

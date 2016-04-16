@@ -9,15 +9,10 @@
 
 Player::Player(IWorld& world):
 Actor(world),
-position(Vector3::Zero),
-cameraPos(0.0f, 0.0f, -100.0f)
+position(Vector3::Zero)
 {
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(cameraPos);
-	Camera::GetInstance().Target.Set(Vector3::Zero);
-	Camera::GetInstance().Up.Set(Vector3::Up);
 
 	parameter.mat =
 		Matrix4::Scale(Vector3(1,1,1)) *
@@ -41,8 +36,6 @@ void Player::Update()
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
 		position.z -= 100.0f * Time::DeltaTime;
 
-	Camera::GetInstance().Position.Set(cameraPos);
-
 	parameter.mat =
 		Matrix4::Scale(Vector3(1, 1, 1)) *
 		Matrix4::RotateZ(0) *
@@ -52,8 +45,8 @@ void Player::Update()
 }
 void Player::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL,Matrix4::GetPosition(parameter.mat));
-	DrawSphere3D(Matrix4::GetPosition(parameter.mat), parameter.radius, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
+	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
+	DrawSphere3D(parameter.mat.GetPosition(), parameter.radius, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {

@@ -36,7 +36,7 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update()
 {
-	if (Keyboard::GetInstance().KeyTriggerDown(KEY_INPUT_SPACE)){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
 	wa.Update();
