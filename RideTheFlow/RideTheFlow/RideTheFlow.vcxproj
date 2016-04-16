@@ -86,9 +86,11 @@
     <ClCompile Include="src\actor\Actor.cpp" />
     <ClCompile Include="src\actor\ActorManager.cpp" />
     <ClCompile Include="src\actor\CameraActor.cpp" />
+    <ClCompile Include="src\actor\castle\castle.cpp" />
     <ClCompile Include="src\actor\Collision.cpp" />
     <ClCompile Include="src\actor\Enemy.cpp" />
     <ClCompile Include="src\actor\Player.cpp" />
+    <ClCompile Include="src\actor\tornado\Tornado.cpp" />
     <ClCompile Include="src\camera\Camera.cpp" />
     <ClCompile Include="src\game\Game1.cpp" />
     <ClCompile Include="src\game\GameFrame.cpp" />
@@ -123,12 +125,14 @@
   <ItemGroup>
     <ClInclude Include="src\actor\Actor.h" />
     <ClInclude Include="src\actor\CameraActor.h" />
+    <ClInclude Include="src\actor\castle\castle.h" />
     <ClInclude Include="src\actor\Collision.h" />
     <ClInclude Include="src\actor\ID.h" />
     <ClInclude Include="src\actor\ActorManager.h" />
     <ClInclude Include="src\actor\ActorPtr.h" />
     <ClInclude Include="src\actor\Enemy.h" />
     <ClInclude Include="src\actor\Player.h" />
+    <ClInclude Include="src\actor\tornado\Tornado.h" />
     <ClInclude Include="src\AllInclude.h" />
     <ClInclude Include="src\camera\Camera.h" />
     <ClInclude Include="src\Def.h" />

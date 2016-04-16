@@ -4,6 +4,7 @@
 #include "../graphic/Sprite.h"
 #include <map>
 #include <functional>
+#include "../math/Matrix4.h"
 
 class IWorld;
 struct CollisionParameter;
@@ -13,6 +14,7 @@ struct ActorParameter
 	ACTOR_ID id;
 	bool isDead;
 	float radius;
+	Matrix4 mat;
 };
 
 class Actor{

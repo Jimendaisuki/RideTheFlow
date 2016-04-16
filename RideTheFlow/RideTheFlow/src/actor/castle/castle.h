@@ -1,18 +1,16 @@
 #pragma once
-#include "Actor.h"
-#include "../math/Vector3.h"
-#include <memory>
+#include "../Actor.h"
+#include "../../math/Vector3.h"
 
-class Player :public Actor, public std::enable_shared_from_this<Player>
+class Castle : public Actor
 {
 public:
-	Player(IWorld& world);
-	~Player();
+	Castle(IWorld& world, Vector3 position);
+	~Castle();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
 	Vector3 position;
-	float animetime;
 };

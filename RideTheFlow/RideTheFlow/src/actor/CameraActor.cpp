@@ -23,14 +23,14 @@ CameraActor::~CameraActor()
 }
 void CameraActor::Update()
 {
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
-		position.x -= 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
-		position.x += 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
-		position.z += 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
-		position.z -= 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+	//	position.x -= 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+	//	position.x += 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+	//	position.z += 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+	//	position.z -= 100.0f * Time::DeltaTime;
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Update();
 }
