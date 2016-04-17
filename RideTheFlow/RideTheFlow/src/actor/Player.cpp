@@ -4,7 +4,6 @@
 #include "../graphic/Sprite.h"
 #include "../graphic/Model.h"
 #include "../input/Keyboard.h"
-#include "../camera/Camera.h"
 #include "../time/Time.h"
 
 Player::Player(IWorld& world):
