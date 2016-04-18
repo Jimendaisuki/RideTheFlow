@@ -1,7 +1,9 @@
 #pragma once
 
+#include <Dxlib.h>
 #include "Vector3.h"
 #include "Vector4.h"
+#include <string>
 
 class Matrix4
 {
@@ -61,6 +63,10 @@ public:
 	/// 自身のスケールを返す
 	/// </summary>
 	Vector3 GetScale() const;
+	/// <summary>
+	/// 自身の各軸の回転量を返す
+	/// </summary>
+	Vector3 GetRotate() const;
 	/// <summary>
 	/// 座標をセットする
 	/// </summary>
@@ -165,6 +171,10 @@ public:
 	/// </summary>
 	static Vector3 GetScale(const Matrix4& m);
 	/// <summary>
+	/// 各軸の回転量を返す
+	/// </summary>
+	static Vector3 GetRotate(const Matrix4& m);
+	/// <summary>
 	/// 座標をセットした行列を返す
 	/// </summary>
 	static Matrix4 SetPosition(Matrix4& m, const Vector3& position);
@@ -234,6 +244,7 @@ public:
 
 public:
 	Matrix4& operator = (const Matrix4& m_);
+	operator std::string() const;
 };
 
 Matrix4& operator *= (Matrix4& m1, const Matrix4& m2);

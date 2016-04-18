@@ -112,7 +112,7 @@ float Math::Atan(int angle)
 
 float Math::Atan(float y, float x)
 {
-	return Degree(atan2(y, x));
+	return atan2(y, x);
 }
 
 // y / x ‚Ì‹t³Ú‚ğ•Ô‚·

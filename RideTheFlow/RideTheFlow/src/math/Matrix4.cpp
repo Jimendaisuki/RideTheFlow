@@ -1,6 +1,7 @@
 #include "Matrix4.h"
 #include "Math.h"
 #include "Quaternion.h"
+#include <sstream>
 
 Matrix4 Matrix4::Zero = Matrix4(
 	0.0f, 0.0f, 0.0f, 0.0f,
@@ -73,6 +74,11 @@ Vector3 Matrix4::GetScale() const
 	return GetScale(*this);
 }
 
+Vector3 Matrix4::GetRotate() const
+{
+	return GetRotate(*this);
+}
+
 void Matrix4::SetPosition(const Vector3& position)
 {
 	m[3][0] = position.x;
@@ -84,8 +90,7 @@ void Matrix4::SetLeft(const Vector3& left)
 {
 	m[0][0] = left.x;
 	m[0][1] = left.y;
-	m[0][
-		2] = left.z;
+	m[0][2] = left.z;
 }
 void Matrix4::SetUp(const Vector3& up)
 {
@@ -114,12 +119,12 @@ Matrix4 Matrix4::Scale(const Vector3& s)
 
 Matrix4 Matrix4::RotateX(float angle)
 {
-	float Sin = Math::Sin(angle);
-	float Cos = Math::Cos(angle);
+	float sin = Math::Sin(angle);
+	float cos = Math::Cos(angle);
 	Matrix4 result = {
 		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, Cos, Sin, 0.0f,
-		0.0f, -Sin, Cos, 0.0f,
+		0.0f, cos, sin, 0.0f,
+		0.0f, -sin, cos, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 	return result;
@@ -127,12 +132,12 @@ Matrix4 Matrix4::RotateX(float angle)
 
 Matrix4 Matrix4::RotateY(float angle)
 {
-	float Sin = Math::Sin(angle);
-	float Cos = Math::Cos(angle);
+	float sin = Math::Sin(angle);
+	float cos = Math::Cos(angle);
 	Matrix4 result = {
-		Cos, 0.0f, -Sin, 0.0f,
+		cos, 0.0f, -sin, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
-		Sin, 0.0f, Cos, 0.0f,
+		sin, 0.0f, cos, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 	return result;
@@ -140,11 +145,11 @@ Matrix4 Matrix4::RotateY(float angle)
 
 Matrix4 Matrix4::RotateZ(float angle)
 {
-	float Sin = Math::Sin(angle);
-	float Cos = Math::Cos(angle);
+	float sin = Math::Sin(angle);
+	float cos = Math::Cos(angle);
 	Matrix4 result = {
-		Cos, Sin, 0.0f, 0.0f,
-		-Sin, Cos, 0.0f, 0.0f,
+		cos, sin, 0.0f, 0.0f,
+		-sin, cos, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
@@ -345,6 +350,16 @@ Vector3 Matrix4::GetScale(const Matrix4& m)
 	return result;
 }
 
+Vector3 Matrix4::GetRotate(const Matrix4& m)
+{
+	Vector3 result = {
+		Pitch(m),
+		Yaw(m),
+		Roll(m)
+	};
+	return result;
+}
+
 Matrix4 Matrix4::SetPosition(Matrix4& m, const Vector3& position)
 {
 	Matrix4 result = m;
@@ -483,9 +498,21 @@ Matrix4& Matrix4::operator = (const Matrix4& m_)
 	return *this;
 }
 
+Matrix4::operator std::string() const
+{
+	std::stringstream ss;
+	ss <<
+		"( "
+		<< m[0][0] << " , " << m[0][1] << " , " << m[0][2] << " , " << m[0][3] << " , "
+		<< m[1][0] << " , " << m[1][1] << " , " << m[1][2] << " , " << m[1][3] << " , "
+		<< m[2][0] << " , " << m[2][1] << " , " << m[2][2] << " , " << m[2][3] << " , "
+		<< m[3][0] << " , " << m[3][1] << " , " << m[3][2] << " , " << m[3][3] << " )";
+	return ss.str();
+}
+
 Matrix4& operator *= (Matrix4& m1, const Matrix4& m2)
 {
-	Matrix4 result;
+	Matrix4 result = Matrix4::Zero;
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
 			for (int k = 0; k < 4; k++) {
@@ -496,11 +523,13 @@ Matrix4& operator *= (Matrix4& m1, const Matrix4& m2)
 	m1 = result;
 	return m1;
 }
+
 Matrix4 operator * (const Matrix4& m1, const Matrix4& m2)
 {
 	Matrix4 result = m1;
 	return result *= m2;
 }
+
 Vector3 operator * (const Vector3& v, const Matrix4& m)
 {
 	return Matrix4::Transform(v, m);
