@@ -11,6 +11,7 @@
 AnimTestActor::AnimTestActor(IWorld& world) :
 Actor(world),
 position(Vector3::Zero),
+rotate(Vector3::Zero),
 animetime(0.0f)
 {
 	parameter.isDead = false;
@@ -38,11 +39,24 @@ void AnimTestActor::Update()
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
 		position.z -= 100.0f * Time::DeltaTime;
 
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::NUM1))
+		rotate.x += 100.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::NUM2))
+		rotate.x -= 100.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::NUM3))
+		rotate.y += 100.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::NUM4))
+		rotate.y -= 100.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::NUM5))
+		rotate.z += 100.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::NUM6))
+		rotate.z -= 100.0f * Time::DeltaTime;
+
 	parameter.mat = 
 		Matrix4::Scale(Vector3::One) *
-		Matrix4::RotateY(0) *
-		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(0) *
+		Matrix4::RotateY(rotate.y) *
+		Matrix4::RotateZ(rotate.z) *
+		Matrix4::RotateX(rotate.x) *
 		Matrix4::Translate(position);
 }
 void AnimTestActor::Draw() const
