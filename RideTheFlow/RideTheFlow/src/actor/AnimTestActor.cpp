@@ -6,6 +6,7 @@
 #include "../input/Keyboard.h"
 #include "../graphic/Anime.h"
 #include "../time/Time.h"
+#include "../graphic/TextDraw.h"
 
 AnimTestActor::AnimTestActor(IWorld& world) :
 Actor(world),
@@ -13,6 +14,8 @@ position(Vector3::Zero),
 animetime(0.0f)
 {
 	parameter.isDead = false;
+
+	Anime::GetInstance().AttachAnime(MODEL_ID::TEST_MODEL, 0);
 }
 AnimTestActor::~AnimTestActor()
 {
@@ -20,7 +23,11 @@ AnimTestActor::~AnimTestActor()
 }
 void AnimTestActor::Update()
 {
-	animetime += Time::DeltaTime;
+	animetime += 10.0f * Time::DeltaTime;
+	if (animetime > 140.0f)
+	{
+		animetime = 0.0f;
+	}
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
 		position.x -= 100.0f * Time::DeltaTime;
@@ -31,18 +38,21 @@ void AnimTestActor::Update()
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
 		position.z -= 100.0f * Time::DeltaTime;
 
-	parameter.mat =
-		Matrix4::Scale(Vector3(1, 1, 1)) *
+	parameter.mat = 
+		Matrix4::Scale(Vector3::One) *
+		Matrix4::RotateY(0) *
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
-		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 }
 void AnimTestActor::Draw() const
 {
-	Anime::GetInstance().AttachAnime(MODEL_ID::TEST_MODEL, 0);
-	Anime::GetInstance().PlayAnime(MODEL_ID::TEST_MODEL, 0, animetime*0.001f);
-	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, parameter.mat.GetPosition());
+	//Anime::GetInstance().PlayAnime(MODEL_ID::TEST_MODEL, 0, animetime);
+	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
+
+	TextDraw::GetInstance().Draw(Vector3(animetime * 6.0f));
+	TextDraw::GetInstance().Draw(Point(0, 20), parameter.mat.GetRotate());
+	//TextDraw::GetInstance().Draw(Point(0, 40), parameter.mat);
 }
 void AnimTestActor::OnCollide(Actor& other, CollisionParameter colpara)
 {
