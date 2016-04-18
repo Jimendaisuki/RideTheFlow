@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "../actor/Player.h"
 #include "../actor/CameraActor.h"
+#include"../actor/EnemyBullet.h"
 
 #include "../math/Vector2.h"
 #include "../input/Keyboard.h"
@@ -28,9 +29,11 @@ GamePlayScene::~GamePlayScene()
 void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	/*wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));*/
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
-
+	
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<EnemyBullet>(wa));
+	
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector3(10, 0, 0)));
 }
 
