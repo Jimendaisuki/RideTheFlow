@@ -126,7 +126,6 @@ void Model::Load2D(const std::string& filename, const MODEL_ID& id, int allnum, 
 	delete[] handle;
 }
 
-// ３Ｄモデルを描画する（アセット名、座標）
 void Model::Draw(const MODEL_ID& id, const Vector3& position)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -134,7 +133,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position)
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha)
 {
 
@@ -144,7 +142,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha)
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、回転量）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate)
 {
 	rotate = rotate * PI / 180.0f;
@@ -155,7 +152,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate)
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale)
 {
 	rotate = rotate * PI / 180.0f;
@@ -167,7 +163,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, co
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate)
 {
 	rotate = rotate * PI / 180.0f;
@@ -179,7 +174,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale)
 {
 	rotate = rotate * PI / 180.0f;
@@ -192,7 +186,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -201,7 +194,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& dif
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -211,7 +203,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& dif
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor)
 {
 	rotate = rotate * PI / 180.0f;
@@ -226,7 +217,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, bool trans)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -235,7 +225,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, bool trans)
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, bool trans)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -245,7 +234,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, bool 
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、回転量、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
@@ -257,7 +245,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, bo
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
@@ -270,7 +257,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, co
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
@@ -283,7 +269,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
@@ -297,7 +282,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, bool trans)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -307,7 +291,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& dif
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -318,7 +301,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, const Vector4& dif
 	MV1DrawModel(handle);
 }
 
-// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
 {
 	rotate = rotate * PI / 180.0f;
@@ -333,6 +315,19 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1SetVisible(handle, trans);
 	MV1DrawModel(handle);
 }
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1DrawModel(handle);
+}
+
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
 void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size)

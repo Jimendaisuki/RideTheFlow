@@ -8,6 +8,7 @@
 #include "../math/Vector2.h"
 #include "../math/Vector3.h"
 #include "../math/Vector4.h"
+#include "../math/Matrix4.h"
 #include "../actor/ID.h"
 
 class Point;
@@ -30,112 +31,116 @@ public:
 	void Initialize();
 
 	///<summary>
-	/// ３Ｄモデルを読み込む（アセット名）
+	/// ３Ｄモデルを読み込む（モデルID）
 	///</summary>
 	void Load(const std::string& filename, const MODEL_ID& id, bool async = false, int param = 0, bool collinfo = false, bool reference = false, std::function<void(int)> end = nullptr);
 	///<summary>
-	/// ２Ｄ画像を読み込む（アセット名）
+	/// ２Ｄ画像を読み込む（モデルID）
 	///</summary>
 	void Load2D(const std::string& filename, const MODEL_ID& id);
 	///<summary>
-	/// 分割２Ｄ画像を読み込む(アセット名、分割数、横と縦の分割数、1コマの大きさ)
+	/// 分割２Ｄ画像を読み込む(モデルID、分割数、横と縦の分割数、1コマの大きさ)
 	///</summary>
 	void Load2D(const std::string& filename, const MODEL_ID& id, int allnum, const Point& splitnum, const Point& size);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標）
+	/// ３Ｄモデルを描画する（モデルID、座標）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、回転量）
+	/// ３Ｄモデルを描画する（モデルID、座標、回転量）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率）
+	/// ３Ｄモデルを描画する（モデルID、座標、回転量、拡大率）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量、拡大率）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー）
+	/// ３Ｄモデルを描画する（モデルID、座標、ディフューズカラー）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー）
+	/// ３Ｄモデルを描画する（モデルID、座標、ディフューズカラー、スペキュラーカラー）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、回転量、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、回転量、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、回転量、拡大率、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、回転量、拡大率、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量、拡大率、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、ディフューズカラー、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、ディフューズカラー、スペキュラーカラー、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、ディフューズカラー、スペキュラーカラー、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
 	///<summary>
-	/// ３Ｄモデルを描画する（アセット名、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
+	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat);
 
 	///<summary>
-	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
+	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size);
 	///<summary>
-	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標）
+	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ、中心座標）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin);
 	///<summary>
-	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量）
+	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ、中心座標、回転量）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle);
 	///<summary>
-	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度）
+	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha);
 	///<summary>
-	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ）
+	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans);
 	///<summary>
-	/// ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ、反転）
+	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ、反転）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn);
 	///<summary>

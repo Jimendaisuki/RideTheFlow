@@ -45,39 +45,39 @@ public:
 	///</summary>
 	static float Tan(int angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t³Œ·‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t³Œ·‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Asin(float angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t³Œ·‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t³Œ·‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Asin(double angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t³Œ·‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t³Œ·‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Asin(int angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t—]Œ·‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t—]Œ·‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Acos(float angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t—]Œ·‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t—]Œ·‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Acos(double angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t—]Œ·‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t—]Œ·‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Acos(int angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t³Ú‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t³Ú‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Atan(float angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t³Ú‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t³Ú‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Atan(double angle);
 	///<summary>
-	/// Šp“x‚ğ“n‚µA‹t³Ú‚ğ•Ô‚·
+	/// Šp“x‚ğ“n‚µA‹t³Ú‚ğƒ‰ƒWƒAƒ“‚Å•Ô‚·
 	///</summary>
 	static float Atan(int angle);
 	static float Atan(float y, float x);

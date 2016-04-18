@@ -181,12 +181,12 @@ void Vector3::Spring(
 
 float Vector3::Pitch(const Vector3& front)
 {
-	float l;
-	if ((l = Length(front)) == 0){
+	float l = Length(front);
+	if (l == 0)
 		return 0.0f;
-	}
+
 	float y = front.y / l;
-	return Math::Asin(-y);
+	return Math::Asin(Math::Degree(-y));
 }
 
 float Vector3::Yaw(const Vector3& front)

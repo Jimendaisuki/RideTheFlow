@@ -134,11 +134,11 @@ public:
 	///</summary>
 	static void Spring(Vector3& position, Vector3& velocity, const Vector3& restPosition, float stiffness, float friction, float mass);
 	///<summary>
-	/// ピッチを求める
+	/// ピッチを求め、ラジアンで返す
 	///</summary>
 	static float Pitch(const Vector3& front);
 	///<summary>
-	/// ヨーを求める
+	/// ヨーを求め、ラジアンで返す
 	///</summary>
 	static float Yaw(const Vector3& front);
 	///<summary>
