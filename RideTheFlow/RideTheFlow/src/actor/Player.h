@@ -13,6 +13,9 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
-	Vector3 position;
+	Vector3 position, otherVertex;
+	Vector3* vertexVec;
 	float animetime;
+	float angle;
+	int i = 0;
 };
