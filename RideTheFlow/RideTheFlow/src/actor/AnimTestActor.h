@@ -13,5 +13,6 @@ public:
 
 private:
 	Vector3 position;
+	Vector3 rotate;
 	float animetime;
 };
