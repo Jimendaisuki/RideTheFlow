@@ -13,7 +13,7 @@ const int ropeCount = 1000;
 
 Player::Player(IWorld& world) :
 Actor(world),
-position(Vector3(3,0,0)),
+position(Vector3(0,0,0)),
 otherVertex(Vector3(0,0,0)),
 vertexVec(new Vector3[ropeCount])
 {

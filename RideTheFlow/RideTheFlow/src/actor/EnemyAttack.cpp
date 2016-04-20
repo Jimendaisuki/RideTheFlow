@@ -1,19 +1,13 @@
 #include "EnemyAttack.h"
 #include <math.h>
 
-EnemyAttack::EnemyAttack() :
-time(0),
-InitialVelocity(0),
-mPosition(0.0f,0.0f,0.0f),
-vertexTime(0)
+Vector3 EnemyAttack::AttackVertex(const Vector3& pos, const Vector3 &goPosition, const Vector3& currentPosition, const float& time)
 {
-
-}
-Vector3 EnemyAttack::AttackVertex(const Vector3 &goPosition, const Vector3 &vertex)
-{
-	time += Time::DeltaTime / 60.0f;
-	InitialVelocity = sqrt(2 * 9.8f*vertex.y - goPosition.y);
-	vertexTime = InitialVelocity / 9.8f;
-	mPosition += vertex - goPosition / vertexTime / 60.0f;
-	return Vector3(mPosition.x, (float)(InitialVelocity*time - 9.8f / 2 * pow(time, 2)), mPosition.z);
+	Vector3 result = pos;
+		float InitialVelocity = sqrt(2 * 9.8f*currentPosition.y - goPosition.y);
+		float vertexTime = InitialVelocity / 9.8f;
+		result.x += (currentPosition.x-goPosition.x ) / vertexTime/60.0f;
+		result.z += (currentPosition.z-goPosition.z ) / vertexTime/60.0f ;
+		result = Vector3(result.x, (float)(InitialVelocity*time - 9.8f / 2 * pow(time, 2)), result.z);
+	return result;
 }

@@ -83,6 +83,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\EnemyGun.cpp" />
+    <ClCompile Include="src\actor\EnemyVaristor.cpp" />
+    <ClCompile Include="src\scene\EndhingScene.cpp" />
     <ClCompile Include="src\actor\EnemyAttack.cpp" />
     <ClCompile Include="src\actor\EnemyBullet.cpp" />
     <ClCompile Include="src\actor\Actor.cpp" />
@@ -126,6 +129,9 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actor\EnemyVaristor.h" />
+    <ClInclude Include="src\actor\EnemyGun.h" />
+    <ClInclude Include="src\scene\EndhingScene.h" />
     <ClInclude Include="src\actor\EnemyAttack.h" />
     <ClInclude Include="src\actor\EnemyBullet.h" />
     <ClInclude Include="src\actor\Actor.h" />

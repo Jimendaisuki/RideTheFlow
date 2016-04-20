@@ -3,15 +3,18 @@
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
 #include <math.h>
-EnemyBullet::EnemyBullet(IWorld& world):
+EnemyBullet::EnemyBullet(IWorld& world, float initialVelocity) :
 Actor(world),
 playerMat(Matrix4::Identity),
-mPosition(0.0f,0.0f,0.0f),
+mPosition(parameter.mat.GetPosition()),
 time(0),
-InitialVelocity(0.0f),
+mInitialVelocity(initialVelocity),
 vertexTime(0)
 {
-
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		playerMat = other.GetParameter().mat;
+	});
+	parameter.isDead = false;
 }
 EnemyBullet::~EnemyBullet()
 {
@@ -19,23 +22,18 @@ EnemyBullet::~EnemyBullet()
 }
 void EnemyBullet::Update()
 {
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
-	});
-
-	time += Time::DeltaTime / 60.0f;
-	InitialVelocity = sqrt(2 * 9.8f*playerMat.GetPosition().y - parameter.mat.GetPosition().y);
-	vertexTime = InitialVelocity / 9.8f;
-	mPosition += playerMat.GetPosition() - parameter.mat.GetPosition() / vertexTime / 60.0f;
-	parameter.mat=Matrix4::Translate(Vector3(mPosition.x, (float)(InitialVelocity*time - 9.8f / 2 * pow(time, 2)), mPosition.z));
+	time += Time::DeltaTime;
+	
 
 
-	/*parameter.mat = Matrix4::Translate(enemyAttack.AttackVertex(parameter.mat.GetPosition(), playerMat.GetPosition()));*/
+	mPosition.y = mInitialVelocity*sin(atan2())
 }
+
 void EnemyBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
 }
+
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
 

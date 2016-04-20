@@ -6,16 +6,9 @@
 class EnemyAttack
 {
 public:
-	EnemyAttack();
 	//Žw’è‚µ‚½’¸“_‚ð’Ê‚é‹O“¹
-	Vector3 AttackVertex(const Vector3 &goPosition, const Vector3 &vertex);
-	Vector3 AttackEndPoint(const Vector3 &goPosition, const Vector3 &endPoaisiton);
-
-private:
-	float time;
-	float vertexTime;
-	float InitialVelocity;
-	Vector3 mPosition;
+	static Vector3 AttackVertex(const Vector3& pos,const Vector3 &goPosition, const Vector3& currentPosition, const float& time);
+	static Vector3 AttackEndPoint(const Vector3 &goPosition, const Vector3 &endPoaisiton);
 };
 
 #endif
