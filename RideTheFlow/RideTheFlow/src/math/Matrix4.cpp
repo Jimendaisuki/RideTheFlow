@@ -534,3 +534,14 @@ Vector3 operator * (const Vector3& v, const Matrix4& m)
 {
 	return Matrix4::Transform(v, m);
 }
+
+Matrix4 Matrix4::ToMatrix4(const MATRIX& m){
+	Matrix4 m1;
+	for (int i = 0; i < 4; i++){
+		for (int j = 0; j < 4; j++){
+			m1.m[i][j] = m.m[i][j];
+		}
+	}
+
+	return m1;
+}
