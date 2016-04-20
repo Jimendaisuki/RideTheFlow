@@ -3,6 +3,7 @@
 #include "../scene/SceneManager.h"
 #include "../scene/TitleScene.h"
 #include "../scene/GamePlayScene.h"
+#include "../scene/CreditScene.h"
 #include "../Def.h"
 #include "../graphic/Model.h"
 #include "../graphic/Anime.h"
@@ -32,7 +33,9 @@ void Game1::Initialize()
 
 	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());
-	mSceneManager.SetScene(Scene::Title);
+	mSceneManager.Add(Scene::Credit, std::make_shared<CreditScene>());
+	//mSceneManager.SetScene(Scene::Title);
+	mSceneManager.SetScene(Scene::Credit);
 }
 
 void Game1::Update()

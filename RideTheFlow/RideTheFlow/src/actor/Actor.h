@@ -31,6 +31,8 @@ private:
 	std::map<COL_ID, std::function<CollisionParameter(const Actor&)>> colFunc;
 	//‹…‚Æ‹…‚Ì‚ ‚½‚è”»’è
 	CollisionParameter SphereSphere(const Actor& other)const;
+	// ‰~’Œ‚Æ” ‚Ì“–‚½‚è”»’è
+	CollisionParameter CylinderBox(const Actor& other)const;
 protected:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) = 0;
 	ActorParameter parameter;

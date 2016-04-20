@@ -89,7 +89,7 @@
     <ClCompile Include="src\actor\ActorManager.cpp" />
     <ClCompile Include="src\actor\AnimTestActor.cpp" />
     <ClCompile Include="src\actor\CameraActor.cpp" />
-    <ClCompile Include="src\actor\castle\castle.cpp" />
+    <ClCompile Include="src\actor\castle\Castle.cpp" />
     <ClCompile Include="src\actor\Collision.cpp" />
     <ClCompile Include="src\actor\Enemy.cpp" />
     <ClCompile Include="src\actor\Player.cpp" />
@@ -117,6 +117,7 @@
     <ClCompile Include="src\math\Vector2.cpp" />
     <ClCompile Include="src\math\Vector3.cpp" />
     <ClCompile Include="src\math\Vector4.cpp" />
+    <ClCompile Include="src\scene\CreditScene.cpp" />
     <ClCompile Include="src\scene\GamePlayScene.cpp" />
     <ClCompile Include="src\scene\SceneManager.cpp" />
     <ClCompile Include="src\scene\TitleScene.cpp" />
@@ -131,7 +132,7 @@
     <ClInclude Include="src\actor\Actor.h" />
     <ClInclude Include="src\actor\AnimTestActor.h" />
     <ClInclude Include="src\actor\CameraActor.h" />
-    <ClInclude Include="src\actor\castle\castle.h" />
+    <ClInclude Include="src\actor\castle\Castle.h" />
     <ClInclude Include="src\actor\Collision.h" />
     <ClInclude Include="src\actor\ID.h" />
     <ClInclude Include="src\actor\ActorManager.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="src\math\Vector2.h" />
     <ClInclude Include="src\math\Vector3.h" />
     <ClInclude Include="src\math\Vector4.h" />
+    <ClInclude Include="src\scene\CreditScene.h" />
     <ClInclude Include="src\scene\GamePlayScene.h" />
     <ClInclude Include="src\scene\IScene.h" />
     <ClInclude Include="src\scene\ISceneMediator.h" />

@@ -7,5 +7,6 @@ enum class Scene{
 	Title,
 	GamePlay,
 	Ending,
+	Credit,
 	GameEnd,
 };
