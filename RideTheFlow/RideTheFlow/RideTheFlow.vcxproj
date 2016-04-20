@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
     <ClCompile Include="src\actor\EnemyAttack.cpp" />
     <ClCompile Include="src\actor\EnemyBullet.cpp" />
     <ClCompile Include="src\actor\Actor.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="src\math\Vector4.cpp" />
     <ClCompile Include="src\scene\GamePlayScene.cpp" />
     <ClCompile Include="src\scene\SceneManager.cpp" />
+    <ClCompile Include="src\scene\TeamLogoScene.cpp" />
     <ClCompile Include="src\scene\TitleScene.cpp" />
     <ClCompile Include="src\sound\Sound.cpp" />
     <ClCompile Include="src\time\Time.cpp" />
@@ -126,6 +128,7 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actor\castle\CastleBlock.h" />
     <ClInclude Include="src\actor\EnemyAttack.h" />
     <ClInclude Include="src\actor\EnemyBullet.h" />
     <ClInclude Include="src\actor\Actor.h" />
@@ -169,6 +172,7 @@
     <ClInclude Include="src\scene\IScenePtr.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneManager.h" />
+    <ClInclude Include="src\scene\TeamLogoScene.h" />
     <ClInclude Include="src\scene\TitleScene.h" />
     <ClInclude Include="src\sound\Sound.h" />
     <ClInclude Include="src\time\Time.h" />
