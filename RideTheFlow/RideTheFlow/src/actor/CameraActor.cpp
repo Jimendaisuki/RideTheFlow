@@ -9,7 +9,7 @@
 
 CameraActor::CameraActor(IWorld& world) :
 Actor(world),
-position(0.0f, 0.0f, -100.0f),
+position(0.0f, 0.0f, -200.0f),
 target(Matrix4::Identity)
 {
 	parameter.isDead = false;

@@ -35,8 +35,18 @@ void Sprite::Load(const std::string& filename, const SPRITE_ID& id, int allnum, 
 	{
 		m_splitsprites[id].emplace_back(handle[i]);
 	}
-	m_comma[id] = splitnum;
 	delete[] handle;
+}
+
+void Sprite::DeleteAll()
+{
+	std::unordered_map<SPRITE_ID, int>::iterator spritr = m_sprites.begin();
+	while (spritr != m_sprites.end()) {
+		DeleteGraph(spritr->first);
+		++spritr;
+	}
+	m_sprites.clear();
+	m_splitsprites.clear();
 }
 
 // 通常画像の描画(アセット名、座標)

@@ -10,9 +10,12 @@
 
 CastleBlock::CastleBlock(IWorld& world, Vector3& position_, const float& risingSpeed_) :
 Actor(world),
-tornadeRadius(2.0f),
+tornadePos(Vector3::Zero),
+tornadeMove(Vector3::Zero),
+tornadeRadius(Random::GetInstance().Range(1,3)),
 tornadeSpeed(360.0f),
 risingSpeed(risingSpeed_),
+risingAddSpeed(Random::GetInstance().Range(3, 29)),
 scale(Vector3(1.0f)),
 position(position_),
 rotate(Vector3::Zero),
@@ -29,13 +32,23 @@ CastleBlock::~CastleBlock()
 }
 void CastleBlock::Update()
 {
+	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
+		Vector3 pos = other.GetParameter().mat.GetPosition();
+		tornadeMove = pos - tornadePos;
+		tornadePos = pos;
+	});
+
 	timer += Time::DeltaTime;
 	if (timer > 10.0f)
 		parameter.isDead = true;
 
 	//âÒì]â¡Ç¶ÇÈëOÇÃç¿ïW
+	position += tornadeMove;
 	position.y += risingSpeed * Time::DeltaTime;
-	rotate += Vector3(2.0f, 2.0f, 0.0f);
+	rotate += Vector3(
+		360.0f* Time::DeltaTime,
+		360.0f* Time::DeltaTime,
+		0.0f);
 
 	//âÒì]â¡Ç¶ÇΩå„ÇÃç¿ïW
 	tornadeAddPosition = Vector3(
@@ -44,7 +57,7 @@ void CastleBlock::Update()
 		Math::Sin(timer * tornadeSpeed) * tornadeRadius);
 	position += tornadeAddPosition;
 
-	risingSpeed += Time::DeltaTime;
+	risingSpeed += risingAddSpeed * Time::DeltaTime;
 	tornadeRadius += Time::DeltaTime;
 
 	parameter.mat =

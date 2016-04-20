@@ -1,6 +1,7 @@
 #include "Game1.h"
 #include "../AllInclude.h"
 #include "../scene/SceneManager.h"
+#include "../scene/TeamLogoScene.h"
 #include "../scene/TitleScene.h"
 #include "../scene/GamePlayScene.h"
 #include "../scene/CreditScene.h"
@@ -32,12 +33,14 @@ void Game1::Initialize()
 	mContent.LoadSound(Sound::GetInstance());
 	mContent.LoadModel(Model::GetInstance(),false);
 
-	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
+	mSceneManager.Add(Scene::Demo, std::make_shared<TeamLogoScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());
-	mSceneManager.Add(Scene::Credit, std::make_shared<CreditScene>());
+	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
 	mSceneManager.Add(Scene::Ending, std::make_shared<EndhingScene>());
+	mSceneManager.Add(Scene::Credit, std::make_shared<CreditScene>());
+
 	//mSceneManager.SetScene(Scene::Title);
-	mSceneManager.SetScene(Scene::Title);
+	mSceneManager.SetScene(Scene::Demo);
 }
 
 void Game1::Update()
