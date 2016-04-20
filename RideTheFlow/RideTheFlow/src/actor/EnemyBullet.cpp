@@ -26,7 +26,7 @@ void EnemyBullet::Update()
 	
 
 
-	mPosition.y = mInitialVelocity*sin(atan2())
+	/*mPosition.y = mInitialVelocity*sin(atan2())*/
 }
 
 void EnemyBullet::Draw() const
