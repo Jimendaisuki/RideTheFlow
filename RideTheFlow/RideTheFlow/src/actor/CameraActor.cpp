@@ -26,11 +26,7 @@ CameraActor::~CameraActor()
 void CameraActor::Update()
 {
 	Camera::GetInstance().Position.Set(position);
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		target = other.GetParameter().mat;
-	});
 
-	//Camera::GetInstance().Target.Set(target.GetPosition());
 	Camera::GetInstance().Update();
 }
 void CameraActor::Draw() const

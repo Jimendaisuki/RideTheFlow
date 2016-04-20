@@ -1,5 +1,6 @@
 #include "Game1.h"
 #include "../AllInclude.h"
+#include "../scene/TeamLogoScene.h"
 #include "../scene/SceneManager.h"
 #include "../scene/TitleScene.h"
 #include "../scene/GamePlayScene.h"
@@ -30,9 +31,10 @@ void Game1::Initialize()
 	mContent.LoadSound(Sound::GetInstance());
 	mContent.LoadModel(Model::GetInstance(),false);
 
+	mSceneManager.Add(Scene::Logo, std::make_shared<TeamLogoScene>());
 	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());
-	mSceneManager.SetScene(Scene::Title);
+	mSceneManager.SetScene(Scene::Logo);
 }
 
 void Game1::Update()

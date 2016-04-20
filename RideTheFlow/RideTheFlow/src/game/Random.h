@@ -38,5 +38,4 @@ public:
 private:
 	std::random_device m_rnd_dev;	// ‰ŠúƒV[ƒh
 	std::mt19937 m_mt;			// —”¶¬Ší
-
 };
