@@ -7,9 +7,12 @@
 #include "../time/Time.h"
 #include "../graphic/Anime.h"
 #include "../math/Math.h"
+#include "../camera/Camera.h"
 
-const float Range = 0.05f;
-const int ropeCount = 1000;
+const float Range = 1.0f;
+const int ropeCount = 32;
+const float updownRange = 1.0f;
+const float scale = 0.01f;
 
 Player::Player(IWorld& world) :
 Actor(world),
@@ -21,7 +24,7 @@ vertexVec(new Vector3[ropeCount])
 	parameter.radius = 3.0f;
 	vertexVec[0] = position;
 	for (int count = 1; count < ropeCount - 1; count++){
-		vertexVec[count] = Vector3(count * 3.0f, 0.0f, 0.0f);
+		vertexVec[count] = Vector3(0.0f, 0.0f, count * 3.0f);
 	}
 
 	parameter.mat =
@@ -47,9 +50,9 @@ void Player::Update()
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
 		position.y -= 10.0f * Time::DeltaTime;
 
-	if (Keyboard::GetInstance().AnyStateDown()){
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
 		angle += 360.0f * Time::DeltaTime;
-		position.y += 1.0f * Math::Sin(angle);
+		position.y += updownRange * Math::Sin(angle);
 	}
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
@@ -74,18 +77,43 @@ void Player::Update()
 }
 void Player::Draw() const{
 	// ２番目のフレームに下に動くのローカル行列をセットする
-	//Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, parameter.mat.GetPosition() + Vector3(0.0f,0.0f,0.0f), 1.0f, Vector3(0, 0, 0));// Vector3(Matrix4::Pitch(parameter.mat), Matrix4::Yaw(parameter.mat), Matrix4::Roll(parameter.mat)));
+	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f), 1.0f,Vector3(0,0,0), Vector3(scale,scale,scale));// , Vector3(0.01f, 0.01f, 0.01f));/// Vector3(0.01f, 0.01f, 0.01f));// Vector3(Matrix4::Pitch(parameter.mat), Matrix4::Yaw(parameter.mat), Matrix4::Roll(parameter.mat)));
 
 	for (int count = 0; count< ropeCount - 1; count++){
 		DrawLine3D(Vector3::ToVECTOR(vertexVec[count]), Vector3::ToVECTOR(vertexVec[count + 1]), GetColor(255, 255, 255));
 	}
 
-	DrawSphere3D(Vector3::ToVECTOR(vertexVec[0]), 1.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255),FALSE);
+	//DrawSphere3D(Vector3::ToVECTOR(vertexVec[0]), 1.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255),FALSE);
+	
 	int ModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
-	//for (int a = 1; a < 18; a++){
-	//	MV1SetFrameUserLocalMatrix(ModelHandle, a, MGetTranslate(VGet(0.0f, 5.0f * Math::Sin(angle + a * 5), 0.0f)));
-	//}
+	MV1SetFrameUserLocalMatrix(ModelHandle, 1, MGetTranslate(
+		Vector3::Zero));
+	for (int a = 2; a <= ropeCount; a++){
+		Matrix4 inv = Matrix4::Identity;
+		//inv = Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(ModelHandle, 1))) * inv;
+		for (int b = 1; b < a; b++){
+			inv = Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(ModelHandle, b))) * inv;
+		}
+		inv = Matrix4::Identity;
+		MV1SetFrameUserLocalMatrix(ModelHandle, a, MMult(MGetTranslate(
+			Vector3::ToVECTOR((vertexVec[a - 1] - vertexVec[a - 2]) / scale)), Matrix4::ToMATRIX(inv)));
+			//		Matrix4::ToMatrix4(GetCameraViewMatrix()) * 
+			//		Matrix4::ToMatrix4(GetCameraProjectionMatrix()))));
+			//VGet(3 * a, 0, 0) * inv
+			//));
+	}
+	VECTOR Position = MV1GetFramePosition(ModelHandle, i);
+	DrawSphere3D(Position, 1.0f, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
 
+	ParameterDraw();
+
+}
+
+
+void Player::ParameterDraw() const{
+	//DrawSphere3D(Vector3::ToVECTOR(vertexVec[0]), 1.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255),FALSE);
+
+	int ModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
 	// フレーム名の描画
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "Name         %s", MV1GetFrameName(ModelHandle, i));
 
@@ -134,20 +162,16 @@ void Player::Draw() const{
 	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, i));
 
 	// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 256, GetColor(255, 255, 255), "Pitch   %f", Matrix4::Pitch(parameter.mat));
+	DrawFormatString(0, 256, GetColor(255, 255, 255), "vertexVec.x   %f", vertexVec[0].x);
 
 	float a = Matrix4::Yaw(parameter.mat);
 	// フレームに含まれるメッシュの数を描画
-	DrawFormatString(0, 272, GetColor(255, 255, 255), "Yaw     %f", Matrix4::Yaw(parameter.mat));
+	DrawFormatString(0, 272, GetColor(255, 255, 255), "vertexVec.y     %f", vertexVec[0].y);
 
 	// フレームに含まれる三角形ポリゴンの数を描画
-	DrawFormatString(0, 288, GetColor(255, 255, 255), "Roll	   %f", Matrix4::Roll(parameter.mat));
-
+	DrawFormatString(0, 288, GetColor(255, 255, 255), "vertexVec.z	   %f", vertexVec[0].z);
 	// フレームに含まれる三角形ポリゴンの数を描画
-	DrawFormatString(0, 304, GetColor(255, 255, 255), "Sin	   %f", Math::Sin(angle));
-
-	DrawSphere3D(Position, 1.0f, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
-
+	DrawFormatString(0, 304, GetColor(255, 255, 255), "boneCount	   %d", MV1GetFrameNum(ModelHandle));
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {

@@ -16,7 +16,7 @@ animetime(0.0f)
 {
 	parameter.isDead = false;
 
-	Anime::GetInstance().AttachAnime(MODEL_ID::TEST_MODEL, 0);
+	//Anime::GetInstance().AttachAnime(MODEL_ID::TEST_MODEL, 0);
 }
 AnimTestActor::~AnimTestActor()
 {

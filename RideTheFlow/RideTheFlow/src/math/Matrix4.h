@@ -241,6 +241,7 @@ public:
 	/// ©g‚ğMATRIXŒ^‚É•ÏŠ·‚µ‚½‚à‚Ì‚ğ•Ô‚·
 	///</summary>
 	MATRIX ToMATRIX() const;
+	static Matrix4 ToMatrix4(const MATRIX& m);
 
 public:
 	Matrix4& operator = (const Matrix4& m_);

@@ -2,8 +2,10 @@
 
 // コンストラクタ
 Random::Random()
-	: m_mt(m_rnd_dev())
-{}
+: m_mt(m_rnd_dev())
+{
+
+}
 Random::Random(int seed)
 	: m_mt(seed)
 {}
