@@ -42,8 +42,9 @@ void CreditScene::Initialize()
 void CreditScene::Update()
 {
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
-		//mIsEnd = true;
+		mIsEnd = true;
 	}
+
 	wa.Update();
 }
 

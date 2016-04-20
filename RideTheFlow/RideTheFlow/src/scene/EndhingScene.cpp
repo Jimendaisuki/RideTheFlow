@@ -65,7 +65,7 @@ bool EndhingScene::IsEnd() const
 //Ÿ‚ÌƒV[ƒ“‚ğ•Ô‚·
 Scene EndhingScene::Next() const
 {
-	return Scene::Title;
+	return Scene::Credit;
 }
 
 void EndhingScene::End(){

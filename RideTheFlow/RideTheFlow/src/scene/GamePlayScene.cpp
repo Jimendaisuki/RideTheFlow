@@ -57,7 +57,7 @@ bool GamePlayScene::IsEnd() const
 //Ÿ‚ÌƒV[ƒ“‚ğ•Ô‚·
 Scene GamePlayScene::Next() const
 {
-	return Scene::Title;
+	return Scene::Ending;
 }
 
 void GamePlayScene::End(){
