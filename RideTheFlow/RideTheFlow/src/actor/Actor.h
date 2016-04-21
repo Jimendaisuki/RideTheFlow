@@ -31,6 +31,8 @@ private:
 	std::map<COL_ID, std::function<CollisionParameter(const Actor&)>> colFunc;
 	//球と球のあたり判定
 	CollisionParameter SphereSphere(const Actor& other)const;
+	// カプセルとカプセルの当たり判定
+	CollisionParameter CapsuleCapsule(const Actor& other)const;
 	// 円柱と箱の当たり判定
 	CollisionParameter CylinderBox(const Actor& other)const;
 protected:

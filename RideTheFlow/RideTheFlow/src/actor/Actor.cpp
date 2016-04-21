@@ -33,6 +33,41 @@ CollisionParameter Actor::SphereSphere(const Actor& other) const{
 	return colpara;
 }
 
+//
+CollisionParameter Actor::CapsuleCapsule(const Actor& other) const{
+	CollisionParameter colpara;
+
+	/* TornadoData */
+	Vector3 tBottomPos  = Matrix4::GetPosition(parameter.mat);
+	Vector3 tTopPos		= tBottomPos + Matrix4::GetScale(parameter.mat).y;
+	float	tRadius		= parameter.radius;
+
+	/* otherData */
+	Vector3 startPos, endPos, minPos, maxPos;
+	Vector3 otherScale = Matrix4::GetScale(other.parameter.mat);
+	minPos = Matrix4::GetPosition(other.parameter.mat) - otherScale * Vector3(1, 0, 1) / 2;
+	maxPos = Matrix4::GetPosition(other.parameter.mat) - otherScale * Vector3(1, 2, 1) / 2;
+
+
+	if (otherScale.y >= otherScale.x && otherScale.y >= otherScale.z)
+	{
+		auto max = otherScale.x;
+		if (max >= otherScale.z){
+
+		}
+	}
+
+
+	//if (HitCheck_Capsule_Capsule(tTopPos,  tBottomPos, tRadius))
+	//{
+
+	//}
+
+	return colpara;
+}
+
+
+
 // 円柱と箱の当たり判定
 CollisionParameter Actor::CylinderBox(const Actor& other) const{
 	CollisionParameter colpara;
@@ -51,11 +86,14 @@ CollisionParameter Actor::CylinderBox(const Actor& other) const{
 	Vector3 rotate = Matrix4::GetRotate(other.parameter.mat);
 	rotate = rotate * 180 / PI;
 	
-	// 箱の分割数を算出（頂点数を求めるため結果に＋１する）
+	// 箱の分割数を算出
  	Vector3 split;
 	split.x = (int)(BoxScale.x / parameter.radius) + 1;
 	split.z = (int)(BoxScale.z / parameter.radius) + 1;
 	split.y = (int)(BoxScale.y / L) + 1;
+	if (split.x <= 1) split.x = 2;
+	if (split.y <= 1) split.y = 2;
+	if (split.z <= 1) split.z = 2;
 
 	// 辺の長さを設定
 	Vector3 side;
@@ -64,7 +102,8 @@ CollisionParameter Actor::CylinderBox(const Actor& other) const{
 	side.z = BoxScale.z / split.z;
 
 	// 基準点
-	Vector3 p = Matrix4::GetPosition(other.parameter.mat) - (Matrix4::GetScale(other.parameter.mat) / 2);
+	//Vector3 p = Matrix4::GetPosition(other.parameter.mat) - (Matrix4::GetScale(other.parameter.mat) / 2);						// オブジェクトの中心（Unity方式）
+	Vector3 p = Matrix4::GetPosition(other.parameter.mat) - (Matrix4::GetScale(other.parameter.mat) * Vector3(1, 0, 1) / 2);	// モデルの底面中心
 
 	// 箱の点の保存
 	std::list<Vector3> points;
@@ -74,22 +113,24 @@ CollisionParameter Actor::CylinderBox(const Actor& other) const{
 		{
 			for (int x = 0; x <= split.x; x++)
 			{
-				Vector3 point = p + Vector3(side.x * x, side.y * y, side.z * z);
-				points.push_back(point);
+				if ((x == 0 || x == split.x) || (y == 0 || y == split.y) || (z == 0 || z == split.z))
+				{
+					Vector3 point = p + Vector3(side.x * x, side.y * y, side.z * z);
+
+					Vector3 aaa = point - Matrix4::GetPosition(other.parameter.mat);
+
+					// 座標変換
+					auto temp =
+						Matrix4::Translate(-aaa) *
+						Matrix4::RotateZ(rotate.z) *
+						Matrix4::RotateX(rotate.x) *
+						Matrix4::RotateY(rotate.y) *
+						Matrix4::Translate(Matrix4::GetPosition(other.parameter.mat));
+
+					points.push_back(Matrix4::GetPosition(temp));
+				}
 			}
 		}
-	}
-	// 座標変換
-	for each (Vector3 p in points)
-	{
-		auto temp =
-			Matrix4::Translate(p) *
-			Matrix4::RotateZ(rotate.z) *
-			Matrix4::RotateX(rotate.x) *
-			Matrix4::RotateY(rotate.y) *
-			Matrix4::Translate(Matrix4::GetPosition(other.parameter.mat));
-
-		p = Matrix4::GetPosition(temp);
 	}
 
 	// 頂点と円柱の当たり判定
@@ -110,6 +151,8 @@ CollisionParameter Actor::CylinderBox(const Actor& other) const{
 
 	points.clear();
 	return colpara;
+
+	
 }
 
 ActorParameter Actor::GetParameter() const

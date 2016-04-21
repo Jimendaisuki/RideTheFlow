@@ -42,9 +42,10 @@ void Castle::Draw() const
 	//	GetColor(0, 0, 0), 
 	//	false);
 	DrawFormatString(10, 100, GetColor(255, 255, 255), "CastlePos	: %f %f %f", Matrix4::GetPosition(parameter.mat).x, Matrix4::GetPosition(parameter.mat).y, Matrix4::GetPosition(parameter.mat).z);
+	DrawFormatString(10, 120, GetColor(255, 255, 255), "CastleScale	: %f %f %f", Matrix4::GetScale(parameter.mat).x, Matrix4::GetScale(parameter.mat).y, Matrix4::GetScale(parameter.mat).z);
 	if (isHit)
 	{
-		DrawFormatString(10, 120, GetColor(255, 255, 255), "Hit");
+		DrawFormatString(10, 400, GetColor(255, 255, 255), "Hit");
 	}
 }
 

@@ -6,7 +6,6 @@
 #include "../actor/Player.h"
 #include "../actor/CameraActor.h"
 
-#include "../math/Vector2.h"
 #include "../input/Keyboard.h"
 
 #include "../actor/tornado/Tornado.h"
@@ -31,8 +30,11 @@ void CreditScene::Initialize()
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
 
-	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(5, 12), Vector3(10, 0, 0)));
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(50, 0, 0), Vector3(0, 0, 0), Vector3(10, 10, 10)));
+	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(10, 20), Vector3(10, 0, 0)));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 25, 0), Vector3(0, 30, 0), Vector3(50, 50, 50)));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(-100, -25, 0), Vector3(0, 45, 0), Vector3(50, 50, 50)));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, -25, 0), Vector3(0, 60, 0), Vector3(50, 50, 50)));
+	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(100, 25, 0), Vector3(0, 0, 0), Vector3(50, 50, 50)));
 }
 
 void CreditScene::Update()

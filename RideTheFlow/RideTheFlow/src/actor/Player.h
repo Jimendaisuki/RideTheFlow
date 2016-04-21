@@ -14,12 +14,7 @@ public:
 
 private:
 	void ParameterDraw()const;
-	Vector3 position, otherVertex;
-	Vector3* vertexVec;
-	Vector3* drawVertexVec;
-	Vector3* modelVertexVec;
-	Matrix4* drawMatrixVec;
-	float animetime;
+	Vector3 position;
 	float angle;
-	int i = 0;
+	int boneSelect;
 };

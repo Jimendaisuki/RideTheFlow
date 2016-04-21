@@ -12,8 +12,8 @@ Actor(world),
 position(position_),
 velocity(velocity_)
 {
-	parameter.radius = scale_.y;
-	scale = Vector3(scale_.x * 2, scale_.y, scale_.x * 2);
+	parameter.radius = scale_.x;
+	scale = Vector3(parameter.radius, scale_.y, parameter.radius);
 
 	parameter.isDead = false;
 	parameter.mat =
@@ -38,17 +38,17 @@ void Tornado::Update()
 
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::SPHERE_SPHERE_COL);
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= 200.0f * Time::DeltaTime;
+		position.x -= 20.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += 200.0f * Time::DeltaTime;
+		position.x += 20.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += 200.0f * Time::DeltaTime;
+		position.y += 20.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= 200.0f * Time::DeltaTime;
+		position.y -= 20.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
-		position.z += 200.0f * Time::DeltaTime;
+		position.z += 20.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
-		position.z -= 200.0f * Time::DeltaTime;
+		position.z -= 20.0f * Time::DeltaTime;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
