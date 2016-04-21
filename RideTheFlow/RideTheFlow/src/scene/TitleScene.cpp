@@ -40,7 +40,7 @@ void TitleScene::Initialize()
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(5, 12), Vector3(10, 0, 0)));
 
 	Camera::GetInstance().SetRange(0.1f, 3000.0f);
-	Camera::GetInstance().Position.Set(Vector3(0.0f, 200.0f, -300.0f));
+	Camera::GetInstance().Position.Set(Vector3(0.0f,400.0f, -300.0f));
 	Camera::GetInstance().Target.Set(Vector3::Zero);
 	Camera::GetInstance().Up.Set(Vector3::Up);
 	Camera::GetInstance().Update();
@@ -57,7 +57,9 @@ void TitleScene::Update()
 		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 			pos = other.GetParameter().mat.GetPosition();
 		});
-		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(wa, pos));
+		for (int i = 0; i < 30; i++){
+			wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(wa, pos));
+		}
 	}
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;

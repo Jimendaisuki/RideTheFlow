@@ -79,6 +79,11 @@ Vector3 Matrix4::GetRotate() const
 	return GetRotate(*this);
 }
 
+Vector3 Matrix4::GetRotateDegree() const
+{
+	return GetRotateDegree(*this);
+}
+
 void Matrix4::SetPosition(const Vector3& position)
 {
 	m[3][0] = position.x;
@@ -356,6 +361,16 @@ Vector3 Matrix4::GetRotate(const Matrix4& m)
 		Pitch(m),
 		Yaw(m),
 		Roll(m)
+	};
+	return result;
+}
+
+Vector3 Matrix4::GetRotateDegree(const Matrix4& m)
+{
+	Vector3 result = {
+		Math::Degree(Pitch(m)),
+		Math::Degree(Yaw(m)),
+		Math::Degree(Roll(m))
 	};
 	return result;
 }

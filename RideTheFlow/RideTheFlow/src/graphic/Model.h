@@ -119,6 +119,36 @@ public:
 	/// ３Ｄモデルを描画する（モデルID、座標、透過度、回転量、拡大率、ディフューズカラー、スペキュラーカラー、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
+	
+
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、透過度、ディフューズカラー、スペキュラーカラー、描画フラグ）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、透過度、ディフューズカラー、スペキュラーカラー）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor, const Vector4& specularcolor);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、透過度、ディフューズカラー、描画フラグ）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor, bool trans);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、透過度、ディフューズカラー）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、透過度、描画フラグ）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, bool trans);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、透過度）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, float alpha);
+	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、マトリックス、描画フラグ）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Matrix4& mat, bool trans);
 	///<summary>
 	/// ３Ｄモデルを描画する（モデルID、マトリックス）
 	///</summary>

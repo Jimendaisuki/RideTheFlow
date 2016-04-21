@@ -64,9 +64,13 @@ public:
 	/// </summary>
 	Vector3 GetScale() const;
 	/// <summary>
-	/// 自身の各軸の回転量を返す
+	/// 自身の各軸の回転量をラジアンで返す
 	/// </summary>
 	Vector3 GetRotate() const;
+	/// <summary>
+	/// 自身の各軸の回転量を角度で返す
+	/// </summary>
+	Vector3 GetRotateDegree() const;
 	/// <summary>
 	/// 座標をセットする
 	/// </summary>
@@ -171,9 +175,13 @@ public:
 	/// </summary>
 	static Vector3 GetScale(const Matrix4& m);
 	/// <summary>
-	/// 各軸の回転量を返す
+	/// 各軸の回転量をラジアン返す
 	/// </summary>
 	static Vector3 GetRotate(const Matrix4& m);
+	/// <summary>
+	/// 各軸の回転量を角度で返す
+	/// </summary>
+	static Vector3 GetRotateDegree(const Matrix4& m);
 	/// <summary>
 	/// 座標をセットした行列を返す
 	/// </summary>

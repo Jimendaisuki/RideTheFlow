@@ -331,6 +331,114 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1SetVisible(handle, trans);
 	MV1DrawModel(handle);
 }
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor, const Vector4& specularcolor, bool trans)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor, const Vector4& specularcolor)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1DrawModel(handle);
+}
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor, bool trans)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, const Vector4& diffusecolor)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1DrawModel(handle);
+}
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, float alpha, bool trans)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, float alpha)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1DrawModel(handle);
+}
+
+void Model::Draw(const MODEL_ID& id, const Matrix4& mat, bool trans)
+{
+	Vector3 position = mat.GetPosition();
+	Vector3 rotate = mat.GetRotate();
+	Vector3 scale = mat.GetScale();
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetVisible(handle, trans);
+	MV1DrawModel(handle);
+}
+
 void Model::Draw(const MODEL_ID& id, const Matrix4& mat)
 {
 	Vector3 position = mat.GetPosition();
@@ -343,7 +451,6 @@ void Model::Draw(const MODEL_ID& id, const Matrix4& mat)
 	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
 	MV1DrawModel(handle);
 }
-
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
 void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size)
