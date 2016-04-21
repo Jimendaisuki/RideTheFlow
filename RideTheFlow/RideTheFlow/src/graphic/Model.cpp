@@ -126,6 +126,23 @@ void Model::Load2D(const std::string& filename, const MODEL_ID& id, int allnum, 
 	delete[] handle;
 }
 
+void Model::DeleteAll()
+{
+	std::unordered_map<MODEL_ID, HandlePtr>::iterator mitr = m_models.begin();
+	while (mitr != m_models.end()) {
+		MV1DeleteModel(mitr->first);
+		++mitr;
+	}
+	m_models.clear();
+
+	std::unordered_map<MODEL_ID, std::vector<int>>::iterator sitr = m_sprites.begin();
+	while (sitr != m_sprites.end()) {
+		DeleteGraph(sitr->first);
+		++sitr;
+	}
+	m_sprites.clear();
+}
+
 void Model::Draw(const MODEL_ID& id, const Vector3& position)
 {
 	auto handle = m_models.at(id)->GetHangle();
@@ -135,7 +152,6 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position)
 
 void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha)
 {
-
 	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetOpacityRate(handle, alpha);

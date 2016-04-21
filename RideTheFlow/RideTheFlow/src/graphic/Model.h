@@ -43,6 +43,11 @@ public:
 	///</summary>
 	void Load2D(const std::string& filename, const MODEL_ID& id, int allnum, const Point& splitnum, const Point& size);
 	///<summary>
+	/// 読み込んだモデル、2D画像をすべて削除する
+	///</summary>
+	void DeleteAll();
+
+	///<summary>
 	/// ３Ｄモデルを描画する（モデルID、座標）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position);

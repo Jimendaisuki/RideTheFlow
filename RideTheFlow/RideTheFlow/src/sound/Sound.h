@@ -31,6 +31,10 @@ public:
 	///</summary>
 	void LoadSE(const std::string& filename, const SE_ID& id, float volume = 1.0f);
 	///<summary>
+	/// “Ç‚İ‚ñ‚¾BGMASE‚ğ‚·‚×‚Äíœ‚·‚é
+	///</summary>
+	void DeleteAll();
+	///<summary>
 	/// BGM‚ğ–Â‚ç‚·
 	///</summary>
 	void PlayBGM(const BGM_ID& id, int playtype);

@@ -39,6 +39,26 @@ void Sound::LoadSE(const std::string& filename, const SE_ID& id, float volume)
 	SettingSE(id);
 }
 
+void Sound::DeleteAll()
+{
+	std::unordered_map<BGM_ID, int>::iterator bgmitr = m_BGMs.begin();
+	while (bgmitr != m_BGMs.end()) {
+		DeleteSoundMem(bgmitr->first);
+		++bgmitr;
+	}
+	m_BGMs.clear();
+	
+	std::unordered_map<SE_ID, int>::iterator seitr = m_SEs.begin();
+	while (seitr != m_SEs.end()) {
+		DeleteSoundMem(seitr->first);
+		++seitr;
+	}
+	m_SEs.clear();
+
+	m_BGM_Volumes.clear();
+	m_SE_Volumes.clear();
+}
+
 // ƒtƒ@ƒCƒ‹–¼‚Ì'.'‚©‚çŒã‚ğæ‚èœ‚­
 std::string Sound::Split(const std::string& filename)
 {

@@ -9,7 +9,7 @@
 
 CameraActor::CameraActor(IWorld& world) :
 Actor(world),
-position(0.0f, 0.0f, -100.0f),
+position(0.0f, 200.0f, -30.0f),
 target(Matrix4::Identity)
 {
 	parameter.isDead = false;
@@ -25,8 +25,12 @@ CameraActor::~CameraActor()
 }
 void CameraActor::Update()
 {
-	Camera::GetInstance().Position.Set(position);
+	Vector3 target;
+	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
+		target = other.GetParameter().mat.GetPosition();
+	});
 
+	Camera::GetInstance().Target.Set(target);
 	Camera::GetInstance().Update();
 }
 void CameraActor::Draw() const

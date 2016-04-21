@@ -47,15 +47,17 @@ CollisionParameter Actor::CylinderBox(const Actor& other) const{
 	/* ” ƒf[ƒ^ */
 	// ” ‚Ì‘å‚«‚³‚ğæ“¾
 	Vector3 BoxScale = Matrix4::GetScale(other.parameter.mat);
+	// ‰ñ“]Šp‚ğæ“¾
+	Vector3 rotate = Matrix4::GetRotate(other.parameter.mat);
+	rotate = rotate * 180 / PI;
 	
 	// ” ‚Ì•ªŠ„”‚ğZoi’¸“_”‚ğ‹‚ß‚é‚½‚ßŒ‹‰Ê‚É{‚P‚·‚éj
-	Vector3 split;
+ 	Vector3 split;
 	split.x = (int)(BoxScale.x / parameter.radius) + 1;
 	split.z = (int)(BoxScale.z / parameter.radius) + 1;
 	split.y = (int)(BoxScale.y / L) + 1;
 
 	// •Ó‚Ì’·‚³‚ğİ’è
-	// ‰ñ“]‚ğl—¶‚µ‚Ä‚È‚¢‚½‚ßŒãX’Ç‰Á—\’è
 	Vector3 side;
 	side.x = BoxScale.x / split.x;
 	side.y = BoxScale.y / split.y;
@@ -76,6 +78,18 @@ CollisionParameter Actor::CylinderBox(const Actor& other) const{
 				points.push_back(point);
 			}
 		}
+	}
+	// À•W•ÏŠ·
+	for each (Vector3 p in points)
+	{
+		auto temp =
+			Matrix4::Translate(p) *
+			Matrix4::RotateZ(rotate.z) *
+			Matrix4::RotateX(rotate.x) *
+			Matrix4::RotateY(rotate.y) *
+			Matrix4::Translate(Matrix4::GetPosition(other.parameter.mat));
+
+		p = Matrix4::GetPosition(temp);
 	}
 
 	// ’¸“_‚Æ‰~’Œ‚Ì“–‚½‚è”»’è

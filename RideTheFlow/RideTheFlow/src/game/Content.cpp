@@ -23,11 +23,14 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("X-G1.x", MODEL_ID::PLAYER_MODEL, async);
-	model.Load("IKTest.mv1", MODEL_ID::TEST_MODEL, async);
+	model.Load("ryuu.pmd", MODEL_ID::TEST_MODEL, async);
 	model.Load("Box.x", MODEL_ID::BOX_MODEL, async);
 
-	model.Load("X-G1.x", MODEL_ID::TORNADO_MODEL, async);
-	model.Load("X-G1.x", MODEL_ID::CASTLE_MODEL , async);
+	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
+	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
+
+	model.Load("sandstage.x", MODEL_ID::STAGE_MODEL, async);
+	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
 
 	model.Load2D("rightgrey.png", MODEL_ID::RIGHT_GRAY_2D_MODEL);
 

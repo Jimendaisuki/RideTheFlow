@@ -72,6 +72,11 @@ public:
 	///</summary>
 	int IsCheckView(Vector3 position);
 
+	///<summary>
+	/// カメラの視野角を設定する
+	///</summary>
+	void SetViewAngle(float degree);
+
 public:
 	CPosition Position;// 視点の座標
 	CTarget Target;	// 注視点の座標

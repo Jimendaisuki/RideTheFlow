@@ -32,6 +32,10 @@ public:
 	///</summary>
 	void Load(const std::string& filename, const SPRITE_ID& id, int allnum, const Point& splitnum, const Point& size);
 	///<summary>
+	/// 読み込んだ画像をすべて削除する
+	///</summary>
+	void DeleteAll();
+	///<summary>
 	/// 通常画像の描画(アセット名、座標)
 	///</summary>
 	void Draw(const SPRITE_ID& id, const Vector2& position);
@@ -177,6 +181,4 @@ private:
 	std::unordered_map<SPRITE_ID, int> m_sprites;
 	// 分割画像
 	std::unordered_map<SPRITE_ID, std::vector<int>> m_splitsprites;
-	// 読み込んだ分割画像のコマ数
-	std::unordered_map<SPRITE_ID, Point> m_comma;
 };
