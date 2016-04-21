@@ -12,7 +12,8 @@ CastleBlock::CastleBlock(IWorld& world, Vector3& position_) :
 Actor(world),
 tornadePos(Vector3::Zero),
 tornadeMove(Vector3::Zero),
-tornadeRadius(Random::GetInstance().Range(30.0f,35.0f)),
+tornadeRadius(Random::GetInstance().Range(10.0f, 15.0f)),
+tornadeAddRadius(Random::GetInstance().Range(10.0f, 15.0f)),
 tornadeSpeed(360.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
 risingSpeed(Random::GetInstance().Range(8.0f, 10.0f)),
@@ -49,7 +50,7 @@ void CastleBlock::Update()
 		parameter.isDead = true;
 	tornadeDegree += tornadeSpeed * Time::DeltaTime;
 	risingSpeed += risingAddSpeed * Time::DeltaTime;
-	tornadeRadius += Time::DeltaTime;
+	tornadeRadius += tornadeAddRadius * Time::DeltaTime;
 
 	//ƒ‚ƒfƒ‹‰ñ“]
 	rotate += Vector3(

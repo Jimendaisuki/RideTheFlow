@@ -14,6 +14,7 @@ public:
 private:
 	Vector3 tornadePos;
 	Vector3 tornadeMove;
+	float tornadeAddRadius;
 	float tornadeRadius;
 	float tornadeSpeed;
 	float tornadeDegree;

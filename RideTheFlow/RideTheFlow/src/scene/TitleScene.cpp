@@ -38,7 +38,12 @@ void TitleScene::Initialize()
 	objectcount = 0;
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(5, 12), Vector3(10, 0, 0)));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
+
+	Camera::GetInstance().SetRange(0.1f, 3000.0f);
+	Camera::GetInstance().Position.Set(Vector3(0.0f, 200.0f, -300.0f));
+	Camera::GetInstance().Target.Set(Vector3::Zero);
+	Camera::GetInstance().Up.Set(Vector3::Up);
+	Camera::GetInstance().Update();
 }
 
 void TitleScene::Update()
@@ -63,6 +68,13 @@ void TitleScene::Update()
 	wa.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		objectcount++;
 	});
+
+	Vector3 target;
+	wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
+		target = other.GetParameter().mat.GetPosition();
+	});
+	Camera::GetInstance().Target.Set(target);
+	Camera::GetInstance().Update();
 }
 
 //•`‰æ
