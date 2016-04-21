@@ -18,6 +18,7 @@ target(Matrix4::Identity)
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Target.Set(Vector3::Zero);
 	Camera::GetInstance().Up.Set(Vector3::Up);
+	Camera::GetInstance().SetViewAngle(90.0f);
 }
 CameraActor::~CameraActor()
 {

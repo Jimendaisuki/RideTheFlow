@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <Dxlib.h>
+#include "../math/Math.h"
 
 // ƒJƒƒ‰‚ÌXVˆ—
 void Camera::Update()
@@ -25,4 +26,9 @@ void Camera::SetRotation(Vector3 rotate)
 int Camera::IsCheckView(Vector3 position)
 {
 	return CheckCameraViewClip(VGet(position.x, position.y, position.z));
+}
+
+void Camera::SetViewAngle(float degree)
+{
+	SetupCamera_Perspective(Math::Radian(degree));
 }
