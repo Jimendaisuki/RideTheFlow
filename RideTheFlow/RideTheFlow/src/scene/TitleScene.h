@@ -25,6 +25,10 @@ public:
 	virtual void End()override;
 
 private:
+	float timer;
 	bool mIsEnd;
 	World wa;
+
+	//オブジェクト数
+	int objectcount;
 };

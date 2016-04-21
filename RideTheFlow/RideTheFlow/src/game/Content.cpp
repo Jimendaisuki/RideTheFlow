@@ -29,6 +29,9 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
 
+	model.Load("sandstage.x", MODEL_ID::STAGE_MODEL, async);
+	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
+
 	model.Load2D("rightgrey.png", MODEL_ID::RIGHT_GRAY_2D_MODEL);
 
 	//model.Load("m1.pmx", async);
