@@ -7,12 +7,14 @@
 
 #include "../../input/Keyboard.h"
 
-Tornado::Tornado(IWorld& world, Vector3 position, Vector3 velocity) :
+Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_) :
 Actor(world),
-position(position),
-velocity(velocity),
-scale(Vector3(1.0f, 12.0f, 1.0f))
+position(position_),
+velocity(velocity_)
 {
+	parameter.radius = scale_.y;
+	scale = Vector3(scale_.x * 2, scale_.y, scale_.x * 2);
+
 	parameter.isDead = false;
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -20,8 +22,6 @@ scale(Vector3(1.0f, 12.0f, 1.0f))
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-
-	parameter.radius = 10.0f;
 }
 
 Tornado::~Tornado()
@@ -63,19 +63,17 @@ void Tornado::Update()
 
 void Tornado::Draw() const
 {
-	// プレイヤー描画情報を流用
-	//Model::GetInstance().Draw(MODEL_ID::TORNADO_MODEL, Matrix4::GetPosition(parameter.mat), rotate, scale);
-	//Sprite::GetInstance().Draw(SPRITE_ID::PLAYER_SPRITE, Vector2(-150, -150), 0.5f);
-
+	Model::GetInstance().Draw(MODEL_ID::TORNADO_MODEL, parameter.mat);
 
 	Vector3 TopPos		= Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) * Vector3(0.0f, 0.5f, 0.0f);
 	Vector3 BottomPos	= Matrix4::GetPosition(parameter.mat) - Matrix4::GetScale(parameter.mat) * Vector3(0.0f, 0.5f, 0.0f);
 
-	DrawLine3D(TopPos, BottomPos, GetColor(255, 255, 255));
-	DrawCapsule3D(TopPos, BottomPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
+	//DrawLine3D(TopPos, BottomPos, GetColor(255, 255, 255));
+	//DrawCapsule3D(TopPos, BottomPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
 
 	DrawFormatString(10, 40, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
 	DrawFormatString(10, 60, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
+	DrawFormatString(10, 80, GetColor(255, 255, 255), "TornadoSize: %f %f %f", Matrix4::GetScale(parameter.mat).x, Matrix4::GetScale(parameter.mat).y, Matrix4::GetScale(parameter.mat).z);
 
 }
 
