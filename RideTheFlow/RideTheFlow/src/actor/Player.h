@@ -16,7 +16,9 @@ private:
 	void ParameterDraw()const;
 	Vector3 position, otherVertex;
 	Vector3* vertexVec;
-	Matrix4* invVec;
+	Vector3* drawVertexVec;
+	Vector3* modelVertexVec;
+	Matrix4* drawMatrixVec;
 	float animetime;
 	float angle;
 	int i = 0;
