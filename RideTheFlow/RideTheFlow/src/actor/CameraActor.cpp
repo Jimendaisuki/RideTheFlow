@@ -9,7 +9,7 @@
 
 CameraActor::CameraActor(IWorld& world) :
 Actor(world),
-position(0.0f, 0.0f, -100.0f),
+position(0.0f, 0.0f, -200.0f),
 target(Matrix4::Identity)
 {
 	parameter.isDead = false;
@@ -18,6 +18,7 @@ target(Matrix4::Identity)
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Target.Set(Vector3::Zero);
 	Camera::GetInstance().Up.Set(Vector3::Up);
+	Camera::GetInstance().SetViewAngle(90.0f);
 }
 CameraActor::~CameraActor()
 {

@@ -12,9 +12,12 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
+	Vector3 tornadePos;
+	Vector3 tornadeMove;
 	float tornadeRadius;
 	float tornadeSpeed;
 	float risingSpeed;
+	float risingAddSpeed;
 
 	Vector3 scale;
 	Vector3 position;

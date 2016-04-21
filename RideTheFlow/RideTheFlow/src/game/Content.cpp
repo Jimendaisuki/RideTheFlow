@@ -26,8 +26,8 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("ryuu.pmd", MODEL_ID::TEST_MODEL, async);
 	model.Load("Box.x", MODEL_ID::BOX_MODEL, async);
 
-	model.Load("X-G1.x", MODEL_ID::TORNADO_MODEL, async);
-	model.Load("X-G1.x", MODEL_ID::CASTLE_MODEL , async);
+	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
+	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
 
 	model.Load2D("rightgrey.png", MODEL_ID::RIGHT_GRAY_2D_MODEL);
 
