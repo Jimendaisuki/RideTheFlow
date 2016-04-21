@@ -8,20 +8,27 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 
-CastleBlock::CastleBlock(IWorld& world, Vector3& position_, const float& risingSpeed_) :
+CastleBlock::CastleBlock(IWorld& world, Vector3& position_) :
 Actor(world),
 tornadePos(Vector3::Zero),
 tornadeMove(Vector3::Zero),
-tornadeRadius(Random::GetInstance().Range(1,3)),
+tornadeRadius(Random::GetInstance().Range(10.0f, 15.0f)),
+tornadeAddRadius(Random::GetInstance().Range(10.0f, 15.0f)),
 tornadeSpeed(360.0f),
-risingSpeed(risingSpeed_),
-risingAddSpeed(Random::GetInstance().Range(3, 29)),
+tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
+risingSpeed(Random::GetInstance().Range(8.0f, 10.0f)),
+risingAddSpeed(Random::GetInstance().Range(5, 20)),
 scale(Vector3(1.0f)),
 position(position_),
 rotate(Vector3::Zero),
 timer(0.0f),
 tornadeAddPosition(Vector3::Zero)
 {
+	scale = Vector3(10.0f / risingAddSpeed) * Vector3(1, 1, 2);
+	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
+		tornadePos = other.GetParameter().mat.GetPosition();
+	});
+
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	rotate = Vector3(Random::GetInstance().Range(0.0f, 359.0f), Random::GetInstance().Range(0.0f, 359.0f), 0.0f);
@@ -41,31 +48,33 @@ void CastleBlock::Update()
 	timer += Time::DeltaTime;
 	if (timer > 10.0f)
 		parameter.isDead = true;
+	tornadeDegree += tornadeSpeed * Time::DeltaTime;
+	risingSpeed += risingAddSpeed * Time::DeltaTime;
+	tornadeRadius += tornadeAddRadius * Time::DeltaTime;
+
+	//ÉÇÉfÉãâÒì]
+	rotate += Vector3(
+		2.0f,
+		2.0f,
+		0.0f);
 
 	//âÒì]â¡Ç¶ÇÈëOÇÃç¿ïW
 	position += tornadeMove;
 	position.y += risingSpeed * Time::DeltaTime;
-	rotate += Vector3(
-		360.0f* Time::DeltaTime,
-		360.0f* Time::DeltaTime,
-		0.0f);
 
 	//âÒì]â¡Ç¶ÇΩå„ÇÃç¿ïW
 	tornadeAddPosition = Vector3(
-		Math::Cos(timer * tornadeSpeed) * tornadeRadius,
+		Math::Cos(tornadeDegree) * tornadeRadius,
 		0.0f,
-		Math::Sin(timer * tornadeSpeed) * tornadeRadius);
-	position += tornadeAddPosition;
-
-	risingSpeed += risingAddSpeed * Time::DeltaTime;
-	tornadeRadius += Time::DeltaTime;
+		Math::Sin(tornadeDegree) * tornadeRadius);
+	//position += tornadeAddPosition;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::RotateZ(rotate.z) *
 		Matrix4::RotateX(rotate.x) *
-		Matrix4::Translate(position);
+		Matrix4::Translate(position + tornadeAddPosition);
 }
 void CastleBlock::Draw() const
 {

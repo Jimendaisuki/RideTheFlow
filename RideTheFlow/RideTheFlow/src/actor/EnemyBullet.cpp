@@ -2,31 +2,37 @@
 #include "Collision.h"
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
+#include "../input/Keyboard.h"
 #include <math.h>
-EnemyBullet::EnemyBullet(IWorld& world, float initialVelocity) :
+EnemyBullet::EnemyBullet(IWorld& world,Vector3 position, float initialVelocity) :
 Actor(world),
 playerMat(Matrix4::Identity),
-mPosition(parameter.mat.GetPosition()),
-time(0),
+mPosition(position),
+time(0.0f),
 mInitialVelocity(initialVelocity),
-vertexTime(0)
+coppyPosition(position),
+angle(0),
+speed(4.5f)
 {
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
+	mDirection = Vector3::Direction(mPosition, playerMat.GetPosition()).Normalized();
 	parameter.isDead = false;
+	angle = atan2(playerMat.GetPosition().y - mPosition.y,playerMat.GetPosition().x - mPosition.x);
 }
 EnemyBullet::~EnemyBullet()
 {
-
+	
 }
 void EnemyBullet::Update()
 {
-	time += Time::DeltaTime;
-	
+	time += Time::DeltaTime*speed;
+	//mPosition += Vector3(0.0f, 0.0f, mDirection.z);
+	mPosition.x = mInitialVelocity*cos(angle)*time;
+	mPosition.y = mInitialVelocity*sin(angle)*time - 1.0f / 2.0f*9.8f*pow(time, 2);
 
-
-	/*mPosition.y = mInitialVelocity*sin(atan2())*/
+	parameter.mat = Matrix4::Translate(Vector3(mPosition.x,mPosition.y,mPosition.z)+coppyPosition);
 }
 
 void EnemyBullet::Draw() const

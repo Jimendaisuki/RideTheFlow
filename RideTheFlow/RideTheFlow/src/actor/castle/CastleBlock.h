@@ -5,7 +5,7 @@
 class CastleBlock :public Actor
 {
 public:
-	CastleBlock(IWorld& world, Vector3& position_, const float& risingSpeed_);
+	CastleBlock(IWorld& world, Vector3& position_);
 	~CastleBlock();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -14,8 +14,10 @@ public:
 private:
 	Vector3 tornadePos;
 	Vector3 tornadeMove;
+	float tornadeAddRadius;
 	float tornadeRadius;
 	float tornadeSpeed;
+	float tornadeDegree;
 	float risingSpeed;
 	float risingAddSpeed;
 

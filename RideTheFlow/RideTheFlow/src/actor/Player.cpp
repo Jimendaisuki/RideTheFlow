@@ -9,116 +9,162 @@
 #include "../math/Math.h"
 #include "../camera/Camera.h"
 
-const float Range = 1.0f;
-const int ropeCount = 32;
-const float updownRange = 1.0f;
-const float scale = 0.01f;
+//ボーンの数
+const int boneCount = 33;
+//波の周波
+const float waveCount = 0.52f;
+//モデルのスケール
+const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
+//スピード
+const float speed = 30.0f;
 
 Player::Player(IWorld& world) :
 Actor(world),
-position(Vector3(0,0,0)),
-otherVertex(Vector3(0,0,0)),
-vertexVec(new Vector3[ropeCount])
+position(Vector3(0,0,0))
 {
 	parameter.isDead = false;
 	parameter.radius = 3.0f;
-	vertexVec[0] = position;
-	for (int count = 1; count < ropeCount - 1; count++){
-		vertexVec[count] = Vector3(0.0f, 0.0f, count * 3.0f);
-	}
 
+	//PlayerActorのマトリックス
 	parameter.mat =
-		Matrix4::Scale(Vector3(0.3f, 0.3f, 0.3f)) *
+		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
+
 	angle = 0;
+	boneSelect = 0;
 }
 Player::~Player(){
-	SAFE_DELETE_ARRAY(vertexVec);
 }
 void Player::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::SPHERE_SPHERE_COL);
+	//操作
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= 10.0f * Time::DeltaTime;
+		position.x -= speed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += 10.0f * Time::DeltaTime;
+		position.x += speed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += 10.0f * Time::DeltaTime;
+		position.y += speed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= 10.0f * Time::DeltaTime;
+		position.y -= speed * Time::DeltaTime;
 
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
-		angle += 360.0f * Time::DeltaTime;
-		position.y += updownRange * Math::Sin(angle);
-	}
-
+	//ボーンの情報切り替え
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
-		i++;
+		boneSelect++;
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT))
-		i--;
+		boneSelect--;
 
+	//マトリックスの再計算
 	parameter.mat =
-		Matrix4::Scale(Vector3(1, 1, 1)) *
+		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
-		Matrix4::RotateY(90) *
+		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
-	vertexVec[0] = position;
-	for (int count = 0; count < ropeCount - 1; count++){
-		float d = Range - Vector3::Distance(vertexVec[count], vertexVec[count + 1]);
-		Vector3 otherToPosVec = Vector3::Normalize(vertexVec[count] - vertexVec[count + 1]);
-		vertexVec[count + 1] -= otherToPosVec * d;
-	}
-
+	//くねくねの角度のスピード
+	angle -= 180.0f * Time::DeltaTime;
 }
 void Player::Draw() const{
-	// ２番目のフレームに下に動くのローカル行列をセットする
-	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f), 1.0f,Vector3(0,0,0), Vector3(scale,scale,scale));// , Vector3(0.01f, 0.01f, 0.01f));/// Vector3(0.01f, 0.01f, 0.01f));// Vector3(Matrix4::Pitch(parameter.mat), Matrix4::Yaw(parameter.mat), Matrix4::Roll(parameter.mat)));
+	//骨の数だけ用意する
+	Vector3*vertexVec = new Vector3[boneCount];
+	Vector3* drawVertexVec = new Vector3[boneCount];
+	Matrix4* drawMatrixVec = new Matrix4[boneCount];
 
-	for (int count = 0; count< ropeCount - 1; count++){
-		DrawLine3D(Vector3::ToVECTOR(vertexVec[count]), Vector3::ToVECTOR(vertexVec[count + 1]), GetColor(255, 255, 255));
+	//初期化
+	for (int i = 0; i < boneCount; i++){
+		//ボーンの状態をリセット
+		MV1ResetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1);
+		//初期位置ボーンの位置を取得
+		vertexVec[i] = Matrix4::ToMatrix4(
+			MV1GetFrameLocalWorldMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1)).GetPosition() *
+			parameter.mat;
+		drawVertexVec[i] = vertexVec[i];
+		drawMatrixVec[i] = parameter.mat;
 	}
-
-	//DrawSphere3D(Vector3::ToVECTOR(vertexVec[0]), 1.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255),FALSE);
 	
-	int ModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
-	MV1SetFrameUserLocalMatrix(ModelHandle, 1, MGetTranslate(
-		Vector3::Zero));
-	for (int a = 2; a <= ropeCount; a++){
-		Matrix4 inv = Matrix4::Identity;
-		//inv = Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(ModelHandle, 1))) * inv;
-		for (int b = 1; b < a; b++){
-			inv = Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(ModelHandle, b))) * inv;
-		}
-		inv = Matrix4::Identity;
-		MV1SetFrameUserLocalMatrix(ModelHandle, a, MMult(MGetTranslate(
-			Vector3::ToVECTOR((vertexVec[a - 1] - vertexVec[a - 2]) / scale)), Matrix4::ToMATRIX(inv)));
-			//		Matrix4::ToMatrix4(GetCameraViewMatrix()) * 
-			//		Matrix4::ToMatrix4(GetCameraProjectionMatrix()))));
-			//VGet(3 * a, 0, 0) * inv
-			//));
+	//先頭を原点に移動
+	drawVertexVec[0] = Vector3(position.x, -position.y, position.z);
+
+	//先頭の高さを求める為最頂点の位置までの計算を行う
+	for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
+		Matrix4 drawMat = 
+			//ボーンの長さ求めて動かす
+			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
+			//Left軸基準に回転
+			Matrix4::RotateX(Math::Sin(angle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Matrix4::Translate(drawVertexVec[count - 1]);
+		drawVertexVec[count] = drawMat.GetPosition();
 	}
-	VECTOR Position = MV1GetFramePosition(ModelHandle, i);
-	DrawSphere3D(Position, 1.0f, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
 
+	//先頭の高さを代入
+	drawVertexVec[0].y = -drawVertexVec[boneCount / (int)(2.0f / waveCount)].y;
+
+	//移動量を引いたプレイヤーのマトリックスを作成
+	Matrix4 paramMatSubTrans = parameter.mat;
+	paramMatSubTrans.SetPosition(Vector3(0, 0, 0));
+
+	//マトリックスも再計算
+	drawMatrixVec[0] = paramMatSubTrans * Matrix4::Translate(drawVertexVec[0]);
+
+	//先頭の高さを設定した状態で再計算
+	for (int count = 1; count < boneCount; count++){
+		Matrix4 drawMat = 
+			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
+			Matrix4::RotateX(Math::Sin(angle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Matrix4::Translate(drawVertexVec[count - 1]);
+
+		drawVertexVec[count] = drawMat.GetPosition();
+
+		drawMatrixVec[count] =
+			paramMatSubTrans *
+			Matrix4::RotateX(Math::Sin(angle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f)  *
+			Matrix4::Translate(drawVertexVec[count]);
+	}
+
+	SAFE_DELETE_ARRAY(vertexVec);
+	SAFE_DELETE_ARRAY(drawVertexVec);
+
+	//相対座標に変換しセット
+	for (int count = 0; count < boneCount; count++){
+		Matrix4 beforeInvMat = Matrix4::Identity;
+		//親の逆行列をかけていく
+		for (int count2 = 0; count2 < count; count2++){
+			beforeInvMat *= Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), count2 + 1)));
+		}
+		MV1SetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), count + 1,
+			Matrix4::ToMATRIX(
+			drawMatrixVec[count] *
+			//drawInv //*
+			beforeInvMat
+			));
+	}
+
+	SAFE_DELETE_ARRAY(drawMatrixVec);
+
+	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL , Vector3::Zero, 1.0f);
+	
 	ParameterDraw();
-
+	//for (int count = 1; count < boneCount - 1; count++){
+	//	int Color = GetColor(255, 0, 0);
+	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
+	//	DrawLine3D(Vector3::ToVECTOR(drawMatrixVec[count].GetPosition()), Vector3::ToVECTOR(drawMatrixVec[count + 1].GetPosition()), Color);
+	//}
+	//
+	//DrawSphere3D(Vector3::ToVECTOR(drawMatrixVec[boneSelect].GetPosition()), 5.0f, 32, GetColor(255,0,0), GetColor(255, 0,0),FALSE);	
 }
 
 
 void Player::ParameterDraw() const{
-	//DrawSphere3D(Vector3::ToVECTOR(vertexVec[0]), 1.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255),FALSE);
 
 	int ModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
 	// フレーム名の描画
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "Name         %s", MV1GetFrameName(ModelHandle, i));
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "Name         %s", MV1GetFrameName(ModelHandle, boneSelect));
 
 	// 親フレーム名の描画
-	int Parent = MV1GetFrameParent(ModelHandle, i);
+	int Parent = MV1GetFrameParent(ModelHandle, boneSelect);
 	if (Parent == -2)
 	{
 		DrawFormatString(0, 16, GetColor(255, 255, 255), "Parent Name  None");
@@ -129,49 +175,40 @@ void Player::ParameterDraw() const{
 	}
 
 	// 子フレームの数を描画
-	DrawFormatString(0, 32, GetColor(255, 255, 255), "Child Num    %d", MV1GetFrameChildNum(ModelHandle, i));
+	DrawFormatString(0, 32, GetColor(255, 255, 255), "Child Num    %d", MV1GetFrameChildNum(ModelHandle, boneSelect));
 
 	// フレームのワールド座標の描画
-	VECTOR Position = MV1GetFramePosition(ModelHandle, i);
+	VECTOR Position = MV1GetFramePosition(ModelHandle, boneSelect);
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
 	// 変換行列を描画する
-	MATRIX Matrix = MV1GetFrameLocalMatrix(ModelHandle, i);
+	MATRIX Matrix = MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 64, GetColor(255, 255, 255), "   Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 80, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 96, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
 	DrawFormatString(0, 112, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[3][0], Matrix.m[3][1], Matrix.m[3][2], Matrix.m[3][3]);
 
 	// フレームのローカル座標からワールド座標に変換する行列を描画する
-	Matrix = MV1GetFrameLocalWorldMatrix(ModelHandle, i);
+	Matrix = MV1GetFrameLocalWorldMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 128, GetColor(255, 255, 255), "LW Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 144, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 160, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
 	DrawFormatString(0, 176, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[3][0], Matrix.m[3][1], Matrix.m[3][2], Matrix.m[3][3]);
 
 	// フレームの表示状態を描画
-	DrawFormatString(0, 192, GetColor(255, 255, 255), "Visible      %d", MV1GetFrameVisible(ModelHandle, i));
+	DrawFormatString(0, 192, GetColor(255, 255, 255), "Visible      %d", MV1GetFrameVisible(ModelHandle, boneSelect));
 
 	// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 208, GetColor(255, 255, 255), "Semi Trans   %d", MV1GetFrameSemiTransState(ModelHandle, i));
+	DrawFormatString(0, 208, GetColor(255, 255, 255), "Semi Trans   %d", MV1GetFrameSemiTransState(ModelHandle, boneSelect));
 
 	// フレームに含まれるメッシュの数を描画
-	DrawFormatString(0, 224, GetColor(255, 255, 255), "Mesh Num     %d", MV1GetFrameMeshNum(ModelHandle, i));
+	DrawFormatString(0, 224, GetColor(255, 255, 255), "Mesh Num     %d", MV1GetFrameMeshNum(ModelHandle, boneSelect));
 
 	// フレームに含まれる三角形ポリゴンの数を描画
-	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, i));
+	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, boneSelect));
 
-	// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 256, GetColor(255, 255, 255), "vertexVec.x   %f", vertexVec[0].x);
-
-	float a = Matrix4::Yaw(parameter.mat);
-	// フレームに含まれるメッシュの数を描画
-	DrawFormatString(0, 272, GetColor(255, 255, 255), "vertexVec.y     %f", vertexVec[0].y);
-
-	// フレームに含まれる三角形ポリゴンの数を描画
-	DrawFormatString(0, 288, GetColor(255, 255, 255), "vertexVec.z	   %f", vertexVec[0].z);
-	// フレームに含まれる三角形ポリゴンの数を描画
-	DrawFormatString(0, 304, GetColor(255, 255, 255), "boneCount	   %d", MV1GetFrameNum(ModelHandle));
+	//// フレームに半透明要素があるかどうかを描画
+	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {

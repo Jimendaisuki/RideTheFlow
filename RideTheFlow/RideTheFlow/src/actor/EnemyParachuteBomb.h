@@ -1,20 +1,21 @@
-#pragma once
+#ifndef ENEMY_PARACHUTE_BOMB_H_
+#define ENEMY_PARACHUTE_BOMB_H_
 #include "Actor.h"
 
-class Enemy :public Actor
+class EnemyParachiteBomb:public Actor
 {
 public:
-	Enemy(IWorld& world,Vector3 position);
-	~Enemy();
+	EnemyParachiteBomb(IWorld& world, Vector3 position);
+	~EnemyParachiteBomb();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
-
 private:
-	int tex;
+	Vector3 mPosition;
 	Matrix4 playerMat;
 	float coolTime;
 	float time;
 	bool attack;
-	Vector3 mPosition;
 };
+
+#endif

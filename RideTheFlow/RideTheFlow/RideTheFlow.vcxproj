@@ -25,7 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -83,9 +83,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
     <ClCompile Include="src\actor\EnemyGun.cpp" />
+    <ClCompile Include="src\actor\EnemyParachiteBomb.cpp" />
     <ClCompile Include="src\actor\EnemyVaristor.cpp" />
+    <ClCompile Include="src\actor\ParachuteBombBullet.cpp" />
+    <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
+    <ClCompile Include="src\actor\EnemyGunBullet.cpp" />
+    <ClCompile Include="src\actor\EnemyVaristorBullet.cpp" />
+    <ClCompile Include="src\actor\SpringCameraActor.cpp" />
     <ClCompile Include="src\scene\CreditScene.cpp" />
     <ClCompile Include="src\scene\EndhingScene.cpp" />
     <ClCompile Include="src\actor\EnemyAttack.cpp" />
@@ -132,9 +137,14 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\actor\castle\CastleBlock.h" />
-    <ClInclude Include="src\actor\EnemyVaristor.h" />
     <ClInclude Include="src\actor\EnemyGun.h" />
+    <ClInclude Include="src\actor\EnemyParachuteBomb.h" />
+    <ClInclude Include="src\actor\EnemyVaristor.h" />
+    <ClInclude Include="src\actor\ParachuteBombBullet.h" />
+    <ClInclude Include="src\actor\castle\CastleBlock.h" />
+    <ClInclude Include="src\actor\EnemyVaristorBullet.h" />
+    <ClInclude Include="src\actor\EnemyGunBullet.h" />
+    <ClInclude Include="src\actor\SpringCameraActor.h" />
     <ClInclude Include="src\scene\CreditScene.h" />
     <ClInclude Include="src\scene\EndhingScene.h" />
     <ClInclude Include="src\actor\EnemyAttack.h" />
