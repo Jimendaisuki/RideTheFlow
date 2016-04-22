@@ -9,6 +9,8 @@
 Actor::Actor(IWorld& world_) :world(world_)
 {
 	colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
+	colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
+	colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
 	colFunc[COL_ID::CYLINDER_BOX_COL] = std::bind(&Actor::CylinderBox, this, std::placeholders::_1);
 }
 
@@ -33,35 +35,106 @@ CollisionParameter Actor::SphereSphere(const Actor& other) const{
 	return colpara;
 }
 
-//
+// カプセルとカプセルの当たり判定
 CollisionParameter Actor::CapsuleCapsule(const Actor& other) const{
 	CollisionParameter colpara;
+	Capsule c1, c2;
 
-	/* TornadoData */
-	Vector3 tBottomPos  = Matrix4::GetPosition(parameter.mat);
-	Vector3 tTopPos		= tBottomPos + Matrix4::GetScale(parameter.mat).y;
-	float	tRadius		= parameter.radius;
+	/* thisData */
+	c1.startPos = Matrix4::GetPosition(parameter.mat);
+	c1.endPos = c1.startPos + Matrix4::GetScale(parameter.mat) * Vector3::Up;
+	c1.radius = parameter.radius;
 
 	/* otherData */
-	Vector3 startPos, endPos, minPos, maxPos;
-	Vector3 otherScale = Matrix4::GetScale(other.parameter.mat);
-	minPos = Matrix4::GetPosition(other.parameter.mat) - otherScale * Vector3(1, 0, 1) / 2;
-	maxPos = Matrix4::GetPosition(other.parameter.mat) - otherScale * Vector3(1, 2, 1) / 2;
+	c2.startPos = Matrix4::GetPosition(other.parameter.mat);
+	c2.endPos = c2.startPos + Matrix4::GetScale(other.parameter.mat)  * Vector3::Up;
+	c2.radius = other.parameter.radius;
 
+	if (HitCheck_Capsule_Capsule(
+		c1.startPos, c1.endPos, c1.radius,
+		c2.startPos, c2.endPos, c2.radius)) colpara.colFlag = true;
 
-	if (otherScale.y >= otherScale.x && otherScale.y >= otherScale.z)
+	return colpara;
+}
+
+// カプセルとAABBの当たり判定	（カプセルの半径より辺の間隔が長い場合は無効）
+CollisionParameter Actor::CapsuleAABBSegment(const Actor& other)const
+{
+	CollisionParameter colpara;
+
+	/* CapsuleData */
+	Capsule c;
+	c.startPos	= Matrix4::GetPosition(parameter.mat);
+	c.endPos	= c.startPos + Matrix4::GetScale(parameter.mat) * Vector3::Up;
+	c.radius	= parameter.radius;
+
+	/* BoxData*/
+	Vector3 min, max;
+	min = Matrix4::GetPosition(other.parameter.mat) - (Matrix4::GetScale(other.parameter.mat) * Vector3(1, 0, 1)) / 2;
+	max = Matrix4::GetPosition(other.parameter.mat) + (Matrix4::GetScale(other.parameter.mat) * Vector3(1, 2, 1)) / 2;
+	Vector3 sideData[4];
+	sideData[0] = Vector3::Zero;
+	sideData[1] = Matrix4::GetScale(other.parameter.mat) * Vector3(1, 0, 0);
+	sideData[2] = Matrix4::GetScale(other.parameter.mat) * Vector3(0, 1, 0);
+	sideData[3] = Matrix4::GetScale(other.parameter.mat) * Vector3(0, 0, 1);
+
+	Vector3 v, v2;
+	float length;
+	for (int i = 1; i <= 3; i++)
 	{
-		auto max = otherScale.x;
-		if (max >= otherScale.z){
+		v = max - sideData[i];
 
+		length =
+			Segment_Segment_MinLength(
+			c.startPos, c.endPos,
+			max, v);
+
+		if (length <= parameter.radius)
+		{
+			colpara.colFlag = true;
+			break;
 		}
 	}
 
+	if (!colpara.colFlag)
+	{
+		for (int i = 0; i <= 3; i++)
+		{
+			for (int j = 1; j <= 3; j++)
+			{
+				if (colpara.colFlag) break;
 
-	//if (HitCheck_Capsule_Capsule(tTopPos,  tBottomPos, tRadius))
-	//{
+				if (i != j)
+				{
+					v = min + sideData[i];
+					v2 = v + sideData[j];
+					length =
+						Segment_Segment_MinLength(
+						c.startPos, c.endPos,
+						v, v2);
 
-	//}
+					if (length <= parameter.radius)	
+						colpara.colFlag = true;
+				}
+			}
+		}
+	}
+
+	return colpara;
+}
+
+//
+CollisionParameter Actor::ModelLine(const Actor& other) const{
+	CollisionParameter colpara;
+	MV1_COLL_RESULT_POLY HitPoly;
+
+	/* 線分データ */
+	Vector3 startPos, endPos;
+	startPos	= Matrix4::GetPosition(parameter.mat) - Vector3::Up * 300;
+	endPos		= startPos + Matrix4::GetScale(parameter.mat) * Vector3::Up;
+
+	//HitPoly = MV1CollCheck_Line(other.)
+	if (HitPoly.HitFlag) colpara.colPos = HitPoly.HitPosition;
 
 	return colpara;
 }
