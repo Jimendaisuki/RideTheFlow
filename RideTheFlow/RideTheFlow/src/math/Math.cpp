@@ -256,3 +256,21 @@ int Math::Clamp(int value, int min, int max)
 		return max;
 	return value;
 }
+
+//値を指定された範囲内で無限ループさせます
+float Math::InfinityClamp(float value, float min, float max){
+	if (value < min)
+		return max;
+	if (value > max)
+		return min;
+	return value;
+}
+
+//値を指定された範囲内で無限ループさせます
+int Math::InfinityClamp(int value, int min, int max){
+	if (value < min)
+		return max;
+	if (value > max)
+		return min;
+	return value;
+}

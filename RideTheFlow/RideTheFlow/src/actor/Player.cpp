@@ -8,6 +8,7 @@
 #include "../graphic/Anime.h"
 #include "../math/Math.h"
 #include "../camera/Camera.h"
+#include "../math/Quaternion.h"
 
 //ボーンの数
 const int boneCount = 33;
@@ -17,6 +18,21 @@ const float waveCount = 0.52f;
 const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
 //スピード
 const float speed = 30.0f;
+
+/*************************************************リンク君が変えるところ*************************************************/
+//testコード、動きの切り替えtrueの時強弱なし
+bool changeMotion = false;
+
+//changeMotionがtrueの時に反映される
+//くねくねのLeft軸回転速度
+const float leftAngleSpeed = 270.0f;
+//くねくねのUp軸回転速度
+const float upAngleSpeed = 225.0f;
+
+//changeMotionがfalseの時に反映される
+//くねくねのLeft軸回転速度
+const float angleSpeed = 270.0f;
+/************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
 Actor(world),
@@ -33,13 +49,16 @@ position(Vector3(0,0,0))
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
-	angle = 0;
+	upAngle = 0;
+	leftAngle = 0;
 	boneSelect = 0;
+	speedRegulation = 0;
 }
 Player::~Player(){
 }
-void Player::Update()
-{
+
+float rotateY = 0;
+void Player::Update(){
 	//操作
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
 		position.x -= speed * Time::DeltaTime;
@@ -56,6 +75,12 @@ void Player::Update()
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT))
 		boneSelect--;
 
+	//ボーンの情報切り替え
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
+		rotateY += 360.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
+		rotateY -= 360.0f * Time::DeltaTime;
+
 	//マトリックスの再計算
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -65,7 +90,27 @@ void Player::Update()
 		Matrix4::Translate(position);
 
 	//くねくねの角度のスピード
-	angle -= 180.0f * Time::DeltaTime;
+	if (changeMotion){
+		upAngle -= leftAngleSpeed * Time::DeltaTime;
+		leftAngle -= upAngleSpeed * Time::DeltaTime;
+	}
+	else{
+		upAngle -=
+			angleSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+		leftAngle -=
+			angleSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+	}
+
+	upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
+	leftAngle = Math::InfinityClamp(leftAngle, 0.0f, 360.0f);
+	speedRegulation = Math::InfinityClamp(speedRegulation, 0.0f, 360.0f);
+
+
+	Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	Camera::GetInstance().Position.Set(parameter.mat.GetFront().Normalized() * Matrix4::RotateY(rotateY) * 150.0f + Vector3(0, 60, 0) + parameter.mat.GetPosition());
+	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+	Camera::GetInstance().Up.Set(parameter.mat.GetUp());
+	Camera::GetInstance().Update();
 }
 void Player::Draw() const{
 	//骨の数だけ用意する
@@ -94,7 +139,9 @@ void Player::Draw() const{
 			//ボーンの長さ求めて動かす
 			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
 			//Left軸基準に回転
-			Matrix4::RotateX(Math::Sin(angle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			//Front軸基準に回転
+			Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 		drawVertexVec[count] = drawMat.GetPosition();
 	}
@@ -113,14 +160,16 @@ void Player::Draw() const{
 	for (int count = 1; count < boneCount; count++){
 		Matrix4 drawMat = 
 			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-			Matrix4::RotateX(Math::Sin(angle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f)*
+			Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 
 		drawVertexVec[count] = drawMat.GetPosition();
 
 		drawMatrixVec[count] =
 			paramMatSubTrans *
-			Matrix4::RotateX(Math::Sin(angle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f)  *
+			Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f)*
+			Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
@@ -209,6 +258,9 @@ void Player::ParameterDraw() const{
 
 	//// フレームに半透明要素があるかどうかを描画
 	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
+
+	//// フレームに半透明要素があるかどうかを描画
+	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %f", (Math::Cos(speedRegulation) + 1.0f) / 2.0f);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {

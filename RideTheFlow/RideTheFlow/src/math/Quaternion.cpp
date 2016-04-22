@@ -116,7 +116,7 @@ Matrix4 Quaternion::Rotate(const Quaternion& q)
 	return result;
 }
 
-Matrix4 Quaternion::Rotate(const Vector3& v, float angle)
+Matrix4 Quaternion::RotateAxis(const Vector3& v, float angle)
 {
 	return Rotate(Quaternion(v, angle));
 }

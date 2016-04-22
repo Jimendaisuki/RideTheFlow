@@ -15,6 +15,7 @@ public:
 private:
 	void ParameterDraw()const;
 	Vector3 position;
-	float angle;
+	float upAngle, leftAngle;
+	float speedRegulation;
 	int boneSelect;
 };
