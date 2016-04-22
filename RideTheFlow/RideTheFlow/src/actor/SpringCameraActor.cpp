@@ -9,15 +9,18 @@
 
 SpringCameraActor::SpringCameraActor(IWorld& world) :Actor(world),
 velocity(Vector3::Zero),
-stiffness(0.0f),
-friction(0.0f),
-mass(1.0f)
+restPosition(Vector3::Zero),
+stiffness(0.2f),
+friction(0.5f),
+mass(2.0f)
+
 {
 	parameter.isDead = false;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
-
+	position = playerMat.GetPosition();
+	restPosition = position;
 }
 SpringCameraActor::~SpringCameraActor()
 {
@@ -25,6 +28,10 @@ SpringCameraActor::~SpringCameraActor()
 }
 void SpringCameraActor::Update()
 {
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		playerMat = other.GetParameter().mat;
+	});
+	restPosition = playerMat.GetPosition();
 	// バネの伸び具合を計算
 	Vector3 stretch = (position - restPosition);
 	// バネの力を計算
@@ -36,14 +43,13 @@ void SpringCameraActor::Update()
 	// 座標の更新
 	position += velocity;
 
-	point = playerMat.GetFront();
-	Camera::GetInstance().Position.Set(position);
+	point = playerMat.GetPosition();
+	Camera::GetInstance().Position.Set(position + Vector3(0, 50, 200));
 	Camera::GetInstance().Target.Set(point);
 	Camera::GetInstance().Update();
 }
 void SpringCameraActor::Draw() const
 {
-	//TextDraw::GetInstance().Draw(Point::Zero, target.GetPosition());
 	//TextDraw::GetInstance().Draw(Point(0,16), target.GetScale());
 }
 void SpringCameraActor::OnCollide(Actor& other, CollisionParameter colpara)

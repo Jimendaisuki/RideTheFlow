@@ -16,7 +16,7 @@ const float waveCount = 0.52f;
 //モデルのスケール
 const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
 //スピード
-const float speed = 30.0f;
+const float speed = 100.0f;
 
 Player::Player(IWorld& world) :
 Actor(world),
