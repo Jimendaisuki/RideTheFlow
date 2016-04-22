@@ -32,10 +32,10 @@ void EndhingScene::Initialize()
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<SpringCameraActor>(wa));
 	
 
-	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<EnemyGun>(wa, Vector3(40.0f, 0.0f, 0.0f)));
-	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Enemy>(wa, Vector3(20.0f, 0.0f, 0.0f)));
-	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<EnemyVaristor>(wa, Vector3(0.0f, 0.0f, 0.0f)));
-	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<EnemyParachiteBomb>(wa, Vector3(-20.0f, 0.0f, 0.0f)));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<EnemyGun>(wa, Vector3(40.0f, 0.0f, 0.0f)));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Enemy>(wa, Vector3(20.0f, 0.0f, 0.0f)));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<EnemyVaristor>(wa, Vector3(0.0f, 0.0f, 0.0f)));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<EnemyParachiteBomb>(wa, Vector3(-20.0f, 0.0f, 0.0f)));
 
 	//wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector3(10, 0, 0)));
 }
