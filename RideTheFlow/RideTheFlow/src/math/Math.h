@@ -206,4 +206,10 @@ public:
 	/// 値を指定された範囲内に制限します
 	///</summary>
 	static int Clamp(int value, int min, int max);
+
+	//値を指定された範囲内で無限ループさせます
+	static float InfinityClamp(float value, float min, float max);
+	//値を指定された範囲内で無限ループさせます
+
+	static int InfinityClamp(int value, int min, int max);
 };

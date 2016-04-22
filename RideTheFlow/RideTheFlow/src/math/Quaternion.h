@@ -49,7 +49,7 @@ public:
 	///<summary>
 	/// 任意軸周りの回転行列を返す
 	///</summary>
-	static Matrix4 Rotate(const Vector3& v, float angle);
+	static Matrix4 RotateAxis(const Vector3& v, float angle);
 };
 
 // 単項演算子オーバーロード
