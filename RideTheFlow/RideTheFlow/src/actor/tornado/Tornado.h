@@ -18,4 +18,6 @@ private:
 	Vector3 velocity;
 	Vector3	rotate;
 	Vector3	scale;
+
+	bool	isHit;
 };

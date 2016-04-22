@@ -33,6 +33,10 @@ private:
 	CollisionParameter SphereSphere(const Actor& other)const;
 	// カプセルとカプセルの当たり判定
 	CollisionParameter CapsuleCapsule(const Actor& other)const;
+	// カプセルとAABBの当たり判定
+	CollisionParameter CapsuleAABBSegment(const Actor& other)const;
+	// モデルと線分の当たり判定
+	CollisionParameter ModelLine(const Actor& other)const;
 	// 円柱と箱の当たり判定
 	CollisionParameter CylinderBox(const Actor& other)const;
 protected:
