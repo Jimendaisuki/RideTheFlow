@@ -12,5 +12,4 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
-	bool		isHit;
 };
