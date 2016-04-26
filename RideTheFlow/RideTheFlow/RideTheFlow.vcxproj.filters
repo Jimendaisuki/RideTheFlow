@@ -171,7 +171,7 @@
     <ClCompile Include="src\actor\SpringCameraActor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp">
+    <ClCompile Include="src\actor\castle\MasterCastle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -356,11 +356,11 @@
     <ClInclude Include="src\actor\SpringCameraActor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\tornado\TornadeBillboard.h">
+    <ClInclude Include="src\actor\castle\MasterCastle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphic\BlendMode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Model\boonStage.pmd" />
   </ItemGroup>
 </Project>
