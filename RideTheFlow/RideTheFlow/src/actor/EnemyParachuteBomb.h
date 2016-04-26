@@ -5,7 +5,7 @@
 class EnemyParachiteBomb:public Actor
 {
 public:
-	EnemyParachiteBomb(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
+	EnemyParachiteBomb(IWorld& world, Vector3 position);
 	~EnemyParachiteBomb();
 	virtual void Update() override;
 	virtual void Draw() const override;

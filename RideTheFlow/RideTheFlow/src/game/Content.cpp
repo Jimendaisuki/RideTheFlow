@@ -34,8 +34,6 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load2D("rightgrey.png", MODEL_ID::RIGHT_GRAY_2D_MODEL);
 
-	model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE);
-
 	//model.Load("m1.pmx", async);
 	//model.Load("m3.pmd", async);
 }

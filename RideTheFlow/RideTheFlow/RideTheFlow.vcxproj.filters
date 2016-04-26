@@ -171,9 +171,6 @@
     <ClCompile Include="src\actor\SpringCameraActor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\castle\MasterCastle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\Actor.h">
@@ -356,11 +353,5 @@
     <ClInclude Include="src\actor\SpringCameraActor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\castle\MasterCastle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\Model\boonStage.pmd" />
   </ItemGroup>
 </Project>

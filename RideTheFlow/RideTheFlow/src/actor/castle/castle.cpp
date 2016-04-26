@@ -5,18 +5,8 @@
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
 
-#include "../EnemyBullet.h"
-#include "../EnemyGunBullet.h"
-#include "../EnemyVaristorBullet.h"
-#include "../ParachuteBombBullet.h"
-
-Castle::Castle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float parSecondAttack, float attackRange) :
-Actor(world),
-mParSecondAttack(parSecondAttack),
-mAttackRange(attackRange),
-time(0.0f),
-playerMat(Matrix4::Identity),
-mPosition(position)
+Castle::Castle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
+Actor(world)
 {
 	parameter.isDead = false;
 
@@ -38,27 +28,7 @@ Castle::~Castle()
 
 void Castle::Update()
 {
-	time += Time::DeltaTime;
-	if (time >= 1.0f/mParSecondAttack)
-	{
-		time = 0.0f;
-		if (Vector3::Distance(playerMat.GetPosition(), mPosition) > mAttackRange) return;
-		switch (GetRand(2))
-		{
-		case 0:
-			/*world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, 40.0f));*/
-			break;
-		case 1:
-			world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), 2.0f));
-			break;
-		case 2:
-			world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5)));
-			break;
-		//case 3:
-		//	world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<ParachuteBombBullet>(world, mPosition,20.0f));
-		//	break;
-		}
-	}
+
 }
 
 void Castle::Draw() const

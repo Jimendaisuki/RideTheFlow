@@ -1,7 +1,6 @@
 #include "IScene.h"
 #include "ISceneMediator.h"
 #include "../world/World.h"
-#include <vector>
 
 class  EndhingScene :public IScene{
 public:
@@ -27,6 +26,4 @@ private:
 	bool mIsEnd;
 	World wa;
 	int timeTest;
-	Vector3 position;
-	std::vector<Vector3>boonPositions;
 };
