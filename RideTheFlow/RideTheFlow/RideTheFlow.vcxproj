@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
+    <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\EnemyGun.h" />
     <ClInclude Include="src\actor\EnemyParachuteBomb.h" />
     <ClInclude Include="src\actor\EnemyVaristor.h" />
