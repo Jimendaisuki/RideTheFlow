@@ -48,16 +48,12 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z)){
-		timer += Time::DeltaTime;
-	}
-	if (timer > 0.01f){
-		timer = 0.0f;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z)){
 		Vector3 pos;
 		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 			pos = other.GetParameter().mat.GetPosition();
 		});
-		for (int i = 0; i < 30; i++){
+		for (int i = 0; i < 100; i++){
 			wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(wa, pos));
 		}
 	}

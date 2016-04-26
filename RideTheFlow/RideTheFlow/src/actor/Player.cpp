@@ -21,7 +21,7 @@ const float speed = 100.0f;
 
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
-bool changeMotion = false;
+bool changeMotion = true;
 
 //changeMotionがtrueの時に反映される
 //くねくねのLeft軸回転速度
