@@ -29,6 +29,7 @@ mPosition(position)
 
 	Vector2 side = Vector2(scale.x, scale.z) / 2;
 	parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
+	parameter.height = 30.0f;
 }
 
 Castle::~Castle()
@@ -67,7 +68,7 @@ void Castle::Draw() const
 
 	Vector3 startPos, endPos;
 	startPos = Matrix4::GetPosition(parameter.mat);
-	endPos = Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) * Vector3::Up;
+	endPos = startPos + Vector3(0.0f, parameter.height, 0.0f);
 	DrawCapsule3D(startPos, endPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
 
 	//DrawLine3D(startPos, endPos, GetColor(255, 0, 0));
