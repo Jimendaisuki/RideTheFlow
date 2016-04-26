@@ -11,20 +11,7 @@
 #include "../math/Matrix4.h"
 #include "../actor/ID.h"
 #include "../math/Point.h"
-
-namespace BLEND_MODE
-{
-	const int NoBlend = DX_BLENDMODE_NOBLEND;
-	const int Alpha = DX_BLENDMODE_ALPHA;
-	const int Add = DX_BLENDMODE_ADD;
-	const int Sub = DX_BLENDMODE_SUB;
-	const int Mul = DX_BLENDMODE_MULA;
-	const int Inverse = DX_BLENDMODE_INVSRC;
-	const int PMA_Alpha = DX_BLENDMODE_PMA_ALPHA;
-	const int PMA_Add = DX_BLENDMODE_PMA_ADD;
-	const int PMA_Sub = DX_BLENDMODE_PMA_SUB;
-	const int PMA_Inverse = DX_BLENDMODE_PMA_INVSRC;
-}
+#include "BlendMode.h"
 
 class Model
 {
@@ -195,7 +182,7 @@ public:
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、ブレンドモード）
 	///</summary>
-	void Draw2DBlend(const MODEL_ID& id, const Vector3& position, int blend_mode);
+	void Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, int blend_mode, int alpha);
 
 	///<summary>
 	/// モデルハンドルを受け取る
@@ -277,4 +264,7 @@ private:
 	std::unordered_map<MODEL_ID, HandlePtr> m_models;
 	
 	std::unordered_map<MODEL_ID, std::vector<int>> m_sprites;
+
+	//現在選択中のブレンドモード
+	int currentBlendMode;
 };

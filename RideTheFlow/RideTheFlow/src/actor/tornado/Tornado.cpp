@@ -46,17 +46,17 @@ void Tornado::Update()
 	//rotate.y += 1000 * Time::DeltaTime;
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= 40.0f * Time::DeltaTime;
+		position.x -= 440.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += 40.0f * Time::DeltaTime;
+		position.x += 440.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += 40.0f * Time::DeltaTime;
+		position.y += 440.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= 40.0f * Time::DeltaTime;
+		position.y -= 440.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
-		position.z += 40.0f * Time::DeltaTime;
+		position.z += 440.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
-		position.z -= 40.0f * Time::DeltaTime;
+		position.z -= 440.0f * Time::DeltaTime;
 
 	velocity.y -= GRAVITY * Time::DeltaTime;
 	position += velocity * speed;

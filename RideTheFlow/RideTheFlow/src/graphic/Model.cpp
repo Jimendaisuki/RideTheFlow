@@ -23,6 +23,7 @@ void Model::Initialize()
 	MV1InitModel();
 	m_models.clear();
 	m_sprites.clear();
+	currentBlendMode = BLEND_MODE::NoBlend;
 }
 
 void Model::ModelHandle::Load(const std::string& filename, bool async, bool collinfo, bool reference, std::function<void(int)> end)
@@ -494,10 +495,10 @@ void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float
 	DefaultBlend();
 }
 
-void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int mode)
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, int blend_mode, int alpha)
 {
-	SetDrawBlendMode(mode, 0);
-	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, 1.0f, 0.0f, m_sprites[id][0], true);
+	SetDrawBlendMode(blend_mode, alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, 0.0f, m_sprites[id][0], true);
 	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
 }
 

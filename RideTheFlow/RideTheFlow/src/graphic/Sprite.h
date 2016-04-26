@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "BlendMode.h"
+
 
 class Sprite
 {
@@ -88,6 +90,12 @@ public:
 	///</summary>
 	void Draw(const SPRITE_ID& id, const Vector2& position, const Point& size, const Vector2& origin, float alpha, const Vector2& scale, float angle, bool trans, bool turn);
 	///<summary>
+
+	///<summary>
+	/// ブレンド画像の描画(アセット名、座標、原点、拡大率、回転率、ブレンドモード)
+	///</summary>
+	void DrawBlend(const SPRITE_ID& id, const Vector2& position, const Vector2& origin, const Vector2& scale, float angle, const int& blendmode);
+
 	/// 分割画像の描画(アセット名、座標、表示コマ番号)
 	///</summary>
 	void SplitDraw(const SPRITE_ID& id, const Vector2& position, int frame);

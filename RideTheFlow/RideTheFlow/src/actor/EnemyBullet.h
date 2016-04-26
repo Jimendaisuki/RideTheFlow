@@ -6,7 +6,7 @@
 class EnemyBullet :public Actor
 {
 public:
-	EnemyBullet(IWorld& world, Vector3 position, float initialVelocity);
+	EnemyBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float initialVelocity);
 	~EnemyBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;

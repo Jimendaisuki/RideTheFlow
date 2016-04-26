@@ -4,7 +4,7 @@
 #include"../graphic/Model.h"
 #include "../time/Time.h"
 #include "EnemyVaristorBullet.h"
-EnemyVaristor::EnemyVaristor(IWorld& world, Vector3 position) :
+EnemyVaristor::EnemyVaristor(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
 Actor(world),
 coolTime(10.0f),
 time(0.0f),
@@ -16,7 +16,12 @@ mPosition(position)
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
-	
+	parameter.mat =
+		Matrix4::Scale(scale) *
+		Matrix4::RotateZ(rotate.z) *
+		Matrix4::RotateX(rotate.x) *
+		Matrix4::RotateY(rotate.y) *
+		Matrix4::Translate(position);
 }
 EnemyVaristor::~EnemyVaristor()
 {
@@ -29,7 +34,7 @@ void EnemyVaristor::Update()
 	});
 	if (Vector3::Distance(playerMat.GetPosition(), mPosition) <= 40.0f&&attack)
 	{
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0), Vector3(5)));
 		time = 0;
 		attack = false;
 	}

@@ -35,7 +35,7 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 25, 0), Vector3(0, 0, 0), Vector3(50, 50, 50)));
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(-100, -25, 0), Vector3(0, 45, 0), Vector3(50, 50, 50)));
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, -25, 0), Vector3(0, 60, 0), Vector3(50, 50, 50)));
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1)));
+	/*wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1)));*/
 
 	MV1SetupCollInfo(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), -1, 8, 8, 8);
 }
