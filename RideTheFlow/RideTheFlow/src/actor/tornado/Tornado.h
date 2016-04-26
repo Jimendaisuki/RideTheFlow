@@ -20,4 +20,8 @@ private:
 	Vector3	scale;
 
 	bool	isHit;
+
+	float	GRAVITY;
+	float	ACTIVITYTIME;
+	float	speed;
 };
