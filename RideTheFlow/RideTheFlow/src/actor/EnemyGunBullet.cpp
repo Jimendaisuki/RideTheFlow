@@ -20,7 +20,7 @@ EnemyGunBullet::~EnemyGunBullet()
 }
 void EnemyGunBullet::Update()
 {
-	mPosition += mDirection;
+	mPosition += mDirection*Time::DeltaTime*60.0f;
 	parameter.mat = Matrix4::Translate(mPosition);
 }
 

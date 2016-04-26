@@ -31,24 +31,26 @@ Tornado::~Tornado()
 
 void Tornado::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CYLINDER_BOX_COL);
+	isHit = false;
+
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CAPSULE_AABB_COL);
 
 	//position += velocity;// * Time::DeltaTime;
-	rotate.y += 1000;// *Time::DeltaTime;
+	rotate.y += 1000 * Time::DeltaTime;
 
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::SPHERE_SPHERE_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::SPHERE_SPHERE_COL);
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= 200.0f * Time::DeltaTime;
+		position.x -= 40.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += 200.0f * Time::DeltaTime;
+		position.x += 40.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += 200.0f * Time::DeltaTime;
+		position.y += 40.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= 200.0f * Time::DeltaTime;
+		position.y -= 40.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
-		position.z += 200.0f * Time::DeltaTime;
+		position.z += 40.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
-		position.z -= 200.0f * Time::DeltaTime;
+		position.z -= 40.0f * Time::DeltaTime;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -67,21 +69,23 @@ void Tornado::Update()
 
 void Tornado::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::TORNADO_MODEL, parameter.mat);
+	//Model::GetInstance().Draw(MODEL_ID::TORNADO_MODEL, parameter.mat);
 
-	Vector3 TopPos		= Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) * Vector3(0.0f, 0.5f, 0.0f);
-	Vector3 BottomPos	= Matrix4::GetPosition(parameter.mat) - Matrix4::GetScale(parameter.mat) * Vector3(0.0f, 0.5f, 0.0f);
+	//Vector3 TopPos = Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) * Vector3(0.0f, 0.5f, 0.0f);
+	//Vector3 BottomPos = Matrix4::GetPosition(parameter.mat) - Matrix4::GetScale(parameter.mat) * Vector3(0.0f, 0.5f, 0.0f);
+	Vector3 startPos	= Matrix4::GetPosition(parameter.mat);
+	Vector3 endPos		= Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) * Vector3::Up;
 
-	//DrawLine3D(TopPos, BottomPos, GetColor(255, 255, 255));
-	//DrawCapsule3D(TopPos, BottomPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
+	DrawLine3D(startPos, endPos, GetColor(255, 255, 255));
+	DrawCapsule3D(startPos, endPos	, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
 
-	DrawFormatString(10, 40, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
-	DrawFormatString(10, 60, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
+	DrawFormatString(10, 40, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", startPos.x, startPos.y, startPos.z);
+	DrawFormatString(10, 60, GetColor(255, 255, 255), "BottomPoint: %f %f %f", endPos.x, endPos.y, endPos.z);
 	DrawFormatString(10, 80, GetColor(255, 255, 255), "TornadoSize: %f %f %f", Matrix4::GetScale(parameter.mat).x, Matrix4::GetScale(parameter.mat).y, Matrix4::GetScale(parameter.mat).z);
-
+ 	DrawFormatString(10, 100, GetColor(255, 255, 255), "isHit		: %d", isHit);
 }
 
 void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 {
-
+	isHit = true;
 }

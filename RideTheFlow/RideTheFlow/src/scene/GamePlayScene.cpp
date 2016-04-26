@@ -30,11 +30,6 @@ void GamePlayScene::Initialize()
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 //	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(Vector3(0.0f,0.0f, -150.0f));
-	Camera::GetInstance().Target.Set(Vector3::Zero);
-	Camera::GetInstance().Up.Set(Vector3::Up);
-	Camera::GetInstance().Update();
 	
 	//wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector3(10, 0, 0)));
 }

@@ -25,7 +25,7 @@ void ParachuteBombBullet::Update() {
 	}
 	else
 	{
-		mPosition.y -= 2.5f*Time::DeltaTime;
+		mPosition.y -= 0.1f*Time::DeltaTime*60.0f;
 	}
 	parameter.mat = Matrix4::Translate(mPosition);
 }

@@ -28,8 +28,8 @@ void EnemyVaristorBullet::Update()
 
 	InitialVelocity = sqrt(2 * 9.8f*playerMat.GetPosition().y - mPosition.y);
 	vertexTime = InitialVelocity / 9.8f;
-	mPosition.x += (playerMat.GetPosition().x - mPosition.x) / vertexTime / 60.0f*speed;
-	mPosition.z += (playerMat.GetPosition().z - mPosition.z) / vertexTime / 60.0f*speed;
+	mPosition.x += (playerMat.GetPosition().x - mPosition.x) / vertexTime / 60.0f*speed*Time::DeltaTime*60.0f;
+	mPosition.z += (playerMat.GetPosition().z - mPosition.z) / vertexTime / 60.0f*speed*Time::DeltaTime*60.0f;
 	mPosition = Vector3(mPosition.x, (float)(InitialVelocity*time - 9.8f / 2 * pow(time, 2)), mPosition.z);
 	parameter.mat = Matrix4::Translate(mPosition);
 }
