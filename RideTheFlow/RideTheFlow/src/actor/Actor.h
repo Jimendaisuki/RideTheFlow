@@ -14,6 +14,7 @@ struct ActorParameter
 	ACTOR_ID id;
 	bool isDead;
 	float radius;
+	float height;
 	Matrix4 mat;
 };
 

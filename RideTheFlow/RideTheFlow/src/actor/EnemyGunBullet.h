@@ -3,10 +3,11 @@
 
 #include "Actor.h"
 #include "EnemyAttack.h"
-class EnemyGunBullet :public Actor
+#include <memory>
+class EnemyGunBullet :public Actor, public std::enable_shared_from_this<EnemyGunBullet>
 {
 public:
-	EnemyGunBullet(IWorld& world, Vector3 position);
+	EnemyGunBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float speed);
 	~EnemyGunBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -15,6 +16,7 @@ private:
 	Matrix4 playerMat;
 	Vector3 mPosition;
 	Vector3 mDirection;
+	float mSpeed;
 
 };
 

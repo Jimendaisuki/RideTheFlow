@@ -3,11 +3,12 @@
 
 #include "Actor.h"
 #include "EnemyAttack.h"
+#include <memory>
 
-class EnemyVaristorBullet:public Actor 
+class EnemyVaristorBullet:public Actor,public std::enable_shared_from_this<EnemyVaristorBullet>
 {
 public:
-	EnemyVaristorBullet(IWorld& world, Vector3 position);
+	EnemyVaristorBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
 	~EnemyVaristorBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -20,5 +21,6 @@ private:
 	float  InitialVelocity;
 	float vertexTime;
 	float speed;
+	Vector3 distance;
 };
 #endif

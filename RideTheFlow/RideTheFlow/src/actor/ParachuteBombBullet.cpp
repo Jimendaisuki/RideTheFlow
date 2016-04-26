@@ -4,24 +4,30 @@
 #include"../graphic/Model.h"
 #include"../time/Time.h"
 
-ParachuteBombBullet::ParachuteBombBullet(IWorld& world, Vector3 position, float height) :Actor(world),
+ParachuteBombBullet::ParachuteBombBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float height) :Actor(world),
 mHeight(height+position.y),
 time(0),
 HeightJuge(false),
 mPosition(position)
 {
 	parameter.isDead = false;
+	parameter.mat =
+		Matrix4::Scale(scale) *
+		Matrix4::RotateZ(rotate.z) *
+		Matrix4::RotateX(rotate.x) *
+		Matrix4::RotateY(rotate.y) *
+		Matrix4::Translate(position);
 }
 ParachuteBombBullet::~ParachuteBombBullet(){
 
 }
 void ParachuteBombBullet::Update() {
-	time += Time::DeltaTime*5.0f;
+	time += Time::DeltaTime*10.0f;
 	if (velocity.y >= 0)
 	{
 		initialVelocity = sqrt(mHeight*(2 * 9.8f));
 		mPosition.y = initialVelocity*time - 1.0f / 2.0f*9.8f*pow(time, 2);
-		velocity.y = initialVelocity - (9.8 * time);
+		velocity.y = initialVelocity - (9.8f * time);
 	}
 	else
 	{

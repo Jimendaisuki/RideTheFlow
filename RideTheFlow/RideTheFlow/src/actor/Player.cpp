@@ -69,6 +69,11 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
 		position.y -= speed * Time::DeltaTime;
 
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::F))
+		position.z += speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::R))
+		position.z -= speed * Time::DeltaTime;
+
 	//É{Å[ÉìÇÃèÓïÒêÿÇËë÷Ç¶
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
 		boneSelect++;
@@ -264,5 +269,5 @@ void Player::ParameterDraw() const{
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	position = Vector3(0, 0, 0);
+	//position = Vector3(0, 0, 0);
 }
