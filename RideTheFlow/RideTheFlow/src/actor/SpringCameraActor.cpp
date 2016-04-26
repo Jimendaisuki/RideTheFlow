@@ -44,7 +44,7 @@ void SpringCameraActor::Update()
 	position += velocity;
 
 	point = playerMat.GetPosition();
-	Camera::GetInstance().Position.Set(position + playerMat.GetFront().Normalized()*150.0f+playerMat.GetUp().Normalized()*40.0f);
+	Camera::GetInstance().Position.Set(position + playerMat.GetFront().Normalized() * 100.0f + playerMat.GetUp().Normalized() * 60.0f);
 	Camera::GetInstance().Target.Set(point);
 	Camera::GetInstance().Update();
 }
