@@ -8,6 +8,8 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 
+static const float MODEL_SCALE = 5.0f;
+
 CastleBlock::CastleBlock(IWorld& world, Vector3& position_) :
 Actor(world),
 tornadePos(Vector3::Zero),
@@ -24,7 +26,7 @@ rotate(Vector3::Zero),
 timer(0.0f),
 tornadeAddPosition(Vector3::Zero)
 {
-	scale = Vector3(10.0f / risingAddSpeed) * Vector3(1, 1, 2);
+	scale = Vector3(10.0f / risingAddSpeed) * MODEL_SCALE;
 	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 		tornadePos = other.GetParameter().mat.GetPosition();
 	});

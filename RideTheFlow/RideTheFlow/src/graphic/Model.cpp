@@ -494,6 +494,13 @@ void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float
 	DefaultBlend();
 }
 
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int mode)
+{
+	SetDrawBlendMode(mode, 0);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, 1.0f, 0.0f, m_sprites[id][0], true);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
+}
+
 // ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹‚ðŽó‚¯Žæ‚é
 int Model::GetHandle(const MODEL_ID& id)
 {
