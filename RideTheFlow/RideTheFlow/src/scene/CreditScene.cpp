@@ -7,6 +7,7 @@
 #include "../actor/CameraActor.h"
 
 #include "../input/Keyboard.h"
+#include "../time/Time.h"
 
 #include "../actor/tornado/Tornado.h"
 #include "../actor/castle/Castle.h"
@@ -54,6 +55,8 @@ void CreditScene::Draw() const
 	Model::GetInstance().Draw(MODEL_ID::STAGE_MODEL, Vector3::Zero, Vector3::Zero, Vector3(10.0f));
 
 	DrawFormatString(10, 10, GetColor(255, 255, 255), "CreditScene");
+	DrawFormatString(10, 30, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
+
 	wa.Draw();
 }
 

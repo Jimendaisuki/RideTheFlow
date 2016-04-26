@@ -12,19 +12,19 @@ Actor(world),
 position(position_),
 velocity(velocity_)
 {
+	ACTIVITYTIME = 5.0f;
 	GRAVITY = 1.0f;
 	velocity = Vector3::Zero;
 	speed = 1;
 
 	parameter.isDead = false;
+	parameter.height = 30.0f;
+	parameter.radius = 10;
 	parameter.mat =
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	parameter.height = 30.0f;
-	parameter.radius = 10;
-
 }
 
 Tornado::~Tornado()
@@ -34,6 +34,12 @@ Tornado::~Tornado()
 
 void Tornado::Update()
 {
+	ACTIVITYTIME -= Time::DeltaTime;
+	if (ACTIVITYTIME <= 0)
+	{
+		parameter.isDead = true;
+		return;
+	}
 	isHit = false;
 
 	//position += velocity;// * Time::DeltaTime;
@@ -88,10 +94,10 @@ void Tornado::Draw() const
 
 	DrawCapsule3D(TopPos, BottomPos	, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
-	DrawFormatString(10, 40, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
-	DrawFormatString(10, 60, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
-	DrawFormatString(10, 80, GetColor(255, 255, 255), "TornadoSize: %f %f %f", Matrix4::GetScale(parameter.mat).x, Matrix4::GetScale(parameter.mat).y, Matrix4::GetScale(parameter.mat).z);
- 	DrawFormatString(10, 100, GetColor(255, 255, 255), "isHit		: %d", isHit);
+	DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
+	DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
+	DrawFormatString(10, 110, GetColor(255, 255, 255), "TornadoSize: %f %f %f", Matrix4::GetScale(parameter.mat).x, Matrix4::GetScale(parameter.mat).y, Matrix4::GetScale(parameter.mat).z);
+ 	DrawFormatString(10, 130, GetColor(255, 255, 255), "isHit		: %d", isHit);
 }
 
 void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
@@ -102,7 +108,11 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 		velocity.y = 0;
 		break;
 	case COL_ID::TORNADO_CASTLE_COL:
-		speed = 0.75f;
+		speed *= 0.75f;
+		isHit = true;
+		break;
+	case COL_ID::TORNADO_ISLAND:
+		speed *= 0.75;
 		isHit = true;
 		break;
 	default:

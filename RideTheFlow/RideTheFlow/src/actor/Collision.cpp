@@ -1,44 +1,42 @@
 #include "Collision.h"
 
 // 線と箱の当たり判定
-CollisionParameter Collisin::SegmentBoxAABB(const Line& line, const Box& box) const{
+CollisionParameter Collisin::SegmentBoxAABB(const Line& line, const Box& box) {
 	CollisionParameter colpara;
 	HITRESULT_LINE result;
 
 	result = HitCheck_Line_Cube(
 		line.startPos, line.endPos, 
 		box.min, box.max);
-	colpara.colFlag = result.HitFlag;
+	if (result.HitFlag > 0) colpara.colFlag = true;
 	colpara.colPos = result.Position;
 
 	return colpara;
 }
-
 // 線と球の当たり判定
-CollisionParameter Collisin::SegmentSphere(const Line& line, const Sphere& s) const{
+CollisionParameter Collisin::SegmentSphere(const Line& line, const Sphere& s) {
 	CollisionParameter colpara;
 	
-	colpara.colFlag = HitCheck_Line_Sphere(
+	int result = HitCheck_Line_Sphere(
 		line.startPos, line.endPos,
 		s.position, s.radius);
+	if (result > 0) colpara.colFlag = true;
 	
 	return colpara;
 }
-
 
 // 球と球のあたり判定
 CollisionParameter Collisin::SphereSphere(const Sphere& s1, const Sphere& s2) {
 	CollisionParameter colpara;
 
-	colpara.colFlag = HitCheck_Sphere_Sphere(
+	colpara.colFlag = (bool)HitCheck_Sphere_Sphere(
 		s1.position, s1.radius,
 		s2.position, s2.radius);
 
 	return colpara;
 }
-
 // 球とカプセルの当たり判定
-CollisionParameter Collisin::SphereCapsule(const Sphere& s, const Capsule& c) const{
+CollisionParameter Collisin::SphereCapsule(const Sphere& s, const Capsule& c){
 	CollisionParameter colpara;
 
 	colpara.colFlag = HitCheck_Sphere_Capsule(
@@ -48,20 +46,18 @@ CollisionParameter Collisin::SphereCapsule(const Sphere& s, const Capsule& c) co
 	return colpara;
 }
 
-
 // カプセルとカプセルの当たり判定
 CollisionParameter Collisin::CapsuleCapsule(const Capsule& c1, const Capsule& c2){
 	CollisionParameter colpara;
 
-	colpara.colFlag = HitCheck_Capsule_Capsule(
+	colpara.colFlag = (bool)HitCheck_Capsule_Capsule(
 		c1.startPos, c1.endPos, c1.radius,
 		c2.startPos, c2.endPos, c2.radius);
 
 	return colpara;
 }
-
 // カプセルと点の当たり判定
-CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p) const{
+CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p){
 	CollisionParameter colpara;
 
 	float length = Segment_Point_MinLength(c.startPos, c.endPos, p);
@@ -136,7 +132,6 @@ CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p) co
 //
 //	return colpara;
 //}
-
 
 // モデルと線分の当たり判定
 CollisionParameter Collisin::ModelLine(const ModelData& model, const Line& line){

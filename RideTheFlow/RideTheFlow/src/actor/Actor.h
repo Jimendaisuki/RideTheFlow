@@ -42,7 +42,7 @@ private:
 	// —³Šª‚Æé‚Ì“–‚½‚è”»’è
 	CollisionParameter Tornado_vs_Castle(const Actor& other) const;
 	// —³Šª‚Æ•‚“‡‚Ì“–‚½‚è”»’è
-
+	CollisionParameter Tornado_vs_IsLand(const Actor& other) const;
 
 
 	/* Œã‚Åíœ

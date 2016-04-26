@@ -47,6 +47,7 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	bullet.position = Matrix4::GetPosition(other.parameter.mat);
 	bullet.radius = other.parameter.radius;
 
+	/* ResultData */
 	colpara = Collisin::SphereSphere(player, bullet);
 	colpara.colID = COL_ID::SPHERE_SPHERE_COL;
 
@@ -54,7 +55,27 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 }
 
 /* 竜巻vs */
-//  竜巻と城の当たり判定
+// 竜巻とステージの当たり判定
+CollisionParameter Actor::Tornado_vs_Stage(const Actor& other) const{
+	CollisionParameter colpara;
+
+	/* TornadoData */
+	Line tornado;
+	tornado.startPos = Matrix4::GetPosition(parameter.mat);// -Vector3::Up * parameter.radius;
+	tornado.endPos = Matrix4::GetPosition(parameter.mat) + Vector3(0.0f, parameter.height, 0.0f);
+
+	/* ModelData */
+	ModelData stage;
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MFrameIndex = -1;
+
+	/* ResultData */
+	colpara = Collisin::ModelLine(stage, tornado);
+	colpara.colID = COL_ID::TORNADO_STAGE_COL;
+
+	return colpara;
+}
+// 竜巻と城の当たり判定
 CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	CollisionParameter colpara;
 
@@ -70,28 +91,30 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	castle.endPos	= castle.startPos + Vector3(0.0f, other.parameter.height, 0.0f);
 	castle.radius	= other.parameter.radius;
 
+	/* ResultData */
 	colpara = Collisin::CapsuleCapsule(tornado, castle);
 	colpara.colID = COL_ID::TORNADO_CASTLE_COL;
 
 	return colpara;
 }
-// 
-CollisionParameter Actor::Tornado_vs_Stage(const Actor& other) const{
+// 竜巻と浮島の当たり判定
+CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 	CollisionParameter colpara;
 
 	/* TornadoData */
-	Line tornado;
-	tornado.startPos = Matrix4::GetPosition(parameter.mat);// -Vector3::Up * parameter.radius;
-	tornado.endPos = Matrix4::GetPosition(parameter.mat) + Vector3(0.0f, parameter.height, 0.0f);
+	Capsule tornado;
+	tornado.startPos = Matrix4::GetPosition(parameter.mat);
+	tornado.endPos = tornado.startPos + Vector3(0.0f, parameter.height, 0.0f);
+	tornado.radius = parameter.radius;
 
-	/* ModelData */
-	ModelData stage;
-	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
-	stage.MFrameIndex = -1;
+	/* IslandData */
+	Sphere island;
+	island.position = Matrix4::GetPosition(parameter.mat);
+	island.radius	= other.parameter.radius;
 
-	colpara = Collisin::ModelLine(stage, tornado);
-	colpara.colID = COL_ID::TORNADO_STAGE_COL;
+	Collisin::SphereCapsule(island, tornado);
 
+	colpara.colID = COL_ID::TORNADO_ISLAND;
 	return colpara;
 }
 

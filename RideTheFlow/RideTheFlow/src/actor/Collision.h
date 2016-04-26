@@ -43,19 +43,19 @@ struct ModelData{
 class Collisin{
 public:
 	// 線と箱の当たり判定
-	CollisionParameter SegmentBoxAABB(const Line& line, const Box& box)const;
+	static CollisionParameter SegmentBoxAABB(const Line& line, const Box& box);
 	// 線と球の当たり判定
-	CollisionParameter SegmentSphere(const Line& line, const Sphere& s)const;
+	static CollisionParameter SegmentSphere(const Line& line, const Sphere& s);
 
 	// 球と球のあたり判定
 	static CollisionParameter SphereSphere(const Sphere& s1, const Sphere& s2);
 	// 球とカプセルの当たり判定
-	CollisionParameter SphereCapsule(const Sphere& s, const Capsule& c)const;
+	static CollisionParameter SphereCapsule(const Sphere& s, const Capsule& c);
 
 	// カプセルとカプセルの当たり判定
 	static CollisionParameter CapsuleCapsule(const Capsule& c1, const Capsule& c2);
 	// カプセルと点の当たり判定
-	CollisionParameter CapsulePoint(const Capsule& c, const Vector3& p)const;
+	static CollisionParameter CapsulePoint(const Capsule& c, const Vector3& p);
 	// カプセルとAABBの当たり判定
 	//CollisionParameter CapsuleAABBSegment(const Actor& other)const;
 
