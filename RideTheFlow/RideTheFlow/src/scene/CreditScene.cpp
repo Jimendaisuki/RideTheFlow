@@ -34,7 +34,7 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 25, 0), Vector3(0, 0, 0), Vector3(50, 50, 50)));
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(-100, -25, 0), Vector3(0, 45, 0), Vector3(50, 50, 50)));
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, -25, 0), Vector3(0, 60, 0), Vector3(50, 50, 50)));
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(30, 30, 30)));
+	/*wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(30, 30, 30)));*/
 }
 
 void CreditScene::Update()

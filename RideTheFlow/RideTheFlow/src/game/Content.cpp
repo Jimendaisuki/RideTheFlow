@@ -31,6 +31,8 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load("sandstage.x", MODEL_ID::STAGE_MODEL, async);
 	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
+	model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
+
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 

@@ -4,7 +4,7 @@
 class Enemy :public Actor
 {
 public:
-	Enemy(IWorld& world,Vector3 position);
+	Enemy(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
 	~Enemy();
 	virtual void Update() override;
 	virtual void Draw() const override;

@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\EnemyGun.cpp" />
     <ClCompile Include="src\actor\EnemyParachiteBomb.cpp" />
     <ClCompile Include="src\actor\EnemyVaristor.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\EnemyGun.h" />
     <ClInclude Include="src\actor\EnemyParachuteBomb.h" />
     <ClInclude Include="src\actor\EnemyVaristor.h" />
@@ -197,6 +199,9 @@
     <ClInclude Include="src\world\IWorld.h" />
     <ClInclude Include="src\world\World.h" />
     <ClInclude Include="src\world\WorldActor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Model\boonStage.pmd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -68,6 +68,12 @@ void Player::Update(){
 		position.y += speed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
 		position.y -= speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::R))
+		position.z -= speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::F))
+		position.z += speed * Time::DeltaTime;
+
+
 
 	//ƒ{[ƒ“‚Ìî•ñØ‚è‘Ö‚¦
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
