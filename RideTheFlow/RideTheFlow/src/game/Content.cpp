@@ -12,6 +12,7 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	WorkFolder::SetWorkFolder("res/Sprite/");
 	sprite.Load("body.png", SPRITE_ID::PLAYER_SPRITE);
 	sprite.Load("images.png", SPRITE_ID::ENEMY_SPRITE);
+	sprite.Load("smoke.png", SPRITE_ID::BEGIN_SPRITE);
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");
 }
@@ -24,15 +25,19 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("X-G1.x", MODEL_ID::PLAYER_MODEL, async);
 	model.Load("ryuu.pmd", MODEL_ID::TEST_MODEL, async);
-	model.Load("Box.x", MODEL_ID::BOX_MODEL, async);
+	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
 
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
 
 	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
 	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
+	model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 
-	model.Load2D("rightgrey.png", MODEL_ID::RIGHT_GRAY_2D_MODEL);
+
+	WorkFolder::SetWorkFolder("res/Model2D/");
+
+	model.Load2D("smoke.png", MODEL_ID::SMOKE_MODEL2D);
 
 	//model.Load("m1.pmx", async);
 	//model.Load("m3.pmd", async);

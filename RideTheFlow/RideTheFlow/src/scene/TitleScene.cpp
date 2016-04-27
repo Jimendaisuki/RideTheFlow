@@ -13,6 +13,7 @@
 #include "../actor/AnimTestActor.h"
 #include "../actor/CameraActor.h"
 #include "../actor/castle/CastleBlock.h"
+#include "../actor/tornado/TornadeBillboard.h"
 #include "../actor/tornado/Tornado.h"
 #include "../time/Time.h"
 
@@ -46,21 +47,24 @@ void TitleScene::Initialize()
 	Camera::GetInstance().Update();
 }
 
+float timer = 0.0f;
+
 void TitleScene::Update()
 {
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z)){
 		timer += Time::DeltaTime;
 	}
-	if (timer > 0.01f){
+	if (timer > 0.05f){
 		timer = 0.0f;
 		Vector3 pos;
 		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 			pos = other.GetParameter().mat.GetPosition();
 		});
-		for (int i = 0; i < 30; i++){
-			wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(wa, pos));
-		}
+		//for (int i = 0; i < 2; i++){
+		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<TornadeBillboard>(wa, pos));
+		//}
 	}
+
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}

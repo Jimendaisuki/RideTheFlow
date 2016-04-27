@@ -5,7 +5,7 @@
 class EnemyVaristor:public Actor
 {
 public:
-	EnemyVaristor(IWorld& world, Vector3 position);
+	EnemyVaristor(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
 	~EnemyVaristor();
 	virtual void Update() override;
 	virtual void Draw() const override;

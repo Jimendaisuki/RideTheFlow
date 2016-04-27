@@ -10,8 +10,8 @@
 #include "../math/Vector4.h"
 #include "../math/Matrix4.h"
 #include "../actor/ID.h"
-
-class Point;
+#include "../math/Point.h"
+#include "BlendMode.h"
 
 class Model
 {
@@ -178,6 +178,12 @@ public:
 	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ、中心座標、回転量、透過度、描画フラグ、反転）
 	///</summary>
 	void Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, float alpha, bool trans, bool turn);
+	
+	///<summary>
+	/// ３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、ブレンドモード）
+	///</summary>
+	void Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, int blend_mode, int alpha);
+
 	///<summary>
 	/// モデルハンドルを受け取る
 	///</summary>
@@ -258,4 +264,7 @@ private:
 	std::unordered_map<MODEL_ID, HandlePtr> m_models;
 	
 	std::unordered_map<MODEL_ID, std::vector<int>> m_sprites;
+
+	//現在選択中のブレンドモード
+	int currentBlendMode;
 };

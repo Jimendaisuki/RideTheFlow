@@ -4,7 +4,7 @@
 #include"../actor/EnemyBullet.h"
 #include "../time/Time.h"
 #include "../graphic/Model.h"
-Enemy::Enemy(IWorld& world,Vector3 position) :Actor(world),
+Enemy::Enemy(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :Actor(world),
 playerMat(Matrix4::Identity),
 coolTime(1.0f),
 time(0.0f),
@@ -32,7 +32,7 @@ void Enemy::Update() {
 	});
 	if (Vector3::Distance(playerMat.GetPosition(), mPosition) <= 40.0f&&attack)
 	{
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, 30.0f));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition,Vector3(0), Vector3(5), 30.0f));
 		time = 0;
 		attack = false;
 	}

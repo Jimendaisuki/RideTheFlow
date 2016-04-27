@@ -1,4 +1,4 @@
-#include "CastleBlock.h"
+#include "TornadeBillboard.h"
 #include "../Collision.h"
 #include "../../world/IWorld.h"
 #include "../../graphic/Sprite.h"
@@ -7,10 +7,9 @@
 #include "../../graphic/TextDraw.h"
 #include "../../math/Math.h"
 #include "../../game/Random.h"
+#include "../../graphic/Sprite.h"
 
-static const float MODEL_SCALE = 5.0f;
-
-CastleBlock::CastleBlock(IWorld& world, Vector3& position_) :
+TornadeBillboard::TornadeBillboard(IWorld& world, Vector3& position_) :
 Actor(world),
 tornadePos(Vector3::Zero),
 tornadeMove(Vector3::Zero),
@@ -18,15 +17,15 @@ tornadeRadius(Random::GetInstance().Range(10.0f, 15.0f)),
 tornadeAddRadius(Random::GetInstance().Range(10.0f, 15.0f)),
 tornadeSpeed(360.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
-risingSpeed(Random::GetInstance().Range(8.0f, 10.0f)),
-risingAddSpeed(Random::GetInstance().Range(5, 20)),
-scale(Vector3(1.0f)),
+risingSpeed(Random::GetInstance().Range(50.0f, 60.0f)),
+risingAddSpeed(Random::GetInstance().Range(15, 20)),
+scale(100.0f),
 position(position_),
 rotate(Vector3::Zero),
+drawPosition(Vector2::Zero),
 timer(0.0f),
 tornadeAddPosition(Vector3::Zero)
 {
-	scale = Vector3(10.0f / risingAddSpeed) * MODEL_SCALE;
 	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 		tornadePos = other.GetParameter().mat.GetPosition();
 	});
@@ -35,11 +34,11 @@ tornadeAddPosition(Vector3::Zero)
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	rotate = Vector3(Random::GetInstance().Range(0.0f, 359.0f), Random::GetInstance().Range(0.0f, 359.0f), 0.0f);
 }
-CastleBlock::~CastleBlock()
+TornadeBillboard::~TornadeBillboard()
 {
 
 }
-void CastleBlock::Update()
+void TornadeBillboard::Update()
 {
 	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 		Vector3 pos = other.GetParameter().mat.GetPosition();
@@ -77,12 +76,15 @@ void CastleBlock::Update()
 		Matrix4::RotateZ(rotate.z) *
 		Matrix4::RotateX(rotate.x) *
 		Matrix4::Translate(position + tornadeAddPosition);
+
+	drawPosition = ConvWorldPosToScreenPos(parameter.mat.GetPosition().ToVECTOR());
 }
-void CastleBlock::Draw() const
+void TornadeBillboard::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::BOX_MODEL, parameter.mat);
+	Model::GetInstance().Draw2DBlend(MODEL_ID::SMOKE_MODEL2D, parameter.mat.GetPosition(), 0, scale, BLEND_MODE::Sub,128);
+	//Sprite::GetInstance().DrawBlend(SPRITE_ID::BEGIN_SPRITE, drawPosition, Vector2(200, 0), scale, 0, BLEND_MODE::Sub);
 }
-void CastleBlock::OnCollide(Actor& other, CollisionParameter colpara)
+void TornadeBillboard::OnCollide(Actor& other, CollisionParameter colpara)
 {
 
 }

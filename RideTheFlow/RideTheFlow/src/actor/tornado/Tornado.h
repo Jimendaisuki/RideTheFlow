@@ -19,5 +19,9 @@ private:
 	Vector3	rotate;
 	Vector3	scale;
 
+	float	ACTIVITYTIME;
+	float	GRAVITY;
+	float	speed;
+
 	bool	isHit;
 };

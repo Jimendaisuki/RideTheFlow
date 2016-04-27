@@ -156,6 +156,14 @@ void Sprite::Draw(const SPRITE_ID& id, const Vector2& position, const Point& siz
 	DefaultBlend();
 }
 
+void Sprite::DrawBlend(const SPRITE_ID& id, const Vector2& position, const Vector2& origin, const Vector2& scale, float angle, const int& blendmode)
+{
+	SetDrawBlendMode(blendmode, 255);
+	DrawRotaGraph3((int)position.x, (int)position.y, (int)origin.x, (int)origin.y,
+		(double)scale.x, (double)scale.y, (double)angle * PI / 180.0, m_sprites[id], true, false);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 255);
+}
+
 // 分割画像の描画(アセット名、座標)
 void Sprite::SplitDraw(const SPRITE_ID& id, const Vector2& position, int frame)
 {
