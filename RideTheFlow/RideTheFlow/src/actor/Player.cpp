@@ -19,6 +19,8 @@ const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
 //スピード
 const float speed = 100.0f;
 
+
+
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
 bool changeMotion = true;
@@ -53,27 +55,44 @@ position(Vector3(0,0,0))
 	leftAngle = 0;
 	boneSelect = 0;
 	speedRegulation = 0;
+	rotateUp = 0;
+	rotateLeft = 0;
 }
 Player::~Player(){
 }
 
 float rotateY = 0;
 void Player::Update(){
-	//操作
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= speed * Time::DeltaTime;
+	posStorage.push_back(position);
 
-	//ボーンの情報切り替え
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
-		boneSelect++;
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT))
-		boneSelect--;
+	//操作
+	Vector3 vec = Vector3::Zero;
+
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+		rotateLeft += speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+		rotateLeft -= speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+		rotateUp += speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+		rotateUp -= speed * Time::DeltaTime;
+
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
+		vec.x += speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
+		vec.x -= speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
+		vec.z += speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
+		vec.z -= speed * Time::DeltaTime;
+
+	position += (vec.Normalized().x * parameter.mat.GetLeft() + vec.Normalized().z * -parameter.mat.GetFront()).Normalized() * speed * Time::DeltaTime;
+
+	////ボーンの情報切り替え
+	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
+	//	boneSelect++;
+	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT))
+	//	boneSelect--;
 
 	//ボーンの情報切り替え
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
@@ -85,8 +104,8 @@ void Player::Update(){
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(0) *
-		Matrix4::RotateY(0) *
+		Matrix4::RotateX(rotateLeft) *
+		Matrix4::RotateY(rotateUp) *
 		Matrix4::Translate(position);
 
 	//くねくねの角度のスピード
@@ -107,7 +126,7 @@ void Player::Update(){
 
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(parameter.mat.GetFront().Normalized() * Matrix4::RotateY(rotateY) * 150.0f + Vector3(0, 60, 0) + parameter.mat.GetPosition());
+	Camera::GetInstance().Position.Set(parameter.mat.GetFront().Normalized() * 150.0f + parameter.mat.GetUp().Normalized() * 30.0f + parameter.mat.GetPosition());
 	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
 	Camera::GetInstance().Up.Set(parameter.mat.GetUp());
 	Camera::GetInstance().Update();
@@ -129,6 +148,25 @@ void Player::Draw() const{
 		drawVertexVec[i] = vertexVec[i];
 		drawMatrixVec[i] = parameter.mat;
 	}
+
+	int storageCount = 0;
+	for (auto i : posStorage){
+	//	Vector3 localI = i - position;
+	//	if (Vector3::Length(vertexVec[storageCount + 1] - vertexVec[storageCount + 2]) > Vector3::Length(position - i)){
+	//		Vector3 verVec = localI - vertexVec[storageCount + 1];
+	//		vertexVec[storageCount + 1] = localI;
+	//		for (int a = storageCount + 2; a < boneCount; a++){
+	//			if (storageCount > boneCount - 3){
+	//				break;
+	//			}
+	//			vertexVec[a] += verVec;
+	//		}
+	//		storageCount++;
+	//
+	//	}
+	//	//if (storageCount <= boneCount)posStorage.pop_back();
+
+	}
 	
 	//先頭を原点に移動
 	drawVertexVec[0] = Vector3(position.x, -position.y, position.z);
@@ -138,10 +176,9 @@ void Player::Draw() const{
 		Matrix4 drawMat = 
 			//ボーンの長さ求めて動かす
 			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-			//Left軸基準に回転
-			Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
-			//Front軸基準に回転
-			Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			//Left軸、Front軸基準に回転
+			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 		drawVertexVec[count] = drawMat.GetPosition();
 	}
@@ -159,17 +196,17 @@ void Player::Draw() const{
 	//先頭の高さを設定した状態で再計算
 	for (int count = 1; count < boneCount; count++){
 		Matrix4 drawMat = 
-			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-			Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f)*
-			Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *			
+			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 
 		drawVertexVec[count] = drawMat.GetPosition();
 
 		drawMatrixVec[count] =
 			paramMatSubTrans *
-			Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f)*
-			Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
@@ -191,18 +228,18 @@ void Player::Draw() const{
 			));
 	}
 
-	SAFE_DELETE_ARRAY(drawMatrixVec);
 
-	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL , Vector3::Zero, 1.0f);
+	Model::GetInstance().Draw(MODEL_ID::STAGE_MODEL, Vector3::Zero, 1.0f,Vector3::Zero,scale);
+	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	
 	ParameterDraw();
-	//for (int count = 1; count < boneCount - 1; count++){
-	//	int Color = GetColor(255, 0, 0);
-	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
-	//	DrawLine3D(Vector3::ToVECTOR(drawMatrixVec[count].GetPosition()), Vector3::ToVECTOR(drawMatrixVec[count + 1].GetPosition()), Color);
-	//}
-	//
-	//DrawSphere3D(Vector3::ToVECTOR(drawMatrixVec[boneSelect].GetPosition()), 5.0f, 32, GetColor(255,0,0), GetColor(255, 0,0),FALSE);	
+	for (int count = 1; count < boneCount - 1; count++){
+		int Color = GetColor(255, 0, 0);
+		if (count % 2 == 0)Color = GetColor(0, 255, 0);
+		DrawLine3D(Vector3::ToVECTOR(drawMatrixVec[count].GetPosition()), Vector3::ToVECTOR(drawMatrixVec[count + 1].GetPosition()), Color);
+	}
+	
+	SAFE_DELETE_ARRAY(drawMatrixVec);
 }
 
 
