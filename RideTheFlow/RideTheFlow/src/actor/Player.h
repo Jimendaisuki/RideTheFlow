@@ -20,4 +20,5 @@ private:
 	float rotateUp, rotateLeft;
 	std::vector<Vector3> posStorage;
 	int boneSelect;
+	Matrix4* rotateMat;
 };

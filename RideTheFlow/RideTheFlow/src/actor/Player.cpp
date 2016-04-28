@@ -18,6 +18,8 @@ const float waveCount = 0.52f;
 const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
 //スピード
 const float speed = 100.0f;
+//回転スピード
+const float rotateSpeed = 250.0f;
 
 
 
@@ -57,8 +59,15 @@ position(Vector3(0,0,0))
 	speedRegulation = 0;
 	rotateUp = 0;
 	rotateLeft = 0;
+
+	rotateMat = new Matrix4[boneCount];
+	for (int i = 0; i < boneCount; i++){
+		rotateMat[i] = Matrix4::Identity;	
+	}
 }
 Player::~Player(){
+	SAFE_DELETE_ARRAY(rotateMat);
+	posStorage.clear();
 }
 
 float rotateY = 0;
@@ -69,13 +78,15 @@ void Player::Update(){
 	Vector3 vec = Vector3::Zero;
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
-		rotateLeft += speed * Time::DeltaTime;
+		rotateLeft += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
-		rotateLeft -= speed * Time::DeltaTime;
+		rotateLeft -= rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
-		rotateUp += speed * Time::DeltaTime;
+		rotateUp += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
-		rotateUp -= speed * Time::DeltaTime;
+		rotateUp -= rotateSpeed * Time::DeltaTime;
+
+	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
 		vec.x += speed * Time::DeltaTime;
@@ -86,26 +97,34 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
 		vec.z -= speed * Time::DeltaTime;
 
-	position += (vec.Normalized().x * parameter.mat.GetLeft() + vec.Normalized().z * -parameter.mat.GetFront()).Normalized() * speed * Time::DeltaTime;
-
-	////ボーンの情報切り替え
-	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))
-	//	boneSelect++;
-	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT))
-	//	boneSelect--;
+	Vector3 cameraPos = Camera::GetInstance().Position.Get();
+	//cameraPos.y = 0;
+	position += (vec.z * (position - cameraPos)).Normalized() * speed * Time::DeltaTime;
 
 	//ボーンの情報切り替え
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
-		rotateY += 360.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
-		rotateY -= 360.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X))
+		boneSelect++;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
+		boneSelect--;
 
+	////ボーンの情報切り替え
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
+	//	rotateY += 360.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
+	//	rotateY -= 360.0f * Time::DeltaTime
+	Matrix4 playerRot = Matrix4::Identity;
+	Vector3 front = (Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp)).Normalized();
+	playerRot.SetFront(front);
+	Vector3 up = Vector3(0, 1, 0).Normalized();
+	Vector3 left = Vector3::Cross(front, up).Normalized();
+	up = Vector3::Cross(up, left).Normalized();
+
+	playerRot.SetUp(up);
+	playerRot.SetLeft(left);
 	//マトリックスの再計算
 	parameter.mat =
 		Matrix4::Scale(scale) *
-		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(rotateLeft) *
-		Matrix4::RotateY(rotateUp) *
+		playerRot * 
 		Matrix4::Translate(position);
 
 	//くねくねの角度のスピード
@@ -126,16 +145,19 @@ void Player::Update(){
 
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(parameter.mat.GetFront().Normalized() * 150.0f + parameter.mat.GetUp().Normalized() * 30.0f + parameter.mat.GetPosition());
+	Camera::GetInstance().Position.Set(
+		Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
+		parameter.mat.GetPosition());
 	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-	Camera::GetInstance().Up.Set(parameter.mat.GetUp());
+	Camera::GetInstance().Up.Set(Vector3(0,1,0));
 	Camera::GetInstance().Update();
 }
 void Player::Draw() const{
 	//骨の数だけ用意する
-	Vector3*vertexVec = new Vector3[boneCount];
+	Vector3* vertexVec = new Vector3[boneCount];
 	Vector3* drawVertexVec = new Vector3[boneCount];
 	Matrix4* drawMatrixVec = new Matrix4[boneCount];
+	Vector3* copyVertexVec = new Vector3[boneCount];
 
 	//初期化
 	for (int i = 0; i < boneCount; i++){
@@ -144,32 +166,33 @@ void Player::Draw() const{
 		//初期位置ボーンの位置を取得
 		vertexVec[i] = Matrix4::ToMatrix4(
 			MV1GetFrameLocalWorldMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1)).GetPosition() *
-			parameter.mat;
+			Matrix4::Scale(scale);
 		drawVertexVec[i] = vertexVec[i];
 		drawMatrixVec[i] = parameter.mat;
 	}
 
 	int storageCount = 0;
-	for (auto i : posStorage){
-	//	Vector3 localI = i - position;
-	//	if (Vector3::Length(vertexVec[storageCount + 1] - vertexVec[storageCount + 2]) > Vector3::Length(position - i)){
-	//		Vector3 verVec = localI - vertexVec[storageCount + 1];
-	//		vertexVec[storageCount + 1] = localI;
-	//		for (int a = storageCount + 2; a < boneCount; a++){
-	//			if (storageCount > boneCount - 3){
-	//				break;
-	//			}
-	//			vertexVec[a] += verVec;
-	//		}
-	//		storageCount++;
-	//
-	//	}
-	//	//if (storageCount <= boneCount)posStorage.pop_back();
+	Vector3 startPos = position;
 
+	for (int i = 0; i < boneCount; i++){
+		copyVertexVec[i] = vertexVec[i];
+	}
+
+	vertexVec[0] = position;
+	for (int i = posStorage.size() - 1; i >= 0;i--){
+		if (storageCount + 1 >= boneCount){
+			break;
+		}
+		if (Vector3::Length(startPos - posStorage[i]) >= Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1])){
+			vertexVec[storageCount + 1] = startPos  + (posStorage[i] - startPos).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
+			startPos = vertexVec[storageCount + 1];
+
+			storageCount++;
+		}
 	}
 	
 	//先頭を原点に移動
-	drawVertexVec[0] = Vector3(position.x, -position.y, position.z);
+	drawVertexVec[0] = vertexVec[0];
 
 	//先頭の高さを求める為最頂点の位置までの計算を行う
 	for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
@@ -184,14 +207,17 @@ void Player::Draw() const{
 	}
 
 	//先頭の高さを代入
-	drawVertexVec[0].y = -drawVertexVec[boneCount / (int)(2.0f / waveCount)].y;
+	//drawVertexVec[0] = -drawVertexVec[boneCount / (int)(2.0f / waveCount)];
 
 	//移動量を引いたプレイヤーのマトリックスを作成
 	Matrix4 paramMatSubTrans = parameter.mat;
 	paramMatSubTrans.SetPosition(Vector3(0, 0, 0));
 
+
 	//マトリックスも再計算
-	drawMatrixVec[0] = paramMatSubTrans * Matrix4::Translate(drawVertexVec[0]);
+	drawMatrixVec[0] =
+		Matrix4::Scale(scale) *
+		Matrix4::Translate(drawVertexVec[0]);
 
 	//先頭の高さを設定した状態で再計算
 	for (int count = 1; count < boneCount; count++){
@@ -202,16 +228,24 @@ void Player::Draw() const{
 			Matrix4::Translate(drawVertexVec[count - 1]);
 
 		drawVertexVec[count] = drawMat.GetPosition();
+		rotateMat[count] = Matrix4::Identity;
+		Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
+		rotateMat[count].SetFront(front);
+		Vector3 up = Vector3(0,1,0).Normalized();
+		Vector3 left = Vector3::Cross(front, up).Normalized();
+		up = Vector3::Cross(left, front).Normalized();
+		rotateMat[count].SetUp(up);
+		rotateMat[count].SetLeft(left);
 
+		//rotateMat[count] = Matrix4::Translate(front);
 		drawMatrixVec[count] =
-			paramMatSubTrans *
+			Matrix4::Scale(scale) * 
+			rotateMat[count] *
 			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
-	SAFE_DELETE_ARRAY(vertexVec);
-	SAFE_DELETE_ARRAY(drawVertexVec);
 
 	//相対座標に変換しセット
 	for (int count = 0; count < boneCount; count++){
@@ -228,18 +262,20 @@ void Player::Draw() const{
 			));
 	}
 
-
-	Model::GetInstance().Draw(MODEL_ID::STAGE_MODEL, Vector3::Zero, 1.0f,Vector3::Zero,scale);
+	Model::GetInstance().Draw(MODEL_ID::STAGE_MODEL, Vector3(0,-100,0), 1.0f,Vector3::Zero,scale);
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
-	
+	//DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 	ParameterDraw();
-	for (int count = 1; count < boneCount - 1; count++){
+	for (int count = 0; count < boneCount - 1; count++){
 		int Color = GetColor(255, 0, 0);
 		if (count % 2 == 0)Color = GetColor(0, 255, 0);
-		DrawLine3D(Vector3::ToVECTOR(drawMatrixVec[count].GetPosition()), Vector3::ToVECTOR(drawMatrixVec[count + 1].GetPosition()), Color);
+		DrawLine3D(Vector3::ToVECTOR(drawVertexVec[count]), Vector3::ToVECTOR(drawVertexVec[count + 1]), Color);
 	}
 	
+	SAFE_DELETE_ARRAY(vertexVec);
+	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
+	SAFE_DELETE_ARRAY(copyVertexVec);
 }
 
 
@@ -264,11 +300,11 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "Child Num    %d", MV1GetFrameChildNum(ModelHandle, boneSelect));
 
 	// フレームのワールド座標の描画
-	VECTOR Position = MV1GetFramePosition(ModelHandle, boneSelect);
+	VECTOR Position = position;// MV1GetFramePosition(ModelHandle, boneSelect);
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
 	// 変換行列を描画する
-	MATRIX Matrix = MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
+	MATRIX Matrix = rotateMat[boneSelect].ToMATRIX();// MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 64, GetColor(255, 255, 255), "   Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 80, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 96, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
@@ -297,7 +333,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %f", (Math::Cos(speedRegulation) + 1.0f) / 2.0f);
+	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %d", posStorage.size());
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
