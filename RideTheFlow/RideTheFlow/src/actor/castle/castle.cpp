@@ -10,26 +10,40 @@
 #include "../EnemyVaristorBullet.h"
 #include "../ParachuteBombBullet.h"
 
-Castle::Castle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float parSecondAttack, float attackRange) :
+Castle::Castle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float secondAttack, float attackRange, int arrowNumber, float arrowAccuracy,float attackTime) :
 Actor(world),
-mParSecondAttack(parSecondAttack),
+mSecondAttack(secondAttack),
 mAttackRange(attackRange),
-time(0.0f),
+mArrowAccuracy(arrowAccuracy),
+mArrowNumber(arrowNumber),
+arrowCount(0),
+attackRag(0.0f),
+mAttackTime(attackTime),
 playerMat(Matrix4::Identity),
-mPosition(position)
+mPosition(position),
+randomTarget(0,0,0),
+endPos(0,0,0),
+startPos(0,0,0)
 {
-	parameter.isDead = false;
 
+	//MV1_REF_POLYGONLIST castleModel= MV1GetReferenceMesh(Model::GetInstance().GetHandle(MODEL_ID::CASTLE_MODEL), -1, FALSE);
+
+	//float castleMin = sqrtf(castleModel.MinPosition.x * castleModel.MinPosition.x + castleModel.MinPosition.z * castleModel.MinPosition.z);;
+	//float castleMax = sqrtf(castleModel.MaxPosition.x * castleModel.MaxPosition.x + castleModel.MaxPosition.z * castleModel.MaxPosition.z);;
+	//parameter.radius=Math::Max(castleMin, castleMax);
+	//parameter.height = castleModel.MaxPosition.y-castleModel.MinPosition.y;
+	Vector2 side = Vector2(scale.x, scale.z) / 2;
+	parameter.isDead = false;
+	parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
+	parameter.height = 30.0f;
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(rotate.z) *
 		Matrix4::RotateX(rotate.x) *
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
-
-	Vector2 side = Vector2(scale.x, scale.z) / 2;
-	parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
-	parameter.height = 30.0f;
+	startPos = Matrix4::GetPosition(parameter.mat);
+	endPos = startPos + Vector3(0.0f, parameter.height, 0.0f);
 }
 
 Castle::~Castle()
@@ -39,36 +53,33 @@ Castle::~Castle()
 
 void Castle::Update()
 {
-	time += Time::DeltaTime;
-	if (time >= 1.0f / mParSecondAttack)
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		playerMat = other.GetParameter().mat;
+	});
+	attackRag += Time::DeltaTime;
+	mAttackTime += Time::DeltaTime;
+	if (mAttackTime >= mSecondAttack&&attackRag >= 0.03f&&arrowCount < mArrowNumber&&
+		Vector3::Distance(playerMat.GetPosition(),mPosition)<=mAttackRange)
 	{
-		time = 0.0f;
-		if (Vector3::Distance(playerMat.GetPosition(), mPosition) > mAttackRange) return;
-		switch (GetRand(2))
+		attackRag = 0.0f;
+		arrowCount++;
+		randomTarget = Vector3(GetRand(mArrowAccuracy * 2) - mArrowAccuracy,
+			GetRand(mArrowAccuracy * 2) - mArrowAccuracy,
+			GetRand(mArrowAccuracy * 2) - mArrowAccuracy);
+		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world,mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), randomTarget));
+		if (arrowCount >= mArrowNumber)
 		{
-		case 0:
-			/*world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, 40.0f));*/
-			break;
-		case 1:
-			world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), 2.0f));
-			break;
-		case 2:
-			world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5)));
-			break;
-			//case 3:
-			//	world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<ParachuteBombBullet>(world, mPosition,20.0f));
-			//	break;
+			arrowCount = 0;
+			mAttackTime = 0.0f;
 		}
+
 	}
 }
 
 void Castle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_MODEL, parameter.mat);
-
-	Vector3 startPos, endPos;
-	startPos = Matrix4::GetPosition(parameter.mat);
-	endPos = startPos + Vector3(0.0f, parameter.height, 0.0f);
 	DrawCapsule3D(startPos, endPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
 
 	//DrawLine3D(startPos, endPos, GetColor(255, 0, 0));

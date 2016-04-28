@@ -17,5 +17,10 @@ private:
 	Vector3 position;
 	float upAngle, leftAngle;
 	float speedRegulation;
+	float rotateUp, rotateLeft;
+	std::vector<Vector3> posStorage;
 	int boneSelect;
+	Matrix4* rotateMat;
+	int deletePosStorageCount;
+	Vector3* vertexVec;
 };

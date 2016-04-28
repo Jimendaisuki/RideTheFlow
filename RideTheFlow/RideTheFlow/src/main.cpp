@@ -5,6 +5,10 @@
 #include "scene\GamePlayScene.h"
 #include  "scene\TitleScene.h"
 
+#define _CRTDBG_MAP_ALLOC 
+#include <stdlib.h> 
+#include <crtdbg.h>
+
 #ifndef _GAME
 #define _GAME TRUE
 #endif /* _GAME */
@@ -13,6 +17,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmdShow)
 {
 	Game1 game;
+
+	// ÉÅÉÇÉäÉäÅ[ÉNåüèo
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	try
 	{

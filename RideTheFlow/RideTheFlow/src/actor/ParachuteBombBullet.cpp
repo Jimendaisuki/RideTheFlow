@@ -5,10 +5,11 @@
 #include"../time/Time.h"
 
 ParachuteBombBullet::ParachuteBombBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float height) :Actor(world),
-mHeight(height+position.y),
+mHeight(height-position.y),
 time(0),
 HeightJuge(false),
-mPosition(position)
+mPosition(position),
+coppyPosition(position)
 {
 	parameter.isDead = false;
 	parameter.mat =
@@ -33,10 +34,10 @@ void ParachuteBombBullet::Update() {
 	{
 		mPosition.y -= 0.1f*Time::DeltaTime*60.0f;
 	}
-	parameter.mat = Matrix4::Translate(mPosition);
+	parameter.mat = Matrix4::Translate(mPosition+Vector3(0.0f,coppyPosition.y,0.0f));
 }
 void ParachuteBombBullet::Draw() const{
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
+	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
 }
 void ParachuteBombBullet::OnCollide(Actor& other, CollisionParameter colpara){
 
