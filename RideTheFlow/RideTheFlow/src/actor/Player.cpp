@@ -64,9 +64,13 @@ position(Vector3(0,0,0))
 	for (int i = 0; i < boneCount; i++){
 		rotateMat[i] = Matrix4::Identity;	
 	}
+
+	vertexVec = new Vector3[boneCount];
+	deletePosStorageCount = 0;
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
+	SAFE_DELETE_ARRAY(vertexVec);
 	posStorage.clear();
 }
 
@@ -151,15 +155,10 @@ void Player::Update(){
 	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
 	Camera::GetInstance().Up.Set(Vector3(0,1,0));
 	Camera::GetInstance().Update();
-}
-void Player::Draw() const{
-	//骨の数だけ用意する
-	Vector3* vertexVec = new Vector3[boneCount];
-	Vector3* drawVertexVec = new Vector3[boneCount];
-	Matrix4* drawMatrixVec = new Matrix4[boneCount];
+
+
 	Vector3* copyVertexVec = new Vector3[boneCount];
 
-	//初期化
 	for (int i = 0; i < boneCount; i++){
 		//ボーンの状態をリセット
 		MV1ResetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1);
@@ -167,28 +166,56 @@ void Player::Draw() const{
 		vertexVec[i] = Matrix4::ToMatrix4(
 			MV1GetFrameLocalWorldMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1)).GetPosition() *
 			Matrix4::Scale(scale);
-		drawVertexVec[i] = vertexVec[i];
-		drawMatrixVec[i] = parameter.mat;
+
+		copyVertexVec[i] = vertexVec[i];
 	}
 
 	int storageCount = 0;
 	Vector3 startPos = position;
-
-	for (int i = 0; i < boneCount; i++){
-		copyVertexVec[i] = vertexVec[i];
-	}
-
 	vertexVec[0] = position;
-	for (int i = posStorage.size() - 1; i >= 0;i--){
+
+	deletePosStorageCount = posStorage.size();
+	for (int i = posStorage.size() - 1; i >= 0; i--){
 		if (storageCount + 1 >= boneCount){
 			break;
 		}
+		else{
+			deletePosStorageCount--;
+		}
 		if (Vector3::Length(startPos - posStorage[i]) >= Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1])){
-			vertexVec[storageCount + 1] = startPos  + (posStorage[i] - startPos).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
+			vertexVec[storageCount + 1] = startPos + (posStorage[i] - startPos).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
 			startPos = vertexVec[storageCount + 1];
-
 			storageCount++;
 		}
+	}
+	while (!(storageCount + 1 >= boneCount)){
+		vertexVec[storageCount + 1] = startPos + Vector3(0, 0, 1).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
+		startPos = vertexVec[storageCount + 1];
+		storageCount++;
+	}
+	int defaltSize = posStorage.size();
+	for (int i = 0; i < deletePosStorageCount; i++)
+	posStorage.erase(posStorage.begin());
+
+	//deletePosStorageCount = 0;
+
+	SAFE_DELETE_ARRAY(copyVertexVec);
+}
+void Player::Draw() const{
+	//骨の数だけ用意する
+	Vector3* drawVertexVec = new Vector3[boneCount];
+	Matrix4* drawMatrixVec = new Matrix4[boneCount];
+	Vector3* copyVertexVec = new Vector3[boneCount];
+
+	//初期化
+	for (int i = 0; i < boneCount; i++){
+		drawVertexVec[i] = vertexVec[i];
+		drawMatrixVec[i] = parameter.mat;
+	}
+
+
+	for (int i = 0; i < boneCount; i++){
+		copyVertexVec[i] = vertexVec[i];
 	}
 	
 	//先頭を原点に移動
@@ -262,7 +289,6 @@ void Player::Draw() const{
 			));
 	}
 
-	Model::GetInstance().Draw(MODEL_ID::STAGE_MODEL, Vector3(0,-100,0), 1.0f,Vector3::Zero,scale);
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	//DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 	ParameterDraw();
@@ -271,8 +297,7 @@ void Player::Draw() const{
 		if (count % 2 == 0)Color = GetColor(0, 255, 0);
 		DrawLine3D(Vector3::ToVECTOR(drawVertexVec[count]), Vector3::ToVECTOR(drawVertexVec[count + 1]), Color);
 	}
-	
-	SAFE_DELETE_ARRAY(vertexVec);
+
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
 	SAFE_DELETE_ARRAY(copyVertexVec);

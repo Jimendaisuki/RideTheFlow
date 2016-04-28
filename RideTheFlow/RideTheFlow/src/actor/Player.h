@@ -21,4 +21,6 @@ private:
 	std::vector<Vector3> posStorage;
 	int boneSelect;
 	Matrix4* rotateMat;
+	int deletePosStorageCount;
+	Vector3* vertexVec;
 };
