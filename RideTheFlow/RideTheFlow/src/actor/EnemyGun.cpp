@@ -26,7 +26,7 @@ void EnemyGun::Update() {
 	});
 	if (Vector3::Distance(playerMat.GetPosition(), mPosition) <= 40.0f&&attack)
 	{
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0), Vector3(5),3.0f));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0), Vector3(5),Vector3(0),3.0f));
 		time = 0;
 		attack = false;
 	}
