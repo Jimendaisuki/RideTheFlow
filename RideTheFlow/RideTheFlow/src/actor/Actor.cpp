@@ -16,6 +16,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::TORNADO_ISLAND_COL] = std::bind(&Actor::Tornado_vs_IsLand, this, std::placeholders::_1);
 
 	colFunc[COL_ID::SPHERE_CAPSULE] = std::bind(&Actor::BoundarySphere_Capsule, this, std::placeholders::_1);
+	colFunc[COL_ID::PLAYER_TORNADO_COL] = std::bind(&Actor::Player_vs_Tornado, this, std::placeholders::_1);
 
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
@@ -59,6 +60,18 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	return colpara;
 }
 
+
+CollisionParameter Actor::Player_vs_Tornado(const Actor& other) const{
+	CollisionParameter colpara;
+	if (HitCheck_Capsule_Capsule(parameter.mat.GetPosition(), parameter.mat.GetPosition() + parameter.height, parameter.radius,
+		other.parameter.mat.GetPosition(), other.parameter.mat.GetPosition() + other.parameter.height, other.parameter.radius)){
+		colpara.colFlag = true;
+		colpara.colVelosity = parameter.height.Normalized();
+		colpara.colID = COL_ID::PLAYER_TORNADO_COL;
+	}
+	return colpara;
+}
+
 /* 竜巻vs */
 // 竜巻とステージの当たり判定
 CollisionParameter Actor::Tornado_vs_Stage(const Actor& other) const{
@@ -67,7 +80,7 @@ CollisionParameter Actor::Tornado_vs_Stage(const Actor& other) const{
 	/* TornadoData */
 	Line tornado;
 	tornado.startPos = Matrix4::GetPosition(parameter.mat);// -Vector3::Up * parameter.radius;
-	tornado.endPos = Matrix4::GetPosition(parameter.mat) + Vector3(0.0f, parameter.height, 0.0f);
+	tornado.endPos = Matrix4::GetPosition(parameter.mat) + parameter.height;
 
 	/* ModelData */
 	ModelData stage;
@@ -87,13 +100,13 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	/* TornadoData */
 	Capsule tornado;
 	tornado.startPos = Matrix4::GetPosition(parameter.mat);
-	tornado.endPos	 = tornado.startPos + Vector3(0.0f, parameter.height, 0.0f);
+	tornado.endPos = tornado.startPos + parameter.height;
 	tornado.radius   = parameter.radius;
 
 	/* CastleData */
 	Capsule castle;
 	castle.startPos = Matrix4::GetPosition(other.parameter.mat);
-	castle.endPos	= castle.startPos + Vector3(0.0f, other.parameter.height, 0.0f);
+	castle.endPos = castle.startPos + other.parameter.height;
 	castle.radius	= other.parameter.radius;
 
 	/* ResultData */
@@ -109,7 +122,7 @@ CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 	/* TornadoData */
 	Capsule tornado;
 	tornado.startPos = Matrix4::GetPosition(parameter.mat);
-	tornado.endPos = tornado.startPos + Vector3(0.0f, parameter.height, 0.0f);
+	tornado.endPos = tornado.startPos + parameter.height;
 	tornado.radius = parameter.radius;
 
 	/* IslandData */
@@ -135,7 +148,7 @@ CollisionParameter Actor::BoundarySphere_Capsule(const Actor& other) const{
 
 	Capsule tornado;
 	tornado.startPos = Matrix4::GetPosition(other.parameter.mat);
-	tornado.endPos = tornado.startPos + Vector3(0.0f, other.parameter.height, 0.0f);
+	tornado.endPos = tornado.startPos + parameter.height;
 	tornado.radius = other.parameter.radius;
 
 	/* IslandData */

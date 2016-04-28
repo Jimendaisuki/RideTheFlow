@@ -68,6 +68,14 @@ tornadeTimer(0.0f)
 
 	vertexVec = new Vector3[boneCount];
 	deletePosStorageCount = 0;
+
+	damageFlag = false;
+	damageCount = 0;
+
+	
+
+	tackleFlag = false;
+	tackleCount = 0.0f;
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
@@ -75,27 +83,8 @@ Player::~Player(){
 	posStorage.clear();
 }
 
-float rotateY = 0;
 
 void Player::Update(){
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
-		(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || 
-		Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
-		tornadeTimer += Time::DeltaTime;
-	}
-
-	if (tornadeTimer > 2.0f)
-	{
-		tornadeTimer = 0.0f;
-		world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, position, Vector2(1, 1), Vector3::Zero));
-	}
-
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
-		Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
-		Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-		Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
-		posStorage.push_back(position);
-	}
 
 	//ëÄçÏ
 	Vector3 vec = Vector3::Zero;
@@ -119,10 +108,45 @@ void Player::Update(){
 		vec.z += speed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
 		vec.z -= speed * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
+		tackleFlag = true;
 
 	Vector3 cameraPos = Camera::GetInstance().Position.Get();
 	//cameraPos.y = 0;
-	position += (vec.z * (position - cameraPos)).Normalized() * speed * Time::DeltaTime;
+
+	if (!tackleFlag){
+		position += (vec.z * (position - (cameraPos - Vector3(0,30,0)))).Normalized() * speed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
+			(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) ||
+			Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
+			tornadeTimer += Time::DeltaTime;
+		}
+		else{
+			tornadeTimer = 0;
+		}
+
+		if (tornadeTimer > 3.0f)
+		{
+			tornadeTimer = 0.0f;
+			world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, position, Vector2(1, 1), Vector3::Zero));
+		}
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
+			Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
+			Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
+			Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+			posStorage.push_back(position);
+		}
+	}
+	else{
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
+		tackleCount += Time::DeltaTime;
+		parameter.height = (position - cameraPos).Normalized() * 30.0f;
+		if (tackleCount > 2.0f){
+			tackleCount = 0.0f;
+			tackleFlag = false;
+		}
+	}
 
 	//É{Å[ÉìÇÃèÓïÒêÿÇËë÷Ç¶
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X))
@@ -136,7 +160,7 @@ void Player::Update(){
 	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
 	//	rotateY -= 360.0f * Time::DeltaTime
 	Matrix4 playerRot = Matrix4::Identity;
-	Vector3 front = (Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp)).Normalized();
+	Vector3 front = (Vector3(0, 0, 1) * 200.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp)).Normalized();
 	playerRot.SetFront(front);
 	Vector3 up = Vector3(0, 1, 0).Normalized();
 	Vector3 left = Vector3::Cross(front, up).Normalized();
@@ -170,7 +194,7 @@ void Player::Update(){
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(
 		Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
-		parameter.mat.GetPosition());
+		parameter.mat.GetPosition() + Vector3(0,30,0));
 	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
 	Camera::GetInstance().Up.Set(Vector3(0,1,0));
 	Camera::GetInstance().Update();
@@ -212,6 +236,8 @@ void Player::Update(){
 		startPos = vertexVec[storageCount + 1];
 		storageCount++;
 	}
+
+
 	int defaltSize = posStorage.size();
 	for (int i = 0; i < deletePosStorageCount; i++)
 	posStorage.erase(posStorage.begin());
@@ -219,6 +245,13 @@ void Player::Update(){
 	//deletePosStorageCount = 0;
 
 	SAFE_DELETE_ARRAY(copyVertexVec);
+	if (damageFlag){
+		damageCount += Time::DeltaTime;
+		if (damageCount > 1.0f){
+			damageFlag = false;
+			damageCount = 0;
+		}
+	}
 }
 void Player::Draw() const{
 	//çúÇÃêîÇæÇØópà”Ç∑ÇÈ
@@ -309,8 +342,14 @@ void Player::Draw() const{
 	}
 
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
-	//DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
-	ParameterDraw();
+	if (damageFlag){
+		DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
+	}
+
+	if (tackleFlag)
+	DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
+	
+	//ParameterDraw();
 	//for (int count = 0; count < boneCount - 1; count++){
 	//	int Color = GetColor(255, 0, 0);
 	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
@@ -381,5 +420,7 @@ void Player::ParameterDraw() const{
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	position = Vector3(0, 0, 0);
+	if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
+		damageFlag = true;
+	}
 }

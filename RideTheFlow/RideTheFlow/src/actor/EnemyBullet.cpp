@@ -43,7 +43,7 @@ void EnemyBullet::Update()
 
 void EnemyBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
+	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat.GetPosition());
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)

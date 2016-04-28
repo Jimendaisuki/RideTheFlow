@@ -26,5 +26,9 @@ private:
 
 	float tornadeTimer;
 
+	bool damageFlag;
+	float damageCount;
 
+	bool tackleFlag;
+	float tackleCount;
 };

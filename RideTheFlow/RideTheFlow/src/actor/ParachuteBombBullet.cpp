@@ -37,7 +37,7 @@ void ParachuteBombBullet::Update() {
 	parameter.mat = Matrix4::Translate(mPosition+Vector3(0.0f,coppyPosition.y,0.0f));
 }
 void ParachuteBombBullet::Draw() const{
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
+	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
 }
 void ParachuteBombBullet::OnCollide(Actor& other, CollisionParameter colpara){
 

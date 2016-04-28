@@ -14,7 +14,7 @@ struct ActorParameter
 	ACTOR_ID id;
 	bool isDead;
 	float radius;
-	float height;
+	Vector3 height;
 	Matrix4 mat;
 };
 
@@ -35,6 +35,7 @@ private:
 	/* —´vs */
 	// —´‚Æ’e
 	CollisionParameter Player_vs_Bullet(const Actor& other) const;
+	CollisionParameter Player_vs_Tornado(const Actor& other) const;
 
 	/* •—ˆ³vs */
 	// •—ˆ³‚Æ’e

@@ -38,7 +38,7 @@ void EnemyGun::Update() {
 	}
 }
 void EnemyGun::Draw() const{
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, mPosition);
+	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, mPosition);
 }
 void EnemyGun::OnCollide(Actor& other, CollisionParameter colpara){
 

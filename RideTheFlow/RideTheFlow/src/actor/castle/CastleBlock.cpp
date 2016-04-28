@@ -84,5 +84,5 @@ void CastleBlock::Draw() const
 }
 void CastleBlock::OnCollide(Actor& other, CollisionParameter colpara)
 {
-
+	parameter.isDead = true;
 }

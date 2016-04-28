@@ -8,25 +8,28 @@
 
 #include "../../input/Keyboard.h"
 
+const float TornadoDefaltSpeed = 300.0f;
 Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_) :
 Actor(world),
 position(position_),
 velocity(velocity_),
 timer(0.0f)
 {
-	ACTIVITYTIME = 5.0f;
-	GRAVITY = 1.0f;
+	ACTIVITYTIME = 20.0f;
+	GRAVITY = 3.0f;
 	//velocity = Vector3::Zero;
-	speed = 1;
+	speed = 300.0f;
 
 	parameter.isDead = false;
-	parameter.height = 30.0f;
-	parameter.radius = 10;
+	parameter.height = Vector3(0.0f,300.0f,0.0f);
+	parameter.radius = 80;
 	parameter.mat =
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
+
+	parameter.id = ACTOR_ID::TORNADO_ACTOR;
 }
 
 Tornado::~Tornado()
@@ -64,7 +67,8 @@ void Tornado::Update()
 	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
 	//	position.z -= 100.0f * Time::DeltaTime;
 
-	position += velocity * speed;
+	velocity.y = -GRAVITY;
+	position += velocity * speed  * Time::DeltaTime;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -73,8 +77,6 @@ void Tornado::Update()
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
-	velocity.y -= GRAVITY * Time::DeltaTime;
-	speed = 1.0f;
 
 	//====竜巻の煙生成====//
 	timer += Time::DeltaTime;
@@ -89,9 +91,10 @@ void Tornado::Draw() const
 {
 	Vector3 TopPos, BottomPos;
 	BottomPos = Matrix4::GetPosition(parameter.mat);
-	TopPos = BottomPos + Vector3(0.0f, parameter.height, 0.0f);
+	TopPos = BottomPos + velocity * 1000.0f;
 
-	DrawCapsule3D(TopPos, BottomPos	, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
+	//デバックコード消しました
+	//DrawCapsule3D(TopPos, BottomPos	, 32, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
 	DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
 	DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
@@ -108,19 +111,23 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 		break;
 	case COL_ID::TORNADO_CASTLE_COL:
 		// 城と衝突
+		if (speed > 300.0f * 0.5f)
 		speed *= 0.5f;
 		isHit = true;
 		break;
 	case COL_ID::TORNADO_ISLAND_COL:
 		// 浮島と衝突
+		if (speed > 300.0f * 0.5f)
 		speed *= 0.5f;
 		velocity.y = 0;
-		position = colpara.colPos;
+		//position = colpara.colPos;
 		isHit = true;
 		break;
 	case COL_ID::SPHERE_SPHERE_COL:
 		// 
 		velocity = colpara.colVelosity;
+	case COL_ID::PLAYER_TORNADO_COL:
+		velocity = Vector3(colpara.colVelosity.x, 0.0f, colpara.colVelosity.z).Normalized();
 	default:
 		break;
 	}

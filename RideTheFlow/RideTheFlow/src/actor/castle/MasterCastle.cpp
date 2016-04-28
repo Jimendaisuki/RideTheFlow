@@ -43,7 +43,7 @@ randomTarget(0)
     Vector2 side = Vector2(scale.x, scale.z) / 2;
     parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
 	parameter.isDead = false;
-	parameter.height = CastleHeight;
+	parameter.height = Vector3(0.0f,CastleHeight,0.0f);
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(rotate.z) *
@@ -104,7 +104,7 @@ void MasterCastle::Update()
 void MasterCastle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_MODEL, parameter.mat);
-	DrawCapsule3D(startPos, endPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
+	//DrawCapsule3D(startPos, endPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
 
 	//DrawLine3D(startPos, endPos, GetColor(255, 0, 0));
 
@@ -124,5 +124,5 @@ void MasterCastle::Draw() const
 
 void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	//parameter.isDead = true;
+	parameter.isDead = true;
 }
