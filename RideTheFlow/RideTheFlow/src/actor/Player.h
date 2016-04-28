@@ -23,4 +23,8 @@ private:
 	Matrix4* rotateMat;
 	int deletePosStorageCount;
 	Vector3* vertexVec;
+
+	float tornadeTimer;
+
+
 };

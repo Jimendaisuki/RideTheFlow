@@ -4,13 +4,15 @@
 #include "../../graphic/Sprite.h"
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
+#include "TornadeBillboard.h"
 
 #include "../../input/Keyboard.h"
 
 Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_) :
 Actor(world),
 position(position_),
-velocity(velocity_)
+velocity(velocity_),
+timer(0.0f)
 {
 	ACTIVITYTIME = 5.0f;
 	GRAVITY = 1.0f;
@@ -34,11 +36,11 @@ Tornado::~Tornado()
 
 void Tornado::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_STAGE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::TORNADO_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR , COL_ID::TORNADO_CASTLE_COL);
 	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR , COL_ID::TORNADO_ISLAND_COL);
 
-	//ACTIVITYTIME -= Time::DeltaTime;
+	ACTIVITYTIME -= Time::DeltaTime;
 	if (ACTIVITYTIME <= 0)
 	{
 		parameter.isDead = true;
@@ -49,18 +51,18 @@ void Tornado::Update()
 	//position += velocity;// * Time::DeltaTime;
 	//rotate.y += 1000 * Time::DeltaTime;
 
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
-		position.z += 100.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
-		position.z -= 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
+	//	position.x -= 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
+	//	position.x += 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
+	//	position.y += 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
+	//	position.y -= 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
+	//	position.z += 100.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
+	//	position.z -= 100.0f * Time::DeltaTime;
 
 	position += velocity * speed;
 
@@ -73,6 +75,14 @@ void Tornado::Update()
 
 	velocity.y -= GRAVITY * Time::DeltaTime;
 	speed = 1.0f;
+
+	//====—³Šª‚Ì‰Œ¶¬====//
+	timer += Time::DeltaTime;
+	if (timer > 0.08f){
+		timer = 0.0f;
+		Vector3 pos = parameter.mat.GetPosition();
+		world.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<TornadeBillboard>(world, pos, shared_from_this()));
+	}
 }
 
 void Tornado::Draw() const

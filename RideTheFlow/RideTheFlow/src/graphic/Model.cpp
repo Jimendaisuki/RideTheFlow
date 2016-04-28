@@ -173,7 +173,7 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, co
 {
 	rotate = rotate * PI / 180.0f;
 
-	auto handle = m_models.at(id)->GetHangle();
+ 	auto handle = m_models.at(id)->GetHangle();
 	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
 	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
 	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));

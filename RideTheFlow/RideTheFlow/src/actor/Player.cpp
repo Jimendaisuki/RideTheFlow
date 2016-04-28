@@ -9,6 +9,7 @@
 #include "../math/Math.h"
 #include "../camera/Camera.h"
 #include "../math/Quaternion.h"
+#include "tornado\Tornado.h"
 
 //ƒ{[ƒ“‚Ì”
 const int boneCount = 33;
@@ -39,7 +40,8 @@ const float rotateSpeed = 250.0f;
 
 Player::Player(IWorld& world) :
 Actor(world),
-position(Vector3(0,0,0))
+position(Vector3(0,0,0)),
+tornadeTimer(0.0f)
 {
 	parameter.isDead = false;
 	parameter.radius = 3.0f;
@@ -74,7 +76,20 @@ Player::~Player(){
 }
 
 float rotateY = 0;
+
 void Player::Update(){
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
+		(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || 
+		Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
+		tornadeTimer += Time::DeltaTime;
+	}
+
+	if (tornadeTimer > 2.0f)
+	{
+		tornadeTimer = 0.0f;
+		world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, position, Vector2(1, 1), Vector3::Zero));
+	}
+
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
 		Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
 		Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||

@@ -1,11 +1,12 @@
 #pragma once
 #include "../Actor.h"
 #include "../../math/Vector3.h"
+#include "Tornado.h"
 
 class TornadeBillboard :public Actor
 {
 public:
-	TornadeBillboard(IWorld& world, Vector3& position_);
+	TornadeBillboard(IWorld& world, Vector3& position_, std::weak_ptr<Tornado> tornade_);
 	~TornadeBillboard();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -31,4 +32,6 @@ private:
 	Vector3 tornadeAddPosition;
 	float timer;
 	int drawFrame;
+
+	std::weak_ptr<Tornado> tornade;
 };

@@ -24,4 +24,6 @@ private:
 	float	speed;
 
 	bool	isHit;
+
+	float timer;
 };

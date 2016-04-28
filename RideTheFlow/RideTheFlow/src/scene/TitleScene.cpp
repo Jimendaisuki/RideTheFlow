@@ -17,6 +17,7 @@
 #include "../actor/tornado/Tornado.h"
 #include "../actor/Sand.h"
 #include "../time/Time.h"
+#include "../actor/Stage.h"
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -40,6 +41,7 @@ void TitleScene::Initialize()
 	timer = 0.0f;
 	objectcount = 0;
 	mIsEnd = false;
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(5, 12), Vector3(10, 0, 0)));
 	wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa));
 	Camera::GetInstance().SetRange(0.1f, 3000.0f);
@@ -79,7 +81,7 @@ void TitleScene::Update()
 		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 			pos = other.GetParameter().mat.GetPosition();
 		});
-		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<TornadeBillboard>(wa, pos));
+		//wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<TornadeBillboard>(wa, pos));
 	}
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
@@ -104,7 +106,7 @@ void TitleScene::Update()
 void TitleScene::Draw() const
 {
 	//Model::GetInstance().Draw(MODEL_ID::SKY_MODEL, Vector3::Zero, Vector3::Zero, Vector3(5.0f));
-	Model::GetInstance().Draw(MODEL_ID::TEST_STAGE, Vector3::Zero, Vector3::Zero, Vector3(0.01f));
+	//Model::GetInstance().Draw(MODEL_ID::TEST_STAGE, Vector3::Zero, Vector3::Zero, Vector3(0.01f));
 	wa.Draw();
 
 	TextDraw::GetInstance().Draw(Vector2(fps));

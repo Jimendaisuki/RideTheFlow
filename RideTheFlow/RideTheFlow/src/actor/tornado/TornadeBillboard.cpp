@@ -9,7 +9,7 @@
 #include "../../game/Random.h"
 #include "../../graphic/Sprite.h"
 
-TornadeBillboard::TornadeBillboard(IWorld& world, Vector3& position_) :
+TornadeBillboard::TornadeBillboard(IWorld& world, Vector3& position_, std::weak_ptr<Tornado> tornade_) :
 Actor(world),
 tornadePos(Vector3::Zero),
 tornadeMove(Vector3::Zero),
@@ -25,7 +25,8 @@ rotate(Vector3::Zero),
 drawPosition(Vector2::Zero),
 timer(0.0f),
 tornadeAddPosition(Vector3::Zero),
-drawFrame(Random::GetInstance().Range(0, 2))
+drawFrame(Random::GetInstance().Range(0, 2)),
+tornade(tornade_)
 {
 	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 		tornadePos = other.GetParameter().mat.GetPosition();
@@ -41,11 +42,9 @@ TornadeBillboard::~TornadeBillboard()
 }
 void TornadeBillboard::Update()
 {
-	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
-		Vector3 pos = other.GetParameter().mat.GetPosition();
-		tornadeMove = pos - tornadePos;
-		tornadePos = pos;
-	});
+	Vector3 pos = tornade._Get()->GetParameter().mat.GetPosition();
+	tornadeMove = pos - tornadePos;
+	tornadePos = pos;
 
 	timer += Time::DeltaTime;
 	if (timer > 10.0f)
