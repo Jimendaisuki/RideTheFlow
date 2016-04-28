@@ -34,7 +34,7 @@ void EnemyVaristor::Update()
 	});
 	if (Vector3::Distance(playerMat.GetPosition(), mPosition) <= 40.0f&&attack)
 	{
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0), Vector3(5)));
+		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0), Vector3(5),Vector3(0),0));
 		time = 0;
 		attack = false;
 	}

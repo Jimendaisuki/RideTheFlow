@@ -9,91 +9,101 @@
 #include "../EnemyVaristorBullet.h"
 #include "../ParachuteBombBullet.h"
 #include "castle.h"
-//èÈÇÃè„å¿äKêî
-const int Rank = 4;
+#include "../../game/Random.h"
+
+//èÈÇÃè„Ç…êœÇ›èdÇ»ÇÈèÈÇÃíiêî
+const int Rank = 0;
 //èÈÇ™êœÇ›Ç†Ç™ÇÈéûä‘(ïb)
 const float RankUpSecond = 5.0f;
 //èÈÇ™çUåÇÇµÇƒÇ≠ÇÈîÕàÕ
-const float AttackRange = 300.0f;
-//ñàïbÇÃçUåÇ(ÇPïbä‘Ç…âΩå¬ãÖÇèoÇ∑Ç©)
-const float ParSecondAttack = 1.0f;
+const float AttackRange = 200.0f;
+//èÈÇÃçUåÇÉNÅ[ÉãÉ^ÉCÉÄ(ïb)
+const float SecondAttack = 5.0f;
+//èÈÇ™àÍâÒÇ…èoÇ∑ñÓÇÃñ{êî(ñ{)
+const int ArrowNumber = 2;
+//çUåÇÇÃê∏ìx(êîílÇ™è¨Ç≥Ç¢ÇŸÇ«çÇê∏ìx)
+const float ArrowAccuracy = 20.0f;
+
+//èÈÉÇÉfÉãÇÃçÇÇ≥ÇÃÇRî{(ÉXÉPÅ[ÉãòMÇ¡ÇƒÇÈÇ©ÇÁ)
+const float CastleHeight = 30.0f;
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
 Actor(world),
 attackTime(0),
 castleTime(0),
+attackRag(0),
+arrowCount(0),
 mRank(Rank),
 mPosition(position),
 startPos(Vector3::Zero),
 endPos(Vector3::Zero),
-playerMat(Matrix4::Identity)
+playerMat(Matrix4::Identity),
+randomTarget(0)
 {
+    Vector2 side = Vector2(scale.x, scale.z) / 2;
+    parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
 	parameter.isDead = false;
-
+	parameter.height = CastleHeight;
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(rotate.z) *
 		Matrix4::RotateX(rotate.x) *
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
-
-	Vector2 side = Vector2(scale.x, scale.z) / 2;
-	parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
-
+	
 	startPos = Matrix4::GetPosition(parameter.mat);
-	endPos = Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) * Vector3::Up;
+	endPos = Matrix4::GetPosition(parameter.mat) + parameter.height * Vector3::Up;
 }
 
 MasterCastle::~MasterCastle()
 {
-
+	
 }
 
 void MasterCastle::Update()
 {
+
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
+
 	attackTime += Time::DeltaTime;
 	castleTime += Time::DeltaTime;
+	attackRag += Time::DeltaTime;
 	if (castleTime >= RankUpSecond&&mRank>0)
 	{
 		mRank--;
-		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world, Vector3(mPosition.x, endPos.y*(Rank - mRank), mPosition.z), Vector3(0, 0, 0), Vector3(30, 30, 30), ParSecondAttack, AttackRange));
+		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
+			Vector3(mPosition.x, mPosition.y + (CastleHeight*(Rank - mRank)), mPosition.z),
+			Vector3(0, 0, 0), Vector3(30), 
+			SecondAttack, AttackRange,ArrowNumber,ArrowAccuracy,attackTime));
 		castleTime = 0.0f;
 	}
 
-	if (attackTime >= 1.0f / ParSecondAttack)
+	if (attackTime >= SecondAttack&&attackRag >= 0.03f&&arrowCount < ArrowNumber&&
+		Vector3::Distance(playerMat.GetPosition(), mPosition) <= AttackRange&&
+		abs(playerMat.GetPosition().y-mPosition.y)>=2.0f)
 	{
-		attackTime = 0.0f;
-		if (Vector3::Distance(playerMat.GetPosition(), mPosition) > AttackRange) return;
-		switch (GetRand(2))
+		attackRag = 0.0f;
+		arrowCount++;
+		randomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
+			                   GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
+			                   GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
+
+		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
+		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1), randomTarget));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<ParachuteBombBullet>(world, mPosition, Vector3(0), Vector3(1), playerMat.GetPosition().y + 5.0f));
+		if (arrowCount >= ArrowNumber)
 		{
-		case 0:
-			//ÉoÉOÇ¡ÇƒÇÈ
-			/*world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), 50.0f));*/
-			break;
-		case 1:
-			world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), 2.0f));
-			break;
-		case 2:
-			world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5)));
-			break;
-		case 3:
-			//ÉpÉâÉVÉÖÅ[ÉgÇÕÇ¢ÇÁÇ»Ç¢
-			//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<ParachuteBombBullet>(world, mPosition,100.0f));
-			break;
+			arrowCount = 0;
+			attackTime = 0.0f;
 		}
 	}
-
-
 }
 
 void MasterCastle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_MODEL, parameter.mat);
-
-
 	DrawCapsule3D(startPos, endPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
 
 	//DrawLine3D(startPos, endPos, GetColor(255, 0, 0));

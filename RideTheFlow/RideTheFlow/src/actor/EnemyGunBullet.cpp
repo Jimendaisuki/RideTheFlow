@@ -3,7 +3,7 @@
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
 
-EnemyGunBullet::EnemyGunBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float speed) :
+EnemyGunBullet::EnemyGunBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale,Vector3 randomTarget, float speed) :
 Actor(world),
 playerMat(Matrix4::Identity),
 mPosition(position),
@@ -20,7 +20,7 @@ mSpeed(speed)
 		playerMat = other.GetParameter().mat;
 	});
 	parameter.radius = 5.0f;
-	mDirection = Vector3::Direction(mPosition, playerMat.GetPosition()).Normalized()*speed;
+	mDirection = Vector3::Direction(mPosition, playerMat.GetPosition()+randomTarget).Normalized()*speed;
 }
 EnemyGunBullet::~EnemyGunBullet()
 {
@@ -35,7 +35,7 @@ void EnemyGunBullet::Update()
 
 void EnemyGunBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
+	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
 }
 
 void EnemyGunBullet::OnCollide(Actor& other, CollisionParameter colpara)

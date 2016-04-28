@@ -14,8 +14,11 @@ public:
 private:
 	float attackTime;
 	float castleTime;
+	float attackRag;
 	int mRank;
+	int arrowCount;
 	Matrix4 playerMat;
+	Vector3 randomTarget;
 	Vector3 mPosition;
 	Vector3 startPos;
 	Vector3 endPos;
