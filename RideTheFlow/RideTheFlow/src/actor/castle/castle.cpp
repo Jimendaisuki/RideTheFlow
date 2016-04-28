@@ -66,8 +66,8 @@ void Castle::Update()
 		randomTarget = Vector3(GetRand(mArrowAccuracy * 2) - mArrowAccuracy,
 			GetRand(mArrowAccuracy * 2) - mArrowAccuracy,
 			GetRand(mArrowAccuracy * 2) - mArrowAccuracy);
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
-		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world,mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), randomTarget));
+		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world,mPosition, Vector3(0, 0, 0), Vector3(5, 5, 5), randomTarget));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;

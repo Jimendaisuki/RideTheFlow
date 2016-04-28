@@ -26,13 +26,12 @@ void EndhingScene::Initialize()
 	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<SpringCameraActor>(wa));
 
-	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE)); i++)
+	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
 	{
 		if (i % 2 == 0)
 		{
-			Vector3 Position = Vector3::ToVECTOR(MV1GetFramePosition(Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE), i));
+			Vector3 Position = Vector3::ToVECTOR(MV1GetFramePosition(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), i));
 			boonPositions.push_back(Position);
 		}
 	}
@@ -40,7 +39,7 @@ void EndhingScene::Initialize()
 	{
 		wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i, Vector3(0), Vector3(30)));
 	}
-  	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE));
+  	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL));
 }
 
 void EndhingScene::Update()
@@ -56,7 +55,7 @@ void EndhingScene::Update()
 //•`‰æ
 void EndhingScene::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::TEST_STAGE, Vector3::Zero, Vector3::Zero, Vector3(1.0f));
+	//Model::GetInstance().Draw(MODEL_ID::TEST_STAGE, Vector3::Zero, Vector3::Zero, Vector3(1.0f));
 	//Model::GetInstance().Draw(MODEL_ID::SKY_MODEL, Vector3::Zero, Vector3::Zero, Vector3(5.0f));
 
 	wa.Draw();
