@@ -31,9 +31,9 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
 
-	model.Load("sandstage.x", MODEL_ID::STAGE_MODEL, async);
+	model.Load("boonStage.pmd", MODEL_ID::STAGE_MODEL, async);
 	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
-	model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
+	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 
 
 	WorkFolder::SetWorkFolder("res/Model2D/");

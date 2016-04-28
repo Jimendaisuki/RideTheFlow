@@ -36,6 +36,11 @@ private:
 	// 龍と弾
 	CollisionParameter Player_vs_Bullet(const Actor& other) const;
 
+	/* 風圧vs */
+	// 風圧と弾
+	// 風圧と竜巻
+
+
 	/* 竜巻vs */
 	// 竜巻とステージの当たり判定
 	CollisionParameter Tornado_vs_Stage(const Actor& other) const;
@@ -43,6 +48,10 @@ private:
 	CollisionParameter Tornado_vs_Castle(const Actor& other) const;
 	// 竜巻と浮島の当たり判定
 	CollisionParameter Tornado_vs_IsLand(const Actor& other) const;
+	// 竜巻と風圧の当たり判定
+
+	/*  */
+	CollisionParameter BoundarySphere_Capsule(const Actor& other)  const;
 
 
 	/* 後で削除

@@ -14,6 +14,7 @@ public:
 private:
 	Vector3 mPosition;
 	Vector3 velocity;
+	Vector3 coppyPosition;
 	float initialVelocity;
 	float mHeight;
 	float time;

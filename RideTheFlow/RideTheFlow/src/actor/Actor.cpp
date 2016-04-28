@@ -11,8 +11,12 @@
 Actor::Actor(IWorld& world_) :world(world_)
 {
 	colFunc[COL_ID::SPHERE_SPHERE_COL ] = std::bind(&Actor::Player_vs_Bullet, this, std::placeholders::_1);
-	colFunc[COL_ID::TORNADO_CASTLE_COL] = std::bind(&Actor::Tornado_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_STAGE_COL ] = std::bind(&Actor::Tornado_vs_Stage,  this, std::placeholders::_1);
+	colFunc[COL_ID::TORNADO_CASTLE_COL] = std::bind(&Actor::Tornado_vs_Castle, this, std::placeholders::_1);
+	colFunc[COL_ID::TORNADO_ISLAND_COL] = std::bind(&Actor::Tornado_vs_IsLand, this, std::placeholders::_1);
+
+	colFunc[COL_ID::SPHERE_CAPSULE] = std::bind(&Actor::BoundarySphere_Capsule, this, std::placeholders::_1);
+
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
@@ -34,6 +38,7 @@ void Actor::Collide(COL_ID id, Actor& other){
 }
 
 /* —´vs */
+// —´‚Æ’e‚Ì“–‚½‚è”»’è
 CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	CollisionParameter colpara;
 
@@ -48,7 +53,7 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	bullet.radius = other.parameter.radius;
 
 	/* ResultData */
-	colpara = Collisin::SphereSphere(player, bullet);
+	colpara = Collisin::GetInstace().SphereSphere(player, bullet);
 	colpara.colID = COL_ID::SPHERE_SPHERE_COL;
 
 	return colpara;
@@ -70,7 +75,7 @@ CollisionParameter Actor::Tornado_vs_Stage(const Actor& other) const{
 	stage.MFrameIndex = -1;
 
 	/* ResultData */
-	colpara = Collisin::ModelLine(stage, tornado);
+	colpara = Collisin::GetInstace().ModelLine(stage, tornado);
 	colpara.colID = COL_ID::TORNADO_STAGE_COL;
 
 	return colpara;
@@ -92,7 +97,7 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	castle.radius	= other.parameter.radius;
 
 	/* ResultData */
-	colpara = Collisin::CapsuleCapsule(tornado, castle);
+	colpara = Collisin::GetInstace().CapsuleCapsule(tornado, castle);
 	colpara.colID = COL_ID::TORNADO_CASTLE_COL;
 
 	return colpara;
@@ -109,12 +114,37 @@ CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 
 	/* IslandData */
 	Sphere island;
-	island.position = Matrix4::GetPosition(parameter.mat);
+	island.position = Matrix4::GetPosition(other.parameter.mat);
 	island.radius	= other.parameter.radius;
 
-	Collisin::SphereCapsule(island, tornado);
+	colpara = Collisin::GetInstace().SphereCapsule(island, tornado);
 
-	colpara.colID = COL_ID::TORNADO_ISLAND;
+	Capsule land;
+	land.startPos = Matrix4::GetPosition(other.parameter.mat);
+	land.endPos = Matrix4::GetPosition(other.parameter.mat) + Vector3::Up;
+	land.radius = other.parameter.radius;
+
+	colpara.colID = COL_ID::TORNADO_ISLAND_COL;
+	return colpara;
+}
+
+
+
+CollisionParameter Actor::BoundarySphere_Capsule(const Actor& other) const{
+	CollisionParameter colpara;
+
+	Capsule tornado;
+	tornado.startPos = Matrix4::GetPosition(other.parameter.mat);
+	tornado.endPos = tornado.startPos + Vector3(0.0f, other.parameter.height, 0.0f);
+	tornado.radius = other.parameter.radius;
+
+	/* IslandData */
+	Sphere island;
+	island.position = Matrix4::GetPosition(parameter.mat);
+	island.radius = parameter.radius;
+
+	colpara = Collisin::GetInstace().PushedBack_SphereCapsule(island, tornado);
+
 	return colpara;
 }
 

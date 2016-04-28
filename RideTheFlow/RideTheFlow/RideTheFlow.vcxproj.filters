@@ -177,10 +177,7 @@
     <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\Sand.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\actor\ParticleSystem.cpp">
+    <ClCompile Include="src\actor\island\FloatingIsland.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -377,10 +374,7 @@
     <ClInclude Include="src\actor\castle\MasterCastle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\Sand.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\actor\ParticleSystem.h">
+    <ClInclude Include="src\actor\island\FloatingIsland.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

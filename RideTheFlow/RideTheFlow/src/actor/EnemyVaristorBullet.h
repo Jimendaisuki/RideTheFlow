@@ -8,7 +8,7 @@
 class EnemyVaristorBullet :public Actor, public std::enable_shared_from_this<EnemyVaristorBullet>
 {
 public:
-	EnemyVaristorBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
+	EnemyVaristorBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, Vector3 randomTarget);
 	~EnemyVaristorBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -22,5 +22,7 @@ private:
 	float vertexTime;
 	float speed;
 	Vector3 distance;
+	Vector3 mRandomTarget;
+	Vector3 coppyPosition;
 };
 #endif

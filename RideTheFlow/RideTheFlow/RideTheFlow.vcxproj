@@ -87,12 +87,11 @@
     <ClCompile Include="src\actor\EnemyGun.cpp" />
     <ClCompile Include="src\actor\EnemyParachiteBomb.cpp" />
     <ClCompile Include="src\actor\EnemyVaristor.cpp" />
+    <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\ParachuteBombBullet.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
     <ClCompile Include="src\actor\EnemyGunBullet.cpp" />
     <ClCompile Include="src\actor\EnemyVaristorBullet.cpp" />
-    <ClCompile Include="src\actor\ParticleSystem.cpp" />
-    <ClCompile Include="src\actor\Sand.cpp" />
     <ClCompile Include="src\actor\SpringCameraActor.cpp" />
     <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp" />
     <ClCompile Include="src\scene\CreditScene.cpp" />
@@ -142,8 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
-    <ClInclude Include="src\actor\ParticleSystem.h" />
-    <ClInclude Include="src\actor\Sand.h" />
+    <ClInclude Include="src\actor\island\FloatingIsland.h" />
     <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\EnemyGun.h" />
     <ClInclude Include="src\actor\EnemyParachuteBomb.h" />
