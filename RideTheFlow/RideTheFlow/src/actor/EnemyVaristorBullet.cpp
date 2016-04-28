@@ -53,7 +53,7 @@ void EnemyVaristorBullet::Update()
 		mPosition.z += distance.z / vertexTime / 60.0f*speed*Time::DeltaTime*60.0f;
 	}
 	parameter.mat = Matrix4::Translate(mPosition+Vector3(0.0f,coppyPosition.y,0.0f));
-	if (parameter.mat.GetPosition().y <= 0) parameter.isDead = true;
+	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
 }
 
 void EnemyVaristorBullet::Draw() const

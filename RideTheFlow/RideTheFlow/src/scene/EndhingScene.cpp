@@ -6,13 +6,13 @@
 #include "../actor/Player.h"
 #include "../actor/castle/MasterCastle.h"
 #include "../camera/Camera.h"
+#include "../actor/Stage.h"
 //コンストラクタ
 EndhingScene::EndhingScene()
 {
 	timeTest = 0;
 	//mIsEnd = false;
 	position = Vector3::Zero;
-
 }
 
 //デストラクタ
@@ -23,6 +23,7 @@ EndhingScene::~EndhingScene()
 //開始
 void EndhingScene::Initialize()
 {
+
 	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
@@ -40,6 +41,7 @@ void EndhingScene::Initialize()
 		wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i, Vector3(0), Vector3(30)));
 	}
   	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL));
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 }
 
 void EndhingScene::Update()
