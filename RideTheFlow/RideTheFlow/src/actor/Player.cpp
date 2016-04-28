@@ -16,12 +16,6 @@ const int boneCount = 33;
 const float waveCount = 0.52f;
 //モデルのスケール
 const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
-//スピード
-const float speed = 100.0f;
-//回転スピード
-const float rotateSpeed = 250.0f;
-
-
 
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
@@ -36,6 +30,11 @@ const float upAngleSpeed = 225.0f;
 //changeMotionがfalseの時に反映される
 //くねくねのLeft軸回転速度
 const float angleSpeed = 270.0f;
+
+//スピード
+const float speed = 100.0f;
+//回転スピード
+const float rotateSpeed = 250.0f;
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
@@ -76,7 +75,12 @@ Player::~Player(){
 
 float rotateY = 0;
 void Player::Update(){
-	posStorage.push_back(position);
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
+		Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
+		Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
+		Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+		posStorage.push_back(position);
+	}
 
 	//操作
 	Vector3 vec = Vector3::Zero;
@@ -292,11 +296,11 @@ void Player::Draw() const{
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	//DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 	ParameterDraw();
-	for (int count = 0; count < boneCount - 1; count++){
-		int Color = GetColor(255, 0, 0);
-		if (count % 2 == 0)Color = GetColor(0, 255, 0);
-		DrawLine3D(Vector3::ToVECTOR(drawVertexVec[count]), Vector3::ToVECTOR(drawVertexVec[count + 1]), Color);
-	}
+	//for (int count = 0; count < boneCount - 1; count++){
+	//	int Color = GetColor(255, 0, 0);
+	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
+	//	DrawLine3D(Vector3::ToVECTOR(drawVertexVec[count]), Vector3::ToVECTOR(drawVertexVec[count + 1]), Color);
+	//}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
