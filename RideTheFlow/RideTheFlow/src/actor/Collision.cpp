@@ -1,7 +1,8 @@
 #include "Collision.h"
+#include "../math/Math.h"
 
 // 線と箱の当たり判定
-CollisionParameter Collisin::SegmentBoxAABB(const Line& line, const Box& box) {
+CollisionParameter Collisin::SegmentBoxAABB(const Line& line, const Box& box) const {
 	CollisionParameter colpara;
 	HITRESULT_LINE result;
 
@@ -14,7 +15,7 @@ CollisionParameter Collisin::SegmentBoxAABB(const Line& line, const Box& box) {
 	return colpara;
 }
 // 線と球の当たり判定
-CollisionParameter Collisin::SegmentSphere(const Line& line, const Sphere& s) {
+CollisionParameter Collisin::SegmentSphere(const Line& line, const Sphere& s) const {
 	CollisionParameter colpara;
 	
 	int result = HitCheck_Line_Sphere(
@@ -26,38 +27,41 @@ CollisionParameter Collisin::SegmentSphere(const Line& line, const Sphere& s) {
 }
 
 // 球と球のあたり判定
-CollisionParameter Collisin::SphereSphere(const Sphere& s1, const Sphere& s2) {
+CollisionParameter Collisin::SphereSphere(const Sphere& s1, const Sphere& s2) const {
 	CollisionParameter colpara;
 
-	colpara.colFlag = (bool)HitCheck_Sphere_Sphere(
+	int result = HitCheck_Sphere_Sphere(
 		s1.position, s1.radius,
 		s2.position, s2.radius);
+	if (result > 0) colpara.colFlag = true;
 
 	return colpara;
 }
 // 球とカプセルの当たり判定
-CollisionParameter Collisin::SphereCapsule(const Sphere& s, const Capsule& c){
+CollisionParameter Collisin::SphereCapsule(const Sphere& s, const Capsule& c) const{
 	CollisionParameter colpara;
 
-	colpara.colFlag = HitCheck_Sphere_Capsule(
+	int result = HitCheck_Sphere_Capsule(
 		s.position, s.radius,
 		c.startPos, c.endPos, c.radius);
+	if (result > 0) colpara.colFlag = true;
 
 	return colpara;
 }
 
 // カプセルとカプセルの当たり判定
-CollisionParameter Collisin::CapsuleCapsule(const Capsule& c1, const Capsule& c2){
+CollisionParameter Collisin::CapsuleCapsule(const Capsule& c1, const Capsule& c2) const{
 	CollisionParameter colpara;
 
-	colpara.colFlag = (bool)HitCheck_Capsule_Capsule(
+	int result = HitCheck_Capsule_Capsule(
 		c1.startPos, c1.endPos, c1.radius,
 		c2.startPos, c2.endPos, c2.radius);
+	if (result > 0) colpara.colFlag = true;
 
 	return colpara;
 }
 // カプセルと点の当たり判定
-CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p){
+CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p) const{
 	CollisionParameter colpara;
 
 	float length = Segment_Point_MinLength(c.startPos, c.endPos, p);
@@ -134,7 +138,7 @@ CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p){
 //}
 
 // モデルと線分の当たり判定
-CollisionParameter Collisin::ModelLine(const ModelData& model, const Line& line){
+CollisionParameter Collisin::ModelLine(const ModelData& model, const Line& line) const{
 	CollisionParameter colpara;
 	MV1_COLL_RESULT_POLY HitPoly;
 
@@ -151,7 +155,7 @@ CollisionParameter Collisin::ModelLine(const ModelData& model, const Line& line)
 }
 
 // モデルと球の当たり判定
-CollisionParameter Collisin::ModelSphere(const ModelData& model, const Sphere& s) {
+CollisionParameter Collisin::ModelSphere(const ModelData& model, const Sphere& s) const {
 	CollisionParameter colpara;
 	MV1_COLL_RESULT_POLY_DIM HitPolyDim;
 
@@ -165,7 +169,7 @@ CollisionParameter Collisin::ModelSphere(const ModelData& model, const Sphere& s
 }
 
 // モデルとカプセルの当たり判定
-CollisionParameter Collisin::ModelCapsule(const ModelData& model, const Capsule& c){
+CollisionParameter Collisin::ModelCapsule(const ModelData& model, const Capsule& c) const{
 	CollisionParameter colpara;
 	MV1_COLL_RESULT_POLY_DIM HitPolyDim;
 
@@ -262,3 +266,97 @@ CollisionParameter Collisin::ModelCapsule(const ModelData& model, const Capsule&
 //	points.clear();
 //	return colpara;
 //}
+
+//
+CollisionParameter Collisin::PushedBack_SphereCapsule(const Sphere& s, const Capsule& c) const{
+	CollisionParameter colpara;
+	colpara.colFlag = false;
+	
+	Vector3 v = c.endPos - c.startPos;
+	Vector3 v1 = s.position - c.startPos;
+	float t = Vector3::Dot(v, v1) / Vector3::Dot(v, v);
+	float radius = s.radius + c.radius;
+	float r2 = radius * radius;
+
+	if (t < 0 && v1.Length() * v1.Length() <= r2)
+	{
+		Vector3 vr = Vector3::Normalize(v1) * radius;
+		colpara.colPos = c.startPos + vr;
+		colpara.colFlag = true;
+		return colpara;
+	}
+
+	Vector3 v2 = s.position - c.endPos;
+	if (t > 1 && v2.Length() * v2.Length() <= r2)
+	{
+		Vector3 vr = Vector3::Normalize(v2) * radius;
+		colpara.colPos = c.endPos + vr;
+		colpara.colFlag = true;
+		return colpara;
+	}
+
+	Vector3 vn = v1 - t * v;
+	if ((0 <= t && t <= 1) && (vn.Length() * vn.Length() < r2))
+	{
+		Vector3 vr = radius * Vector3::Normalize(vn);
+		colpara.colPos = c.startPos + t * v + vr;
+		colpara.colFlag = true;
+		return colpara;
+	}
+
+	return colpara;
+}
+
+// 
+Vector3 Collisin::PushedBack_CapsuleSphere(const Sphere& s, const Capsule& c) const{
+	Vector3 pushedPos = Vector3::Zero;
+
+	Vector3 v = c.endPos - c.startPos;
+	Vector3 v1 = s.position - c.startPos;
+	float t = Vector3::Dot(v, v1) / Vector3::Dot(v, v);
+	float radius = s.radius + c.radius;
+	float r2 = radius * radius;
+	if (t < 0 && v1.Length() * v1.Length() <= r2)
+	{
+		Vector3 vr = Vector3::Normalize(v1) * radius;
+		pushedPos = s.position - vr;
+	}
+
+	Vector3 v2 = s.position - c.endPos;
+	if (t > 1 && v2.Length() * v2.Length() <= r2)
+	{
+		Vector3 vr = Vector3::Normalize(v2) * radius;
+		pushedPos = s.position - vr - v;
+	}
+
+	Vector3 vn = v1 - t * v;
+	if ((0 <= t && t <= 1) && (vn.Length() * vn.Length() < r2))
+	{
+		Vector3 vr = radius * Vector3::Normalize(vn);
+		pushedPos = s.position - t * v - vr;
+	}
+	return pushedPos;
+}
+
+// カプセルとカプセルの押し戻し
+Vector3 Collisin::PushedBack_CapsuleCapsule(const Capsule& c1, const Capsule& c2) const{
+	Vector3 pushedPosition;
+
+	Vector3 a = c1.endPos - c2.startPos;
+	Vector3 b = c2.endPos - c2.startPos;
+	Vector3 c = c2.startPos - c1.startPos;
+	float D = c1.radius + c2.radius;
+
+	Vector3 n = Vector3::Normalize(Vector3::Cross(a, b));
+	float L = Vector3::Dot(c, n);
+
+	Vector3 vd;
+	if (L > 0)	vd = n * D;
+	else		vd = -n * D;
+
+	Vector3 p = c1.startPos - n * L;
+
+	pushedPosition = p + vd;
+
+	return pushedPosition;
+}
