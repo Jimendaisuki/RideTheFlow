@@ -15,6 +15,7 @@
 #include "../actor/castle/CastleBlock.h"
 #include "../actor/tornado/TornadeBillboard.h"
 #include "../actor/tornado/Tornado.h"
+#include "../actor/Sand.h"
 #include "../time/Time.h"
 
 //コンストラクタ
@@ -35,11 +36,12 @@ void TitleScene::Initialize()
 	////リソース読み込み
 	//WorkFolder::SetWorkFolder("res/Model/");
 	//Model::GetInstance().Load("Box.x", MODEL_ID::BOX_MODEL);
+
 	timer = 0.0f;
 	objectcount = 0;
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(5, 12), Vector3(10, 0, 0)));
-
+	wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa));
 	Camera::GetInstance().SetRange(0.1f, 3000.0f);
 	Camera::GetInstance().Position.Set(Vector3(0.0f,400.0f, -300.0f));
 	Camera::GetInstance().Target.Set(Vector3::Zero);
@@ -47,22 +49,37 @@ void TitleScene::Initialize()
 	Camera::GetInstance().Update();
 }
 
-float timer = 0.0f;
+float tornadeTimer = 0.0f;
+float fpsTimer = 0.0f;
+float fps;
 
 void TitleScene::Update()
 {
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z)){
-		timer += Time::DeltaTime;
+	fpsTimer += Time::DeltaTime;
+	if (fpsTimer > 1.0f)
+	{
+		fps = 1.0f / Time::DeltaTime;
+		fpsTimer = 0.0f;
 	}
-	if (timer > 0.05f){
-		timer = 0.0f;
+
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z)){
 		Vector3 pos;
 		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 			pos = other.GetParameter().mat.GetPosition();
 		});
-		//for (int i = 0; i < 2; i++){
+		for (int i = 0; i < 20; i++){
+		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(wa, pos));
+		}
+	}
+	tornadeTimer += Time::DeltaTime;
+	if (tornadeTimer > 0.08f){
+		tornadeTimer = 0.0f;
+		Vector3 pos;
+		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
+			pos = other.GetParameter().mat.GetPosition();
+		});
 		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<TornadeBillboard>(wa, pos));
-		//}
 	}
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
@@ -86,11 +103,12 @@ void TitleScene::Update()
 //描画
 void TitleScene::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::SKY_MODEL, Vector3::Zero, Vector3::Zero, Vector3(5.0f));
-	Model::GetInstance().Draw(MODEL_ID::STAGE_MODEL, Vector3::Zero, Vector3::Zero, Vector3(10.0f));
+	//Model::GetInstance().Draw(MODEL_ID::SKY_MODEL, Vector3::Zero, Vector3::Zero, Vector3(5.0f));
+	Model::GetInstance().Draw(MODEL_ID::TEST_STAGE, Vector3::Zero, Vector3::Zero, Vector3(0.01f));
 	wa.Draw();
 
-	TextDraw::GetInstance().Draw(Point::Zero, Vector3(255), Vector2(objectcount));
+	TextDraw::GetInstance().Draw(Vector2(fps));
+	//TextDraw::GetInstance().Draw(Point::Zero, Vector3(255), Vector2(objectcount));
 }
 
 //終了しているか？

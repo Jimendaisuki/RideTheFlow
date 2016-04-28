@@ -30,4 +30,5 @@ private:
 	//‰ñ“]‚É‚æ‚Á‚Ä‰Á‚¦‚ç‚ê‚éÀ•W—Ê
 	Vector3 tornadeAddPosition;
 	float timer;
+	int drawFrame;
 };

@@ -495,12 +495,45 @@ void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float
 	DefaultBlend();
 }
 
-void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, int blend_mode, int alpha)
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, float size, int blend_mode, int alpha)
 {
 	SetDrawBlendMode(blend_mode, alpha);
 	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, 0.0f, m_sprites[id][0], true);
 	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
 }
+
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, int blend_mode, int alpha)
+{
+	SetDrawBlendMode(blend_mode, alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, 0.0f, m_sprites[id][frame], true);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
+}
+
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, float size, const Vector2& origin, float angle, int blend_mode, int alpha)
+{
+	SetDrawBlendMode(blend_mode, alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, angle, m_sprites[id][0], true);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
+}
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, int blend_mode, int alpha)
+{
+	SetDrawBlendMode(blend_mode, alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, angle, m_sprites[id][frame], true);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
+}
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, float size, const Vector2& origin, float angle, bool turn, int blend_mode, int alpha)
+{
+	SetDrawBlendMode(blend_mode, alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, angle, m_sprites[id][0], true, turn);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
+}
+void Model::Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, bool turn, int blend_mode, int alpha)
+{
+	SetDrawBlendMode(blend_mode, alpha);
+	DrawBillboard3D(VGet(position.x, position.y, position.z), 0.5f, 0.5f, size, angle, m_sprites[id][frame], true, turn);
+	SetDrawBlendMode(BLEND_MODE::NoBlend, 0);
+}
+
 
 // ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹‚ðŽó‚¯Žæ‚é
 int Model::GetHandle(const MODEL_ID& id)

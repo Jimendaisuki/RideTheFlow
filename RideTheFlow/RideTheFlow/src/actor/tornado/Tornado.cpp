@@ -34,7 +34,7 @@ Tornado::~Tornado()
 
 void Tornado::Update()
 {
-	ACTIVITYTIME -= Time::DeltaTime;
+	//ACTIVITYTIME -= Time::DeltaTime;
 	if (ACTIVITYTIME <= 0)
 	{
 		parameter.isDead = true;
@@ -46,19 +46,19 @@ void Tornado::Update()
 	//rotate.y += 1000 * Time::DeltaTime;
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		position.x -= 440.0f * Time::DeltaTime;
+		position.x -= 140.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		position.x += 440.0f * Time::DeltaTime;
+		position.x += 140.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		position.y += 440.0f * Time::DeltaTime;
+		position.y += 140.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		position.y -= 440.0f * Time::DeltaTime;
+		position.y -= 140.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
-		position.z += 440.0f * Time::DeltaTime;
+		position.z += 140.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
-		position.z -= 440.0f * Time::DeltaTime;
+		position.z -= 140.0f * Time::DeltaTime;
 
-	velocity.y -= GRAVITY * Time::DeltaTime;
+	//velocity.y -= GRAVITY * Time::DeltaTime;
 	position += velocity * speed;
 
 
@@ -86,13 +86,15 @@ void Tornado::Update()
 
 void Tornado::Draw() const
 {
-	//Model::GetInstance().Draw(MODEL_ID::TORNADO_MODEL, parameter.mat);
+	Model::GetInstance().Draw(MODEL_ID::BOX_MODEL, parameter.mat.GetPosition(), Vector3::Zero, Vector3(5));
 
 	Vector3 TopPos, BottomPos;
 	BottomPos = Matrix4::GetPosition(parameter.mat);
 	TopPos = BottomPos + Vector3(0.0f, parameter.height, 0.0f);
 
-	DrawCapsule3D(TopPos, BottomPos	, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
+
+
+	//DrawCapsule3D(TopPos, BottomPos	, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
 	DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
 	DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);

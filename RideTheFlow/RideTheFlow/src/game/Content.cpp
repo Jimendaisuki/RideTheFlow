@@ -13,6 +13,7 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("body.png", SPRITE_ID::PLAYER_SPRITE);
 	sprite.Load("images.png", SPRITE_ID::ENEMY_SPRITE);
 	sprite.Load("smoke.png", SPRITE_ID::BEGIN_SPRITE);
+	sprite.Load("sand.png", SPRITE_ID::SAND_SPRITE);
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");
 }
@@ -37,7 +38,8 @@ void Content::LoadModel(Model& model, bool async)
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 
-	model.Load2D("smoke.png", MODEL_ID::SMOKE_MODEL2D);
+	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));
+	model.Load2D("sand.png", MODEL_ID::SAND_2D);
 
 	//model.Load("m1.pmx", async);
 	//model.Load("m3.pmd", async);

@@ -8,14 +8,14 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 
-static const float MODEL_SCALE = 5.0f;
+static const float MODEL_SCALE = 3.0f;
 
 CastleBlock::CastleBlock(IWorld& world, Vector3& position_) :
 Actor(world),
 tornadePos(Vector3::Zero),
 tornadeMove(Vector3::Zero),
-tornadeRadius(Random::GetInstance().Range(10.0f, 15.0f)),
-tornadeAddRadius(Random::GetInstance().Range(10.0f, 15.0f)),
+tornadeRadius(Random::GetInstance().Range(40.0f, 60.0f)),
+tornadeAddRadius(Random::GetInstance().Range(8.0f, 15.0f)),
 tornadeSpeed(360.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
 risingSpeed(Random::GetInstance().Range(8.0f, 10.0f)),

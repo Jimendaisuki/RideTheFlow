@@ -13,25 +13,26 @@ TornadeBillboard::TornadeBillboard(IWorld& world, Vector3& position_) :
 Actor(world),
 tornadePos(Vector3::Zero),
 tornadeMove(Vector3::Zero),
-tornadeRadius(Random::GetInstance().Range(10.0f, 15.0f)),
-tornadeAddRadius(Random::GetInstance().Range(10.0f, 15.0f)),
-tornadeSpeed(360.0f),
+tornadeRadius(Random::GetInstance().Range(10.0f, 20.0f)),
+tornadeAddRadius(Random::GetInstance().Range(20.0f, 30.0f)),
+tornadeSpeed(1000.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
-risingSpeed(Random::GetInstance().Range(50.0f, 60.0f)),
-risingAddSpeed(Random::GetInstance().Range(15, 20)),
-scale(100.0f),
+risingSpeed(Random::GetInstance().Range(120.0f, 150.0f)),
+risingAddSpeed(Random::GetInstance().Range(0, 2)),
+scale(200.0f),
 position(position_),
 rotate(Vector3::Zero),
 drawPosition(Vector2::Zero),
 timer(0.0f),
-tornadeAddPosition(Vector3::Zero)
+tornadeAddPosition(Vector3::Zero),
+drawFrame(Random::GetInstance().Range(0, 2))
 {
 	world.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
 		tornadePos = other.GetParameter().mat.GetPosition();
 	});
 
 	parameter.isDead = false;
-	parameter.id = ACTOR_ID::CASTLE_ACTOR;
+	parameter.id = ACTOR_ID::TORNADO_ACTOR;
 	rotate = Vector3(Random::GetInstance().Range(0.0f, 359.0f), Random::GetInstance().Range(0.0f, 359.0f), 0.0f);
 }
 TornadeBillboard::~TornadeBillboard()
@@ -81,7 +82,8 @@ void TornadeBillboard::Update()
 }
 void TornadeBillboard::Draw() const
 {
-	Model::GetInstance().Draw2DBlend(MODEL_ID::SMOKE_MODEL2D, parameter.mat.GetPosition(), 0, scale, BLEND_MODE::Sub,128);
+	Model::GetInstance().Draw2DBlend(
+		MODEL_ID::SMOKE_2D, parameter.mat.GetPosition(), drawFrame, scale, BLEND_MODE::Mul, 150);
 	//Sprite::GetInstance().DrawBlend(SPRITE_ID::BEGIN_SPRITE, drawPosition, Vector2(200, 0), scale, 0, BLEND_MODE::Sub);
 }
 void TornadeBillboard::OnCollide(Actor& other, CollisionParameter colpara)
