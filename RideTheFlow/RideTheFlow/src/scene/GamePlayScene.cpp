@@ -10,6 +10,7 @@
 #include "../input/Keyboard.h"
 
 #include "../actor/tornado/Tornado.h"
+#include "../actor/Stage.h"
 
 
 //コンストラクタ
@@ -29,6 +30,7 @@ void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 //	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
 	
 	//wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector3(10, 0, 0)));

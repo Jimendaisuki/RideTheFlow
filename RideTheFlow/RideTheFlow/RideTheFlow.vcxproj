@@ -92,6 +92,7 @@
     <ClCompile Include="src\actor\EnemyGunBullet.cpp" />
     <ClCompile Include="src\actor\EnemyVaristorBullet.cpp" />
     <ClCompile Include="src\actor\SpringCameraActor.cpp" />
+    <ClCompile Include="src\actor\Stage.cpp" />
     <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp" />
     <ClCompile Include="src\scene\CreditScene.cpp" />
     <ClCompile Include="src\scene\EndhingScene.cpp" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
+    <ClInclude Include="src\actor\Stage.h" />
     <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\EnemyGun.h" />
     <ClInclude Include="src\actor\EnemyParachuteBomb.h" />
