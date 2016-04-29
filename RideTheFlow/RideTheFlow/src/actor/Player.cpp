@@ -95,6 +95,18 @@ void Player::Update(){
 	//‘€ì
 	Vector3 vec = Vector3::Zero;
 
+	auto input = DINPUT_JOYSTATE();
+
+	// “ü—Íó‘Ô‚ðŽæ“¾
+	GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
+	Vector3 rightStick = Vector3(input.Rx, input.Ry, input.Rz).Normalized();
+	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
+
+	bool padInputFlag = false;
+	if (Vector3::Length(rightStick) > 0.01f || Vector3::Length(rightStick) > 0.01f){
+		padInputFlag = true;
+	}
+
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
 		rotateLeft += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
@@ -104,7 +116,7 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
 		rotateUp -= rotateSpeed * Time::DeltaTime;
 
-	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
+
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
 		vec.x += speed * Time::DeltaTime;
@@ -117,6 +129,14 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
 		tackleFlag = true;
 
+	if (padInputFlag){
+		rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
+		rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
+		vec.x += leftStick.x * speed * Time::DeltaTime;
+		vec.z += leftStick.y * speed * Time::DeltaTime;
+	}
+
+	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 	Vector3 cameraPos = Camera::GetInstance().Position.Get();
 	//cameraPos.y = 0;
 
