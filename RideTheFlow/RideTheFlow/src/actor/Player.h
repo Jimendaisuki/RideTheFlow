@@ -24,6 +24,8 @@ private:
 	int deletePosStorageCount;
 	Vector3* vertexVec;
 
+	Matrix4 cameraMat;
+
 	float tornadeTimer;
 
 	bool damageFlag;

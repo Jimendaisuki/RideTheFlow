@@ -10,24 +10,9 @@
 #include "../ParachuteBombBullet.h"
 #include "castle.h"
 #include "../../game/Random.h"
+#include "CastleParameter.h"
 
-//城の上に積み重なる城の段数
-const int Rank = 3;
-//城が積みあがる時間(秒)
-const float RankUpSecond = 5.0f;
-//城が攻撃してくる範囲
-const float AttackRange = 200.0f;
-//城の攻撃クールタイム(秒)
-const float SecondAttack = 5.0f;
-//城が一回に出す矢の本数(本)
-const int ArrowNumber = 2;
-//攻撃の精度(数値が小さいほど高精度)
-const float ArrowAccuracy = 15.0f;
-
-//城モデルの高さの３倍(スケール弄ってるから)
-const float CastleHeight = 30.0f;
-
-MasterCastle::MasterCastle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
+MasterCastle::MasterCastle(IWorld& world, Vector3 position) :
 Actor(world),
 attackTime(0),
 castleTime(0),
@@ -35,24 +20,23 @@ attackRag(0),
 arrowCount(0),
 mRank(Rank),
 mPosition(position),
-startPos(Vector3::Zero),
-endPos(Vector3::Zero),
 playerMat(Matrix4::Identity),
-randomTarget(0)
+mScale(30,30,30)
 {
-    Vector2 side = Vector2(scale.x, scale.z) / 2;
+	
+    Vector2 side = Vector2(mScale.x, mScale.z) / 2;
     parameter.radius = sqrtf(side.x * side.x + side.y + side.y);
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f,CastleHeight,0.0f);
 	parameter.mat =
-		Matrix4::Scale(scale) *
-		Matrix4::RotateZ(rotate.z) *
-		Matrix4::RotateX(rotate.x) *
-		Matrix4::RotateY(rotate.y) *
+		Matrix4::Scale(mScale) *
+		Matrix4::RotateZ(0) *
+		Matrix4::RotateX(0) *
+		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	
-	startPos = Matrix4::GetPosition(parameter.mat);
-	endPos = Matrix4::GetPosition(parameter.mat) + parameter.height * Vector3::Up;
+	//startPos = Matrix4::GetPosition(parameter.mat);
+	//endPos = Matrix4::GetPosition(parameter.mat) + parameter.height * Vector3::Up;
 }
 
 MasterCastle::~MasterCastle()
@@ -74,9 +58,7 @@ void MasterCastle::Update()
 	{
 		mRank--;
 		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
-			Vector3(mPosition.x, mPosition.y + (CastleHeight*(Rank - mRank)), mPosition.z),
-			Vector3(0, 0, 0), Vector3(30), 
-			SecondAttack, AttackRange,ArrowNumber,ArrowAccuracy,attackTime));
+			Vector3(mPosition.x, mPosition.y + (CastleHeight*(Rank - mRank)), mPosition.z)));
 		castleTime = 0.0f;
 	}
 
@@ -86,12 +68,8 @@ void MasterCastle::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		randomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-			                   GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-			                   GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
-
 		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1), randomTarget));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world, mPosition));
 		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<ParachuteBombBullet>(world, mPosition, Vector3(0), Vector3(1),40.0f));
     if (arrowCount >= ArrowNumber)
 		{

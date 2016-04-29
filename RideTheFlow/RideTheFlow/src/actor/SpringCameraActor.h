@@ -17,9 +17,12 @@ private:
 	Vector3 point;
 	Vector3 velocity;
 	Vector3 restPosition;
+	Vector3 rotateVelocity;
 	float stiffness;
 	float friction;
 	float mass;
+	float rotateLeft;
+	float rotateUp;
 };
 
 #endif

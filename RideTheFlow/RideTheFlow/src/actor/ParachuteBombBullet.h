@@ -6,7 +6,7 @@
 class ParachuteBombBullet :public Actor
 {
 public:
-	ParachuteBombBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float height);
+	ParachuteBombBullet(IWorld& world, Vector3 position);
 	~ParachuteBombBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -15,7 +15,8 @@ private:
 	Vector3 mPosition;
 	Vector3 velocity;
 	Vector3 coppyPosition;
-	float initialVelocity;
+	Vector3 mScale;
+	Matrix4 playerMat;
 	float mHeight;
 	float time;
 	bool HeightJuge;

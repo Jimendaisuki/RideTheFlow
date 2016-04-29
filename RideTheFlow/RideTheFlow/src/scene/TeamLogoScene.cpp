@@ -4,7 +4,6 @@
 #include <iomanip>
 #include "Scene.h"
 #include "../actor/Player.h"
-#include "../actor/Enemy.h"
 #include "../actor/AnimTestActor.h"
 #include "../actor/CameraActor.h"
 #include "../input/Keyboard.h"
