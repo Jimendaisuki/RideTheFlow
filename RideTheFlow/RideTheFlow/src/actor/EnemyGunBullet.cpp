@@ -2,6 +2,7 @@
 #include "Collision.h"
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
+#include "../time/Time.h"
 
 EnemyGunBullet::EnemyGunBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale,Vector3 randomTarget, float speed) :
 Actor(world),

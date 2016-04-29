@@ -5,7 +5,7 @@
 class MasterCastle : public Actor
 {
 public:
-	MasterCastle(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
+	MasterCastle(IWorld& world, Vector3 position);
 	~MasterCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -18,8 +18,6 @@ private:
 	int mRank;
 	int arrowCount;
 	Matrix4 playerMat;
-	Vector3 randomTarget;
+	Vector3 mScale;
 	Vector3 mPosition;
-	Vector3 startPos;
-	Vector3 endPos;
 };

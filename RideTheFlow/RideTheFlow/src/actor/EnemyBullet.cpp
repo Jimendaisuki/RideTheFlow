@@ -3,6 +3,7 @@
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
 #include "../input/Keyboard.h"
+#include "../time/Time.h"
 #include <math.h>
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float initialVelocity) :
 Actor(world),
