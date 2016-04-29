@@ -28,4 +28,5 @@ private:
 
 	bool mIsEnd;
 	World wa;
+	std::vector<Vector3>boonPositions;
 };
