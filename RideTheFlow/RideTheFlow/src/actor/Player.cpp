@@ -18,15 +18,21 @@ const float waveCount = 0.52f;
 //モデルのスケール
 const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
 
+const Vector3 cameraUpMove = Vector3(0, 30, 0);
+
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
 bool changeMotion = true;
 
 //changeMotionがtrueの時に反映される
-//くねくねのLeft軸回転速度
+//くねくねの上下の回転速度
 const float leftAngleSpeed = 270.0f;
-//くねくねのUp軸回転速度
+//くねくねの上下の回転の振れ幅
+const float leftMoveRange = 10.0f;
+//くねくねの左右の回転速度
 const float upAngleSpeed = 225.0f;
+//くねくねの左右の回転の振れ幅
+const float upMoveRange = 10.0f;
 
 //changeMotionがfalseの時に反映される
 //くねくねのLeft軸回転速度
@@ -115,7 +121,7 @@ void Player::Update(){
 	//cameraPos.y = 0;
 
 	if (!tackleFlag){
-		position += (vec.z * (position - (cameraPos - Vector3(0,30,0)))).Normalized() * speed * Time::DeltaTime;
+		position += (vec.z * (position - (cameraPos - cameraUpMove))).Normalized() * speed * Time::DeltaTime;
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
 			(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) ||
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
@@ -194,7 +200,7 @@ void Player::Update(){
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(
 		Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
-		parameter.mat.GetPosition() + Vector3(0,30,0));
+		parameter.mat.GetPosition() + cameraUpMove);
 	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
 	Camera::GetInstance().Up.Set(Vector3(0,1,0));
 	Camera::GetInstance().Update();
@@ -275,12 +281,17 @@ void Player::Draw() const{
 
 	//先頭の高さを求める為最頂点の位置までの計算を行う
 	for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
+		Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
+		Vector3 boneUp = Vector3(0, 1, 0);
+		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
+		boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
+
 		Matrix4 drawMat = 
 			//ボーンの長さ求めて動かす
 			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
 			//Left軸、Front軸基準に回転
-			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
-			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
+			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 		drawVertexVec[count] = drawMat.GetPosition();
 	}
@@ -300,10 +311,15 @@ void Player::Draw() const{
 
 	//先頭の高さを設定した状態で再計算
 	for (int count = 1; count < boneCount; count++){
+		Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
+		Vector3 boneUp = Vector3(0, 1, 0);
+		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
+		boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
+
 		Matrix4 drawMat = 
 			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *			
-			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
-			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
+			Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
+			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 
 		drawVertexVec[count] = drawMat.GetPosition();
