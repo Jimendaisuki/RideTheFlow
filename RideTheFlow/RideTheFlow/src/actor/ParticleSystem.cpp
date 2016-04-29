@@ -13,15 +13,32 @@ ParticleSystem::Particle::Particle()
 
 }
 
-void ParticleSystem::Particle::Initialize(Vector3 vec_, float speed_, float size_, float alpha_, float addSpeed_, float addSize_, float addAlpha_)
+void ParticleSystem::Particle::Initialize(
+	const Vector3& pos_,
+	const Vector3& vec_,
+	float speed_,
+	float size_,
+	float alpha_,
+	float addSpeed_, 
+	float addSize_,
+	float addAlpha_)
 {
-
-
+	pos = pos_;
+	vec = vec_;
+	speed = speed_;
+	addSpeed = addSpeed_;
+	size = size_;
+	addSize = addSize_;
+	alpha = alpha_;
+	addAlpha = addAlpha_;
 }
 
 void ParticleSystem::Particle::Update()
 {
-
+	pos += vec * speed;
+	speed += addSpeed;
+	size += addSize;
+	alpha += addAlpha;
 }
 
 void ParticleSystem::Particle::Draw(const MODEL_ID& drawID, Vector2 origin, const int& blend_mode) const
@@ -64,7 +81,8 @@ billboardOrigin(billboardOrigin_),
 addSpeed(addSpeed_),
 addSize(addSize_),
 addAlpha(addAlpha_),
-blendMode(blendMode_)
+blendMode(blendMode_),
+emissiveTimer(0.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
@@ -75,7 +93,7 @@ ParticleSystem::~ParticleSystem()
 }
 void ParticleSystem::Update()
 {
-
+	
 }
 void ParticleSystem::Draw() const
 {
