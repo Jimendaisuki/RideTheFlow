@@ -31,4 +31,6 @@ private:
 
 	bool tackleFlag;
 	float tackleCount;
+
+	Vector3 beforeVec;
 };
