@@ -19,7 +19,15 @@ public:
 	{
 	public:
 		Particle();
-		void Initialize(Vector3 vec_ = Vector3::One, float speed_ = 1.0f, float size_ = 1.0f, float alpha_ = 255.0f, float addSpeed_ = 0.0f, float addSize_ = 0.0f, float addAlpha_ = 0.0f);
+		void Initialize(
+			const Vector3& pos_ , 
+			const Vector3& vec_ = Vector3::One,
+			float speed_ = 1.0f,
+			float size_ = 1.0f,
+			float alpha_ = 255.0f,
+			float addSpeed_ = 0.0f,
+			float addSize_ = 0.0f,
+			float addAlpha_ = 0.0f);
 		void Update();
 		void Draw(const MODEL_ID& drawID, Vector2 origin = Vector2::Zero, const int& blend_mode = BLEND_MODE::NoBlend) const;
 	private:
@@ -42,9 +50,14 @@ public:
 	};
 
 public:
+	///<summary>球状、もしくは半球状に放出するパーティクルを生成します。</summary>
+	///<param name = "world">ワールド</param>
 	ParticleSystem(
+		//ワールド
 		IWorld& world,
+		//描画する2D画像のID
 		const MODEL_ID& drawID_,
+		//放出間隔（秒）
 		float intervalSec_,
 		int sameEmissiveNum_,
 		float lifeTime_,
@@ -103,7 +116,7 @@ private:
 	int blendMode;
 	
 	//タイマー
-	float timer;
+	float emissiveTimer;
 
 	//==============BOX、CORN共通===============//
 	//放出する方向の基準
