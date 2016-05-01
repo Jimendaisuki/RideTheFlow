@@ -5,6 +5,7 @@
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
 #include "TornadeBillboard.h"
+#include "../castle/CastleBlock.h"
 
 #include "../../input/Keyboard.h"
 
@@ -114,6 +115,12 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 		if (speed > 300.0f * 0.5f)
 		speed *= 0.5f;
 		isHit = true;
+
+		//‚ª‚ê‚«‚ğ”ò‚Î‚·
+		for (int i = 0; i < 20; i++){
+			world.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(world, parameter.mat.GetPosition()));
+		}
+
 		break;
 	case COL_ID::TORNADO_ISLAND_COL:
 		// •‚“‡‚ÆÕ“Ë
