@@ -23,7 +23,6 @@ EndhingScene::~EndhingScene()
 //ŠJŽn
 void EndhingScene::Initialize()
 {
-
 	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
