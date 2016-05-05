@@ -16,7 +16,7 @@ const int boneCount = 33;
 //波の周波
 const float waveCount = 0.52f;
 //モデルのスケール
-const Vector3 scale = Vector3(0.01f, 0.01f, 0.01f);
+const Vector3 scale = Vector3(0.01f);
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
@@ -41,7 +41,7 @@ const float angleSpeed = 270.0f;
 //スピード
 const float speed = 100.0f;
 //回転スピード
-const float rotateSpeed = 250.0f;
+const float rotateSpeed = 150.0f;
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
@@ -78,10 +78,10 @@ tornadeTimer(0.0f)
 	damageFlag = false;
 	damageCount = 0;
 
-	
-
 	tackleFlag = false;
 	tackleCount = 0.0f;
+
+	beforeVec = Vector3(0,0,-1);
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
@@ -95,6 +95,18 @@ void Player::Update(){
 	//操作
 	Vector3 vec = Vector3::Zero;
 
+	auto input = DINPUT_JOYSTATE();
+
+	// 入力状態を取得
+	GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
+	Vector3 rightStick = Vector3(input.Rx, input.Ry, input.Rz).Normalized();
+	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
+
+	bool padInputFlag = false;
+	if (Vector3::Length(rightStick) > 0.01f || Vector3::Length(rightStick) > 0.01f){
+		padInputFlag = true;
+	}
+
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
 		rotateLeft += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
@@ -104,7 +116,7 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
 		rotateUp -= rotateSpeed * Time::DeltaTime;
 
-	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
+
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
 		vec.x += speed * Time::DeltaTime;
@@ -117,11 +129,31 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
 		tackleFlag = true;
 
+	if (padInputFlag){
+		rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
+		rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
+		vec.x += leftStick.x * speed * Time::DeltaTime;
+		vec.z += leftStick.y * speed * Time::DeltaTime;
+	}
+
+	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 	Vector3 cameraPos = Camera::GetInstance().Position.Get();
 	//cameraPos.y = 0;
 
 	if (!tackleFlag){
-		position += (vec.z * (position - (cameraPos - cameraUpMove))).Normalized() * speed * Time::DeltaTime;
+
+		Vector3 cameraFront = (position - (cameraPos - cameraUpMove)).Normalized();
+		Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
+		vec.Normalize();
+		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
+
+		Vector3 cross = Vector3::Cross(beforeVec, trueVec).Normalized().Normalized();
+
+
+		float crossAngle = Math::Acos(Vector3::Dot(trueVec, beforeVec));
+		position += (Vector3::Length(trueVec) * 
+			beforeVec *
+			Quaternion::RotateAxis(cross, crossAngle >= 20.0f ? 20.0f : crossAngle)).Normalized() * speed * Time::DeltaTime;
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
 			(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) ||
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
@@ -142,6 +174,7 @@ void Player::Update(){
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
 			posStorage.push_back(position);
+			beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle >= 20.0f ? 20.0f : crossAngle)).Normalized();
 		}
 	}
 	else{
@@ -153,6 +186,8 @@ void Player::Update(){
 			tackleFlag = false;
 		}
 	}
+
+	
 
 	//ボーンの情報切り替え
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X))

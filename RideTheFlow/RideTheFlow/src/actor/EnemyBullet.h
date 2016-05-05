@@ -2,7 +2,6 @@
 #define ENEMY_BULLET_H_
 
 #include "Actor.h"
-#include "EnemyAttack.h"
 class EnemyBullet :public Actor
 {
 public:
@@ -20,8 +19,6 @@ private:
 	Vector3 mPosition;
 	Vector3 coppyPosition;
 	Vector3 mDirection;
-	EnemyAttack enemyAttack;
-
 };
 
 #endif;

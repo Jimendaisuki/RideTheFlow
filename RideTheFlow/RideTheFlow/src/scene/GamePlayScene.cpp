@@ -11,6 +11,7 @@
 
 #include "../actor/tornado/Tornado.h"
 #include "../actor/Stage.h"
+#include "../actor/castle/MasterCastle.h"
 
 
 //コンストラクタ
@@ -28,8 +29,24 @@ GamePlayScene::~GamePlayScene()
 //開始
 void GamePlayScene::Initialize()
 {
+	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+
+	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
+	{
+		if (i % 2 == 0)
+		{
+			Vector3 Position = Vector3::ToVECTOR(MV1GetFramePosition(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), i));
+			boonPositions.push_back(Position);
+		}
+	}
+	for (auto i : boonPositions)
+	{
+		wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i));
+	}
+	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 //	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
 	
@@ -41,6 +58,7 @@ void GamePlayScene::Update()
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
+
 	wa.Update();
 }
 
@@ -63,5 +81,6 @@ Scene GamePlayScene::Next() const
 }
 
 void GamePlayScene::End(){
+	boonPositions.clear();
 	wa.Clear();
 }
