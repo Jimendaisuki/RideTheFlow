@@ -350,7 +350,7 @@ void Player::Draw() const{
 		drawVertexVec[i] = vertexVec[i];
 		drawMatrixVec[i] = parameter.mat;
 	}
-	
+
 	//先頭を原点に移動
 	drawVertexVec[0] = vertexVec[0];
 
@@ -386,8 +386,8 @@ void Player::Draw() const{
 		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
 		boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
 
-		Matrix4 drawMat = 
-			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *			
+		Matrix4 drawMat =
+			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
 			Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
 			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
@@ -395,16 +395,16 @@ void Player::Draw() const{
 		drawVertexVec[count] = drawMat.GetPosition();
 		rotateMat[count] = Matrix4::Identity;
 		Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
-		Vector3 up = Vector3(0,1,0).Normalized();
-		Vector3 left = Vector3::Cross(up,front).Normalized();
+		Vector3 up = Vector3(0, 1, 0).Normalized();
+		Vector3 left = Vector3::Cross(up, front).Normalized();
 		up = Vector3::Cross(front, left).Normalized();
-		front = Vector3::Cross(left,up).Normalized();
+		front = Vector3::Cross(left, up).Normalized();
 		rotateMat[count].SetFront(front);
 		rotateMat[count].SetUp(up);
 		rotateMat[count].SetLeft(left);
 
 		drawMatrixVec[count] =
-			Matrix4::Scale(scale) * 
+			Matrix4::Scale(scale) *
 			rotateMat[count] *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
@@ -421,27 +421,33 @@ void Player::Draw() const{
 		localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
 		localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
 	}
-	
+
 	Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
 	Matrix4 animSubRotate = Matrix4::Identity;
-	animSubRotate.SetFront(localAnimDrawMatrixVec[0].GetFront().Normalized());
-	animSubRotate.SetUp(localAnimDrawMatrixVec[0].GetUp().Normalized());
-	animSubRotate.SetLeft(localAnimDrawMatrixVec[0].GetLeft().Normalized());
+	animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
+	animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
+	animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
 
 	Vector3 front = -tackleT;
 	Vector3 up = Vector3(0, 1, 0).Normalized();
 	Vector3 left = Vector3::Cross(up, front).Normalized();
 	up = Vector3::Cross(front, left).Normalized();
 	front = Vector3::Cross(left, up).Normalized();
+	Matrix4 rotateY = Matrix4::Identity;	
+	rotateY.SetFront(front);
+	rotateY.SetUp(up);
+	rotateY.SetLeft(left);
 
-	animSubRotate.SetFront(front);
-	animSubRotate.SetUp(up);
-	animSubRotate.SetLeft(left);
-
-	localAnimDrawMatrixVec[0] = 
+	localAnimDrawMatrixVec[0] =
 		Matrix4::Scale(scale) *
-		animSubRotate *
 		Matrix4::Translate(position);
+
+	localAnimDrawMatrixVec[1] =
+		Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale())*
+
+		animSubRotate *
+		rotateY *
+		Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
 
 	// 再生時間をセットする
 	MV1SetAttachAnimTime(modelHandle, animIndex, animTime);
