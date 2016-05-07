@@ -35,4 +35,7 @@ private:
 	float tackleCount;
 
 	Vector3 beforeVec;
+
+	float animTime, totalTime;
+	int modelHandle,animIndex;
 };

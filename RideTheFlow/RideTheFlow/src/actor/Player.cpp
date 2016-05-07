@@ -82,6 +82,11 @@ tornadeTimer(0.0f)
 	tackleCount = 0.0f;
 
 	beforeVec = Vector3(0,0,-1);
+
+	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	animTime = 0;
+	animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
+	totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
@@ -245,10 +250,10 @@ void Player::Update(){
 
 	for (int i = 0; i < boneCount; i++){
 		//ボーンの状態をリセット
-		MV1ResetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1);
+		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
 		//初期位置ボーンの位置を取得
 		vertexVec[i] = Matrix4::ToMatrix4(
-			MV1GetFrameLocalWorldMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1)).GetPosition() *
+			MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition() *
 			Matrix4::Scale(scale);
 
 		copyVertexVec[i] = vertexVec[i];
@@ -293,11 +298,23 @@ void Player::Update(){
 			damageCount = 0;
 		}
 	}
+
+	// 再生時間を進める
+	animTime += 30.0f * Time::DeltaTime;
+
+	// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
+	if (animTime >= totalTime)
+	{
+		animTime = 0.0f;
+	}
 }
 void Player::Draw() const{
 	//骨の数だけ用意する
 	Vector3* drawVertexVec = new Vector3[boneCount];
 	Matrix4* drawMatrixVec = new Matrix4[boneCount];
+	Matrix4* localDrawMatrixVec = new Matrix4[boneCount];
+	Matrix4* animDrawMatrixVec = new Matrix4[boneCount];
+	Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
 	Vector3* copyVertexVec = new Vector3[boneCount];
 
 	//初期化
@@ -371,26 +388,42 @@ void Player::Draw() const{
 		drawMatrixVec[count] =
 			Matrix4::Scale(scale) * 
 			rotateMat[count] *
-			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
-			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
+	for (int count = 0; count < boneCount; count++){
+		localDrawMatrixVec[count] = drawMatrixVec[count];
+	}
 
 	//相対座標に変換しセット
 	for (int count = 0; count < boneCount; count++){
 		Matrix4 beforeInvMat = Matrix4::Identity;
 		//親の逆行列をかけていく
 		for (int count2 = 0; count2 < count; count2++){
-			beforeInvMat *= Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), count2 + 1)));
+			beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
 		}
-		MV1SetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), count + 1,
+		localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+		localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+	}
+	
+	Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
+	Matrix4 animSubRotate = Matrix4::Identity;
+	animSubRotate.SetFront(localAnimDrawMatrixVec[0].GetFront().Normalized());
+	animSubRotate.SetUp(localAnimDrawMatrixVec[0].GetUp().Normalized());
+	animSubRotate.SetLeft(localAnimDrawMatrixVec[0].GetLeft().Normalized());
+
+	localAnimDrawMatrixVec[0] = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(position);
+
+	for (int count = 0; count < boneCount; count++){
+		MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 			Matrix4::ToMATRIX(
-			drawMatrixVec[count] *
-			//drawInv //*
-			beforeInvMat
+			//localDrawMatrixVec[count]
+			Matrix4::Slerp(localDrawMatrixVec[count],localAnimDrawMatrixVec[count], 0)
 			));
 	}
+
+	// 再生時間をセットする
+	MV1SetAttachAnimTime(modelHandle, animIndex, animTime);
 
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	if (damageFlag){
@@ -409,13 +442,16 @@ void Player::Draw() const{
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
+	SAFE_DELETE_ARRAY(localDrawMatrixVec);
 	SAFE_DELETE_ARRAY(copyVertexVec);
+	SAFE_DELETE_ARRAY(animDrawMatrixVec);
+	SAFE_DELETE_ARRAY(localAnimDrawMatrixVec);
 }
 
 
 void Player::ParameterDraw() const{
 
-	int ModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	int ModelHandle = modelHandle;
 	// フレーム名の描画
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "Name         %s", MV1GetFrameName(ModelHandle, boneSelect));
 
