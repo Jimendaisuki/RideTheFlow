@@ -38,4 +38,6 @@ private:
 
 	float animTime, totalTime;
 	int modelHandle,animIndex;
+
+	float animBlend;
 };

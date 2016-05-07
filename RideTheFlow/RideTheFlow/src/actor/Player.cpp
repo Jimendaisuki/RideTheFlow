@@ -87,6 +87,8 @@ tornadeTimer(0.0f)
 	animTime = 0;
 	animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 	totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+
+	animBlend = 0;
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
@@ -133,6 +135,13 @@ void Player::Update(){
 		vec.z -= speed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
 		tackleFlag = true;
+
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::J))
+		animBlend += 1.0f * Time::DeltaTime;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::H))
+		animBlend -= 1.0f * Time::DeltaTime;
+
+	animBlend = Math::Clamp(animBlend, 0.0f, 1.0f);
 
 	if (padInputFlag){
 		rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
@@ -377,10 +386,11 @@ void Player::Draw() const{
 		drawVertexVec[count] = drawMat.GetPosition();
 		rotateMat[count] = Matrix4::Identity;
 		Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
-		rotateMat[count].SetFront(front);
 		Vector3 up = Vector3(0,1,0).Normalized();
-		Vector3 left = Vector3::Cross(front, up).Normalized();
-		up = Vector3::Cross(left, front).Normalized();
+		Vector3 left = Vector3::Cross(up,front).Normalized();
+		up = Vector3::Cross(front, left).Normalized();
+		front = Vector3::Cross(left,up).Normalized();
+		rotateMat[count].SetFront(front);
 		rotateMat[count].SetUp(up);
 		rotateMat[count].SetLeft(left);
 
@@ -414,11 +424,25 @@ void Player::Draw() const{
 
 	localAnimDrawMatrixVec[0] = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(position);
 
+	std::vector<Matrix4> aaaa;
+	std::vector<Matrix4> aa;
+	std::vector<Matrix4> aaa;
+	for (int count = 0; count < boneCount; count++){
+		aa.push_back(Matrix4::Slerp(
+			localDrawMatrixVec[count]
+			, localAnimDrawMatrixVec[count], 0));
+		aaa.push_back(localDrawMatrixVec[count]);
+		aaaa.push_back(drawMatrixVec[count]);
+	}
+	//aa[1].m[0][0] = localDrawMatrixVec[1].m[0][0];
+	//aa[1].m[0][1] = localDrawMatrixVec[1].m[0][1];
+	//aa[1].m[0][2] = localDrawMatrixVec[1].m[0][2];
 	for (int count = 0; count < boneCount; count++){
 		MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 			Matrix4::ToMATRIX(
-			//localDrawMatrixVec[count]
-			Matrix4::Slerp(localDrawMatrixVec[count],localAnimDrawMatrixVec[count], 0)
+			Matrix4::Slerp(
+			localDrawMatrixVec[count]
+			, localAnimDrawMatrixVec[count], animBlend)
 			));
 	}
 
@@ -433,7 +457,7 @@ void Player::Draw() const{
 	if (tackleFlag)
 	DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
-	//ParameterDraw();
+	ParameterDraw();
 	//for (int count = 0; count < boneCount - 1; count++){
 	//	int Color = GetColor(255, 0, 0);
 	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
@@ -474,7 +498,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
 	// •ÏŠ·s—ñ‚ð•`‰æ‚·‚é
-	MATRIX Matrix = rotateMat[boneSelect].ToMATRIX();// MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
+	MATRIX Matrix =  MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 64, GetColor(255, 255, 255), "   Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 80, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 96, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
