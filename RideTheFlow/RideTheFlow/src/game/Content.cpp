@@ -14,6 +14,7 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("images.png", SPRITE_ID::ENEMY_SPRITE);
 	sprite.Load("smoke.png", SPRITE_ID::BEGIN_SPRITE);
 	sprite.Load("sand.png", SPRITE_ID::SAND_SPRITE);
+	sprite.Load("intensiveLine.png", SPRITE_ID::INTENSIVELINE_SPRITE);
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");
 }

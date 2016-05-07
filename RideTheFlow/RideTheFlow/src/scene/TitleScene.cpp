@@ -19,6 +19,8 @@
 #include "../time/Time.h"
 #include "../actor/Stage.h"
 
+#include "../actor/Effect.h"
+
 //コンストラクタ
 TitleScene::TitleScene()
 {
@@ -34,16 +36,10 @@ TitleScene::~TitleScene()
 //開始
 void TitleScene::Initialize()
 {
-	////リソース読み込み
-	//WorkFolder::SetWorkFolder("res/Model/");
-	//Model::GetInstance().Load("Box.x", MODEL_ID::BOX_MODEL);
-
 	timer = 0.0f;
 	objectcount = 0;
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector2(5, 12), Vector3(10, 0, 0)));
-	wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa));
+	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	Camera::GetInstance().SetRange(0.1f, 3000.0f);
 	Camera::GetInstance().Position.Set(Vector3(0.0f,400.0f, -300.0f));
 	Camera::GetInstance().Target.Set(Vector3::Zero);
@@ -63,54 +59,29 @@ void TitleScene::Update()
 		fps = 1.0f / Time::DeltaTime;
 		fpsTimer = 0.0f;
 	}
-
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z)){
-		Vector3 pos;
-		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
-			pos = other.GetParameter().mat.GetPosition();
-		});
-		for (int i = 0; i < 20; i++){
-		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(wa, pos));
-		}
-	}
-	tornadeTimer += Time::DeltaTime;
-	if (tornadeTimer > 0.08f){
-		tornadeTimer = 0.0f;
-		Vector3 pos;
-		wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
-			pos = other.GetParameter().mat.GetPosition();
-		});
-		//wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<TornadeBillboard>(wa, pos));
-	}
+	
+	/* 集中線発生 */
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
+		Effect::GetInstance().DashEffect(wa);
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
 	wa.Update();
 
-	objectcount = 0;
-	wa.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		objectcount++;
-	});
-
-	Vector3 target;
-	wa.EachActor(ACTOR_ID::TORNADO_ACTOR, [&](const Actor& other){
-		target = other.GetParameter().mat.GetPosition();
-	});
-	Camera::GetInstance().Target.Set(target);
+	Camera::GetInstance().Target.Set(Vector3::Zero);
 	Camera::GetInstance().Update();
 }
 
 //描画
 void TitleScene::Draw() const
 {
-	//Model::GetInstance().Draw(MODEL_ID::SKY_MODEL, Vector3::Zero, Vector3::Zero, Vector3(5.0f));
-	//Model::GetInstance().Draw(MODEL_ID::TEST_STAGE, Vector3::Zero, Vector3::Zero, Vector3(0.01f));
 	wa.Draw();
 
-	TextDraw::GetInstance().Draw(Vector2(fps));
-	//TextDraw::GetInstance().Draw(Point::Zero, Vector3(255), Vector2(objectcount));
+	TextDraw::GetInstance().Draw("TitleScene");
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
+
+	DrawFormatString(0, 100, GetColor(255, 255, 255), "LSHIFT	: ダッシュ演出");
 }
 
 //終了しているか？
@@ -125,10 +96,7 @@ Scene TitleScene::Next() const
 	return Scene::GamePlay;
 }
 
-void TitleScene::End(){
+void TitleScene::End()
+{
 	wa.Clear();
-	//リソース全削除
-	//Model::GetInstance().DeleteAll();
-	//Sprite::GetInstance().DeleteAll();
-	//Sound::GetInstance().DeleteAll();
 }

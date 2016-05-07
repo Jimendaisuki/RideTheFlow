@@ -39,9 +39,7 @@ struct ModelData{
 };
 
 class Collisin{
-
-
-public:
+	public:
 	static Collisin &GetInstace(){
 		static Collisin c;
 		return c;
@@ -76,8 +74,6 @@ public:
 
 	//
 	CollisionParameter PushedBack_SphereCapsule(const Sphere& s, const Capsule& c) const;
-	//
-	Vector3 PushedBack_CapsuleSphere(const Sphere& s, const Capsule& c) const;
 	//
 	Vector3 PushedBack_CapsuleCapsule(const Capsule& c1, const Capsule& c2) const;
 };

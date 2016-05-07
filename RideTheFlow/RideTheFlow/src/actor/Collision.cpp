@@ -267,7 +267,7 @@ CollisionParameter Collisin::ModelCapsule(const ModelData& model, const Capsule&
 //	return colpara;
 //}
 
-//
+// 球とカプセルの押し戻し（カプセルは静止）
 CollisionParameter Collisin::PushedBack_SphereCapsule(const Sphere& s, const Capsule& c) const{
 	CollisionParameter colpara;
 	colpara.colFlag = false;
@@ -307,42 +307,11 @@ CollisionParameter Collisin::PushedBack_SphereCapsule(const Sphere& s, const Cap
 	return colpara;
 }
 
-// 
-Vector3 Collisin::PushedBack_CapsuleSphere(const Sphere& s, const Capsule& c) const{
-	Vector3 pushedPos = Vector3::Zero;
-
-	Vector3 v = c.endPos - c.startPos;
-	Vector3 v1 = s.position - c.startPos;
-	float t = Vector3::Dot(v, v1) / Vector3::Dot(v, v);
-	float radius = s.radius + c.radius;
-	float r2 = radius * radius;
-	if (t < 0 && v1.Length() * v1.Length() <= r2)
-	{
-		Vector3 vr = Vector3::Normalize(v1) * radius;
-		pushedPos = s.position - vr;
-	}
-
-	Vector3 v2 = s.position - c.endPos;
-	if (t > 1 && v2.Length() * v2.Length() <= r2)
-	{
-		Vector3 vr = Vector3::Normalize(v2) * radius;
-		pushedPos = s.position - vr - v;
-	}
-
-	Vector3 vn = v1 - t * v;
-	if ((0 <= t && t <= 1) && (vn.Length() * vn.Length() < r2))
-	{
-		Vector3 vr = radius * Vector3::Normalize(vn);
-		pushedPos = s.position - t * v - vr;
-	}
-	return pushedPos;
-}
-
 // カプセルとカプセルの押し戻し
 Vector3 Collisin::PushedBack_CapsuleCapsule(const Capsule& c1, const Capsule& c2) const{
 	Vector3 pushedPosition;
 
-	Vector3 a = c1.endPos - c2.startPos;
+	Vector3 a = c1.endPos - c1.startPos;
 	Vector3 b = c2.endPos - c2.startPos;
 	Vector3 c = c2.startPos - c1.startPos;
 	float D = c1.radius + c2.radius;
