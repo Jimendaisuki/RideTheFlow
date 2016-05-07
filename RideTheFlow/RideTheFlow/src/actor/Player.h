@@ -31,8 +31,10 @@ private:
 	bool damageFlag;
 	float damageCount;
 
-	bool tackleFlag;
-	float tackleCount;
+	bool tackleFlag, tackleEndFlag,leftStickMove;
+	Matrix4 tackleRotate;
+	float tackleAngle;
+	Vector3 tackleT;
 
 	Vector3 beforeVec;
 
