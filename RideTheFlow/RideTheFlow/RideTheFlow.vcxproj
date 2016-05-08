@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Effect.cpp" />
     <ClCompile Include="src\actor\IntensiveLine.cpp" />
@@ -91,9 +92,10 @@
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
     <ClCompile Include="src\actor\EnemyGunBullet.cpp" />
     <ClCompile Include="src\actor\EnemyVaristorBullet.cpp" />
-    <ClCompile Include="src\actor\ParticleSystem.cpp" />
+    <ClCompile Include="src\actor\particle\Particle.cpp" />
+    <ClCompile Include="src\actor\particle\ParticleSystem.cpp" />
     <ClCompile Include="src\actor\Sand.cpp" />
-    <ClCompile Include="src\actor\SpringCameraActor.cpp" />
+    <ClCompile Include="src\actor\ZerudaCameraActor.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
     <ClCompile Include="src\actor\TitleCameraActor.cpp" />
     <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp" />
@@ -146,7 +148,9 @@
     <ClInclude Include="src\actor\Effect.h" />
     <ClInclude Include="src\actor\IntensiveLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
-    <ClInclude Include="src\actor\ParticleSystem.h" />
+    <ClInclude Include="src\actor\particle\Particle.h" />
+    <ClInclude Include="src\actor\particle\ParticlePtr.h" />
+    <ClInclude Include="src\actor\particle\ParticleSystem.h" />
     <ClInclude Include="src\actor\Sand.h" />
     <ClInclude Include="src\actor\Stage.h" />
     <ClInclude Include="src\actor\TestCapsule.h" />
@@ -156,9 +160,10 @@
     <ClInclude Include="src\actor\castle\CastleBlock.h" />
     <ClInclude Include="src\actor\EnemyVaristorBullet.h" />
     <ClInclude Include="src\actor\EnemyGunBullet.h" />
-    <ClInclude Include="src\actor\SpringCameraActor.h" />
+    <ClInclude Include="src\actor\ZerudaCameraActor.h" />
     <ClInclude Include="src\actor\tornado\TornadeBillboard.h" />
     <ClInclude Include="src\graphic\BlendMode.h" />
+    <ClInclude Include="src\actor\MonhanCameraActor.h" />
     <ClInclude Include="src\scene\CreditScene.h" />
     <ClInclude Include="src\scene\EndhingScene.h" />
     <ClInclude Include="src\actor\EnemyBullet.h" />

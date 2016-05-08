@@ -1,12 +1,12 @@
-#ifndef SPRING_CAMERA_ACTOR_H_
-#define SPRING_CAMERA_ACTOR_H_
+#ifndef MONHAN_CAMERA_ACTOR_H_
+#define MONHAN_CAMERA_ACTOR_H_
 #include "Actor.h"
 
-class SpringCameraActor :public Actor
+class MonhanCameraActor :public Actor
 {
 public:
-	SpringCameraActor(IWorld& world);
-	~SpringCameraActor();
+	MonhanCameraActor(IWorld& world);
+	~MonhanCameraActor();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
@@ -14,10 +14,8 @@ public:
 private:
 	Matrix4 playerMat;
 	Vector3 position;
-	Vector3 point;
-	Vector3 velocity;
 	Vector3 restPosition;
-	Vector3 rotateVelocity;
+	Vector3 velocity;
 	float stiffness;
 	float friction;
 	float mass;
