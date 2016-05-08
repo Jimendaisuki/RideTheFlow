@@ -85,6 +85,8 @@
   <ItemGroup>
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
+    <ClCompile Include="src\actor\Effect.cpp" />
+    <ClCompile Include="src\actor\IntensiveLine.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\ParachuteBombBullet.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
@@ -141,10 +143,13 @@
   <ItemGroup>
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
+    <ClInclude Include="src\actor\Effect.h" />
+    <ClInclude Include="src\actor\IntensiveLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
     <ClInclude Include="src\actor\ParticleSystem.h" />
     <ClInclude Include="src\actor\Sand.h" />
     <ClInclude Include="src\actor\Stage.h" />
+    <ClInclude Include="src\actor\TestCapsule.h" />
     <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\ParachuteBombBullet.h" />
     <ClInclude Include="src\actor\castle\CastleBlock.h" />

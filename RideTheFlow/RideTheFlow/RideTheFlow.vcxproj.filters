@@ -153,6 +153,9 @@
     <ClCompile Include="src\actor\ParachuteBombBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\actor\SpringCameraActor.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="src\actor\castle\MasterCastle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -171,10 +174,10 @@
     <ClCompile Include="src\actor\Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\ZerudaCameraActor.cpp">
+    <ClCompile Include="src\actor\IntensiveLine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\MonhanCameraActor.cpp">
+    <ClCompile Include="src\actor\Effect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -341,6 +344,9 @@
     <ClInclude Include="src\actor\ParachuteBombBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\actor\SpringCameraActor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="src\actor\tornado\TornadeBillboard.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -368,10 +374,13 @@
     <ClInclude Include="src\actor\castle\CastleParameter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\ZerudaCameraActor.h">
+    <ClInclude Include="src\actor\IntensiveLine.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\MonhanCameraActor.h">
+    <ClInclude Include="src\actor\Effect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actor\TestCapsule.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

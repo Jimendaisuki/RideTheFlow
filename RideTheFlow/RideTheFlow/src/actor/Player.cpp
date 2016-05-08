@@ -42,6 +42,11 @@ const float angleSpeed = 270.0f;
 const float speed = 100.0f;
 //回転スピード
 const float rotateSpeed = 150.0f;
+
+//タックルのアニメーションのスピード
+const float tackleAnimSpeed = 20.0f;
+//タックルの入り出の時のブレンドスピード(上記のスピード÷１０位が目安っぽい(?))
+const float tackleAnimBlendSpeed = 2.0f;
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
@@ -79,9 +84,26 @@ tornadeTimer(0.0f)
 	damageCount = 0;
 
 	tackleFlag = false;
-	tackleCount = 0.0f;
+	tackleEndFlag = false;
+	leftStickMove = false;
+	tackleRotate = Matrix4::Identity;
+	tackleAngle = 0;
 
-	beforeVec = Vector3(0,0,-1);
+	beforeVec = Vector3(0.0f,0.01f,-1.0f);
+
+	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	animTime = 0;
+
+	for (int i = 0; i < boneCount; i++){
+		//ボーンの状態をリセット
+		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
+		//初期位置ボーンの位置を取得
+		vertexVec[i] = Matrix4::ToMatrix4(
+			MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition() *
+			Matrix4::Scale(scale);
+	}
+
+	animBlend = 0;
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
@@ -91,9 +113,21 @@ Player::~Player(){
 
 
 void Player::Update(){
-
+	leftStickMove = false;
 	//操作
 	Vector3 vec = Vector3::Zero;
+
+	auto input = DINPUT_JOYSTATE();
+
+	// 入力状態を取得
+	GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
+	Vector3 rightStick = Vector3(input.Rx, input.Ry, input.Rz).Normalized();
+	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
+
+	bool padInputFlag = false;
+	if (Vector3::Length(rightStick) > 0.01f || Vector3::Length(rightStick) > 0.01f){
+		padInputFlag = true;
+	}
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
 		rotateLeft += rotateSpeed * Time::DeltaTime;
@@ -104,28 +138,51 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
 		rotateUp -= rotateSpeed * Time::DeltaTime;
 
+
+
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
+		vec.x += speed * Time::DeltaTime;
+		leftStickMove = true;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)){
+		vec.x -= speed * Time::DeltaTime;
+		leftStickMove = true;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)){
+		vec.z += speed * Time::DeltaTime;
+		leftStickMove = true;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+		vec.z -= speed * Time::DeltaTime;
+		leftStickMove = true;
+	}
+
+
+	if (padInputFlag){
+		rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
+		rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
+		vec.x += leftStick.x * speed * Time::DeltaTime;
+		vec.z += leftStick.y * speed * Time::DeltaTime;
+	}
 	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		vec.x += speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		vec.x -= speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		vec.z += speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		vec.z -= speed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
-		tackleFlag = true;
-
 	Vector3 cameraPos = Camera::GetInstance().Position.Get();
+	Vector3 cameraFront = (position - (cameraPos - cameraUpMove)).Normalized();
+	Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
+	vec.Normalize();
+	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) && leftStickMove){
+		tackleFlag = true;
+		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
+		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+		Vector3 tackleTrueVec = Vector3(trueVec.x, 0.0f, trueVec.z);
+		tackleT = tackleTrueVec;
+	}
+
 	//cameraPos.y = 0;
 
 	if (!tackleFlag){
-
-		Vector3 cameraFront = (position - (cameraPos - cameraUpMove)).Normalized();
-		Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
-		vec.Normalize();
-		Vector3 trueVec = (cameraFront *  vec.z + cameraLeft * vec.x).Normalized();
 		Vector3 cross = Vector3::Cross(beforeVec, trueVec).Normalized().Normalized();
 
 
@@ -157,13 +214,28 @@ void Player::Update(){
 		}
 	}
 	else{
-		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-		tackleCount += Time::DeltaTime;
-		parameter.height = (position - cameraPos).Normalized() * 30.0f;
-		if (tackleCount > 2.0f){
-			tackleCount = 0.0f;
-			tackleFlag = false;
+		// 再生時間を進める
+		animTime += tackleAnimSpeed * Time::DeltaTime;
+
+		if (totalTime - animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f){
+			tackleEndFlag = true;
 		}
+
+		if (tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
+		else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
+
+		animBlend = Math::Clamp(animBlend, 0.0f, 1.0f);
+		// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
+		if (animTime >= totalTime)
+		{
+			animTime = 0.0f;
+			tackleFlag = false;
+			tackleEndFlag = false;
+			animBlend = 0.0f;
+		}
+
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
+		parameter.height = (position - cameraPos).Normalized() * 30.0f;
 	}
 
 	
@@ -211,25 +283,18 @@ void Player::Update(){
 	speedRegulation = Math::InfinityClamp(speedRegulation, 0.0f, 360.0f);
 
 
-	//Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	//Camera::GetInstance().Position.Set(
-	//	Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
-	//	parameter.mat.GetPosition() + cameraUpMove);
-	//Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-	//Camera::GetInstance().Up.Set(Vector3(0,1,0));
-	//Camera::GetInstance().Update();
+	Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	Camera::GetInstance().Position.Set(
+		Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
+		parameter.mat.GetPosition() + cameraUpMove);
+	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+	Camera::GetInstance().Up.Set(Vector3(0,1,0));
+	Camera::GetInstance().Update();
 
 
 	Vector3* copyVertexVec = new Vector3[boneCount];
 
 	for (int i = 0; i < boneCount; i++){
-		//ボーンの状態をリセット
-		MV1ResetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1);
-		//初期位置ボーンの位置を取得
-		vertexVec[i] = Matrix4::ToMatrix4(
-			MV1GetFrameLocalWorldMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i + 1)).GetPosition() *
-			Matrix4::Scale(scale);
-
 		copyVertexVec[i] = vertexVec[i];
 	}
 
@@ -277,7 +342,8 @@ void Player::Draw() const{
 	//骨の数だけ用意する
 	Vector3* drawVertexVec = new Vector3[boneCount];
 	Matrix4* drawMatrixVec = new Matrix4[boneCount];
-	Vector3* copyVertexVec = new Vector3[boneCount];
+	Matrix4* localDrawMatrixVec = new Matrix4[boneCount];
+	Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
 
 	//初期化
 	for (int i = 0; i < boneCount; i++){
@@ -285,38 +351,28 @@ void Player::Draw() const{
 		drawMatrixVec[i] = parameter.mat;
 	}
 
-
-	for (int i = 0; i < boneCount; i++){
-		copyVertexVec[i] = vertexVec[i];
-	}
-	
 	//先頭を原点に移動
 	drawVertexVec[0] = vertexVec[0];
 
-	//先頭の高さを求める為最頂点の位置までの計算を行う
-	for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
-		Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
-		Vector3 boneUp = Vector3(0, 1, 0);
-		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
-		boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
-
-		Matrix4 drawMat = 
-			//ボーンの長さ求めて動かす
-			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-			//Left軸、Front軸基準に回転
-			Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
-			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
-			Matrix4::Translate(drawVertexVec[count - 1]);
-		drawVertexVec[count] = drawMat.GetPosition();
-	}
-
+	////先頭の高さを求める為最頂点の位置までの計算を行う
+	//for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
+	//	Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
+	//	Vector3 boneUp = Vector3(0, 1, 0);
+	//	Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
+	//	boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
+	//
+	//	Matrix4 drawMat = 
+	//		//ボーンの長さ求めて動かす
+	//		Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
+	//		//Left軸、Front軸基準に回転
+	//		Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
+	//		Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
+	//		Matrix4::Translate(drawVertexVec[count - 1]);
+	//	drawVertexVec[count] = drawMat.GetPosition();
+	//}
+	//
 	//先頭の高さを代入
 	//drawVertexVec[0] = -drawVertexVec[boneCount / (int)(2.0f / waveCount)];
-
-	//移動量を引いたプレイヤーのマトリックスを作成
-	Matrix4 paramMatSubTrans = parameter.mat;
-	paramMatSubTrans.SetPosition(Vector3(0, 0, 0));
-
 
 	//マトリックスも再計算
 	drawMatrixVec[0] =
@@ -330,8 +386,8 @@ void Player::Draw() const{
 		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
 		boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
 
-		Matrix4 drawMat = 
-			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *			
+		Matrix4 drawMat =
+			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
 			Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
 			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
@@ -339,35 +395,69 @@ void Player::Draw() const{
 		drawVertexVec[count] = drawMat.GetPosition();
 		rotateMat[count] = Matrix4::Identity;
 		Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
+		Vector3 up = Vector3(0, 1, 0).Normalized();
+		Vector3 left = Vector3::Cross(up, front).Normalized();
+		up = Vector3::Cross(front, left).Normalized();
+		front = Vector3::Cross(left, up).Normalized();
 		rotateMat[count].SetFront(front);
-		Vector3 up = Vector3(0,1,0).Normalized();
-		Vector3 left = Vector3::Cross(front, up).Normalized();
-		up = Vector3::Cross(left, front).Normalized();
 		rotateMat[count].SetUp(up);
 		rotateMat[count].SetLeft(left);
 
-		//rotateMat[count] = Matrix4::Translate(front);
 		drawMatrixVec[count] =
-			Matrix4::Scale(scale) * 
+			Matrix4::Scale(scale) *
 			rotateMat[count] *
-			//Quaternion::RotateAxis(parameter.mat.GetLeft().Normalized(), Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
-			//Quaternion::RotateAxis(parameter.mat.GetUp().Normalized(), Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * 20.0f) *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
-
 	//相対座標に変換しセット
 	for (int count = 0; count < boneCount; count++){
+		localDrawMatrixVec[count] = drawMatrixVec[count];
+
 		Matrix4 beforeInvMat = Matrix4::Identity;
 		//親の逆行列をかけていく
 		for (int count2 = 0; count2 < count; count2++){
-			beforeInvMat *= Matrix4::Inverse(Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), count2 + 1)));
+			beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
 		}
-		MV1SetFrameUserLocalMatrix(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), count + 1,
+		localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+		localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+	}
+
+	Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
+	Matrix4 animSubRotate = Matrix4::Identity;
+	animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
+	animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
+	animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+
+	Vector3 front = -tackleT;
+	Vector3 up = Vector3(0, 1, 0).Normalized();
+	Vector3 left = Vector3::Cross(up, front).Normalized();
+	up = Vector3::Cross(front, left).Normalized();
+	front = Vector3::Cross(left, up).Normalized();
+	Matrix4 rotateY = Matrix4::Identity;	
+	rotateY.SetFront(front);
+	rotateY.SetUp(up);
+	rotateY.SetLeft(left);
+
+	localAnimDrawMatrixVec[0] =
+		Matrix4::Scale(scale) *
+		Matrix4::Translate(position);
+
+	localAnimDrawMatrixVec[1] =
+		Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale())*
+
+		animSubRotate *
+		rotateY *
+		Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
+
+	// 再生時間をセットする
+	MV1SetAttachAnimTime(modelHandle, animIndex, animTime);
+
+	for (int count = 0; count < boneCount; count++){
+		MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 			Matrix4::ToMATRIX(
-			drawMatrixVec[count] *
-			//drawInv //*
-			beforeInvMat
+			Matrix4::Slerp(
+			localDrawMatrixVec[count]
+			,localAnimDrawMatrixVec[count], animBlend)
 			));
 	}
 
@@ -379,22 +469,24 @@ void Player::Draw() const{
 	if (tackleFlag)
 	DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
-	//ParameterDraw();
-	//for (int count = 0; count < boneCount - 1; count++){
-	//	int Color = GetColor(255, 0, 0);
-	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
-	//	DrawLine3D(Vector3::ToVECTOR(drawVertexVec[count]), Vector3::ToVECTOR(drawVertexVec[count + 1]), Color);
-	//}
+	ParameterDraw();
+
+	for (int count = 0; count < boneCount - 1; count++){
+		int Color = GetColor(255, 0, 0);
+		if (count % 2 == 0)Color = GetColor(0, 255, 0);
+		DrawLine3D(Vector3::ToVECTOR(position), position + tackleT * 1000.0f, Color);
+	}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
-	SAFE_DELETE_ARRAY(copyVertexVec);
+	SAFE_DELETE_ARRAY(localDrawMatrixVec);
+	SAFE_DELETE_ARRAY(localAnimDrawMatrixVec);
 }
 
 
 void Player::ParameterDraw() const{
 
-	int ModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	int ModelHandle = modelHandle;
 	// フレーム名の描画
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "Name         %s", MV1GetFrameName(ModelHandle, boneSelect));
 
@@ -417,7 +509,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
 	// 変換行列を描画する
-	MATRIX Matrix = rotateMat[boneSelect].ToMATRIX();// MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
+	MATRIX Matrix =  MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 64, GetColor(255, 255, 255), "   Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 80, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 96, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
@@ -446,7 +538,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %d", posStorage.size());
+	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %f", tackleAngle);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {

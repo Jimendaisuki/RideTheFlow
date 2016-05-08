@@ -151,7 +151,6 @@ CollisionParameter Actor::BoundarySphere_Capsule(const Actor& other) const{
 	tornado.endPos = tornado.startPos + parameter.height;
 	tornado.radius = other.parameter.radius;
 
-	/* IslandData */
 	Sphere island;
 	island.position = Matrix4::GetPosition(parameter.mat);
 	island.radius = parameter.radius;
