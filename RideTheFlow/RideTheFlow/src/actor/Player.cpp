@@ -125,8 +125,7 @@ void Player::Update(){
 		Vector3 cameraFront = (position - (cameraPos - cameraUpMove)).Normalized();
 		Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
 		vec.Normalize();
-		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
-
+		Vector3 trueVec = (cameraFront *  vec.z + cameraLeft * vec.x).Normalized();
 		Vector3 cross = Vector3::Cross(beforeVec, trueVec).Normalized().Normalized();
 
 
@@ -212,13 +211,13 @@ void Player::Update(){
 	speedRegulation = Math::InfinityClamp(speedRegulation, 0.0f, 360.0f);
 
 
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(
-		Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
-		parameter.mat.GetPosition() + cameraUpMove);
-	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-	Camera::GetInstance().Up.Set(Vector3(0,1,0));
-	Camera::GetInstance().Update();
+	//Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	//Camera::GetInstance().Position.Set(
+	//	Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
+	//	parameter.mat.GetPosition() + cameraUpMove);
+	//Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+	//Camera::GetInstance().Up.Set(Vector3(0,1,0));
+	//Camera::GetInstance().Update();
 
 
 	Vector3* copyVertexVec = new Vector3[boneCount];

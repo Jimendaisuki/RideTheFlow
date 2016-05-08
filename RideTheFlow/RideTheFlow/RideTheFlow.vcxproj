@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\ParachuteBombBullet.cpp" />
@@ -91,7 +92,7 @@
     <ClCompile Include="src\actor\EnemyVaristorBullet.cpp" />
     <ClCompile Include="src\actor\ParticleSystem.cpp" />
     <ClCompile Include="src\actor\Sand.cpp" />
-    <ClCompile Include="src\actor\SpringCameraActor.cpp" />
+    <ClCompile Include="src\actor\ZerudaCameraActor.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
     <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp" />
     <ClCompile Include="src\scene\CreditScene.cpp" />
@@ -149,9 +150,10 @@
     <ClInclude Include="src\actor\castle\CastleBlock.h" />
     <ClInclude Include="src\actor\EnemyVaristorBullet.h" />
     <ClInclude Include="src\actor\EnemyGunBullet.h" />
-    <ClInclude Include="src\actor\SpringCameraActor.h" />
+    <ClInclude Include="src\actor\ZerudaCameraActor.h" />
     <ClInclude Include="src\actor\tornado\TornadeBillboard.h" />
     <ClInclude Include="src\graphic\BlendMode.h" />
+    <ClInclude Include="src\actor\MonhanCameraActor.h" />
     <ClInclude Include="src\scene\CreditScene.h" />
     <ClInclude Include="src\scene\EndhingScene.h" />
     <ClInclude Include="src\actor\EnemyBullet.h" />
