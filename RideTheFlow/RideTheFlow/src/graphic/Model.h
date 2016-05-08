@@ -204,6 +204,33 @@ public:
 	///</summary>
 	void Draw2DBlend(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, bool turn, int blend_mode, int alpha);
 
+
+	///<summary>
+	/// ブレンドモードを変えずに、３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、サイズ、ブレンドの強さ(アルファ値)）
+	///</summary>
+	void Draw2DBlendNoChange(const MODEL_ID& id, const Vector3& position, float size, int alpha);
+	///<summary>
+	/// ブレンドモードを変えずに、３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、表示コマ番号、サイズ、ブレンドの強さ(アルファ値)）
+	///</summary>
+	void Draw2DBlendNoChange(const MODEL_ID& id, const Vector3& position, int frame, float size, int alpha);
+	///<summary>
+	/// ブレンドモードを変えずに、３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、サイズ、中心座標、回転量、ブレンドの強さ(アルファ値)）
+	///</summary>
+	void Draw2DBlendNoChange(const MODEL_ID& id, const Vector3& position, float size, const Vector2& origin, float angle, int alpha);
+	///<summary>
+	/// ブレンドモードを変えずに、３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、表示コマ番号、サイズ、中心座標、回転量、ブレンドの強さ(アルファ値)）
+	///</summary>
+	void Draw2DBlendNoChange(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, int alpha);
+	///<summary>
+	/// ブレンドモードを変えずに、３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、サイズ、中心座標、回転量、反転、ブレンドの強さ(アルファ値)）
+	///</summary>
+	void Draw2DBlendNoChange(const MODEL_ID& id, const Vector3& position, float size, const Vector2& origin, float angle, bool turn, int alpha);
+	///<summary>
+	/// ブレンドモードを変えずに、３Ｄ空間に２Ｄ画像をブレンドしながら描画する（モデルID、座標、表示コマ番号、サイズ、中心座標、回転量、反転、ブレンドの強さ(アルファ値)）
+	///</summary>
+	void Draw2DBlendNoChange(const MODEL_ID& id, const Vector3& position, int frame, float size, const Vector2& origin, float angle, bool turn, int alpha);
+	
+
 	///<summary>
 	/// モデルハンドルを受け取る
 	///</summary>

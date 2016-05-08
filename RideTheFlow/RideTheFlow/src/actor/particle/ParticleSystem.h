@@ -1,6 +1,8 @@
 #pragma once
-#include "Actor.h"
-#include <vector>
+#include "../Actor.h"
+#include "ParticlePtr.h"
+
+#include <list>
 
 enum PARTICLE_SHAPE
 {
@@ -14,55 +16,6 @@ enum PARTICLE_SHAPE
 
 class ParticleSystem :public Actor
 {
-public:
-	class Particle
-	{
-	public:
-		Particle(
-			const Vector3& pos_,
-			const Vector3& vec_ = Vector3::One,
-			float life_ = 1.0f,
-			float speed_ = 1.0f,
-			float size_ = 1.0f,
-			float alpha_ = 255.0f,
-			float addSpeed_ = 0.0f,
-			float addSize_ = 0.0f,
-			float addAlpha_ = 0.0f);
-		void Initialize(
-			const Vector3& pos_ , 
-			const Vector3& vec_ = Vector3::One,
-			float speed_ = 1.0f,
-			float size_ = 1.0f,
-			float alpha_ = 255.0f,
-			float addSpeed_ = 0.0f,
-			float addSize_ = 0.0f,
-			float addAlpha_ = 0.0f);
-		void Update();
-		void Draw(const MODEL_ID& drawID, Vector2 origin = Vector2::Zero, const int& blend_mode = BLEND_MODE::NoBlend) const;
-		bool GetIsDead();
-	private:
-		//パーティクル寿命
-		float lifeTime;
-		float lifeTimeLimit;
-		bool isDead;
-		//座標
-		Vector3 pos;
-		//移動方向
-		Vector3 vec;
-		//弾速
-		float speed;
-		//弾速度変化量
-		float addSpeed;
-		//画像拡大率
-		float size;
-		//画像拡大率変化量
-		float addSize;
-		//アルファ値
-		float alpha;
-		//アルファ値変化量
-		float addAlpha;
-	};
-
 public:
 	///<summary>
 	///球状、もしくは半球状に放出するパーティクルを生成します。
@@ -80,8 +33,8 @@ public:
 		float lifeTimeLimit_,
 		//放出地点
 		const Vector3& basePos_,
-		//true:球状、false:半球状
-		bool isShpere,
+		//true:半球状、false:球状
+		bool isHalfShpere,
 		//初期速度
 		float initSpeed_ = 1.0f,
 		//初期サイズ
@@ -99,15 +52,41 @@ public:
 		//ブレンド
 		int blendMode_ = BLEND_MODE::NoBlend
 		);
+	///<summary>
+	///箱状に放出するパーティクルを生成します。
+	///</summary>
+	ParticleSystem(
+		IWorld& world,
+		const MODEL_ID& drawID_,
+		float intervalSec_,
+		int sameEmissiveNum_,
+		float lifeTimeLimit_,
+		float particleLifeTimeLimit_,
+		const Vector3& basePos_,
+		const Vector3& emissiveVec_ = Vector3::One,
+		const Vector3& boxSize_ = Vector3::One,
+		float initSpeed_ = 1.0f,
+		float initSize_ = 1.0f,
+		float initAlpha_ = 255.0f,
+		const Vector2& billboardOrigin_ = Vector2::Zero,
+		float addSpeed_ = 0.0f,
+		float addSize_ = 0.0f,
+		float addAlpha_ = 0.0f,
+		int blendMode_ = BLEND_MODE::NoBlend
+		);
 	~ParticleSystem();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
+	void Add(ParticlePtr particle);
+	void Remove();
+
 private:
 	//==============共通===============//
 	//パーティクルを保管
-	std::vector<Particle> particles;
+	std::list<ParticlePtr> particles;
+
 	//放出する形状
 	PARTICLE_SHAPE shape;
 	//描画する画像
@@ -124,11 +103,10 @@ private:
 
 	//パーティクルに与える寿命
 	float particleLifeTimeLimit;
-
-	//画像中心位置
-	Vector2 billboardOrigin;
 	//放出の中心、基準となる位置
 	Vector3 basePos;
+	//画像中心位置
+	Vector2 billboardOrigin;
 
 	//弾初速
 	float initSpeed;
@@ -152,7 +130,7 @@ private:
 
 	//==============BOX、CORN共通===============//
 	//放出する方向の基準
-	Vector3 vec;
+	Vector3 emissiveVec;
 
 	//==============BOX===============//
 	//放出する箱の大きさ

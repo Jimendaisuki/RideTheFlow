@@ -42,6 +42,7 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));
 	model.Load2D("sand.png", MODEL_ID::SAND_2D);
+	model.Load2D("wind.png", MODEL_ID::WIND_2D);
 
 	//model.Load("m1.pmx", async);
 	//model.Load("m3.pmd", async);

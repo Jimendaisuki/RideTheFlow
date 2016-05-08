@@ -91,7 +91,8 @@
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
     <ClCompile Include="src\actor\EnemyGunBullet.cpp" />
     <ClCompile Include="src\actor\EnemyVaristorBullet.cpp" />
-    <ClCompile Include="src\actor\ParticleSystem.cpp" />
+    <ClCompile Include="src\actor\particle\Particle.cpp" />
+    <ClCompile Include="src\actor\particle\ParticleSystem.cpp" />
     <ClCompile Include="src\actor\Sand.cpp" />
     <ClCompile Include="src\actor\SpringCameraActor.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
@@ -145,7 +146,9 @@
     <ClInclude Include="src\actor\Effect.h" />
     <ClInclude Include="src\actor\IntensiveLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
-    <ClInclude Include="src\actor\ParticleSystem.h" />
+    <ClInclude Include="src\actor\particle\Particle.h" />
+    <ClInclude Include="src\actor\particle\ParticlePtr.h" />
+    <ClInclude Include="src\actor\particle\ParticleSystem.h" />
     <ClInclude Include="src\actor\Sand.h" />
     <ClInclude Include="src\actor\Stage.h" />
     <ClInclude Include="src\actor\TestCapsule.h" />

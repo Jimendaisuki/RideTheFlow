@@ -14,7 +14,7 @@
 #include "../actor/island/FloatingIsland.h"
 #include "../actor/Stage.h"
 
-#include "../actor/ParticleSystem.h"
+#include "../actor/particle/ParticleSystem.h"
 
 //コンストラクタ
 CreditScene::CreditScene()
@@ -39,23 +39,14 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(0, 20, 0), Vector3(0, 0, 0), Vector3(1, 1, 1)));
 
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	//IWorld& world,
-	//	const MODEL_ID& drawID_,
-	//	float intervalSec_,
-	//	int sameEmissiveNum_,
-	//	float lifeTimeLimit_,
-	//	const Vector3& basePos_,
-	//	bool isShpere,
-	//	float initSpeed_,
-	//	float initSize_,
-	//	float initAlpha_,
-	//	const Vector2& billboardOrigin_,
-	//	float addSpeed_,
-	//	float addSize_,
-	//	float addAlpha_,
-	//	int blendMode_
-	wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<ParticleSystem>(
-		wa, MODEL_ID::SMOKE_2D, 1.0f, 1.0f, 1000.0f, Vector3(0), true, 40.0f, 30.0f));
+	//ParticleSystem(wa, MODEL_ID::SMOKE_2D, 0.1f, 100, 1000.0f, Vector3(0), true, 200.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -120.0f,BLEND_MODE::Alpha);
+	//ParticleSystem(wa, MODEL_ID::WIND_2D, 0.01f, 1, 1000.0f, 4.0f,
+	//	Vector3(0, 100, 0), Vector3::One, Vector3(10, 100, 10),
+	//	400.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -70.0f, BLEND_MODE::Alpha);
+	//wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<ParticleSystem>(
+	//	wa, MODEL_ID::WIND_2D, 0.02f, 1, 1000.0f, 4.0f,
+	//	Vector3(200, 100, 0), Vector3(-1,0,0), Vector3(1, 100, 100),
+	//	80.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -70.0f, BLEND_MODE::Alpha));
 
 	Camera::GetInstance().SetRange(0.1f, 3000.0f);
 	Camera::GetInstance().Position.Set(Vector3(0.0f, 300.0f, -300.0f));
