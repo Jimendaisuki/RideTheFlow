@@ -1,5 +1,6 @@
 #pragma once;
 #include "../world/IWorld.h"
+#include "../math/Vector3.h"
 
 class Effect
 {
@@ -15,4 +16,5 @@ public:
 
 	// ダッシュエフェクト
 	void DashEffect(IWorld& wa);
+	void DashEffect(IWorld& wa, Vector3 position_);
 };

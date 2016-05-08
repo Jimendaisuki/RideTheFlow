@@ -95,6 +95,7 @@
     <ClCompile Include="src\actor\Sand.cpp" />
     <ClCompile Include="src\actor\SpringCameraActor.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
+    <ClCompile Include="src\actor\TitleCameraActor.cpp" />
     <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp" />
     <ClCompile Include="src\scene\CreditScene.cpp" />
     <ClCompile Include="src\scene\EndhingScene.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="src\actor\Sand.h" />
     <ClInclude Include="src\actor\Stage.h" />
     <ClInclude Include="src\actor\TestCapsule.h" />
+    <ClInclude Include="src\actor\TitleCameraActor.h" />
     <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\ParachuteBombBullet.h" />
     <ClInclude Include="src\actor\castle\CastleBlock.h" />

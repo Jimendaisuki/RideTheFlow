@@ -11,15 +11,13 @@
 #include <iomanip>
 #include "Scene.h"
 #include "../actor/AnimTestActor.h"
-#include "../actor/CameraActor.h"
-#include "../actor/castle/CastleBlock.h"
-#include "../actor/tornado/TornadeBillboard.h"
-#include "../actor/tornado/Tornado.h"
-#include "../actor/Sand.h"
-#include "../time/Time.h"
-#include "../actor/Stage.h"
 
 #include "../actor/Effect.h"
+#include "../actor/Stage.h"
+#include "../actor/TitleCameraActor.h"
+#include "../time/Time.h"
+
+#include "../actor/CameraActor.h"
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -33,6 +31,10 @@ TitleScene::~TitleScene()
 
 }
 
+int	  modelHandle = 0;
+float frameCount = 0;
+float frameNum = 0;
+
 //開始
 void TitleScene::Initialize()
 {
@@ -40,11 +42,17 @@ void TitleScene::Initialize()
 	objectcount = 0;
 	mIsEnd = false;
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	Camera::GetInstance().SetRange(0.1f, 3000.0f);
-	Camera::GetInstance().Position.Set(Vector3(0.0f,400.0f, -300.0f));
-	Camera::GetInstance().Target.Set(Vector3::Zero);
+	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wa));
+	
+	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	frameCount = MV1GetFrameNum(modelHandle);
+
+	position = Vector3::Zero;
+
+	Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
+	Camera::GetInstance().Target.Set(position);
 	Camera::GetInstance().Up.Set(Vector3::Up);
-	Camera::GetInstance().Update();
 }
 
 float tornadeTimer = 0.0f;
@@ -59,17 +67,33 @@ void TitleScene::Update()
 		fps = 1.0f / Time::DeltaTime;
 		fpsTimer = 0.0f;
 	}
-	
+
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)) position.x--;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)) position.x++;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)) position.y++;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)) position.y--;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E)) position.z--;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q)) position.z++;
+
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::UP)) frameNum++;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::DOWN)) frameNum--;
+	if (frameNum > frameCount - 1) frameNum = 0;
+	if (frameNum < 0) frameNum = frameCount - 1;
+
+
 	/* 集中線発生 */
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
-		Effect::GetInstance().DashEffect(wa);
+		Effect::GetInstance().DashEffect(wa, position);
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
+
 	wa.Update();
 
-	Camera::GetInstance().Target.Set(Vector3::Zero);
+	Camera::GetInstance().Position.Set(Vector3(0, 100, -200));
+	Camera::GetInstance().Target.Set(Vector3(0, 100, 0));
 	Camera::GetInstance().Update();
 }
 
@@ -78,10 +102,17 @@ void TitleScene::Draw() const
 {
 	wa.Draw();
 
+	DrawSphere3D(position, 2, 4, GetColor(255, 0, 0), GetColor(0, 0, 0), true);
+
 	TextDraw::GetInstance().Draw("TitleScene");
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
 
-	DrawFormatString(0, 100, GetColor(255, 255, 255), "LSHIFT	: ダッシュ演出");
+	DrawFormatString(0, 100, GetColor(255, 0, 0), "LSHIFT	: ダッシュ演出");
+
+	DrawFormatString(0, 150, GetColor(0, 0, 0), "FrameNum  : %f", frameNum);
+	DrawFormatString(0, 170, GetColor(0, 0, 0), "FrameName : %s", MV1GetFrameName(modelHandle, frameNum));
+	Vector3 position = Vector3::ToVECTOR(MV1GetFramePosition(modelHandle, frameNum));
+	DrawFormatString(0, 190, GetColor(0, 0, 0), "FramePos  : [%f] [%f] [%f]", position.x, position.y, position.z);
 }
 
 //終了しているか？
