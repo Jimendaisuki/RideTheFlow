@@ -2,7 +2,8 @@
 #include "../math/Vector2.h"
 #include "../input/Keyboard.h"
 
-#include"../actor/SpringCameraActor.h"
+#include"../actor/ZerudaCameraActor.h"
+#include"../actor/MonhanCameraActor.h"
 #include "../actor/Player.h"
 #include "../actor/castle/MasterCastle.h"
 #include "../camera/Camera.h"
@@ -26,8 +27,8 @@ void EndhingScene::Initialize()
 	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<SpringCameraActor>(wa));
-
+	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<ZerudaCameraActor>(wa));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
 	{
 		if (i % 2 == 0)
