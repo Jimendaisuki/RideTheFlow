@@ -24,35 +24,55 @@ public:
 
 
 private:
+	//デバック表示まとめ
 	void ParameterDraw()const;
-	Vector3 position;
-	float upAngle, leftAngle;
-	float speedRegulation;
-	float rotateUp, rotateLeft;
-	std::vector<Vector3> posStorage;
+	//デバックコード(デバック表示されているもののボーンのナンバー)
 	int boneSelect;
-	Matrix4* rotateMat;
-	int deletePosStorageCount;
+
+	//計算用のポジション
+	Vector3 position;
+	//くねくねさせる為のangle２つ
+	float upAngle, leftAngle;
+	//カメラの上下左右のrotate
+	float rotateUp, rotateLeft;
+	//マイフレームpositionを保存するもの
+	std::vector<Vector3> posStorage;
+	//初期ボーン
 	Vector3* vertexVec;
 
-	Matrix4 cameraMat;
-
+	//トルネードが発生するまでの時間
 	float tornadeTimer;
 
+	//ダメージを受けた際のパラメーター
 	bool damageFlag;
 	float damageCount;
 
+	//タックルのパラメーター
 	TackleParameter tp;
 
+	//加速ゲージの回復中
+	bool dashHealFlag;
+	//加速用のスピード
+	float dashSpeed;
+	//加速できる時間
+	float dashTime;
+	std::vector<Vector3> dashPosStorage;
+
+	//左スティック(WASD)が入力されたどうか判断する
 	bool leftStickMove;
 
+	//posStorageに何もないときのボーンの方向
 	Vector3 nonPosStorageVec;
 
+	//回転のディレイをかけるために用いる前フレームのベクトル(y = 0.01fの理由はぴったりだとバグを生じるから)
 	Vector3 beforeVec;
 
+	//アニメーションの再生タイム
 	float animTime, totalTime;
-	int modelHandle,animIndex;
-
+	//モデルハンドルを取得する(アニメーションのために)
+	int modelHandle, animIndex;
+	//アニメーションのブレンド
 	float animBlend;
+	//待機アニメーションをアタッチしたかどうか判断
 	bool waitAnimSet;
 };
