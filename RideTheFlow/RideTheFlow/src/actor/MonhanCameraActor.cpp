@@ -7,6 +7,7 @@
 #include "../time/Time.h"
 #include <string>
 #include "../math/Math.h"
+#include "Player.h"
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 const float rotateSpeed = 250.0f;
 
@@ -33,8 +34,10 @@ MonhanCameraActor::~MonhanCameraActor()
 }
 void MonhanCameraActor::Update()
 {
+	TackleParameter tp;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
+		tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	});
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))

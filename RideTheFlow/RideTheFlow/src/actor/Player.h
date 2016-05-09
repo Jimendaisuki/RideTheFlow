@@ -3,6 +3,13 @@
 #include "../math/Vector3.h"
 #include <memory>
 
+struct TackleParameter{
+	bool tackleFlag, tackleEndFlag;
+	Matrix4 tackleRotate;
+	float tackleAngle;
+	Vector3 tackleT;
+};
+
 class Player :public Actor, public std::enable_shared_from_this<Player>
 {
 public:
@@ -11,6 +18,10 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
+	TackleParameter& ReturnTackleParameter(){
+		return tp;
+	}
+
 
 private:
 	void ParameterDraw()const;
@@ -31,10 +42,10 @@ private:
 	bool damageFlag;
 	float damageCount;
 
-	bool tackleFlag, tackleEndFlag,leftStickMove;
-	Matrix4 tackleRotate;
-	float tackleAngle;
-	Vector3 tackleT;
+	TackleParameter tp;
+
+	bool leftStickMove;
+
 	Vector3 nonPosStorageVec;
 
 	Vector3 beforeVec;

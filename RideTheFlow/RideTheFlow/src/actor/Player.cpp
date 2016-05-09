@@ -90,11 +90,11 @@ tornadeTimer(0.0f)
 	damageFlag = false;
 	damageCount = 0;
 
-	tackleFlag = false;
-	tackleEndFlag = false;
+	tp.tackleFlag = false;
+	tp.tackleEndFlag = false;
 	leftStickMove = false;
-	tackleRotate = Matrix4::Identity;
-	tackleAngle = 0;
+	tp.tackleRotate = Matrix4::Identity;
+	tp.tackleAngle = 0;
 	nonPosStorageVec = Vector3(0, 0, 1);
 
 	beforeVec = Vector3(0.0f,0.01f,-1.0f);
@@ -115,7 +115,7 @@ tornadeTimer(0.0f)
 
 	waitAnimSet = false;
 
-	tackleT = Vector3(0, 0, -1);
+	tp.tackleT = Vector3(0, 0, -1);
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(rotateMat);
@@ -155,28 +155,28 @@ void Player::Update(){
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
 		vec.x += speed * Time::DeltaTime;
 		leftStickMove = true;
-		if (!tackleFlag){
+		if (!tp.tackleFlag){
 			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)){
 		vec.x -= speed * Time::DeltaTime;
 		leftStickMove = true;
-		if (!tackleFlag){
+		if (!tp.tackleFlag){
 			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)){
 		vec.z += speed * Time::DeltaTime;
 		leftStickMove = true;
-		if (!tackleFlag){
+		if (!tp.tackleFlag){
 			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
 		vec.z -= speed * Time::DeltaTime;
 		leftStickMove = true;
-		if (!tackleFlag){
+		if (!tp.tackleFlag){
 			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
@@ -195,29 +195,29 @@ void Player::Update(){
 	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
 	if (!leftStickMove){
-		if (!tackleFlag){
+		if (!tp.tackleFlag){
 			//animBlend += waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
 	if(leftStickMove){
-		if (!tackleFlag){
-			tackleT = trueVec;
+		if (!tp.tackleFlag){
+			tp.tackleT = trueVec;
 		}
 	}
 
 
 
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) && leftStickMove && !tackleFlag){
-		tackleFlag = true;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) && leftStickMove && !tp.tackleFlag){
+		tp.tackleFlag = true;
 		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-		tackleT = trueVec;
+		tp.tackleT = trueVec;
 		animTime = 0.0f;
 	}
 
 	//cameraPos.y = 0;
 
-	if (!tackleFlag){
+	if (!tp.tackleFlag){
 		if (!waitAnimSet)
 		animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
 		animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -258,28 +258,28 @@ void Player::Update(){
 		// 再生時間を進める
 		animTime += tackleAnimSpeed * Time::DeltaTime;
 
-		if (totalTime - animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tackleEndFlag){
-			tackleEndFlag = true;
+		if (totalTime - animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
+			tp.tackleEndFlag = true;
 			posStorage.clear();
-			nonPosStorageVec = -tackleT;
-			beforeVec = tackleT;
+			nonPosStorageVec = -tp.tackleT;
+			beforeVec = tp.tackleT;
 		}
 
-		if (tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
+		if (tp.tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
 		else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
 
 		// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
 		if (animTime >= totalTime - 10.0f)
 		{
 			animTime = 0.0f;
-			tackleFlag = false;
-			tackleEndFlag = false;
+			tp.tackleFlag = false;
+			tp.tackleEndFlag = false;
 			animBlend = 0.0f;
 			waitAnimSet = false;
 		}
 		if (animTime > tackleAnimAttackTiming){
 			world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-			parameter.height = tackleT.Normalized() * 30.0f;
+			parameter.height = tp.tackleT.Normalized() * 30.0f;
 		}
 	}
 
@@ -473,7 +473,7 @@ void Player::Draw() const{
 	animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
 	animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
 
-	Vector3 front = -tackleT.Normalized();
+	Vector3 front = -tp.tackleT.Normalized();
 	Vector3 up = Vector3(0, 1, 0).Normalized();
 	Vector3 left = Vector3::Cross(up, front).Normalized();
 	up = Vector3::Cross(front, left).Normalized();
@@ -549,7 +549,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "Child Num    %d", MV1GetFrameChildNum(ModelHandle, boneSelect));
 
 	// フレームのワールド座標の描画
-	VECTOR Position = tackleT;// MV1GetFramePosition(ModelHandle, boneSelect);
+	VECTOR Position = tp.tackleT;// MV1GetFramePosition(ModelHandle, boneSelect);
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
 	// 変換行列を描画する
@@ -582,7 +582,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %f", tackleAngle);
+	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %f", tp.tackleAngle);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
