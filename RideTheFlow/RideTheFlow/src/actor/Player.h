@@ -35,6 +35,7 @@ private:
 	Matrix4 tackleRotate;
 	float tackleAngle;
 	Vector3 tackleT;
+	Vector3 nonPosStorageVec;
 
 	Vector3 beforeVec;
 
@@ -42,4 +43,5 @@ private:
 	int modelHandle,animIndex;
 
 	float animBlend;
+	bool waitAnimSet;
 };
