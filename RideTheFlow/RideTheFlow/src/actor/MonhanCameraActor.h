@@ -16,11 +16,17 @@ private:
 	Vector3 position;
 	Vector3 restPosition;
 	Vector3 velocity;
+	Vector3 targetPos;
+	Vector3 posSeveStart;
+	Vector3 posSeveEnd;
+	float fov;
 	float stiffness;
 	float friction;
 	float mass;
 	float rotateLeft;
 	float rotateUp;
+	float leapTimer;
+	bool posSeve;
 };
 
 #endif
