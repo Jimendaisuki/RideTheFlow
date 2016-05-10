@@ -28,10 +28,8 @@ const float BackDashCamera = 100.0f;
 
 MonhanCameraActor::MonhanCameraActor(IWorld& world) :Actor(world),
 restPosition(Vector3::Zero),
-stiffness(3.0f),
-friction(0.1f),
-mass(2.0f),
-velocity(Vector3::Zero)
+velocity(Vector3::Zero),
+posSeve(true)
 {
 	parameter.isDead = false;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
@@ -46,7 +44,9 @@ velocity(Vector3::Zero)
 	targetPos = playerMat.GetPosition();
 	fov = 60.0f;
 
-	posSeve= true;
+	springParameter.stiffness = 3.0f;
+	springParameter.friction = 0.1f;
+	springParameter.mass = 2.0f;
 }
 MonhanCameraActor::~MonhanCameraActor()
 {
@@ -61,7 +61,9 @@ void MonhanCameraActor::Update()
 	});
 	Vector3 left = Vector3::Cross(tp.tackleT, Vector3(0, 1, 0).Normalized()).Normalized();
 	Vector3 up = Vector3::Cross(left, tp.tackleT).Normalized();
+	//タックルしてない
 	if (!tp.tackleFlag)
+		//カメラ移動
 	{
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
 			rotateLeft += rotateSpeed * Time::DeltaTime;
@@ -75,6 +77,35 @@ void MonhanCameraActor::Update()
 		restPosition = Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 			playerMat.GetPosition() + cameraUpMove;
 		targetPos = playerMat.GetPosition();
+
+		//ダッシュ処理
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
+		{
+			Effect::GetInstance().DashEffect(world, playerMat.GetPosition());
+			if (posSeve)
+			{
+				posSeve = false;
+				posSeveEnd = playerMat.GetPosition() + tp.tackleT*(-BackDashCamera) + up*UpDashCamera;
+				posSeveStart = restPosition;
+			}
+			leapTimer += 3 * Time::DeltaTime;
+			leapTimer = Math::Clamp(leapTimer, 0.0f, 1.0f);
+			restPosition = Math::Lerp(posSeveStart, posSeveEnd, leapTimer);
+			fov = Math::Lerp(60.0f, MaxFov, leapTimer);
+			rotateUp = atan2(playerMat.GetPosition().x - position.x, playerMat.GetPosition().z - position.z) * 180 / 3.1415f + 180;
+			Camera::GetInstance().SetViewAngle(fov);
+		}
+		else
+		{
+			leapTimer -= 3 * Time::DeltaTime;
+			leapTimer = Math::Clamp(leapTimer, 0.0f, 1.0f);
+			restPosition = Math::Lerp(Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+				playerMat.GetPosition() + cameraUpMove, posSeveEnd, leapTimer);
+			leapTimer = Math::Clamp(leapTimer, 0.0f, 1.0f);
+			fov = Math::Lerp(60.0f, 80.0f, leapTimer);
+			posSeve = true;
+			Camera::GetInstance().SetViewAngle(fov);
+		}
 	}
 	else
 	{
@@ -83,39 +114,12 @@ void MonhanCameraActor::Update()
 		targetPos = playerMat.GetPosition() + tp.tackleT*20.0f;
 		rotateUp = atan2(playerMat.GetPosition().x - position.x, playerMat.GetPosition().z - position.z) * 180 / 3.1415f + 180;
 	}
-
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::G))
-	{
-		Effect::GetInstance().DashEffect(world, playerMat.GetPosition());
-		if (posSeve)
-		{
-			posSeve = false;
-			posSeveEnd = playerMat.GetPosition() + tp.tackleT*(-BackDashCamera) + up*UpDashCamera;
-			posSeveStart = restPosition;
-		}
-		leapTimer += 3 * Time::DeltaTime;
-		leapTimer = Math::Clamp(leapTimer, 0.0f, 1.0f);
-		restPosition = Math::Lerp(posSeveStart, posSeveEnd, leapTimer);
-		fov = Math::Lerp(60.0f, MaxFov, leapTimer);
-		rotateUp = atan2(playerMat.GetPosition().x - position.x, playerMat.GetPosition().z - position.z) * 180 / 3.1415f + 180;
-		Camera::GetInstance().SetViewAngle(fov);
-	}
-	else
-	{
-		posSeve = true;
-		leapTimer -= 3 * Time::DeltaTime;
-		leapTimer = Math::Clamp(leapTimer, 0.0f, 1.0f);
-		restPosition = Math::Lerp(Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
-			playerMat.GetPosition() + cameraUpMove, posSeveEnd, leapTimer);
-		leapTimer = Math::Clamp(leapTimer, 0.0f, 1.0f);
-		fov = Math::Lerp(60.0f, 80.0f, leapTimer);
-		Camera::GetInstance().SetViewAngle(fov);
-	}
+	
 	//バネカメラ(ポジション)
 	Vector3 stretch = (position - restPosition);
-	Vector3 force = -stiffness * stretch;
-	Vector3 acceleration = force / mass;
-	velocity = friction * (velocity + acceleration);
+	Vector3 force = -springParameter.stiffness * stretch;
+	Vector3 acceleration = force / springParameter.mass;
+	velocity =springParameter.friction * (velocity + acceleration);
 	position += velocity;
 
 	Camera::GetInstance().Position.Set(position);
