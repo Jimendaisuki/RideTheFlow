@@ -10,6 +10,7 @@
 #include "../camera/Camera.h"
 #include "../math/Quaternion.h"
 #include "tornado\Tornado.h"
+#include "../game/Random.h"
 
 //ボーンの数
 const int boneCount = 33;
@@ -54,6 +55,18 @@ const float tackleAnimAttackTiming = 37.0f;
 
 //待機モーションへのブレンド率
 const float waitAnimBlendSpeed = 2.0f;
+
+//加速できる時間
+const float dashMaxTime = 5.0f;
+//加速する際の加速度
+const float dashAccele = 1.0f;
+//加速時の最大スピード
+const float dashMaxSpeed = 1.5f;
+//加速ゲージの回復速度
+const float dashHealSpeed = 2.0f;
+
+//ノーマル時or停止時からの加速度
+const float normalSpeedAccele = 1.0f;
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
@@ -61,10 +74,9 @@ Actor(world),
 position(Vector3(0,0,0)),
 tornadeTimer(0.0f)
 {
+	//paramterの初期化
 	parameter.isDead = false;
 	parameter.radius = 3.0f;
-
-	//PlayerActorのマトリックス
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *
@@ -72,36 +84,47 @@ tornadeTimer(0.0f)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
+	//くねくねさせる為のangle２つ
 	upAngle = 0;
 	leftAngle = 0;
+	
+	//デバックコード(デバック表示されているもののボーンのナンバー)
 	boneSelect = 0;
-	speedRegulation = 0;
+
+	//カメラの上下左右のrotate
 	rotateUp = 0;
 	rotateLeft = 0;
 
-	rotateMat = new Matrix4[boneCount];
-	for (int i = 0; i < boneCount; i++){
-		rotateMat[i] = Matrix4::Identity;	
-	}
-
-	vertexVec = new Vector3[boneCount];
-	deletePosStorageCount = 0;
-
+	//ダメージを受けた際のパラメーターの初期化
 	damageFlag = false;
 	damageCount = 0;
 
+	//タックルのパラメーターの初期化
 	tp.tackleFlag = false;
 	tp.tackleEndFlag = false;
-	leftStickMove = false;
 	tp.tackleRotate = Matrix4::Identity;
 	tp.tackleAngle = 0;
-	nonPosStorageVec = Vector3(0, 0, 1);
+	tp.tackleT = Vector3(0, 0, -1);
 
+	//左スティック(WASD)が入力されたどうか判断する
+	leftStickMove = false;
+
+	//回転のディレイをかけるために用いる前フレームのベクトル(y = 0.01fの理由はぴったりだとバグを生じるから)
 	beforeVec = Vector3(0.0f,0.01f,-1.0f);
 
+	//モデルハンドルを取得する(アニメーションのために)
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	//アニメーションの再生タイム
 	animTime = 0;
+	//アニメーションのブレンド
+	animBlend = 0;
+	//待機アニメーションをアタッチしたかどうか判断
+	waitAnimSet = false;
 
+	//初期ボーン
+	vertexVec = new Vector3[boneCount];
+	//posStorageに何もないときのボーンの方向
+	nonPosStorageVec = Vector3(0, 0, 1);
 	for (int i = 0; i < boneCount; i++){
 		//ボーンの状態をリセット
 		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
@@ -111,20 +134,21 @@ tornadeTimer(0.0f)
 			Matrix4::Scale(scale);
 	}
 
-	animBlend = 0;
-
-	waitAnimSet = false;
-
-	tp.tackleT = Vector3(0, 0, -1);
+	//加速ゲージの回復中
+	dashHealFlag = false;
+	//加速用のスピード
+	dashSpeed = 1.0f;
+	//加速できる時間
+	dashTime = 0.0f;
 }
 Player::~Player(){
-	SAFE_DELETE_ARRAY(rotateMat);
 	SAFE_DELETE_ARRAY(vertexVec);
 	posStorage.clear();
 }
 
 
 void Player::Update(){
+	//左スティック(WASD)が入力されているか調べるために毎度初期化
 	leftStickMove = false;
 	//操作
 	Vector3 vec = Vector3::Zero;
@@ -149,8 +173,6 @@ void Player::Update(){
 		rotateUp += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
 		rotateUp -= rotateSpeed * Time::DeltaTime;
-
-
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
 		vec.x += speed * Time::DeltaTime;
@@ -180,6 +202,7 @@ void Player::Update(){
 			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
+	
 	if (padInputFlag){
 		rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
 		rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
@@ -199,15 +222,13 @@ void Player::Update(){
 			//animBlend += waitAnimBlendSpeed * Time::DeltaTime;
 		}
 	}
-	if(leftStickMove){
+	else{
 		if (!tp.tackleFlag){
 			tp.tackleT = trueVec;
 		}
 	}
-
-
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) && leftStickMove && !tp.tackleFlag){
+	
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && leftStickMove && !tp.tackleFlag){
 		tp.tackleFlag = true;
 		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -215,7 +236,32 @@ void Player::Update(){
 		animTime = 0.0f;
 	}
 
-	//cameraPos.y = 0;
+	if (dashTime >= dashMaxTime){
+		dashHealFlag = true;
+	}
+	if (dashTime <= 0.0f){
+		dashHealFlag = false;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && leftStickMove){
+		if (dashHealFlag){
+			dashPosStorage.clear();
+			dashSpeed -= dashAccele * Time::DeltaTime;
+			dashTime -= dashHealSpeed * Time::DeltaTime;
+		}
+		else{
+			dashPosStorage.push_back(position);
+			dashTime += Time::DeltaTime;
+			dashSpeed += dashAccele * Time::DeltaTime;
+		}
+	}
+	else{
+		dashPosStorage.clear();
+		dashSpeed -= dashAccele * Time::DeltaTime;
+		dashTime -= dashHealSpeed * Time::DeltaTime;
+	}
+
+	dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
+	dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
 
 	if (!tp.tackleFlag){
 		if (!waitAnimSet)
@@ -230,7 +276,7 @@ void Player::Update(){
 
 		position += (Vector3::Length(trueVec) * 
 			beforeVec *
-			Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * Time::DeltaTime;
+			Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
 			(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) ||
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
@@ -313,20 +359,18 @@ void Player::Update(){
 
 	//くねくねの角度のスピード
 	if (changeMotion){
-		upAngle -= leftAngleSpeed * Time::DeltaTime;
-		leftAngle -= upAngleSpeed * Time::DeltaTime;
+		upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f,1.5f) * dashSpeed * Time::DeltaTime;
+		leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f,1.5f) * dashSpeed * Time::DeltaTime;
 	}
 	else{
 		upAngle -=
-			angleSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+			angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
 		leftAngle -=
-			angleSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+			angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
 	}
 
 	upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
 	leftAngle = Math::InfinityClamp(leftAngle, 0.0f, 360.0f);
-	speedRegulation = Math::InfinityClamp(speedRegulation, 0.0f, 360.0f);
-
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(
@@ -335,8 +379,7 @@ void Player::Update(){
 	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
 	Camera::GetInstance().Up.Set(Vector3(0,1,0));
 	Camera::GetInstance().Update();
-
-
+	
 	Vector3* copyVertexVec = new Vector3[boneCount];
 
 	for (int i = 0; i < boneCount; i++){
@@ -347,7 +390,7 @@ void Player::Update(){
 	Vector3 startPos = position;
 	vertexVec[0] = position;
 
-	deletePosStorageCount = posStorage.size();
+	int deletePosStorageCount = posStorage.size();
 	for (int i = posStorage.size() - 1; i >= 0; i--){
 		if (storageCount + 1 >= boneCount){
 			break;
@@ -371,8 +414,6 @@ void Player::Update(){
 	int defaltSize = posStorage.size();
 	for (int i = 0; i < deletePosStorageCount; i++)
 	posStorage.erase(posStorage.begin());
-
-	//deletePosStorageCount = 0;
 
 	SAFE_DELETE_ARRAY(copyVertexVec);
 	if (damageFlag){
@@ -437,20 +478,21 @@ void Player::Draw() const{
 			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
 			Matrix4::Translate(drawVertexVec[count - 1]);
 
+		Matrix4 rotateMat;
 		drawVertexVec[count] = drawMat.GetPosition();
-		rotateMat[count] = Matrix4::Identity;
+		rotateMat = Matrix4::Identity;
 		Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
 		Vector3 up = Vector3(0, 1, 0).Normalized();
 		Vector3 left = Vector3::Cross(up, front).Normalized();
 		up = Vector3::Cross(front, left).Normalized();
 		front = Vector3::Cross(left, up).Normalized();
-		rotateMat[count].SetFront(front);
-		rotateMat[count].SetUp(up);
-		rotateMat[count].SetLeft(left);
+		rotateMat.SetFront(front);
+		rotateMat.SetUp(up);
+		rotateMat.SetLeft(left);
 
 		drawMatrixVec[count] =
 			Matrix4::Scale(scale) *
-			rotateMat[count] *
+			rotateMat *
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
@@ -506,20 +548,20 @@ void Player::Draw() const{
 	}
 
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
-	if (damageFlag){
-		DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
-	}
+	//if (damageFlag){
+	//	DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
+	//}
 
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
 	ParameterDraw();
 
-	//for (int count = 0; count < boneCount - 1; count++){
-	//	int Color = GetColor(255, 0, 0);
-	//	if (count % 2 == 0)Color = GetColor(0, 255, 0);
-	//	DrawLine3D(Vector3::ToVECTOR(position), position + tackleT * 1000.0f, Color);
-	//}
+	if (dashPosStorage.size() > 1)
+	for (int count = 0; count < dashPosStorage.size() - 1; count++){
+		int Color = GetColor(0, 0, 255);
+		DrawLine3D(dashPosStorage[count],dashPosStorage[count + 1], Color);
+	}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
@@ -581,8 +623,13 @@ void Player::ParameterDraw() const{
 	//// フレームに半透明要素があるかどうかを描画
 	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
+	float gageColorNum = 255.0f * ((dashMaxTime - dashTime) / dashMaxTime);
+	DWORD gageColor = GetColor(255, gageColorNum, gageColorNum);
+	if (dashHealFlag)gageColor = GetColor(0, 0, 255);
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 272, GetColor(255, 255, 255), "speedRegulation   %f", tp.tackleAngle);
+	DrawFormatString(0, 272, gageColor, "DashGage   %2.1ff/%2.1ff %s", dashTime, dashMaxTime, dashHealFlag ? "(OVERHEAT)" : "");
+
+	DrawFormatString(0, 288, damageFlag ? GetColor(255, 0, 0) : GetColor(255,255, 255), "Status");
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
