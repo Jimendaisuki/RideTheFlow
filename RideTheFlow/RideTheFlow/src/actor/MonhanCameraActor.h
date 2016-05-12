@@ -2,6 +2,15 @@
 #define MONHAN_CAMERA_ACTOR_H_
 #include "Actor.h"
 
+struct SpringParameter{
+	//ÉoÉlÇÃã≠Ç≥
+	float stiffness;
+	//ñÄéC
+	float friction;
+	//èdÇ≥
+	float mass;
+};
+
 class MonhanCameraActor :public Actor
 {
 public:
@@ -16,11 +25,15 @@ private:
 	Vector3 position;
 	Vector3 restPosition;
 	Vector3 velocity;
-	float stiffness;
-	float friction;
-	float mass;
+	Vector3 targetPos;
+	Vector3 posSeveStart;
+	Vector3 posSeveEnd;
+	SpringParameter springParameter;
+	float fov;
 	float rotateLeft;
 	float rotateUp;
+	float leapTimer;
+	bool posSeve;
 };
 
 #endif
