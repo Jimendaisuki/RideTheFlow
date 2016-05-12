@@ -61,10 +61,13 @@ Actor(world)
 	position = screenPos + Vector2(Radius.x * Math::Cos(angle_), Radius.y * Math::Sin(angle_));
 	velocity = Vector2::Normalize(position - screenPos);
 
-	float lenght = Vector2::Distance(Center, screenPos);
-	float temp = Math::Clamp(lenght / 100.0f, 1.0f, 2.0f);
-	scale = Vector2(1.0f, Random::GetInstance().Range(0.001f, 2.0f));
-	speed *= temp;
+	/* 中心からの距離に応じて補正 */
+	float lengthRatio = Math::Clamp(Vector2::Distance(Center, position) / 100.0f, 0.8f, 1.5f);
+	scale = Vector2(1.0f / lengthRatio, Random::GetInstance().Range(0.005f, 1.5f));
+	speed *= lengthRatio;
+	
+	/* 出現位置を若干中心に戻す */
+	position -= Vector2::Normalize(position - Center) * 15 * lengthRatio * lengthRatio;
 
 	/* 角度の算出 */
 	rotate = Math::Degree(Vector2::Right.Inner(velocity));
@@ -93,12 +96,12 @@ rotate(rotate_)
 	/* 初期設定 */
 	alpha = 0.0f;
 	alphaTime = 0.0f;
-	speed = Random::GetInstance().Range(-3.0f, 3.0f);
-	scale = Vector2(1.0f, 1.0f + abs(speed) / 10.0f);
+	scale = Vector2(1.0f, Random::GetInstance().Range(0.1f, 3.0f) / 10.0f);
+	speed = Random::GetInstance().Range(-5.0f, 10.0f);
 
 	/* 位置を算出 */
-	if ((int)rotate % 180 == 0)	position = position_ + Vector2(Random::GetInstance().Range(-10.0f, 10.0f), 0.0f);
-	else position = position_ + Vector2(0.0f, Random::GetInstance().Range(-10.0f, 10.0f));
+	if ((int)rotate % 180 == 0)	position = position_ + Vector2(Random::GetInstance().Range(-20.0f, 20.0f), 0.0f);
+	else position = position_ + Vector2(0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
 }
 
 IntensiveLine::~IntensiveLine()

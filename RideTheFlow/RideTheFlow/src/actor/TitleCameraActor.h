@@ -12,7 +12,10 @@ public:
 
 private:
 	void SetFrame(int num);
-	void Liner();
+	void Liner(float sec);
+	//void Liner();
+	void BeziersCurve(float sec);
+	//void BeziersCurve();
 
 private:
 	Vector3 cameraPos;

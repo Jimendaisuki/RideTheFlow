@@ -2,6 +2,14 @@
 #include "../world/IWorld.h"
 #include "../math/Vector3.h"
 
+enum EffectDirection
+{
+	Up,
+	Down,
+	Left,
+	Right
+}; 
+
 class Effect
 {
 private:
@@ -16,5 +24,6 @@ public:
 
 	// ダッシュエフェクト
 	void DashEffect(IWorld& wa);
-	void DashEffect(IWorld& wa, Vector3 position_);
+	void DashEffect(IWorld& wa, Vector3 position);
+	void StepEffect(IWorld& wa, EffectDirection ed);
 };

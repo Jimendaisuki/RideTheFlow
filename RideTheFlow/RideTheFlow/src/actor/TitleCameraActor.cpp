@@ -58,15 +58,19 @@ TitleCameraActor::~TitleCameraActor()
 void TitleCameraActor::Update()
 {
 	time += Time::DeltaTime;
-	if (time > 1)
+	if (time > 2)
 	{
-		time = 0;
+		//time = 0;
 		frameIndex += 2;
 		if (frameIndex >= frames.size() - 1) frameIndex = 0;
 		SetFrame(frameIndex);
 	}
 
-	Liner();
+	//Liner(2.0f);
+	BeziersCurve(2.0f);
+
+	Camera::GetInstance().Position.Set(cameraPos);
+	Camera::GetInstance().Target.Set(targetPos);
 	Camera::GetInstance().Update();
 }
 void TitleCameraActor::Draw() const
@@ -90,13 +94,32 @@ void TitleCameraActor::SetFrame(int num)
 }
 
 // 直線移動
-void TitleCameraActor::Liner()
+void TitleCameraActor::Liner(float sec)
 {
-	/* ターゲットとカメラの位置を算出 */
-	targetPos = Vector3::Lerp(startPos, endPos, time);
+	targetPos = Vector3::Lerp(startPos, endPos, time / sec);
 	cameraPos = targetPos - ((endPos - startPos) * Vector3(1.0f, 0.0f, 1.0f)).Normalized() * 10.0f;
 
-	/* カメラ更新 */
-	Camera::GetInstance().Position.Set(cameraPos);
-	Camera::GetInstance().Target.Set(targetPos);
+	if (time >= sec) time = 0;
+}
+
+// ベジエ移動
+float px, py, pz, pre_x = 0, pre_y = 0, pre_z = 0;
+void TitleCameraActor::BeziersCurve(float sec)
+{
+	float b = time / sec;
+	float a = 1 - b;
+
+	/* 現状仮の値を代入 */
+	px = a * a * a * frames[1].x + 3 * a*a*b*frames[3].x + 3 * a*b*b*frames[5].x + b*b*b*frames[7].x;
+	py = a * a * a * frames[1].y + 3 * a*a*b*frames[3].y + 3 * a*b*b*frames[5].y + b*b*b*frames[7].y;
+	pz = a * a * a * frames[1].z + 3 * a*a*b*frames[3].z + 3 * a*b*b*frames[5].z + b*b*b*frames[7].z;
+
+	targetPos = Vector3(px, py, pz);
+	cameraPos = targetPos - (targetPos - Vector3(pre_x, pre_y, pre_z)).Normalized() * 50.0f;
+
+	pre_x = px;
+	pre_y = py;
+	pre_z = pz;
+
+	if (time >= sec) time = 0;
 }
