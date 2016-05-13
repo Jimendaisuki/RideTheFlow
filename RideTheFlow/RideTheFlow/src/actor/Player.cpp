@@ -84,6 +84,9 @@ tornadeTimer(0.0f)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
+	//操作
+	vec = Vector3::Zero;
+
 	//くねくねさせる為のangle２つ
 	upAngle = 0;
 	leftAngle = 0;
@@ -105,9 +108,6 @@ tornadeTimer(0.0f)
 	tp.tackleRotate = Matrix4::Identity;
 	tp.tackleAngle = 0;
 	tp.tackleT = Vector3(0, 0, -1);
-
-	//左スティック(WASD)が入力されたどうか判断する
-	leftStickMove = false;
 
 	//回転のディレイをかけるために用いる前フレームのベクトル(y = 0.01fの理由はぴったりだとバグを生じるから)
 	beforeVec = Vector3(0.0f,0.01f,-1.0f);
@@ -148,11 +148,6 @@ Player::~Player(){
 
 
 void Player::Update(){
-	//左スティック(WASD)が入力されているか調べるために毎度初期化
-	leftStickMove = false;
-	//操作
-	Vector3 vec = Vector3::Zero;
-
 	auto input = DINPUT_JOYSTATE();
 
 	// 入力状態を取得
@@ -161,7 +156,10 @@ void Player::Update(){
 	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
 
 	bool padInputFlag = false;
-	if (Vector3::Length(rightStick) > 0.01f || Vector3::Length(rightStick) > 0.01f){
+	bool leftStickMove = false;
+	if (Vector3::Length(rightStick) > 0.01f){
+		leftStickMove = true;
+		if (Vector3::Length(rightStick) > 0.01f)
 		padInputFlag = true;
 	}
 
@@ -217,18 +215,7 @@ void Player::Update(){
 	vec.Normalize();
 	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-	if (!leftStickMove){
-		if (!tp.tackleFlag){
-			//animBlend += waitAnimBlendSpeed * Time::DeltaTime;
-		}
-	}
-	else{
-		if (!tp.tackleFlag){
-			tp.tackleT = trueVec;
-		}
-	}
-	
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && leftStickMove && !tp.tackleFlag){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
 		tp.tackleFlag = true;
 		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -242,7 +229,7 @@ void Player::Update(){
 	if (dashTime <= 0.0f){
 		dashHealFlag = false;
 	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && leftStickMove){
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT)){
 		if (dashHealFlag){
 			dashPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
@@ -252,6 +239,8 @@ void Player::Update(){
 			dashPosStorage.push_back(position);
 			dashTime += Time::DeltaTime;
 			dashSpeed += dashAccele * Time::DeltaTime;
+			trueVec.y = 0;
+			trueVec.Normalized();
 		}
 	}
 	else{
@@ -264,6 +253,7 @@ void Player::Update(){
 	dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
 
 	if (!tp.tackleFlag){
+		tp.tackleT = trueVec;
 		if (!waitAnimSet)
 		animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
 		animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
