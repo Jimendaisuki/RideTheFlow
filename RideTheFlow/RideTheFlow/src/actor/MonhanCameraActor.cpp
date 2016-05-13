@@ -14,9 +14,9 @@ const Vector3 cameraDistance = 150.0f;
 const float rotateSpeed = 250.0f;
 /**タックル中カメラ関係**/
 //カメラの高さ
-const float UpCamera = 30.0f;
+const float UpCamera = 100.0f;
 //カメラをどのぐらいプレイヤーの後ろに引くか
-const float BackCamera = 150.0f;
+const float BackCamera = 300.0f;
 
 /**ダッシュ中のカメラ関係**/
 //ダッシュ中の視野角(度)
@@ -66,9 +66,8 @@ void MonhanCameraActor::Update()
 	});
 	Vector3 left = Vector3::Cross(tp.tackleT, Vector3(0, 1, 0).Normalized()).Normalized();
 	Vector3 up = Vector3::Cross(left, tp.tackleT).Normalized();
-	//タックルしてない
-	if (!tp.tackleFlag)
-		//カメラ移動
+
+	if (!tp.tackleFlag&&!tp.dashFlag)
 	{
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
 			rotateLeft += rotateSpeed * Time::DeltaTime;
@@ -81,33 +80,28 @@ void MonhanCameraActor::Update()
 		rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 		restPosition = Vector3(0, 0, 1) * cameraDistance * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 			playerMat.GetPosition() + cameraUpMove;
-
-		//ダッシュ処理
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
-		{
-			Effect::GetInstance().DashEffect(world, playerMat.GetPosition());
-			restPosition = playerMat.GetPosition() + tp.tackleT*(-BackDashCamera) + up*UpDashCamera;
-			if (posSeve)
-			{
-				posSeve = false;
-				posSeveStart = position;
-				test1 = Vector3::Distance(restPosition, position);
-			}
-			fov = Math::Lerp(60.0f, MaxFov, Vector3::Distance(posSeveStart, position) / test1);
-		}
-		else if (Vector3::Distance(posSeveStart, position) / test1!=0)
-		{
-			fov = Math::Lerp(60.0f, MaxFov, Vector3::Distance(posSeveStart, position) / test1);
-			posSeve = true;
-		}
 	}
-	else
+
+	if (tp.tackleFlag)
 	{
 		//タックル中
-		restPosition = playerMat.GetPosition()+tp.tackleT*(-BackCamera)+up*UpCamera;
+		restPosition = playerMat.GetPosition() + tp.tackleT*(-BackCamera) + up*UpCamera;
 		rotateUp = atan2(playerMat.GetPosition().x - position.x, playerMat.GetPosition().z - position.z) * 180 / 3.1415f + 180;
 	}
-	
+	if (tp.dashFlag)
+	{
+		//ダッシュ処理
+		Effect::GetInstance().DashEffect(world, playerMat.GetPosition());
+		restPosition = playerMat.GetPosition() + tp.tackleT*(-BackDashCamera) + up*UpDashCamera;
+
+		//if (posSeve)
+		//{
+		//	posSeve = false;
+		//	posSeveStart = position;
+		//	test1 = Vector3::Distance(restPosition, position);
+		//}
+		//fov = Math::Lerp(60.0f, MaxFov, Vector3::Distance(posSeveStart, position) / test1);
+	}
 	//バネカメラ(ポジション)
 	Vector3 stretch = (position - restPosition);
 	Vector3 force = -springParameter.stiffness * stretch;
@@ -127,7 +121,7 @@ void MonhanCameraActor::Draw() const
 	DrawFormatString(0, 128, GetColor(0, 0, 0), "playerPosition   %f %f %f", playerMat.GetPosition().x, playerMat.GetPosition().y, playerMat.GetPosition().z);
 	DrawFormatString(0, 192, GetColor(0, 0, 0), "cameraPosition   %f %f %f", position.x, position.y, position.z);
 	DrawFormatString(0, 256, GetColor(0, 0, 0), "Angle   %f", rotateUp);
-	DrawFormatString(0, 356, GetColor(0, 0, 0), "Fov   %f", fov);
+	//DrawFormatString(0, 356, GetColor(0, 0, 0), "Fov   %f", );
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {
