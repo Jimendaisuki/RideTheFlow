@@ -108,6 +108,7 @@ tornadeTimer(0.0f)
 	tp.tackleRotate = Matrix4::Identity;
 	tp.tackleAngle = 0;
 	tp.tackleT = Vector3(0, 0, -1);
+	tp.dashFlag = false;
 
 	//回転のディレイをかけるために用いる前フレームのベクトル(y = 0.01fの理由はぴったりだとバグを生じるから)
 	beforeVec = Vector3(0.0f,0.01f,-1.0f);
@@ -229,6 +230,8 @@ void Player::Update(){
 	if (dashTime <= 0.0f){
 		dashHealFlag = false;
 	}
+
+	tp.dashFlag = false;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT)){
 		if (dashHealFlag){
 			dashPosStorage.clear();
@@ -241,6 +244,7 @@ void Player::Update(){
 			dashSpeed += dashAccele * Time::DeltaTime;
 			trueVec.y = 0;
 			trueVec.Normalized();
+			tp.dashFlag = true;
 		}
 	}
 	else{
