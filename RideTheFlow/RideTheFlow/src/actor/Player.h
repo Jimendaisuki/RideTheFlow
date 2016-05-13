@@ -4,10 +4,11 @@
 #include <memory>
 
 struct TackleParameter{
-	bool tackleFlag, tackleEndFlag;
+	bool tackleFlag, tackleEndFlag,dashFlag;
 	Matrix4 tackleRotate;
 	float tackleAngle;
 	Vector3 tackleT;
+	float animTime;
 };
 
 class Player :public Actor, public std::enable_shared_from_this<Player>
@@ -68,7 +69,7 @@ private:
 	Vector3 beforeVec;
 
 	//アニメーションの再生タイム
-	float animTime, totalTime;
+	float totalTime;
 	//モデルハンドルを取得する(アニメーションのために)
 	int modelHandle, animIndex;
 	//アニメーションのブレンド
