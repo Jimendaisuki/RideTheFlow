@@ -25,15 +25,16 @@ private:
 	Vector3 position;
 	Vector3 restPosition;
 	Vector3 velocity;
-	Vector3 targetPos;
 	Vector3 posSeveStart;
 	Vector3 posSeveEnd;
 	SpringParameter springParameter;
+	Vector3 testPositionSeve;
 	float fov;
 	float rotateLeft;
 	float rotateUp;
 	float leapTimer;
 	bool posSeve;
+	float test1;
 };
 
 #endif
