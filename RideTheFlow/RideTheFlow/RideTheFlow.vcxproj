@@ -95,6 +95,7 @@
     <ClCompile Include="src\actor\particle\Particle.cpp" />
     <ClCompile Include="src\actor\particle\ParticleSystem.cpp" />
     <ClCompile Include="src\actor\Sand.cpp" />
+    <ClCompile Include="src\actor\WindFlow.cpp" />
     <ClCompile Include="src\actor\ZerudaCameraActor.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
     <ClCompile Include="src\actor\TitleCameraActor.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="src\actor\castle\CastleBlock.h" />
     <ClInclude Include="src\actor\EnemyVaristorBullet.h" />
     <ClInclude Include="src\actor\EnemyGunBullet.h" />
+    <ClInclude Include="src\actor\WindFlow.h" />
     <ClInclude Include="src\actor\ZerudaCameraActor.h" />
     <ClInclude Include="src\actor\tornado\TornadeBillboard.h" />
     <ClInclude Include="src\graphic\BlendMode.h" />

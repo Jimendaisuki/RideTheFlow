@@ -46,6 +46,12 @@ public:
 	/// 読み込んだモデル、2D画像をすべて削除する
 	///</summary>
 	void DeleteAll();
+	///<summary>
+	/// 読み込んだモデル、2D画像を削除する
+	///</summary>
+	void Delete(const MODEL_ID& id);
+
+
 
 	///<summary>
 	/// ３Ｄモデルを描画する（モデルID、座標）
