@@ -2,7 +2,6 @@
 #include "../math/Vector2.h"
 #include "../input/Keyboard.h"
 
-#include"../actor/ZerudaCameraActor.h"
 #include"../actor/MonhanCameraActor.h"
 #include "../actor/Player.h"
 #include "../actor/castle/MasterCastle.h"

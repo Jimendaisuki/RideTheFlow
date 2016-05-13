@@ -67,6 +67,7 @@ const float dashHealSpeed = 2.0f;
 
 //ノーマル時or停止時からの加速度
 const float normalSpeedAccele = 1.0f;
+
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
@@ -76,13 +77,16 @@ tornadeTimer(0.0f)
 {
 	//paramterの初期化
 	parameter.isDead = false;
-	parameter.radius = 3.0f;
+	parameter.radius = 8.0f;
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
+
+	//操作
+	vec = Vector3::Zero;
 
 	//くねくねさせる為のangle２つ
 	upAngle = 0;
@@ -105,9 +109,7 @@ tornadeTimer(0.0f)
 	tp.tackleRotate = Matrix4::Identity;
 	tp.tackleAngle = 0;
 	tp.tackleT = Vector3(0, 0, -1);
-
-	//左スティック(WASD)が入力されたどうか判断する
-	leftStickMove = false;
+	tp.dashFlag = false;
 
 	//回転のディレイをかけるために用いる前フレームのベクトル(y = 0.01fの理由はぴったりだとバグを生じるから)
 	beforeVec = Vector3(0.0f,0.01f,-1.0f);
@@ -115,7 +117,7 @@ tornadeTimer(0.0f)
 	//モデルハンドルを取得する(アニメーションのために)
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
 	//アニメーションの再生タイム
-	animTime = 0;
+	tp.animTime = 0;
 	//アニメーションのブレンド
 	animBlend = 0;
 	//待機アニメーションをアタッチしたかどうか判断
@@ -148,10 +150,14 @@ Player::~Player(){
 
 
 void Player::Update(){
-	//左スティック(WASD)が入力されているか調べるために毎度初期化
-	leftStickMove = false;
-	//操作
-	Vector3 vec = Vector3::Zero;
+		bonePosStorage.clear();
+	for (int i = 0; i < boneCount; i++){
+		//初期位置ボーンの位置を取得
+	bonePosStorage.push_back(Matrix4::ToMatrix4(
+		MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition());
+	}
+
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 
 	auto input = DINPUT_JOYSTATE();
 
@@ -161,7 +167,10 @@ void Player::Update(){
 	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
 
 	bool padInputFlag = false;
-	if (Vector3::Length(rightStick) > 0.01f || Vector3::Length(rightStick) > 0.01f){
+	bool leftStickMove = false;
+	if (Vector3::Length(rightStick) > 0.01f){
+		leftStickMove = true;
+		if (Vector3::Length(rightStick) > 0.01f)
 		padInputFlag = true;
 	}
 
@@ -217,23 +226,12 @@ void Player::Update(){
 	vec.Normalize();
 	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-	if (!leftStickMove){
-		if (!tp.tackleFlag){
-			//animBlend += waitAnimBlendSpeed * Time::DeltaTime;
-		}
-	}
-	else{
-		if (!tp.tackleFlag){
-			tp.tackleT = trueVec;
-		}
-	}
-	
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && leftStickMove && !tp.tackleFlag){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
 		tp.tackleFlag = true;
 		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 		tp.tackleT = trueVec;
-		animTime = 0.0f;
+		tp.animTime = 0.0f;
 	}
 
 	if (dashTime >= dashMaxTime){
@@ -242,7 +240,9 @@ void Player::Update(){
 	if (dashTime <= 0.0f){
 		dashHealFlag = false;
 	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && leftStickMove){
+
+	tp.dashFlag = false;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT)){
 		if (dashHealFlag){
 			dashPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
@@ -252,6 +252,9 @@ void Player::Update(){
 			dashPosStorage.push_back(position);
 			dashTime += Time::DeltaTime;
 			dashSpeed += dashAccele * Time::DeltaTime;
+			trueVec.y = 0;
+			trueVec.Normalized();
+			tp.dashFlag = true;
 		}
 	}
 	else{
@@ -264,9 +267,10 @@ void Player::Update(){
 	dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
 
 	if (!tp.tackleFlag){
+		tp.tackleT = trueVec;
 		if (!waitAnimSet)
 		animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
-		animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+		tp.animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 		waitAnimSet = true;
 		Vector3 cross = Vector3::Cross(beforeVec.Normalized(), trueVec.Normalized()).Normalized();
 
@@ -302,9 +306,9 @@ void Player::Update(){
 	}
 	else{
 		// 再生時間を進める
-		animTime += tackleAnimSpeed * Time::DeltaTime;
+		tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 
-		if (totalTime - animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
+		if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
 			tp.tackleEndFlag = true;
 			posStorage.clear();
 			nonPosStorageVec = -tp.tackleT;
@@ -315,15 +319,15 @@ void Player::Update(){
 		else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
 
 		// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
-		if (animTime >= totalTime - 10.0f)
+		if (tp.animTime >= totalTime - 10.0f)
 		{
-			animTime = 0.0f;
+			tp.animTime = 0.0f;
 			tp.tackleFlag = false;
 			tp.tackleEndFlag = false;
 			animBlend = 0.0f;
 			waitAnimSet = false;
 		}
-		if (animTime > tackleAnimAttackTiming){
+		if (tp.animTime > tackleAnimAttackTiming){
 			world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
 			parameter.height = tp.tackleT.Normalized() * 30.0f;
 		}
@@ -536,7 +540,7 @@ void Player::Draw() const{
 		Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
 
 	// 再生時間をセットする
-	MV1SetAttachAnimTime(modelHandle, animIndex, animTime);
+	MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
 
 	for (int count = 0; count < boneCount; count++){
 		MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
@@ -557,6 +561,12 @@ void Player::Draw() const{
 	
 	ParameterDraw();
 
+	if (bonePosStorage.size() > 1)
+	for (int count = 2; count < bonePosStorage.size() ; count++){
+		int Color = GetColor(0, 0, 255);
+		DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
+	}
+	
 	if (dashPosStorage.size() > 1)
 	for (int count = 0; count < dashPosStorage.size() - 1; count++){
 		int Color = GetColor(0, 0, 255);
@@ -633,7 +643,10 @@ void Player::ParameterDraw() const{
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
+	if (colpara.colID == COL_ID::PLAYER_STAGE_COL){
+		position = colpara.colPos;
+	}
+	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
 	}
 }

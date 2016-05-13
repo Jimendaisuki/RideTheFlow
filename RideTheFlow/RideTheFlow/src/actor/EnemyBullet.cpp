@@ -1,53 +1,72 @@
 #include "EnemyBullet.h"
+
 #include "Collision.h"
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
-#include "../input/Keyboard.h"
 #include "../time/Time.h"
-#include <math.h>
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float initialVelocity) :
+
+//çUåÇÇÃê∏ìx(êîílÇ™è¨Ç≥Ç¢ÇŸÇ«çÇê∏ìx)
+const float ArrowAccuracy = 15.0f;
+
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),
+time(0),
+speed(3.0f),
+distance(0, 0, 0),
 mPosition(position),
-time(0.0f),
-mInitialVelocity(initialVelocity),
-coppyPosition(position),
-angle(0),
-speed(4.5f)
+coppyPosition(position)
 {
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
-	mDirection = Vector3::Direction(mPosition, playerMat.GetPosition()).Normalized();
+
+	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
+		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
+		GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
 	parameter.isDead = false;
-	angle = atan2(playerMat.GetPosition().y - mPosition.y,playerMat.GetPosition().x - mPosition.x);
+	parameter.radius = 10.0f;
 	parameter.mat =
-		Matrix4::Scale(scale) *
-		Matrix4::RotateZ(rotate.z) *
-		Matrix4::RotateX(rotate.x) *
-		Matrix4::RotateY(rotate.y) *
+		Matrix4::Scale(mScale) *
+		Matrix4::RotateZ(0) *
+		Matrix4::RotateX(0) *
+		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
+	distance = (playerMat.GetPosition() + mRandomTarget)- mPosition;
 }
 EnemyBullet::~EnemyBullet()
 {
-	
+
 }
 void EnemyBullet::Update()
 {
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::SPHERE_SPHERE_COL);
 	time += Time::DeltaTime*speed;
-	//mPosition += Vector3(0.0f, 0.0f, mDirection.z);
-	mPosition.x = mInitialVelocity*cos(angle)*time;
-	mPosition.y = mInitialVelocity*sin(angle)*time - 1.0f / 2.0f*9.8f*pow(time, 2);
-
-	parameter.mat = Matrix4::Translate(Vector3(mPosition.x,mPosition.y,mPosition.z)+coppyPosition);
+	if (coppyPosition.y < playerMat.GetPosition().y)
+	{
+		float InitialVelocity = sqrt(2 * 9.8f*(playerMat.GetPosition().y - coppyPosition.y) - mPosition.y);
+		float vertexTime = InitialVelocity / 9.8f;
+		mPosition.x += distance.x / vertexTime * speed*Time::DeltaTime;
+		mPosition.z += distance.z / vertexTime * speed*Time::DeltaTime;
+		mPosition.y = (InitialVelocity*time - 9.8f / 2.0f * pow(time, 2));
+	}
+	else
+	{
+		float vertexTime = sqrt((2 * (coppyPosition.y - playerMat.GetPosition().y)) / 9.8f);
+		mPosition.y = -(1.0f / 2.0f) * 9.8f*pow(time, 2);
+		mPosition.x += distance.x / vertexTime *speed*Time::DeltaTime;
+		mPosition.z += distance.z / vertexTime *speed*Time::DeltaTime;
+	}
+	parameter.mat = Matrix4::Translate(mPosition+Vector3(0.0f,coppyPosition.y,0.0f));
+	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
 }
 
 void EnemyBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat.GetPosition());
+	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
-
+	parameter.isDead = true;
 }

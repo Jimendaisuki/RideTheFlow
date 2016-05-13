@@ -6,9 +6,6 @@
 #include "../../time/Time.h"
 
 #include "../EnemyBullet.h"
-#include "../EnemyGunBullet.h"
-#include "../EnemyVaristorBullet.h"
-#include "../ParachuteBombBullet.h"
 
 #include"CastleParameter.h"
 
@@ -66,7 +63,7 @@ void Castle::Update()
 			GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 			GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
 		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyVaristorBullet>(world,mPosition));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world,mPosition));
 		if (arrowCount >= ArrowNumber)
 		{
 			arrowCount = 0;

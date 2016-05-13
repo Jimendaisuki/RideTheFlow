@@ -31,6 +31,8 @@ public:
 private:
 	std::map<COL_ID, std::function<CollisionParameter(const Actor&)>> colFunc;
 
+	CollisionParameter Player_vs_Stage(const Actor& other) const;
+
 
 	/* —´vs */
 	// —´‚Æ’e
