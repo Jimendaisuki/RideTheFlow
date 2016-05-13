@@ -27,8 +27,9 @@ public:
 private:
 	float timer;
 	bool mIsEnd;
-	World wa;
+	World wo;
 
 	//オブジェクト数
 	int objectcount;
+	Vector3 position;
 };
