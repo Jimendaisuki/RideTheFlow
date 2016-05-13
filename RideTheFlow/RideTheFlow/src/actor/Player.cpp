@@ -105,7 +105,6 @@ tornadeTimer(0.0f)
 	//タックルのパラメーターの初期化
 	tp.tackleFlag = false;
 	tp.tackleEndFlag = false;
-	tp.tackleAttackFlag = false;
 	tp.tackleRotate = Matrix4::Identity;
 	tp.tackleAngle = 0;
 	tp.tackleT = Vector3(0, 0, -1);
@@ -117,7 +116,7 @@ tornadeTimer(0.0f)
 	//モデルハンドルを取得する(アニメーションのために)
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
 	//アニメーションの再生タイム
-	animTime = 0;
+	tp.animTime = 0;
 	//アニメーションのブレンド
 	animBlend = 0;
 	//待機アニメーションをアタッチしたかどうか判断
@@ -217,14 +216,22 @@ void Player::Update(){
 	vec.Normalize();
 	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
+	MV1_COLL_RESULT_POLY_DIM HitPolyDim;
 
+	HitPolyDim = MV1CollCheck_Sphere(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL),-1,position,parameter.radius);
+	if (HitPolyDim.HitNum >= 1){
+		Vector3 nor = Vector3::Vector3(HitPolyDim.Dim[0].Normal).Normalized();
+		trueVec = trueVec - Vector3::Dot(-trueVec, nor) * nor;
+	}
+
+	MV1CollResultPolyDimTerminate(HitPolyDim);
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
 		tp.tackleFlag = true;
 		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 		tp.tackleT = trueVec;
-		animTime = 0.0f;
+		tp.animTime = 0.0f;
 	}
 
 	if (dashTime >= dashMaxTime){
@@ -263,7 +270,7 @@ void Player::Update(){
 		tp.tackleT = trueVec;
 		if (!waitAnimSet)
 		animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
-		animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+		tp.animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 		waitAnimSet = true;
 		Vector3 cross = Vector3::Cross(beforeVec.Normalized(), trueVec.Normalized()).Normalized();
 
@@ -299,9 +306,9 @@ void Player::Update(){
 	}
 	else{
 		// 再生時間を進める
-		animTime += tackleAnimSpeed * Time::DeltaTime;
+		tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 
-		if (totalTime - animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
+		if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
 			tp.tackleEndFlag = true;
 			posStorage.clear();
 			nonPosStorageVec = -tp.tackleT;
@@ -312,18 +319,16 @@ void Player::Update(){
 		else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
 
 		// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
-		if (animTime >= totalTime - 10.0f)
+		if (tp.animTime >= totalTime - 10.0f)
 		{
-			animTime = 0.0f;
+			tp.animTime = 0.0f;
 			tp.tackleFlag = false;
 			tp.tackleEndFlag = false;
-			tp.tackleAttackFlag = false;
 			animBlend = 0.0f;
 			waitAnimSet = false;
 		}
-		if (animTime > tackleAnimAttackTiming){
+		if (tp.animTime > tackleAnimAttackTiming){
 			world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-			tp.tackleAttackFlag = true;
 			parameter.height = tp.tackleT.Normalized() * 30.0f;
 		}
 	}
@@ -535,7 +540,7 @@ void Player::Draw() const{
 		Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
 
 	// 再生時間をセットする
-	MV1SetAttachAnimTime(modelHandle, animIndex, animTime);
+	MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
 
 	for (int count = 0; count < boneCount; count++){
 		MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
