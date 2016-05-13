@@ -26,4 +26,6 @@ public:
 	void DashEffect(IWorld& wa);
 	void DashEffect(IWorld& wa, Vector3 position);
 	void StepEffect(IWorld& wa, EffectDirection ed);
+
+	void DamegeEffect(IWorld& woyuyyuk);
 };

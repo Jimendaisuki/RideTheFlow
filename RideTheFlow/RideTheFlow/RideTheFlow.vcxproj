@@ -85,8 +85,9 @@
   <ItemGroup>
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
-    <ClCompile Include="src\actor\Effect.cpp" />
-    <ClCompile Include="src\actor\IntensiveLine.cpp" />
+    <ClCompile Include="src\UIactor\Blood.cpp" />
+    <ClCompile Include="src\UIactor\Effect.cpp" />
+    <ClCompile Include="src\UIactor\SpeedLine.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\ParachuteBombBullet.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
@@ -139,14 +140,17 @@
     <ClCompile Include="src\scene\TitleScene.cpp" />
     <ClCompile Include="src\sound\Sound.cpp" />
     <ClCompile Include="src\time\Time.cpp" />
+    <ClCompile Include="src\UIactor\UIActor.cpp" />
+    <ClCompile Include="src\UIactor\UIActorManager.cpp" />
     <ClCompile Include="src\world\World.cpp" />
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
-    <ClInclude Include="src\actor\Effect.h" />
-    <ClInclude Include="src\actor\IntensiveLine.h" />
+    <ClInclude Include="src\UIactor\Blood.h" />
+    <ClInclude Include="src\UIactor\Effect.h" />
+    <ClInclude Include="src\UIactor\SpeedLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
     <ClInclude Include="src\actor\particle\Particle.h" />
     <ClInclude Include="src\actor\particle\ParticlePtr.h" />
@@ -211,7 +215,10 @@
     <ClInclude Include="src\scene\TitleScene.h" />
     <ClInclude Include="src\sound\Sound.h" />
     <ClInclude Include="src\time\Time.h" />
+    <ClInclude Include="src\UIactor\UIActorManager.h" />
+    <ClInclude Include="src\UIactor\UIActorPtr.h" />
     <ClInclude Include="src\world\IWorld.h" />
+    <ClInclude Include="src\UIactor\UIActor.h" />
     <ClInclude Include="src\world\World.h" />
     <ClInclude Include="src\world\WorldActor.h" />
   </ItemGroup>

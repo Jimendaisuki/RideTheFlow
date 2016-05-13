@@ -14,7 +14,10 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("images.png", SPRITE_ID::ENEMY_SPRITE);
 	sprite.Load("smoke.png", SPRITE_ID::BEGIN_SPRITE);
 	sprite.Load("sand.png", SPRITE_ID::SAND_SPRITE);
-	sprite.Load("intensiveLine.png", SPRITE_ID::INTENSIVELINE_SPRITE);
+	sprite.Load("speedLine.png", SPRITE_ID::SPEED_SPRITE);
+	sprite.Load("blood.png", SPRITE_ID::BLOOD_SPRITE);
+	sprite.Load("damege.png", SPRITE_ID::DAMEGE_SPRITE);
+
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");
 }
@@ -36,6 +39,7 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
 	model.Load("arrow.pmd", MODEL_ID::ARROW_MODEL, async);
 	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
+	model.Load("cameramap.pmd", MODEL_ID::TEST_STAGE, async);
 
 
 	WorkFolder::SetWorkFolder("res/Model2D/");

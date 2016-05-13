@@ -8,7 +8,8 @@
 #include <string>
 #include "../math/Math.h"
 #include "Player.h"
-#include "Effect.h"
+#include "../UIactor/Effect.h"
+
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 const float rotateSpeed = 250.0f;
 

@@ -1,9 +1,6 @@
-#include "IntensiveLine.h"
-#include "Collision.h"
+#include "SpeedLine.h"
 #include "../Def.h"
 #include "../game/Random.h"
-#include "../graphic/Model.h"
-#include "../graphic/BlendMode.h"
 #include "../math/Math.h"
 #include "../time/Time.h"
 #include <cmath>
@@ -13,11 +10,11 @@ const Vector2 Center = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 // ë»â~îºåa
 const Vector2 Radius = Vector2(140.0f, 100.0f);
 
-IntensiveLine::IntensiveLine(IWorld& world, float angle_) :
-Actor(world)
+SpeedLine::SpeedLine(IWorld& world, float angle_) :
+UIActor(world)
 {
 	parameter.isDead = false;
-	parameter.id = ACTOR_ID::EFFECT_ACTOR;
+	parameter.id	 = EFFECT_ID::SPEED_EFFECT;
 
 	/* èâä˙ê›íË */
 	alpha = 0.0f;
@@ -45,11 +42,11 @@ Actor(world)
 	}
 }
 
-IntensiveLine::IntensiveLine(IWorld& world, float angle_, Vector3 position_) :
-Actor(world)
+SpeedLine::SpeedLine(IWorld& world, float angle_, Vector3 position_) :
+UIActor(world)
 {
 	parameter.isDead = false;
-	parameter.id = ACTOR_ID::EFFECT_ACTOR;
+	parameter.id = EFFECT_ID::SPEED_EFFECT;
 
 	/* èâä˙ê›íË */
 	alpha = 0.0f;
@@ -85,13 +82,13 @@ Actor(world)
 	}
 }
 
-IntensiveLine::IntensiveLine(IWorld& world, Vector2 position_, Vector2 velocity_, float rotate_) :
-Actor(world),
+SpeedLine::SpeedLine(IWorld& world, Vector2 position_, Vector2 velocity_, float rotate_) :
+UIActor(world),
 velocity(velocity_),
 rotate(rotate_)
 {
 	parameter.isDead = false;
-	parameter.id = ACTOR_ID::EFFECT_ACTOR;
+	parameter.id = EFFECT_ID::SPEED_EFFECT;
 
 	/* èâä˙ê›íË */
 	alpha = 0.0f;
@@ -104,12 +101,12 @@ rotate(rotate_)
 	else position = position_ + Vector2(0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
 }
 
-IntensiveLine::~IntensiveLine()
+SpeedLine::~SpeedLine()
 {
 
 }
 
-void  IntensiveLine::Update()
+void SpeedLine::Update()
 {
 	position += velocity * (1500 + 100 * speed) * Time::DeltaTime;
 
@@ -118,9 +115,7 @@ void  IntensiveLine::Update()
 	if (alpha <= 0) parameter.isDead = true;
 }
 
-void IntensiveLine::Draw() const
+void SpeedLine::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::INTENSIVELINE_SPRITE, position, Vector2(0, 16), alpha, scale, rotate, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::SPEED_SPRITE, position, Vector2(0, 16), alpha, scale, rotate, true, false);
 }
-
-void IntensiveLine::OnCollide(Actor& other, CollisionParameter colpara){}
