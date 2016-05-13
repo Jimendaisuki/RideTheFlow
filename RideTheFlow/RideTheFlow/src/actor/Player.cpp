@@ -105,6 +105,7 @@ tornadeTimer(0.0f)
 	//タックルのパラメーターの初期化
 	tp.tackleFlag = false;
 	tp.tackleEndFlag = false;
+	tp.tackleAttackFlag = false;
 	tp.tackleRotate = Matrix4::Identity;
 	tp.tackleAngle = 0;
 	tp.tackleT = Vector3(0, 0, -1);
@@ -216,6 +217,8 @@ void Player::Update(){
 	vec.Normalize();
 	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
+
+
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
 		tp.tackleFlag = true;
 		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
@@ -314,11 +317,13 @@ void Player::Update(){
 			animTime = 0.0f;
 			tp.tackleFlag = false;
 			tp.tackleEndFlag = false;
+			tp.tackleAttackFlag = false;
 			animBlend = 0.0f;
 			waitAnimSet = false;
 		}
 		if (animTime > tackleAnimAttackTiming){
 			world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
+			tp.tackleAttackFlag = true;
 			parameter.height = tp.tackleT.Normalized() * 30.0f;
 		}
 	}
@@ -627,7 +632,10 @@ void Player::ParameterDraw() const{
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
+	if (colpara.colID == COL_ID::PLAYER_STAGE_COL){
+		position = colpara.colPos;
+	}
+	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
 	}
 }
