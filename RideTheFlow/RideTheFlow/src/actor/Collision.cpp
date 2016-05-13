@@ -162,7 +162,10 @@ CollisionParameter Collisin::ModelSphere(const ModelData& model, const Sphere& s
 	HitPolyDim = MV1CollCheck_Sphere(
 		model.MHandle, model.MFrameIndex,
 		s.position, s.radius);
-	if (HitPolyDim.HitNum >= 1) colpara.colFlag = true;
+	if (HitPolyDim.HitNum >= 1){
+		colpara.colPos = HitPolyDim.Dim[0].Normal;
+		colpara.colFlag = true;
+	}
 
 	MV1CollResultPolyDimTerminate(HitPolyDim);
 	return colpara;

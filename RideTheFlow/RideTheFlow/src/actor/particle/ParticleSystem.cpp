@@ -52,6 +52,7 @@ emissiveTimer(0.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
+	parameter.mat.SetPosition(basePos);
 
 	if (isHalfShpere)
 		shape = PARTICLE_SHAPE::HALF_SPHERE;
@@ -102,6 +103,7 @@ emissiveTimer(0.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
+	parameter.mat.SetPosition(basePos);
 	shape = PARTICLE_SHAPE::BOX;
 }
 
@@ -109,6 +111,10 @@ ParticleSystem::~ParticleSystem()
 {
 
 }
+
+Vector3 front;
+Vector3 left;
+Vector3 up;
 
 void ParticleSystem::Update()
 {
@@ -147,13 +153,13 @@ void ParticleSystem::Update()
 		}
 		if (shape == PARTICLE_SHAPE::BOX)
 		{
+			front = emissiveVec;
+			Matrix4 pitchmat = Quaternion::RotateAxis(Vector3::Up, 90.0f);
+			left = Vector3::Normalize(front * pitchmat);
+			up = Vector3::Cross(left, front);
+
 			for (int i = 0; i < sameEmissiveNum; i++)
 			{
-				Vector3 front = emissiveVec;
-				Matrix4 pitchmat = Quaternion::RotateAxis(Vector3::Up, 90.0f);
-				Vector3 left = Vector3::Normalize(front * pitchmat);
-				Vector3 up = Vector3::Cross(left, front);
-
 				Vector3 pos =
 					basePos
 					+ (left * Random::GetInstance().Range(-boxSize.x / 2.0f, boxSize.x / 2.0f))
@@ -171,6 +177,10 @@ void ParticleSystem::Draw() const
 {
 	std::for_each(particles.begin(), particles.end(),
 		[](ParticlePtr par){par->Draw(); });
+
+	DrawLine3D(basePos, basePos + front * 100, GetColor(0, 0, 255));
+	DrawLine3D(basePos, basePos + up * 100, GetColor(0, 255, 0));
+	DrawLine3D(basePos, basePos + left * 100, GetColor(255, 0, 0));
 }
 
 void ParticleSystem::OnCollide(Actor& other, CollisionParameter colpara)

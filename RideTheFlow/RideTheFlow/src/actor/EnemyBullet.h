@@ -1,24 +1,25 @@
-#ifndef ENEMY_BULLET_H_
-#define ENEMY_BULLET_H_
+#ifndef ENEMY_VARISTOR_BULLET_H_
+#define ENEMY_VARISTOR_BULLET_H_
 
 #include "Actor.h"
-class EnemyBullet :public Actor
+#include <memory>
+
+class EnemyBullet :public Actor, public std::enable_shared_from_this<EnemyBullet>
 {
 public:
-	EnemyBullet(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, float initialVelocity);
+	EnemyBullet(IWorld& world, Vector3 position);
 	~EnemyBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 private:
 	Matrix4 playerMat;
-	float time;
-	float  mInitialVelocity;
-	float angle;
-	float speed;
 	Vector3 mPosition;
+	Vector3 mScale;
+	float time;
+	float speed;
+	Vector3 distance;
+	Vector3 mRandomTarget;
 	Vector3 coppyPosition;
-	Vector3 mDirection;
 };
-
-#endif;
+#endif

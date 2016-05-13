@@ -4,10 +4,11 @@
 #include <memory>
 
 struct TackleParameter{
-	bool tackleFlag, tackleEndFlag;
+	bool tackleFlag, tackleEndFlag,dashFlag;
 	Matrix4 tackleRotate;
 	float tackleAngle;
 	Vector3 tackleT;
+	float animTime;
 };
 
 class Player :public Actor, public std::enable_shared_from_this<Player>
@@ -22,6 +23,13 @@ public:
 		return tp;
 	}
 
+	std::vector<Vector3>& ReturnBonePosStorage(){
+		return bonePosStorage;
+	}
+
+	std::vector<Vector3>& ReturnDashPosStorage(){
+		return dashPosStorage;
+	}
 
 private:
 	//デバック表示まとめ
@@ -39,6 +47,11 @@ private:
 	std::vector<Vector3> posStorage;
 	//初期ボーン
 	Vector3* vertexVec;
+	//ボーンの位置
+	std::vector<Vector3> bonePosStorage;
+
+	//移動量
+	Vector3 vec;
 
 	//トルネードが発生するまでの時間
 	float tornadeTimer;
@@ -58,9 +71,6 @@ private:
 	float dashTime;
 	std::vector<Vector3> dashPosStorage;
 
-	//左スティック(WASD)が入力されたどうか判断する
-	bool leftStickMove;
-
 	//posStorageに何もないときのボーンの方向
 	Vector3 nonPosStorageVec;
 
@@ -68,7 +78,7 @@ private:
 	Vector3 beforeVec;
 
 	//アニメーションの再生タイム
-	float animTime, totalTime;
+	float totalTime;
 	//モデルハンドルを取得する(アニメーションのために)
 	int modelHandle, animIndex;
 	//アニメーションのブレンド

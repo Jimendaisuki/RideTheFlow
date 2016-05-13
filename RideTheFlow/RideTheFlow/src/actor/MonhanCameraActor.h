@@ -21,19 +21,30 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
+	Vector3 DefaultCamera();
+
+
+private:
 	Matrix4 playerMat;
 	Vector3 position;
+
+	//バネカメラ関係
 	Vector3 restPosition;
 	Vector3 velocity;
-	Vector3 targetPos;
-	Vector3 posSeveStart;
-	Vector3 posSeveEnd;
 	SpringParameter springParameter;
 	float fov;
 	float rotateLeft;
 	float rotateUp;
+	//座標保存
+	Vector3 posSeveStart;
+	Vector3 posSeveEnd;
+	Vector3 playerPosSeve;
+	//タックル
 	float leapTimer;
-	bool posSeve;
+	bool posMove1;
+	bool posMove2;
+
+	Vector3 test;
 };
 
 #endif
