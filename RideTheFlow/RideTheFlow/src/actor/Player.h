@@ -40,6 +40,9 @@ private:
 	//初期ボーン
 	Vector3* vertexVec;
 
+	//移動量
+	Vector3 vec;
+
 	//トルネードが発生するまでの時間
 	float tornadeTimer;
 
@@ -57,9 +60,6 @@ private:
 	//加速できる時間
 	float dashTime;
 	std::vector<Vector3> dashPosStorage;
-
-	//左スティック(WASD)が入力されたどうか判断する
-	bool leftStickMove;
 
 	//posStorageに何もないときのボーンの方向
 	Vector3 nonPosStorageVec;

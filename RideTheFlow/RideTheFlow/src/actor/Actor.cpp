@@ -10,7 +10,8 @@
 
 Actor::Actor(IWorld& world_) :world(world_)
 {
-	colFunc[COL_ID::SPHERE_SPHERE_COL ] = std::bind(&Actor::Player_vs_Bullet, this, std::placeholders::_1);
+	colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::Player_vs_Bullet, this, std::placeholders::_1);
+	colFunc[COL_ID::SPHERE_MODEL_COL] = std::bind(&Actor::Sphere_vs_Model, this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_STAGE_COL ] = std::bind(&Actor::Tornado_vs_Stage,  this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_CASTLE_COL] = std::bind(&Actor::Tornado_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_ISLAND_COL] = std::bind(&Actor::Tornado_vs_IsLand, this, std::placeholders::_1);
@@ -36,6 +37,26 @@ void Actor::Collide(COL_ID id, Actor& other){
 		OnCollide(other, colpara);
 		other.OnCollide(*this, colpara);
 	}
+}
+
+CollisionParameter Actor::Sphere_vs_Model(const Actor& other) const{
+	CollisionParameter colpara;
+
+	/* TornadoData */
+	Line tornado;
+	tornado.startPos = Matrix4::GetPosition(parameter.mat);// -Vector3::Up * parameter.radius;
+	tornado.endPos = Matrix4::GetPosition(parameter.mat) + parameter.height;
+
+	/* ModelData */
+	ModelData stage;
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MFrameIndex = -1;
+
+	/* ResultData */
+	colpara = Collisin::GetInstace().ModelLine(stage, tornado);
+	colpara.colID = COL_ID::SPHERE_MODEL_COL;
+
+	return colpara;
 }
 
 /* —´vs */

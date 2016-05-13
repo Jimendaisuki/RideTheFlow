@@ -18,6 +18,7 @@
 #include "../time/Time.h"
 
 #include "../actor/CameraActor.h"
+#include "../math/Math.h"
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -41,8 +42,8 @@ void TitleScene::Initialize()
 	timer = 0.0f;
 	objectcount = 0;
 	mIsEnd = false;
-	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wa));
+	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
+	//wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
 	
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
 	frameCount = MV1GetFrameNum(modelHandle);
@@ -58,6 +59,8 @@ void TitleScene::Initialize()
 float tornadeTimer = 0.0f;
 float fpsTimer = 0.0f;
 float fps;
+
+int effectNum = 0.0f;
 
 void TitleScene::Update()
 {
@@ -81,16 +84,36 @@ void TitleScene::Update()
 	if (frameNum > frameCount - 1) frameNum = 0;
 	if (frameNum < 0) frameNum = frameCount - 1;
 
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z)) effectNum++;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)) effectNum--;
+	effectNum = Math::Clamp(effectNum, 0, 4);
 
-	/* 集中線発生 */
+	/* スピード線発生 */
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT))
-		Effect::GetInstance().DashEffect(wa, position);
-
+		switch (effectNum)
+		{
+			case 1: 
+				Effect::GetInstance().StepEffect(wo, EffectDirection::Up);
+				break;
+			case 2: 
+				Effect::GetInstance().StepEffect(wo, EffectDirection::Down);
+				break;
+			case 3:
+				Effect::GetInstance().StepEffect(wo, EffectDirection::Left);
+				break;
+			case 4:
+				Effect::GetInstance().StepEffect(wo, EffectDirection::Right);
+				break;
+			default:
+				Effect::GetInstance().DashEffect(wo, position);
+				break;
+		}
+		
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
 
-	wa.Update();
+	wo.Update();
 
 	Camera::GetInstance().Position.Set(Vector3(0, 100, -200));
 	Camera::GetInstance().Target.Set(Vector3(0, 100, 0));
@@ -100,14 +123,15 @@ void TitleScene::Update()
 //描画
 void TitleScene::Draw() const
 {
-	wa.Draw();
+	wo.Draw();
 
 	DrawSphere3D(position, 2, 4, GetColor(255, 0, 0), GetColor(0, 0, 0), true);
 
 	TextDraw::GetInstance().Draw("TitleScene");
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
 
-	DrawFormatString(0, 100, GetColor(255, 0, 0), "LSHIFT	: ダッシュ演出");
+	DrawFormatString(0, 100, GetColor(255, 0, 0), "LSHIFT	: スピード線演出");
+	DrawFormatString(0, 120, GetColor(255, 0, 0), "Z,X		: 演出切り替え");
 
 	DrawFormatString(0, 150, GetColor(0, 0, 0), "FrameNum  : %f", frameNum);
 	DrawFormatString(0, 170, GetColor(0, 0, 0), "FrameName : %s", MV1GetFrameName(modelHandle, frameNum));
@@ -129,5 +153,5 @@ Scene TitleScene::Next() const
 
 void TitleScene::End()
 {
-	wa.Clear();
+	wo.Clear();
 }
