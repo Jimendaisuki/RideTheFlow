@@ -144,6 +144,11 @@ void Model::DeleteAll()
 	m_sprites.clear();
 }
 
+void Model::Delete(const MODEL_ID& id)
+{
+	MV1DeleteModel(m_models.at(id)->GetHangle());
+}
+
 void Model::Draw(const MODEL_ID& id, const Vector3& position)
 {
 	auto handle = m_models.at(id)->GetHangle();

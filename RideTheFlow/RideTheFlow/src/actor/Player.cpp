@@ -67,6 +67,7 @@ const float dashHealSpeed = 2.0f;
 
 //ノーマル時or停止時からの加速度
 const float normalSpeedAccele = 1.0f;
+
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
@@ -76,7 +77,7 @@ tornadeTimer(0.0f)
 {
 	//paramterの初期化
 	parameter.isDead = false;
-	parameter.radius = 3.0f;
+	parameter.radius = 8.0f;
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *
@@ -149,6 +150,15 @@ Player::~Player(){
 
 
 void Player::Update(){
+		bonePosStorage.clear();
+	for (int i = 0; i < boneCount; i++){
+		//初期位置ボーンの位置を取得
+	bonePosStorage.push_back(Matrix4::ToMatrix4(
+		MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition());
+	}
+
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
+
 	auto input = DINPUT_JOYSTATE();
 
 	// 入力状態を取得
@@ -215,16 +225,6 @@ void Player::Update(){
 	Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
 	vec.Normalize();
 	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
-
-	MV1_COLL_RESULT_POLY_DIM HitPolyDim;
-
-	HitPolyDim = MV1CollCheck_Sphere(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL),-1,position,parameter.radius);
-	if (HitPolyDim.HitNum >= 1){
-		Vector3 nor = Vector3::Vector3(HitPolyDim.Dim[0].Normal).Normalized();
-		trueVec = trueVec - Vector3::Dot(-trueVec, nor) * nor;
-	}
-
-	MV1CollResultPolyDimTerminate(HitPolyDim);
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
 		tp.tackleFlag = true;
@@ -561,6 +561,12 @@ void Player::Draw() const{
 	
 	ParameterDraw();
 
+	if (bonePosStorage.size() > 1)
+	for (int count = 2; count < bonePosStorage.size() ; count++){
+		int Color = GetColor(0, 0, 255);
+		DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
+	}
+	
 	if (dashPosStorage.size() > 1)
 	for (int count = 0; count < dashPosStorage.size() - 1; count++){
 		int Color = GetColor(0, 0, 255);

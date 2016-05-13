@@ -23,6 +23,13 @@ public:
 		return tp;
 	}
 
+	std::vector<Vector3>& ReturnBonePosStorage(){
+		return bonePosStorage;
+	}
+
+	std::vector<Vector3>& ReturnDashPosStorage(){
+		return dashPosStorage;
+	}
 
 private:
 	//デバック表示まとめ
@@ -40,6 +47,8 @@ private:
 	std::vector<Vector3> posStorage;
 	//初期ボーン
 	Vector3* vertexVec;
+	//ボーンの位置
+	std::vector<Vector3> bonePosStorage;
 
 	//移動量
 	Vector3 vec;
