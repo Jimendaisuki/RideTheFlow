@@ -16,6 +16,8 @@
 #include "../graphic/TextDraw.h"
 
 #include "../actor/particle/ParticleSystem.h"
+#include "../actor/MonhanCameraActor.h"
+#include "../game/WorkFolder.h"
 
 //コンストラクタ
 CreditScene::CreditScene()
@@ -32,14 +34,21 @@ CreditScene::~CreditScene()
 //開始
 void CreditScene::Initialize()
 {
+	//モデルを一旦解放して読み込み直す
+	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
+	WorkFolder::SetWorkFolder("res/Model/");
+	Model::GetInstance().Load("ryuu.pmd", MODEL_ID::TEST_MODEL,false);
+
 	mIsEnd = false;
 	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
-
 	//wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(50, 0, 0), Vector2(1, 1), Vector3::Zero));
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(wa, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), 1.0f, 1.0f));
 	//wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(0, 20, 0), Vector3(0, 0, 0), Vector3(1, 1, 1)));
 
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
+
 	//ParticleSystem(wa, MODEL_ID::SMOKE_2D, 0.1f, 100, 1000.0f, Vector3(0), true, 200.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -120.0f,BLEND_MODE::Alpha);
 	//ParticleSystem(wa, MODEL_ID::WIND_2D, 0.01f, 1, 1000.0f, 4.0f,
 	//	Vector3(0, 100, 0), Vector3::One, Vector3(10, 100, 10),
@@ -66,22 +75,21 @@ void CreditScene::Update()
 		mIsEnd = true;
 	}
 
-	Vector3 target;
-	wa.EachActor(ACTOR_ID::PARTICLE_ACTOR, [&](const Actor& other){
-		target = other.GetParameter().mat.GetPosition();
-	});
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-		cameraPos.z += 10.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-		cameraPos.x -= 10.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-		cameraPos.z -= 10.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-		cameraPos.x += 10.0f;
-
-	Camera::GetInstance().Target.Set(target);
-	Camera::GetInstance().Position.Set(Vector3(cameraPos));
-	Camera::GetInstance().Update();
+	//Vector3 target;
+	//wa.EachActor(ACTOR_ID::PARTICLE_ACTOR, [&](const Actor& other){
+	//	target = other.GetParameter().mat.GetPosition();
+	//});
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
+	//	cameraPos.z += 10.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
+	//	cameraPos.x -= 10.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
+	//	cameraPos.z -= 10.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
+	//	cameraPos.x += 10.0f;
+	//Camera::GetInstance().Target.Set(target);
+	//Camera::GetInstance().Position.Set(Vector3(cameraPos));
+	//Camera::GetInstance().Update();
 
 	wa.Update();
 }
@@ -100,8 +108,6 @@ void CreditScene::Draw() const
 	//DrawFormatString(10, 10, GetColor(255, 255, 255), "%f", cameraPos.x);
 	//DrawFormatString(10, 30, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 	wa.Draw();
-
-	TextDraw::GetInstance().Draw(Vector2(cameraPos));
 }
 
 //終了しているか？

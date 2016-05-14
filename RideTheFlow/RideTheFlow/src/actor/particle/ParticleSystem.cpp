@@ -52,6 +52,7 @@ emissiveTimer(0.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
+	parameter.mat.SetPosition(basePos);
 
 	if (isHalfShpere)
 		shape = PARTICLE_SHAPE::HALF_SPHERE;

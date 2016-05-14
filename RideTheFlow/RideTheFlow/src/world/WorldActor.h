@@ -1,10 +1,13 @@
 #pragma once
 #include "../actor/ActorPtr.h"
 #include "../actor/ActorManager.h"
+#include "../UIactor/UIActorPtr.h"
+#include "../UIactor/UIActorManager.h"
 #include <map>
 #include <vector>
 
 enum ACTOR_ID;
+enum EFFECT_ID;
 
 struct CollideSelect{
 	ACTOR_ID otherID;
@@ -18,11 +21,13 @@ public:
 	void Update();
 	void Draw() const;
 	void Add(ACTOR_ID id, ActorPtr actor);
+	void EffectAdd(EFFECT_ID id, UIActorPtr UIactor);
 	void Clear();
 	void SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID);
 
 	//子オブジェクトを巡回
 	void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func);
+	void EachUIActor(EFFECT_ID id, std::function<void(const UIActor&)> func);
 
 private:
 	typedef std::shared_ptr<ActorManager> ActorManagerPtr;
@@ -30,4 +35,9 @@ private:
 	typedef std::pair<ACTOR_ID, ActorManagerPtr> ActorManagerPair;
 	ActorManagerPtrMap managers;
 	std::map<ActorPtr, std::vector<CollideSelect>> colselect;
+
+	typedef std::shared_ptr<UIActorManager> UIActorManagerPtr;
+	typedef std::map<EFFECT_ID, UIActorManagerPtr> UIActorManagerPtrMap;
+	typedef std::pair<EFFECT_ID, UIActorManagerPtr> UIActorManagerPair;
+	UIActorManagerPtrMap UImanagers;
 };
