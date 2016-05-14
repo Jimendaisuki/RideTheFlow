@@ -40,7 +40,6 @@ EnemyBullet::~EnemyBullet()
 }
 void EnemyBullet::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::SPHERE_SPHERE_COL);
 	time += Time::DeltaTime*speed;
 	if (coppyPosition.y < playerMat.GetPosition().y)
 	{
