@@ -47,6 +47,8 @@ struct ParticleDrawParameter
 class Particle
 {
 public:
+	Particle();
+
 	Particle(
 		const MODEL_ID& id_,
 		float lifeLimit_,
@@ -61,11 +63,17 @@ public:
 		int blendMode_ = BLEND_MODE::NoBlend,
 		const Vector2& origin_ = Vector2::Zero);
 
+	//更新（寿命計算、寿命が過ぎたら死ぬ）
 	void Update();
-	void Draw() const;
+
+	//追加更新（寿命計算は勝手に行われる）
+	virtual void OnUpdate() = 0;
+	//描画
+	virtual void Draw() const = 0;
+
 	bool GetIsDead();
 
-private:
+protected:
 	ParticleLifeParameter lifeParam;
 	ParticleMoveParameter moveParam;
 	ParticleDrawParameter drawParam;

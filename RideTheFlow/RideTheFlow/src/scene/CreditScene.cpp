@@ -15,7 +15,6 @@
 #include "../actor/Stage.h"
 #include "../graphic/TextDraw.h"
 
-#include "../actor/particle/ParticleSystem.h"
 #include "../actor/MonhanCameraActor.h"
 #include "../game/WorkFolder.h"
 
@@ -53,10 +52,10 @@ void CreditScene::Initialize()
 	//ParticleSystem(wa, MODEL_ID::WIND_2D, 0.01f, 1, 1000.0f, 4.0f,
 	//	Vector3(0, 100, 0), Vector3::One, Vector3(10, 100, 10),
 	//	400.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -70.0f, BLEND_MODE::Alpha);
-	wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<ParticleSystem>(
-		wa, MODEL_ID::WIND_2D, 0.02f, 1, 1000.0f, 4.0f,
-		Vector3(100, 100, 0), Vector3(-1,0,0), Vector3(1, 100, 100),
-		300.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -70.0f, BLEND_MODE::Alpha));
+	//wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<ParticleSystem>(
+	//	wa, MODEL_ID::WIND_2D, 0.02f, 1, 1000.0f, 4.0f,
+	//	Vector3(100, 100, 0), Vector3(-1,0,0), Vector3(1, 100, 100),
+	//	300.0f, 30.0f, 255.0f, Vector2::Zero, 0.0f, 0.0f, -70.0f, BLEND_MODE::Alpha));
 
 	Camera::GetInstance().SetRange(0.1f, 3000.0f);
 	Camera::GetInstance().Position.Set(Vector3(0.0f, 300.0f, -300.0f));

@@ -35,6 +35,7 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("boonStage.pmd", MODEL_ID::STAGE_MODEL, async);
 	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
 	model.Load("arrow.pmd", MODEL_ID::ARROW_MODEL, async);
+	model.Load("wind.x", MODEL_ID::WIND_MODEL, async);
 	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 
 

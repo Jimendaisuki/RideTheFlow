@@ -11,6 +11,7 @@
 #include "../math/Quaternion.h"
 #include "tornado\Tornado.h"
 #include "../game/Random.h"
+#include "particle\WindFlow.h"
 
 //É{Å[ÉìÇÃêî
 const int boneCount = 33;
@@ -242,6 +243,8 @@ void Player::Update(){
 	}
 
 	tp.dashFlag = false;
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT))
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<WindFlow>(world, *this));
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT)){
 		if (dashHealFlag){
 			dashPosStorage.clear();
