@@ -18,56 +18,44 @@ time(0.0f)
 	parameter.id = ACTOR_ID::CAMERA_ACTOR;
 	parameter.isDead = false;
 
-	stageModelHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stageModelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
 
-	MV1ResetFrameUserLocalMatrix(stageModelHandle, 2);
-	MV1ResetFrameUserLocalMatrix(stageModelHandle, 3);
+	parentFrames.clear();
+	for (int i = 1; i < MV1GetFrameNum(stageModelHandle); i++)
+	{
+		if (MV1GetFrameParent(stageModelHandle, i) == -2)
+			parentFrames.push_back(i);
+	}
 
-	/* ステージ内のフレームを保存 */
-	// テスト用でメッシュ含むので初期０
-	frames.clear();
-	for (int i = 0; i < MV1GetFrameNum(stageModelHandle); i++)
-		frames.push_back(Vector3::ToVECTOR(MV1GetFramePosition(stageModelHandle, i)));
-	
-	frameIndex = 0;
-
-	SetFrame(frameIndex);
-	targetPos = startPos;
-	cameraPos = targetPos - (Vector3::Normalize(endPos - startPos) * 5.0f) * Vector3(1.0f, 0.0f, 1.0f);
-
-	MV1ResetFrameUserLocalMatrix(stageModelHandle, 3);
-	MV1ResetFrameUserLocalMatrix(stageModelHandle, 2);
-	MV1ResetFrameTextureAddressTransform(stageModelHandle, 2);
-	MV1ResetFrameTextureAddressTransform(stageModelHandle, 3);
+	SetFrame(0);
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
+	Camera::GetInstance().Update();
 }
 
 TitleCameraActor::~TitleCameraActor()
 {
-	MV1ResetFrameUserLocalMatrix(stageModelHandle, 3);
-	MV1ResetFrameUserLocalMatrix(stageModelHandle, 2);
-	MV1ResetFrameTextureAddressTransform(stageModelHandle, 2);
-	MV1ResetFrameTextureAddressTransform(stageModelHandle, 3);
-
 	frames.clear();
 }
 void TitleCameraActor::Update()
 {
 	time += Time::DeltaTime;
-	if (time > 2)
-	{
-		//time = 0;
-		frameIndex += 2;
-		if (frameIndex >= frames.size() - 1) frameIndex = 0;
-		SetFrame(frameIndex);
-	}
 
-	//Liner(2.0f);
-	BeziersCurve(2.0f);
+	switch (frames.size())
+	{
+	case 2:
+		Liner(2.0f);
+		break;
+	case 4:
+		BeziersCurve(2.0f);
+		break;
+	default:
+		SetFrame(0);
+		break;
+	}
 
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
@@ -89,37 +77,53 @@ void TitleCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 // カメラフレームセット
 void TitleCameraActor::SetFrame(int num)
 {
-	startPos = frames[num];
-	endPos	 = frames[num + 1];
+	/* 初期化 */
+	frames.clear();
+	/* 初期情報 */
+	int frameChildCount = 1;
+	int child = MV1GetFrameChildNum(stageModelHandle, parentFrames[num]);
+	frames.push_back(Vector3::ToVECTOR(MV1GetFramePosition(stageModelHandle, parentFrames[num])));
+	
+	/* ルートフレームを保存 */
+	while (child >= 0)
+	{
+		frames.push_back(Vector3::ToVECTOR(MV1GetFramePosition(stageModelHandle, parentFrames[num] + frameChildCount)));
+		frameChildCount++;
+		child = MV1GetFrameParent(stageModelHandle, parentFrames[0] + frameChildCount);
+	}
+
+	/* 初期位置 */
+	prePos = frames[0];
 }
 
 // 直線移動
 void TitleCameraActor::Liner(float sec)
 {
-	targetPos = Vector3::Lerp(startPos, endPos, time / sec);
-	cameraPos = targetPos - ((endPos - startPos) * Vector3(1.0f, 0.0f, 1.0f)).Normalized() * 10.0f;
+	//targetPos = Vector3::Lerp(startPos, endPos, time / sec);
+	//cameraPos = targetPos - ((endPos - startPos) * Vector3(1.0f, 0.0f, 1.0f)).Normalized() * 10.0f;
+	targetPos = Vector3::Lerp(frames[0], frames[1], time / sec);
+	cameraPos = targetPos - ((frames[1] - frames[0]) * Vector3(1.0f, 0.0f, 1.0f)).Normalized() * 10.0f;
 
 	if (time >= sec) time = 0;
 }
 
 // ベジエ移動
-float px, py, pz, pre_x = 0, pre_y = 0, pre_z = 0;
 void TitleCameraActor::BeziersCurve(float sec)
 {
 	float b = time / sec;
 	float a = 1 - b;
 
-	/* 現状仮の値を代入 */
-	px = a * a * a * frames[1].x + 3 * a*a*b*frames[3].x + 3 * a*b*b*frames[5].x + b*b*b*frames[7].x;
-	py = a * a * a * frames[1].y + 3 * a*a*b*frames[3].y + 3 * a*b*b*frames[5].y + b*b*b*frames[7].y;
-	pz = a * a * a * frames[1].z + 3 * a*a*b*frames[3].z + 3 * a*b*b*frames[5].z + b*b*b*frames[7].z;
+	/* 位置算出 */
+	p.x = a * a * a * frames[0].x + 3 * a*a*b*frames[1].x + 3 * a*b*b*frames[2].x + b*b*b*frames[3].x;
+	p.y = a * a * a * frames[0].y + 3 * a*a*b*frames[1].y + 3 * a*b*b*frames[2].y + b*b*b*frames[3].y;
+	p.z = a * a * a * frames[0].z + 3 * a*a*b*frames[1].z + 3 * a*b*b*frames[2].z + b*b*b*frames[3].z;
 
-	targetPos = Vector3(px, py, pz);
-	cameraPos = targetPos - (targetPos - Vector3(pre_x, pre_y, pre_z)).Normalized() * 50.0f;
+	/* カメラ・ターゲット位置更新 */
+	targetPos = Vector3(p.x, p.y, p.z);
+	cameraPos = targetPos - (targetPos - prePos).Normalized() * 50.0f;
 
-	pre_x = px;
-	pre_y = py;
-	pre_z = pz;
+	/* 前フレーム保存 */
+	prePos = p;
 
 	if (time >= sec) time = 0;
 }

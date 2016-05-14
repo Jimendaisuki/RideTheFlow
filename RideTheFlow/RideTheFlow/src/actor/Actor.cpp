@@ -6,6 +6,7 @@
 #include <list>
 
 #include "../graphic/Model.h"
+#include "Player.h"
 
 
 Actor::Actor(IWorld& world_) :world(world_)
@@ -73,18 +74,22 @@ CollisionParameter Actor::Player_vs_Stage(const Actor& other) const{
 CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	CollisionParameter colpara;
 
-	/* PlayerData */
-	Sphere player;
-	player.position = Matrix4::GetPosition(parameter.mat);
-	player.radius = parameter.radius;
-
 	/* BulletData */
 	Sphere bullet;
 	bullet.position = Matrix4::GetPosition(other.parameter.mat);
 	bullet.radius = other.parameter.radius;
 
-	/* ResultData */
-	colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+	for (auto i : static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage()){
+		/* PlayerData */
+		Sphere player;
+		player.position = i;
+		player.radius = parameter.radius;
+		/* ResultData */
+		colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+		if (colpara.colFlag){
+			break;
+		}
+	}
 	colpara.colID = COL_ID::SPHERE_SPHERE_COL;
 
 	return colpara;

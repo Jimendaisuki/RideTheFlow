@@ -135,6 +135,8 @@ tornadeTimer(0.0f)
 		vertexVec[i] = Matrix4::ToMatrix4(
 			MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition() *
 			Matrix4::Scale(scale);
+
+		bonePosStorage.push_back(vertexVec[i]);
 	}
 
 	//加速ゲージの回復中
@@ -151,6 +153,8 @@ Player::~Player(){
 
 
 void Player::Update(){
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
+
 		bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++){
 		//初期位置ボーンの位置を取得
@@ -564,11 +568,11 @@ void Player::Draw() const{
 	
 	ParameterDraw();
 
-	if (bonePosStorage.size() > 1)
-	for (int count = 2; count < bonePosStorage.size() ; count++){
-		int Color = GetColor(0, 0, 255);
-		DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
-	}
+	//if (bonePosStorage.size() > 1)
+	//for (int count = 2; count < bonePosStorage.size() ; count++){
+	//	int Color = GetColor(0, 0, 255);
+	//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
+	//}
 	
 	if (dashPosStorage.size() > 1)
 	for (int count = 0; count < dashPosStorage.size() - 1; count++){

@@ -22,9 +22,11 @@ private:
 	Vector3 targetPos;
 	Vector3 startPos;
 	Vector3 endPos;
+	Vector3 p;
+	Vector3 prePos;
 	float	time;
 	int stageModelHandle;
-	int frameIndex;
 
 	std::vector<Vector3> frames;
+	std::vector<float> parentFrames;
 };
