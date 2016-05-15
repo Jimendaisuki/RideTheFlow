@@ -25,7 +25,9 @@ public:
 	virtual void End()override;
 
 private:
-
 	bool mIsEnd;
 	World wa;
+	int timeTest;
+	Vector3 position;
+	std::vector<Vector3>boonPositions;
 };

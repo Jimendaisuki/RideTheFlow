@@ -248,7 +248,7 @@ void Player::Update(){
 
 	tp.dashFlag = false;
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT))
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<WindFlow>(world, *this));
+		world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<WindFlow>(world, *this));
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT)){
 		if (dashHealFlag){
 			dashPosStorage.clear();

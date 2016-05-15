@@ -9,7 +9,7 @@ positionHeight(positionHeight_),
 rotate(Vector3::Zero)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 0.01f * dashPositions.size();
+	lifeParam.lifeTimeLimit = 0.03f * dashPositions.size();
 	lifeParam.isDead = false;
 
 	moveParam.pos = dashPositions.at(0);
@@ -52,5 +52,5 @@ void WindFlowParticle::OnUpdate()
 void WindFlowParticle::Draw() const
 {
 	//Model::GetInstance().Draw2DBlend(drawParam.drawID, moveParam.pos, 0, drawParam.size, drawParam.billboardOrigin, 0, drawParam.blendMode, drawParam.alpha);
-	Model::GetInstance().Draw(drawParam.drawID, moveParam.pos, drawParam.alpha, rotate, drawParam.size, Vector4(0.0f, 0.0f, 1.0f, 1.0f), Vector4(0.0f, 0.0f, 1.0f, 1.0f), true);
+	Model::GetInstance().Draw(drawParam.drawID, moveParam.pos, drawParam.alpha, rotate, drawParam.size,true);
 }

@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
+    <ClCompile Include="src\actor\Cloud.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
     <ClCompile Include="src\UIactor\Effect.cpp" />
     <ClCompile Include="src\UIactor\SpeedLine.cpp" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
+    <ClInclude Include="src\actor\Cloud.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Effect.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />

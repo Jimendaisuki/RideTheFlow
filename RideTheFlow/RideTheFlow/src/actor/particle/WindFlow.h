@@ -14,6 +14,8 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
+	
+	std::vector<Vector3>& GetDashPositions();
 
 public:
 	//=======ParticleSystem======//
