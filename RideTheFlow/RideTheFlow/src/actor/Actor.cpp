@@ -4,8 +4,11 @@
 
 #include "../math/Math.h"
 #include <list>
+#include <vector>
 
 #include "../graphic/Model.h"
+#include "Player.h"
+#include "particle/WindFlow.h"
 
 
 Actor::Actor(IWorld& world_) :world(world_)
@@ -18,6 +21,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 
 	colFunc[COL_ID::SPHERE_CAPSULE] = std::bind(&Actor::BoundarySphere_Capsule, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_TORNADO_COL] = std::bind(&Actor::Player_vs_Tornado, this, std::placeholders::_1);
+	colFunc[COL_ID::CLOUD_WIND_COL] = std::bind(&Actor::Cloud_vs_Wind, this, std::placeholders::_1);
 
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
@@ -73,18 +77,22 @@ CollisionParameter Actor::Player_vs_Stage(const Actor& other) const{
 CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	CollisionParameter colpara;
 
-	/* PlayerData */
-	Sphere player;
-	player.position = Matrix4::GetPosition(parameter.mat);
-	player.radius = parameter.radius;
-
 	/* BulletData */
 	Sphere bullet;
 	bullet.position = Matrix4::GetPosition(other.parameter.mat);
 	bullet.radius = other.parameter.radius;
 
-	/* ResultData */
-	colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+	for (auto i : static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage()){
+		/* PlayerData */
+		Sphere player;
+		player.position = i;
+		player.radius = parameter.radius;
+		/* ResultData */
+		colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+		if (colpara.colFlag){
+			break;
+		}
+	}
 	colpara.colID = COL_ID::SPHERE_SPHERE_COL;
 
 	return colpara;
@@ -168,6 +176,46 @@ CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 	land.radius = other.parameter.radius;
 
 	colpara.colID = COL_ID::TORNADO_ISLAND_COL;
+	return colpara;
+}
+
+CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
+	CollisionParameter colpara;
+
+	Sphere cloud;
+	cloud.position = Matrix4::GetPosition(parameter.mat);
+	cloud.radius = parameter.radius;
+
+	WindFlow* w = static_cast<WindFlow*>(const_cast<Actor*>(&other));
+	std::vector<Vector3> dashPositions = w->GetDashPositions();
+	int dashPositionSize = dashPositions.size();
+
+	if (dashPositionSize < 2)
+	{
+		colpara.colID = COL_ID::CLOUD_WIND_COL;
+		return colpara;
+	}
+
+	Capsule wind;
+	wind.radius = other.parameter.radius;
+	for (int i = 0; i < dashPositionSize; i++)
+	{
+		wind.startPos = dashPositions.at(i);
+		wind.endPos = wind.startPos + other.parameter.height;
+		colpara = Collisin::GetInstace().SphereCapsule(cloud, wind);
+		if (colpara.colFlag)
+		{
+			colpara.colID = COL_ID::CLOUD_WIND_COL;
+			if (i == dashPositionSize - 1)
+				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i) - dashPositions.at(i - 1));
+			else
+				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i + 1) - dashPositions.at(i));
+
+			return colpara;
+		}
+	}
+
+	colpara.colID = COL_ID::CLOUD_WIND_COL;
 	return colpara;
 }
 

@@ -2,6 +2,27 @@
 
 #include "../../time/Time.h"
 
+Particle::Particle()
+{
+	lifeParam.lifeTime = 0.0f;
+	lifeParam.lifeTimeLimit = 1.0f;
+	lifeParam.isDead = false;
+
+	moveParam.pos = Vector3::Zero;
+	moveParam.vec = Vector3::Zero;
+	moveParam.speed = 1.0f;
+	moveParam.addSpeed = 0.0f;
+
+	drawParam.drawID = MODEL_ID::WIND_2D;
+	drawParam.size = 1.0f;
+	drawParam.addSize = 0.0f;
+	drawParam.alpha = 255.0f;
+	drawParam.addAlpha = 0.0f;
+	drawParam.blendMode = BLEND_MODE::NoBlend;
+	drawParam.billboardOrigin = Vector2::Zero;
+}
+
+
 Particle::Particle(
 	const MODEL_ID& id_,
 	float lifeLimit_,
@@ -36,24 +57,12 @@ Particle::Particle(
 
 void Particle::Update()
 {
+	//Žõ–½ŒvŽZ
 	lifeParam.lifeTime += Time::DeltaTime;
 	if (lifeParam.lifeTime > lifeParam.lifeTimeLimit)
 		lifeParam.isDead = true;
-	else
-	{
-		moveParam.pos += moveParam.vec * moveParam.speed *  Time::DeltaTime;
-		moveParam.speed += moveParam.addSpeed * Time::DeltaTime;
-		drawParam.size += drawParam.addSize * Time::DeltaTime;
-		drawParam.alpha += drawParam.addAlpha * Time::DeltaTime;
-	}
-}
 
-void Particle::Draw() const
-{
-	if (drawParam.blendMode == BLEND_MODE::NoBlend)
-		Model::GetInstance().Draw2D(drawParam.drawID, moveParam.pos, 0, drawParam.size, drawParam.billboardOrigin, 0);
-	else
-		Model::GetInstance().Draw2DBlend(drawParam.drawID, moveParam.pos, 0, drawParam.size, drawParam.billboardOrigin, 0, drawParam.blendMode, drawParam.alpha);
+	OnUpdate();
 }
 
 bool Particle::GetIsDead()

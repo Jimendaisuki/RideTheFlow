@@ -56,6 +56,9 @@ private:
 	/*  */
 	CollisionParameter BoundarySphere_Capsule(const Actor& other)  const;
 
+	// 雲と風の当たり判定(球 vs カプセルの集合)
+	CollisionParameter Cloud_vs_Wind(const Actor& other) const;
+
 
 	/* 後で削除
 	// 線と箱の当たり判定
