@@ -2,6 +2,7 @@
 #include "ID.h"
 #include <memory>
 #include "../math/Vector3.h"
+#include "../actor/Actor.h"
 
 //あたり判定のパラメータ
 struct CollisionParameter{
@@ -23,8 +24,15 @@ struct Box{
 };
 // 球
 struct Sphere{
-	Vector3	position	= Vector3::Zero;	// 球の位置
-	float	radius		= 0;				// 球の半径
+	Vector3	position = Vector3::Zero;	// 球の位置
+	float	radius = 0;					// 球の半径
+
+public:
+	Sphere(Actor& actor)
+	{
+		position = actor.parameter.mat.GetPosition();
+		radius	 = actor.parameter.radius;
+	}
 };
 // カプセル
 struct  Capsule{

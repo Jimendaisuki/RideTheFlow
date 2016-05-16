@@ -1,6 +1,7 @@
 #pragma once;
 #include "../world/IWorld.h"
-#include "../math/Vector3.h"
+
+class Vector3;
 
 enum EffectDirection
 {
@@ -27,5 +28,5 @@ public:
 	void DashEffect(IWorld& wa, Vector3 position);
 	void StepEffect(IWorld& wa, EffectDirection ed);
 
-	void DamegeEffect(IWorld& woyuyyuk);
+	void DamegeEffect(IWorld& wo, const Vector3 position);
 };

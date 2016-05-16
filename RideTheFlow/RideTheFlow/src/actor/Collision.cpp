@@ -31,8 +31,8 @@ CollisionParameter Collisin::SphereSphere(const Sphere& s1, const Sphere& s2) co
 	CollisionParameter colpara;
 
 	int result = HitCheck_Sphere_Sphere(
-		s1.position, s1.radius,
-		s2.position, s2.radius);
+		s1.position.ToVECTOR(), s1.radius,
+		s2.position.ToVECTOR(), s2.radius);
 	if (result > 0) colpara.colFlag = true;
 
 	return colpara;
@@ -42,8 +42,8 @@ CollisionParameter Collisin::SphereCapsule(const Sphere& s, const Capsule& c) co
 	CollisionParameter colpara;
 
 	int result = HitCheck_Sphere_Capsule(
-		s.position, s.radius,
-		c.startPos, c.endPos, c.radius);
+		s.position.ToVECTOR(), s.radius,
+		c.startPos.ToVECTOR(), c.endPos.ToVECTOR(), c.radius);
 	if (result > 0) colpara.colFlag = true;
 
 	return colpara;

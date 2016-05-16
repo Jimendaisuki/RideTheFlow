@@ -19,6 +19,7 @@
 
 #include "../actor/CameraActor.h"
 #include "../math/Math.h"
+#include "../UIactor/Damege.h"
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -53,6 +54,9 @@ void TitleScene::Initialize()
 	frameChildCount = MV1GetFrameChildNum(modelHandle, frameNum);
 
 	position = Vector3::Zero;
+
+	wo.UIAdd(EFFECT_ID::SPEED_EFFECT, std::make_shared<Damege>(wo));
+
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
@@ -116,7 +120,7 @@ void TitleScene::Update()
 		}
 		
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
-		Effect::GetInstance().DamegeEffect(wo);
+		Effect::GetInstance().DamegeEffect(wo, position);
 	}
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){

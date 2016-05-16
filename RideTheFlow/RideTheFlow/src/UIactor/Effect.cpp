@@ -42,7 +42,7 @@ void Effect::StepEffect(IWorld& wo, EffectDirection ed)
 	}
 }
 
-void Effect::DamegeEffect(IWorld& wo)
+void Effect::DamegeEffect(IWorld& wo, const Vector3 position)
 {
-	wo.UIAdd(EFFECT_ID::BLOOD_EFFECT, std::make_shared<Blood>(wo));
+	wo.UIAdd(EFFECT_ID::BLOOD_EFFECT, std::make_shared<Blood>(wo, position));
 }
