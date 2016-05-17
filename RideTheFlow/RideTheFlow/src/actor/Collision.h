@@ -26,13 +26,6 @@ struct Box{
 struct Sphere{
 	Vector3	position = Vector3::Zero;	// 球の位置
 	float	radius = 0;					// 球の半径
-
-public:
-	Sphere(Actor& actor)
-	{
-		position = actor.parameter.mat.GetPosition();
-		radius	 = actor.parameter.radius;
-	}
 };
 // カプセル
 struct  Capsule{

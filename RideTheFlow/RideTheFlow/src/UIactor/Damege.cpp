@@ -1,23 +1,24 @@
 #include "Damege.h"
 #include "../math/Math.h"
 #include "../Def.h"
-#include "../actor/Actor.h"
-#include "../world/IWorld.h"
 
-#include "../input/Keyboard.h"
+//#include "../actor/Actor.h"
+//#include "../world/IWorld.h"
 
-const float deadTime = 2.0f;
-const float offset = 20.0f;
+const float deadTime  = 2.0f;
+const float offset    = 20.0f;
+const Vector2 HD	  = Vector2(1920, 1080);
 const Vector2 resSize = Vector2(1920, 1080);
-Damege::Damege(IWorld& world) :
+
+Damege::Damege(IWorld& world, float& HP_) :
 UIActor(world)
 {
 	parameter.isDead = false;
 	parameter.id = EFFECT_ID::DAMAGE_EFFECT;
 
 	/* èâä˙ê›íË */
-	scale.x = (float)WINDOW_WIDTH / resSize.x;
-	scale.y = (float)WINDOW_HEIGHT / resSize.y;
+	scale.x = (float)WINDOW_WIDTH / HD.x;
+	scale.y = (float)WINDOW_HEIGHT / HD.y;
 
 	/* ÉvÉåÉCÉÑÅ[ÇÃHPÇéÊìæ */
 	//world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other)
@@ -26,9 +27,8 @@ UIActor(world)
 	//	nowHP = maxHP;
 	//});
 
-	maxHP = 50;
-	nowHP = maxHP;
-
+	nowHP = &HP_;
+	maxHP = *nowHP;
 }
 
 Damege::~Damege()
@@ -43,17 +43,9 @@ void Damege::Update()
 	//{
 	//	nowHP = other.parameter.HP;
 	//});
-
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::R)){
-		nowHP++;
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::F)){
-		nowHP--;
-	}
-
 }
 
 void Damege::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::DAMEGE_SPRITE, Vector2::Zero, Vector2::Zero, 1.0f - Math::Clamp(nowHP / maxHP, 0.0f, 1.0f), scale, 0.0f, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::DAMEGE_SPRITE, Vector2::Zero, Vector2::Zero, 1.0f - Math::Clamp(*nowHP / maxHP, 0.0f, 1.0f), scale, 0.0f, true, false);
 }

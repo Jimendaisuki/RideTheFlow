@@ -7,7 +7,7 @@ CollisionParameter Collisin::SegmentBoxAABB(const Line& line, const Box& box) co
 	HITRESULT_LINE result;
 
 	result = HitCheck_Line_Cube(
-		line.startPos, line.endPos, 
+		line.startPos.ToVECTOR(), line.endPos.ToVECTOR(), 
 		box.min, box.max);
 	if (result.HitFlag > 0) colpara.colFlag = true;
 	colpara.colPos = result.Position;
@@ -19,8 +19,8 @@ CollisionParameter Collisin::SegmentSphere(const Line& line, const Sphere& s) co
 	CollisionParameter colpara;
 	
 	int result = HitCheck_Line_Sphere(
-		line.startPos, line.endPos,
-		s.position, s.radius);
+		line.startPos.ToVECTOR(), line.endPos.ToVECTOR(),
+		s.position.ToVECTOR(), s.radius);
 	if (result > 0) colpara.colFlag = true;
 	
 	return colpara;
@@ -54,8 +54,8 @@ CollisionParameter Collisin::CapsuleCapsule(const Capsule& c1, const Capsule& c2
 	CollisionParameter colpara;
 
 	int result = HitCheck_Capsule_Capsule(
-		c1.startPos, c1.endPos, c1.radius,
-		c2.startPos, c2.endPos, c2.radius);
+		c1.startPos.ToVECTOR(), c1.endPos.ToVECTOR(), c1.radius,
+		c2.startPos.ToVECTOR(), c2.endPos.ToVECTOR(), c2.radius);
 	if (result > 0) colpara.colFlag = true;
 
 	return colpara;
@@ -64,7 +64,7 @@ CollisionParameter Collisin::CapsuleCapsule(const Capsule& c1, const Capsule& c2
 CollisionParameter Collisin::CapsulePoint(const Capsule& c, const Vector3& p) const{
 	CollisionParameter colpara;
 
-	float length = Segment_Point_MinLength(c.startPos, c.endPos, p);
+	float length = Segment_Point_MinLength(c.startPos.ToVECTOR(), c.endPos.ToVECTOR(), p);
 	if (length <= c.radius) colpara.colFlag = true;
 
 	return colpara;
@@ -144,7 +144,7 @@ CollisionParameter Collisin::ModelLine(const ModelData& model, const Line& line)
 
 	HitPoly = MV1CollCheck_Line(
 		model.MHandle, model.MFrameIndex,
-		line.startPos, line.endPos);
+		line.startPos.ToVECTOR(), line.endPos.ToVECTOR());
 	if (HitPoly.HitFlag)
 	{
 		colpara.colFlag = true;
@@ -161,7 +161,7 @@ CollisionParameter Collisin::ModelSphere(const ModelData& model, const Sphere& s
 
 	HitPolyDim = MV1CollCheck_Sphere(
 		model.MHandle, model.MFrameIndex,
-		s.position, s.radius);
+		s.position.ToVECTOR(), s.radius);
 	if (HitPolyDim.HitNum >= 1){
 		colpara.colPos = HitPolyDim.Dim[0].Normal;
 		colpara.colFlag = true;
@@ -178,7 +178,7 @@ CollisionParameter Collisin::ModelCapsule(const ModelData& model, const Capsule&
 
 	HitPolyDim = MV1CollCheck_Capsule(
 		model.MHandle, model.MFrameIndex,
-		c.startPos, c.endPos, c.radius);
+		c.startPos.ToVECTOR(), c.endPos.ToVECTOR(), c.radius);
 	if (HitPolyDim.HitNum > 0) colpara.colFlag = true;
 
 	MV1CollResultPolyDimTerminate(HitPolyDim);

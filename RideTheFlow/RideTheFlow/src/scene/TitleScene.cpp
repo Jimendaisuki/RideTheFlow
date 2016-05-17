@@ -20,6 +20,7 @@
 #include "../actor/CameraActor.h"
 #include "../math/Math.h"
 #include "../UIactor/Damege.h"
+#include "../UIactor/Stamina.h"
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -34,10 +35,14 @@ TitleScene::~TitleScene()
 }
 
 int	  modelHandle = 0;
-float frameCount = 0;
-float frameNum = 0;
-float frameParentCount = 0;
-float frameChildCount = 0;
+int frameCount = 0;
+int frameNum = 0;
+int frameParentCount = 0;
+int frameChildCount = 0;
+
+float testStamina = 0;
+float testMaxStamina = 100;
+float testHP = 100;
 
 //開始
 void TitleScene::Initialize()
@@ -55,8 +60,8 @@ void TitleScene::Initialize()
 
 	position = Vector3::Zero;
 
-	wo.UIAdd(EFFECT_ID::SPEED_EFFECT, std::make_shared<Damege>(wo));
-
+	wo.UIAdd(EFFECT_ID::STAMINA_EFFECT, std::make_shared<Stamina>(wo, testMaxStamina, testStamina));
+	wo.UIAdd(EFFECT_ID::DAMAGE_EFFECT, std::make_shared<Damege>(wo, testHP));
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
@@ -68,7 +73,7 @@ float tornadeTimer = 0.0f;
 float fpsTimer = 0.0f;
 float fps;
 
-int effectNum = 0.0f;
+int effectNum = 0;
 
 void TitleScene::Update()
 {
@@ -123,6 +128,13 @@ void TitleScene::Update()
 		Effect::GetInstance().DamegeEffect(wo, position);
 	}
 
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::R))testHP++;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::F))testHP--;
+	testHP = Math::Clamp(testHP, 0.0f, 100.0f);
+
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::T))testStamina++;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::G))testStamina--;
+
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
@@ -146,13 +158,16 @@ void TitleScene::Draw() const
 
 	DrawFormatString(0, 100, GetColor(255, 0, 0), "LSHIFT	: スピード線演出");
 	DrawFormatString(0, 120, GetColor(255, 0, 0), "Z,X		: 演出切り替え");
+	DrawFormatString(0, 140, GetColor(255, 0, 0), "C		: 血表現");
+	DrawFormatString(0, 160, GetColor(255, 0, 0), "R,F		: ダメージ演出");
+	DrawFormatString(0, 180, GetColor(255, 0, 0), "T,G		: スタミナ増減");
 
-	DrawFormatString(0, 150, GetColor(0, 0, 0), "FrameNum  : %f", frameNum);
-	DrawFormatString(0, 170, GetColor(0, 0, 0), "FrameName : %s", MV1GetFrameName(modelHandle, frameNum));
-	DrawFormatString(0, 190, GetColor(0, 0, 0), "FramePare : %f", frameParentCount);
-	DrawFormatString(0, 210, GetColor(0, 0, 0), "FrameChild: %f", frameChildCount);
+	DrawFormatString(0, 200, GetColor(0, 0, 0), "FrameNum  : %d", frameNum);
+	DrawFormatString(0, 220, GetColor(0, 0, 0), "FrameName : %s", MV1GetFrameName(modelHandle, frameNum));
+	DrawFormatString(0, 240, GetColor(0, 0, 0), "FramePare : %d", frameParentCount);
+	DrawFormatString(0, 260, GetColor(0, 0, 0), "FrameChild: %d", frameChildCount);
 	Vector3 position = Vector3::ToVECTOR(MV1GetFramePosition(modelHandle, frameNum));
-	DrawFormatString(0, 230, GetColor(0, 0, 0), "FramePos  : [%f] [%f] [%f]", position.x, position.y, position.z);
+	DrawFormatString(0, 280, GetColor(0, 0, 0), "FramePos  : [%f] [%f] [%f]", position.x, position.y, position.z);
 }
 
 //終了しているか？

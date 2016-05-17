@@ -4,6 +4,25 @@
 #include "../time/Time.h"
 #include "../Def.h"
 
+/*
+追加方法メモ
+EnemuBullet.h
+EnemyBullet(IWorld& world, Vector3 position, Actor& parent_);
+.cpp
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Actor& parent_) : 
+parent = &parent_;
+
+バレット生成しているアクター
+world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, *this));
+
+
+OnCollisin内
+プレイヤーの場合
+Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+バレットの場合
+Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition());
+*/
+
 const float deadTime = 2.0f;
 const float offset = 20.0f;
 Blood::Blood(IWorld& world, const Vector3 position_) :
