@@ -273,6 +273,8 @@ void Player::Update(){
 	dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
 	dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
 
+
+	Vector3 forntVec = Vector3::Zero;
 	if (!tp.tackleFlag){
 		tp.tackleT = trueVec;
 		if (!waitAnimSet)
@@ -284,10 +286,10 @@ void Player::Update(){
 		float crossAngle = Vector3::Inner(trueVec, beforeVec);
 		if (crossAngle >= 0)crossAngle = ryuuRotateAngle;
 		else crossAngle = -ryuuRotateAngle;
-
-		position += (Vector3::Length(trueVec) * 
+		forntVec = (Vector3::Length(trueVec) *
 			beforeVec *
 			Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
+		position += forntVec;
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
 			(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) ||
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
@@ -314,7 +316,7 @@ void Player::Update(){
 	else{
 		// çƒê∂éûä‘ÇêiÇﬂÇÈ
 		tp.animTime += tackleAnimSpeed * Time::DeltaTime;
-
+		forntVec = tp.tackleT;
 		if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
 			tp.tackleEndFlag = true;
 			posStorage.clear();
@@ -354,7 +356,7 @@ void Player::Update(){
 	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
 	//	rotateY -= 360.0f * Time::DeltaTime
 	Matrix4 playerRot = Matrix4::Identity;
-	Vector3 front = (Vector3(0, 0, 1) * 200.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp)).Normalized();
+	Vector3 front = forntVec.Normalized();
 	playerRot.SetFront(front);
 	Vector3 up = Vector3(0, 1, 0).Normalized();
 	Vector3 left = Vector3::Cross(front, up).Normalized();
