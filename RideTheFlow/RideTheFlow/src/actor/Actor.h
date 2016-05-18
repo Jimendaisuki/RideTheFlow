@@ -16,6 +16,7 @@ struct ActorParameter
 	float radius;
 	Vector3 height;
 	Matrix4 mat;
+	float   HP;
 };
 
 class Actor{
@@ -92,4 +93,7 @@ protected:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) = 0;
 	ActorParameter parameter;
 	IWorld& world;
+
+public:
+	Actor* parent;
 };
