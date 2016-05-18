@@ -59,6 +59,8 @@ private:
 	// 雲と風の当たり判定(球 vs カプセルの集合)
 	CollisionParameter Cloud_vs_Wind(const Actor& other) const;
 
+	//城とプレイヤーを結んだ線と雲のあたり判定
+	CollisionParameter PlayerCastleLine_vs_Cloud(const Actor& other) const;
 
 	/* 後で削除
 	// 線と箱の当たり判定
