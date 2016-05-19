@@ -24,6 +24,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::PLAYER_TORNADO_COL] = std::bind(&Actor::Player_vs_Tornado, this, std::placeholders::_1);
 	colFunc[COL_ID::CLOUD_WIND_COL] = std::bind(&Actor::Cloud_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYERTOCASTLELINE_CLOUD_COL] = std::bind(&Actor::PlayerCastleLine_vs_Cloud, this, std::placeholders::_1);
+	colFunc[COL_ID::CLOUD_TORNADO_COL] = std::bind(&Actor::Cloud_vs_Tornado, this, std::placeholders::_1);
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
@@ -180,6 +181,24 @@ CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 	return colpara;
 }
 
+
+CollisionParameter Actor::Cloud_vs_Tornado(const Actor& other) const{
+	CollisionParameter colpara;
+
+	Sphere cloud;
+	cloud.position = Matrix4::GetPosition(parameter.mat);
+	cloud.radius = parameter.radius;
+
+	Capsule tornado;
+	tornado.startPos = Matrix4::GetPosition(other.parameter.mat);
+	tornado.endPos = tornado.startPos + other.parameter.height;
+	tornado.radius = other.parameter.radius;
+
+	colpara = Collisin::GetInstace().SphereCapsule(cloud, tornado);
+
+	colpara.colID = COL_ID::CLOUD_TORNADO_COL;
+	return colpara;
+}
 CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
 	CollisionParameter colpara;
 

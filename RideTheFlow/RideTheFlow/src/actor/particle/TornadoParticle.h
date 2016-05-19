@@ -7,7 +7,7 @@
 class TornadoParticle :public Particle
 {
 public:
-	TornadoParticle(Vector3& position_, std::weak_ptr<Tornado> tornade_);
+	TornadoParticle(std::weak_ptr<Tornado> tornade_);
 
 	void OnUpdate() override;
 	void Draw() const override;
@@ -23,14 +23,14 @@ private:
 	float risingSpeed;
 	float risingAddSpeed;
 
-	float scale;
-	Vector3 position;
-	Vector3 rotate;
-	Vector3 up, front, left;
-	Matrix4 mat;
-
 	//âÒì]Ç…ÇÊÇ¡Çƒâ¡Ç¶ÇÁÇÍÇÈç¿ïWó 
 	Vector3 tornadeAddPosition;
-	float timer;
-	int drawFrame;
+
+	Vector3 position;
+	Vector3 up, front, left;
+	Matrix4 rotmat;
+
+	//ï`âÊÇ∑ÇÈÉRÉ}
+	int frame;
+
 };

@@ -4,10 +4,11 @@
 #include "../../graphic/Sprite.h"
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
-#include "TornadeBillboard.h"
 #include "../castle/CastleBlock.h"
 
 #include "../../input/Keyboard.h"
+#include "../particle/TornadoParticle.h"
+
 
 const float TornadoDefaltSpeed = 300.0f;
 Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_) :
@@ -18,7 +19,6 @@ timer(0.0f)
 {
 	ACTIVITYTIME = 20.0f;
 	GRAVITY = 3.0f;
-	//velocity = Vector3::Zero;
 	speed = 300.0f;
 
 	parameter.isDead = false;
@@ -31,6 +31,10 @@ timer(0.0f)
 		Matrix4::Translate(position);
 
 	parameter.id = ACTOR_ID::TORNADO_ACTOR;
+
+	ps_parameter.intervalSec = 0.1f;
+	ps_parameter.lifeTimeLimit = 9999.0f;
+	ps_parameter.sameEmissiveNum = 2;
 }
 
 Tornado::~Tornado()
@@ -52,22 +56,6 @@ void Tornado::Update()
 	}
 	isHit = false;
 
-	//position += velocity;// * Time::DeltaTime;
-	//rotate.y += 1000 * Time::DeltaTime;
-
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A))
-	//	position.x -= 100.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D))
-	//	position.x += 100.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W))
-	//	position.y += 100.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S))
-	//	position.y -= 100.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q))
-	//	position.z += 100.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E))
-	//	position.z -= 100.0f * Time::DeltaTime;
-
 	velocity.y = -GRAVITY;
 	position += velocity * speed  * Time::DeltaTime;
 
@@ -78,28 +66,19 @@ void Tornado::Update()
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
-
-	//====竜巻の煙生成====//
-	timer += Time::DeltaTime;
-	if (timer > 0.08f){
-		timer = 0.0f;
-		Vector3 pos = parameter.mat.GetPosition();
-		world.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<TornadeBillboard>(world, pos, shared_from_this()));
-	}
+	UpdateParticles();
 }
 
 void Tornado::Draw() const
 {
-	Vector3 TopPos, BottomPos;
-	BottomPos = Matrix4::GetPosition(parameter.mat);
-	TopPos = BottomPos + velocity * 1000.0f;
+	DrawParticles();
+	//Vector3 TopPos, BottomPos;
+	//BottomPos = Matrix4::GetPosition(parameter.mat);
+	//TopPos = BottomPos + velocity * 1000.0f;
 
-	//デバックコード消しました
-	//DrawCapsule3D(TopPos, BottomPos	, 32, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
-
-	DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
-	DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
- 	DrawFormatString(10, 130, GetColor(255, 255, 255), "isHit		: %d", isHit);
+	//DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
+	//DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);
+	//DrawFormatString(10, 130, GetColor(255, 255, 255), "isHit		: %d", isHit);
 }
 
 void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
@@ -117,8 +96,8 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 		isHit = true;
 
 		//がれきを飛ばす
-		for (int i = 0; i < 20; i++){
-			world.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<CastleBlock>(world, parameter.mat.GetPosition()));
+		for (int i = 0; i < 3; i++){
+			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleBlock>(world, parameter.mat.GetPosition()));
 		}
 
 		break;
@@ -138,4 +117,9 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 	default:
 		break;
 	}
+}
+
+void Tornado::Emissive()
+{
+	AddParticle(std::make_shared<TornadoParticle>(shared_from_this()));
 }

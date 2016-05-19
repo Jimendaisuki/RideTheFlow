@@ -55,6 +55,7 @@ void Cloud::Update()
 {
 	//当たり判定セット
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
 
 	//ランダムに移動方向を変化させる
 	moveChangeTimer += Time::DeltaTime;
@@ -96,5 +97,9 @@ void Cloud::OnCollide(Actor& other, CollisionParameter colpara)
 		moveVec = colpara.colVelosity;
 		moveSpeed = FlowSpeed;
 		moveChangeTimer = 0.0f;
+	}
+	if (colpara.colID == COL_ID::CLOUD_WIND_COL)
+	{
+		parameter.isDead = true;
 	}
 }

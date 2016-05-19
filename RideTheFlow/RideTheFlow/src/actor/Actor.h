@@ -54,9 +54,13 @@ private:
 	CollisionParameter Tornado_vs_IsLand(const Actor& other) const;
 	// 竜巻と風圧の当たり判定
 
+	
+
 	/*  */
 	CollisionParameter BoundarySphere_Capsule(const Actor& other)  const;
 
+	// 雲と竜巻の当たり判定
+	CollisionParameter Cloud_vs_Tornado(const Actor& other) const;
 	// 雲と風の当たり判定(球 vs カプセルの集合)
 	CollisionParameter Cloud_vs_Wind(const Actor& other) const;
 
