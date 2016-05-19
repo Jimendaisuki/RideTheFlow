@@ -32,6 +32,9 @@ void WindFlowParticle::OnUpdate()
 	//”ÍˆÍŠO‚Ös‚©‚È‚¢‚æ‚¤‚ÉŽ~‚ß‚é
 	if (num > dashPositions.size() - 1)
 		return;
+
+	//ˆÚ“®•ûŒü
+	//Vector3 v = dashPositions.at(num);
 	moveParam.pos = dashPositions.at(num);
 	//Y‚Ì’l‚Í“n‚³‚ê‚Ä‚«‚½‚à‚Ì‚ÅŒÅ’è
 	moveParam.pos.y = positionHeight;
