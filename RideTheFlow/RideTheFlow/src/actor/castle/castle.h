@@ -14,9 +14,6 @@ public:
 private:
 	Matrix4 playerMat;
 	Vector3 mPosition;
-	Vector3 randomTarget;
-	Vector3 startPos;
-	Vector3 endPos;
 	Vector3 mScale;
 	int arrowCount;
 	float attackRag;

@@ -158,7 +158,7 @@ void MonhanCameraActor::Update()
 }
 void MonhanCameraActor::Draw() const
 {
-	DrawFormatString(0, 128, GetColor(0, 0, 0), "startPosition   %f %f %f", test.x, test.y, test.z);
+	//DrawFormatString(0, 128, GetColor(0, 0, 0), "startPosition   %f %f %f", playerMat.GetPosition().x, playerMat.GetPosition().y, playerMat.GetPosition().z);
 	//DrawFormatString(0, 192, GetColor(0, 0, 0), "endPosition   %f %f %f", );
 	DrawFormatString(0, 256, GetColor(0, 0, 0), "Angle   %f", rotateUp);
 	DrawFormatString(0, 356, GetColor(0, 0, 0), "Fov   %f",leapTimer);

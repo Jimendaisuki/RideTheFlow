@@ -15,9 +15,6 @@ arrowCount(0),
 attackRag(0.0f),
 playerMat(Matrix4::Identity),
 mPosition(position),
-randomTarget(0,0,0),
-endPos(0,0,0),
-startPos(0,0,0),
 mScale(30,30,30)
 {
 	//MV1_REF_POLYGONLIST castleModel= MV1GetReferenceMesh(Model::GetInstance().GetHandle(MODEL_ID::CASTLE_MODEL), -1, FALSE);
@@ -36,9 +33,6 @@ mScale(30,30,30)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-
-	startPos = Matrix4::GetPosition(parameter.mat);
-	endPos = startPos + parameter.height;
 }
 
 Castle::~Castle()
@@ -59,39 +53,18 @@ void Castle::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		randomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-			GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-			GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
-		//world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyGunBullet>(world, mPosition, Vector3(0, 0, 0), Vector3(1, 1, 1), randomTarget, 2.0f));
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world,mPosition));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition()));
 		if (arrowCount >= ArrowNumber)
 		{
 			arrowCount = 0;
 			mAttackTime = 0.0f;
 		}
-
 	}
 }
 
 void Castle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_MODEL, parameter.mat);
-	//DrawCapsule3D(startPos, endPos, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), FALSE);
-
-	//DrawLine3D(startPos, endPos, GetColor(255, 0, 0));
-
-	//DrawCube3D(
-	//	Matrix4::GetPosition(parameter.mat) - Matrix4::GetScale(parameter.mat) / 2, 
-	//	Matrix4::GetPosition(parameter.mat) + Matrix4::GetScale(parameter.mat) / 2, 
-	//	color, 
-	//	GetColor(0, 0, 0), 
-	//	false);
-	//DrawFormatString(10, 100, GetColor(255, 255, 255), "CastlePos	: %f %f %f", Matrix4::GetPosition(parameter.mat).x, Matrix4::GetPosition(parameter.mat).y, Matrix4::GetPosition(parameter.mat).z);
-	//DrawFormatString(10, 120, GetColor(255, 255, 255), "CastleScale	: %f %f %f", Matrix4::GetScale(parameter.mat).x, Matrix4::GetScale(parameter.mat).y, Matrix4::GetScale(parameter.mat).z);
-	//if (isHit)
-	//{
-	//	DrawFormatString(10, 400, GetColor(255, 255, 255), "Hit");
-	//}
 }
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)

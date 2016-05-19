@@ -5,7 +5,7 @@
 class Blood : public UIActor
 {
 public:
-	Blood(IWorld& world);
+	Blood(IWorld& world, const Vector3 position);
 	~Blood();
 	virtual void Update() override;
 	virtual void Draw() const override;

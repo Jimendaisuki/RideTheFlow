@@ -144,6 +144,9 @@
     <ClCompile Include="src\actor\castle\MasterCastle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="src\actor\island\FloatingIsland.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -192,13 +195,10 @@
     <ClCompile Include="src\actor\Cloud.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\particle\TornadoParticle.cpp">
+    <ClCompile Include="src\UIactor\Damege.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\particle\TornadoParticleSystem.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp">
+    <ClCompile Include="src\UIactor\Stamina.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -425,10 +425,10 @@
     <ClInclude Include="src\actor\Cloud.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\particle\TornadoParticle.h">
+    <ClInclude Include="src\UIactor\Damege.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\particle\TornadoParticleSystem.h">
+    <ClInclude Include="src\UIactor\Stamina.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

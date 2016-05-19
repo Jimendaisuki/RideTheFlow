@@ -4,23 +4,17 @@
 #include "../world/IWorld.h"
 #include"../graphic/Model.h"
 #include "../time/Time.h"
+#include "../actor/castle/CastleParameter.h"
 
-//çUåÇÇÃê∏ìx(êîílÇ™è¨Ç≥Ç¢ÇŸÇ«çÇê∏ìx)
-const float ArrowAccuracy = 15.0f;
-
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position) :
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint) :
 Actor(world),
-playerMat(Matrix4::Identity),
 time(0),
 speed(3.0f),
 distance(0, 0, 0),
 mPosition(position),
-coppyPosition(position)
+coppyPosition(position),
+mToPoint(toPoint)
 {
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
-	});
-
 	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
@@ -32,7 +26,7 @@ coppyPosition(position)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	distance = (playerMat.GetPosition() + mRandomTarget)- mPosition;
+	distance = (mToPoint + mRandomTarget)- mPosition;
 }
 EnemyBullet::~EnemyBullet()
 {
@@ -41,9 +35,9 @@ EnemyBullet::~EnemyBullet()
 void EnemyBullet::Update()
 {
 	time += Time::DeltaTime*speed;
-	if (coppyPosition.y < playerMat.GetPosition().y)
+	if (coppyPosition.y < mToPoint.y)
 	{
-		float InitialVelocity = sqrt(2 * 9.8f*(playerMat.GetPosition().y - coppyPosition.y) - mPosition.y);
+		float InitialVelocity = sqrt(2 * 9.8f*(mToPoint.y - coppyPosition.y) - mPosition.y);
 		float vertexTime = InitialVelocity / 9.8f;
 		mPosition.x += distance.x / vertexTime * speed*Time::DeltaTime;
 		mPosition.z += distance.z / vertexTime * speed*Time::DeltaTime;
@@ -51,7 +45,7 @@ void EnemyBullet::Update()
 	}
 	else
 	{
-		float vertexTime = sqrt((2 * (coppyPosition.y - playerMat.GetPosition().y)) / 9.8f);
+		float vertexTime = sqrt((2 * (coppyPosition.y - mToPoint.y)) / 9.8f);
 		mPosition.y = -(1.0f / 2.0f) * 9.8f*pow(time, 2);
 		mPosition.x += distance.x / vertexTime *speed*Time::DeltaTime;
 		mPosition.z += distance.z / vertexTime *speed*Time::DeltaTime;
@@ -62,7 +56,7 @@ void EnemyBullet::Update()
 
 void EnemyBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat.GetPosition());
+	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)

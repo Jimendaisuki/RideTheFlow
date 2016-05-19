@@ -89,6 +89,7 @@
     <ClCompile Include="src\actor\particle\TornadoParticle.cpp" />
     <ClCompile Include="src\actor\particle\TornadoParticleSystem.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
+    <ClCompile Include="src\UIactor\Damege.cpp" />
     <ClCompile Include="src\UIactor\Effect.cpp" />
     <ClCompile Include="src\UIactor\SpeedLine.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="src\scene\TitleScene.cpp" />
     <ClCompile Include="src\sound\Sound.cpp" />
     <ClCompile Include="src\time\Time.cpp" />
+    <ClCompile Include="src\UIactor\Stamina.cpp" />
     <ClCompile Include="src\UIactor\UIActor.cpp" />
     <ClCompile Include="src\UIactor\UIActorManager.cpp" />
     <ClCompile Include="src\world\World.cpp" />
@@ -153,6 +155,7 @@
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\TornadoParticleSystem.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
+    <ClInclude Include="src\UIactor\Damege.h" />
     <ClInclude Include="src\UIactor\Effect.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="src\scene\TitleScene.h" />
     <ClInclude Include="src\sound\Sound.h" />
     <ClInclude Include="src\time\Time.h" />
+    <ClInclude Include="src\UIactor\Stamina.h" />
     <ClInclude Include="src\UIactor\UIActorManager.h" />
     <ClInclude Include="src\UIactor\UIActorPtr.h" />
     <ClInclude Include="src\world\IWorld.h" />
