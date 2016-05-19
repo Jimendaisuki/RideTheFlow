@@ -22,6 +22,7 @@ public:
 
 private:
 	Vector3 DefaultCamera();
+	Vector3 DashCmaera();
 
 
 private:
@@ -35,7 +36,7 @@ private:
 	float fov;
 	float rotateLeft;
 	float rotateUp;
-	//座標保存
+	//タックル座標保存
 	Vector3 posSeveStart;
 	Vector3 posSeveEnd;
 	Vector3 playerPosSeve;
@@ -43,8 +44,12 @@ private:
 	float leapTimer;
 	bool posMove1;
 	bool posMove2;
-
-	Vector3 test;
+	bool posSeveFlag;
+	//ダッシュ
+	Vector3 cameraMovePos;
+	float dashCameraDistance;
+	bool cameraFovFlag;
+	bool cameraFovEndFlag;
 };
 
 #endif
