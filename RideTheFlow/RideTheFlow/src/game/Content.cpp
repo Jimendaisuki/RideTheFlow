@@ -37,11 +37,14 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
 
-	model.Load("boonStage.pmd", MODEL_ID::STAGE_MODEL, async);
+	//model.Load("boonStage.pmd", MODEL_ID::STAGE_MODEL, async);
+	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
+
 	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
 	model.Load("arrow.pmd", MODEL_ID::ARROW_MODEL, async);
 	model.Load("wind.x", MODEL_ID::WIND_MODEL, async);
 	model.Load("cloud.x", MODEL_ID::CLOUD_MODEL, async);
+	model.Load("tornadopoly.x", MODEL_ID::TORNADOPOLY_MODEL, async);
 	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 	model.Load("cameramap.pmd", MODEL_ID::TEST_STAGE, async);
 
