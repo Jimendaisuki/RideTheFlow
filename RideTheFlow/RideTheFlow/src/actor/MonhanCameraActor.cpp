@@ -139,7 +139,7 @@ void MonhanCameraActor::Update()
 	{
 		//ƒJƒƒ‰‚ª~‚Ü‚é”ÍˆÍİ’è
 		cameraMovePos = Vector3(restPosition.x, playerMat.GetPosition().y, restPosition.z);
-		Effect::GetInstance().DashEffect(world , playerMat.GetPosition());
+		Effect::GetInstance().DashEffect(world, playerMat.GetFront().Normalized() * 100 + playerMat.GetPosition());
 		if (posSeveFlag)
 		{
 			//ƒ_ƒbƒVƒ…ƒJƒƒ‰‚Ì‰Šúİ’è
@@ -152,7 +152,7 @@ void MonhanCameraActor::Update()
 				*Vector3(150,0,150);
 			springParameter.stiffness = 0.5f;
 		}
-					//‹–ìŠpİ’è
+	    //‹–ìŠpİ’è
 		if (cameraFovFlag)
 		{
 			fov = Math::Lerp(60.0f,MaxFov,leapTimer);
@@ -219,7 +219,7 @@ void MonhanCameraActor::Draw() const
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "ÀÛ‹——£   %f", Vector3::Distance(playerMat.GetPosition(), cameraMovePos));
 	//DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateup   %f", rotateUp);
 	DrawFormatString(0, 356, GetColor(0, 0, 0), "‹–ìŠp   %f",fov);
-	//DrawLine3D(Vector3::ToVECTOR(playerMat.GetFront().Normalized()*50+playerMat.GetPosition()),Vector3::ToVECTOR(playerMat.GetPosition()),2);
+	DrawLine3D(Vector3::ToVECTOR(playerMat.GetFront().Normalized()*100+playerMat.GetPosition()),Vector3::ToVECTOR(playerMat.GetPosition()),2);
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

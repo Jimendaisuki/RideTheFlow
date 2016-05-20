@@ -7,6 +7,7 @@
 //あたり判定のパラメータ
 struct CollisionParameter{
 	bool		colFlag	= false;				//当ったかどうかのフラグ		//敵からの攻撃（罠）か？
+	bool        colAll = false;
 	int			colID;
 	Vector3		colPos = Vector3::Zero;			// 当たったポジション
 	Vector3		colVelosity = Vector3::Zero;
