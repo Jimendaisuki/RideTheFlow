@@ -6,9 +6,7 @@
 #include "../time/Time.h"
 #include "../actor/castle/CastleParameter.h"
 
-#include "../UIactor/Effect.h"
-
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_) :
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint) :
 Actor(world),
 time(0),
 speed(3.0f),
@@ -17,8 +15,6 @@ mPosition(position),
 coppyPosition(position),
 mToPoint(toPoint)
 {
-	parent = &parent_;
-
 	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
@@ -66,6 +62,4 @@ void EnemyBullet::Draw() const
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	parameter.isDead = true;
-	//Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other.GetParameter().mat.GetFront());
-	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
 }

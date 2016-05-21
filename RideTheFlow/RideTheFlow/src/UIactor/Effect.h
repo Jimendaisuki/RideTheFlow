@@ -28,6 +28,5 @@ public:
 	void DashEffect(IWorld& wa, Vector3 position);
 	void StepEffect(IWorld& wa, EffectDirection ed);
 
-	void DamegeEffect(IWorld& wo, const Vector3 position, const Vector3 front);
-	void DamegeEffect(IWorld& wo, const Vector3 position, const Actor& player_);
+	void DamegeEffect(IWorld& wo, const Vector3 position);
 };
