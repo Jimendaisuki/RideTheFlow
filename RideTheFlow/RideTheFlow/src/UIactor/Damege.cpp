@@ -33,7 +33,7 @@ UIActor(world)
 
 Damege::~Damege()
 {
-
+ 
 }
 
 void Damege::Update()

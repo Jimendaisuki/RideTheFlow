@@ -34,13 +34,12 @@ TitleScene::~TitleScene()
 
 }
 
-int	  modelHandle = 0;
+int	modelHandle = 0;
 int frameCount = 0;
 int frameNum = 0;
 int frameParentCount = 0;
 int frameChildCount = 0;
 
-float testStamina = 0;
 float testMaxStamina = 100;
 float testHP = 100;
 
@@ -59,6 +58,7 @@ void TitleScene::Initialize()
 	frameChildCount = MV1GetFrameChildNum(modelHandle, frameNum);
 
 	position = Vector3::Zero;
+	testStamina = 0;
 
 	wo.UIAdd(EFFECT_ID::STAMINA_EFFECT, std::make_shared<Stamina>(wo, testMaxStamina, testStamina));
 	wo.UIAdd(EFFECT_ID::DAMAGE_EFFECT, std::make_shared<Damege>(wo, testHP));
@@ -125,7 +125,7 @@ void TitleScene::Update()
 		}
 		
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
-		Effect::GetInstance().DamegeEffect(wo, position);
+		//Effect::GetInstance().DamegeEffect(wo, position);
 	}
 
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::R))testHP++;

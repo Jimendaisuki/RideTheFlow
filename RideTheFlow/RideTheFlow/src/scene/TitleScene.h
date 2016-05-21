@@ -32,4 +32,6 @@ private:
 	//オブジェクト数
 	int objectcount;
 	Vector3 position;
+
+	float testStamina;
 };

@@ -7,7 +7,7 @@
 class EnemyBullet :public Actor, public std::enable_shared_from_this<EnemyBullet>
 {
 public:
-	EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint);
+	EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_);
 	~EnemyBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
