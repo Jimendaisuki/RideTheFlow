@@ -17,8 +17,8 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("speedLine.png", SPRITE_ID::SPEED_SPRITE);
 	sprite.Load("blood.png", SPRITE_ID::BLOOD_SPRITE);
 	sprite.Load("damege.png", SPRITE_ID::DAMEGE_SPRITE);
-	sprite.Load("Tstamina.png", SPRITE_ID::STAMINA_SPRITE);
-	sprite.Load("Tstamina_back.png", SPRITE_ID::STAMINA_BACK_SPRITE);
+	sprite.Load("staminagauge.png", SPRITE_ID::STAMINA_SPRITE);
+	sprite.Load("staminaback.png", SPRITE_ID::STAMINA_BACK_SPRITE);
 
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");

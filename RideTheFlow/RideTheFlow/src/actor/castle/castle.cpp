@@ -73,7 +73,7 @@ void Castle::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition()));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition(), *this));
 		if (arrowCount >= ArrowNumber)
 		{
 			arrowCount = 0;

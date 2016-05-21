@@ -35,6 +35,7 @@ playerPosSeve(Vector3::Zero),
 leapTimer(0.0f)
 {
 	parameter.isDead = false;
+	parameter.id = ACTOR_ID::CAMERA_ACTOR;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
