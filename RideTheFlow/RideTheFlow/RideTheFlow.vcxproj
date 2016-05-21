@@ -87,7 +87,6 @@
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
     <ClCompile Include="src\actor\particle\TornadoParticle.cpp" />
-    <ClCompile Include="src\actor\particle\TornadoParticleSystem.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
     <ClCompile Include="src\UIactor\Damege.cpp" />
     <ClCompile Include="src\UIactor\Effect.cpp" />
@@ -101,7 +100,6 @@
     <ClCompile Include="src\actor\Sand.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
     <ClCompile Include="src\actor\TitleCameraActor.cpp" />
-    <ClCompile Include="src\actor\tornado\TornadeBillboard.cpp" />
     <ClCompile Include="src\actor\particle\WindFlow.cpp" />
     <ClCompile Include="src\scene\CreditScene.cpp" />
     <ClCompile Include="src\scene\EndhingScene.cpp" />
@@ -153,7 +151,6 @@
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\Cloud.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
-    <ClInclude Include="src\actor\particle\TornadoParticleSystem.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Damege.h" />
     <ClInclude Include="src\UIactor\Effect.h" />
@@ -170,7 +167,6 @@
     <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\castle\CastleBlock.h" />
     <ClInclude Include="src\actor\EnemyBullet.h" />
-    <ClInclude Include="src\actor\tornado\TornadeBillboard.h" />
     <ClInclude Include="src\actor\particle\WindFlow.h" />
     <ClInclude Include="src\graphic\BlendMode.h" />
     <ClInclude Include="src\actor\MonhanCameraActor.h" />

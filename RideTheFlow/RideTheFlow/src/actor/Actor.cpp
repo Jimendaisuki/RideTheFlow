@@ -24,6 +24,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::PLAYER_TORNADO_COL] = std::bind(&Actor::Player_vs_Tornado, this, std::placeholders::_1);
 	colFunc[COL_ID::CLOUD_WIND_COL] = std::bind(&Actor::Cloud_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYERTOCASTLELINE_CLOUD_COL] = std::bind(&Actor::PlayerCastleLine_vs_Cloud, this, std::placeholders::_1);
+	colFunc[COL_ID::CLOUD_TORNADO_COL] = std::bind(&Actor::Cloud_vs_Tornado, this, std::placeholders::_1);
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
@@ -180,6 +181,24 @@ CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 	return colpara;
 }
 
+
+CollisionParameter Actor::Cloud_vs_Tornado(const Actor& other) const{
+	CollisionParameter colpara;
+
+	Sphere cloud;
+	cloud.position = Matrix4::GetPosition(parameter.mat);
+	cloud.radius = parameter.radius;
+
+	Capsule tornado;
+	tornado.startPos = Matrix4::GetPosition(other.parameter.mat);
+	tornado.endPos = tornado.startPos + other.parameter.height;
+	tornado.radius = other.parameter.radius;
+
+	colpara = Collisin::GetInstace().SphereCapsule(cloud, tornado);
+
+	colpara.colID = COL_ID::CLOUD_TORNADO_COL;
+	return colpara;
+}
 CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
 	CollisionParameter colpara;
 
@@ -241,20 +260,35 @@ CollisionParameter Actor::BoundarySphere_Capsule(const Actor& other) const{
 
 CollisionParameter Actor::PlayerCastleLine_vs_Cloud(const Actor& other) const
 {
-	Matrix4 playerMat = Matrix4::Identity;
+	Actor* player;
 	CollisionParameter colpara;
 		world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
+			player = const_cast<Actor*>(&other);
 	});
+		std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+		Vector3 topPlayerPos = boons[0];
+		Vector3 endPlayerPos = boons[boons.size()-1];
+		int boonCount = 0;
+		int boonNum = 0;
+		
 	//Cloud
-	Sphere cloudSphere;
-	cloudSphere.position = Matrix4::GetPosition(other.parameter.mat);
-	cloudSphere.radius = other.parameter.radius;
-	//playerToCastleLine
-	Line playerToCastle;
- 	playerToCastle.startPos = Matrix4::GetPosition(playerMat);
-	playerToCastle.endPos = Matrix4::GetPosition(parameter.mat);
-	colpara = Collisin::GetInstace().SegmentSphere(playerToCastle, cloudSphere);
+		Sphere cloudSphere;
+		cloudSphere.position = Matrix4::GetPosition(other.parameter.mat);
+		cloudSphere.radius = other.parameter.radius;
+	//PlayerBoon　プレイヤーの頭としっぽ
+		Line toTopLine;
+		toTopLine.startPos = topPlayerPos;
+		toTopLine.endPos = parameter.mat.GetPosition();
+		Line toEndLine;
+		toEndLine.startPos = endPlayerPos;
+		toEndLine.endPos = parameter.mat.GetPosition();
+		
+		if (Collisin::GetInstace().SegmentSphere(toTopLine, cloudSphere).colFlag)
+		//if (Collisin::GetInstace().SegmentSphere(toEndLine, cloudSphere).colFlag)
+		{
+			colpara.colFlag = true;
+			colpara.colAll = true;
+		}
 	colpara.colID = COL_ID::PLAYERTOCASTLELINE_CLOUD_COL;
 	return colpara;
 }

@@ -55,6 +55,7 @@ void Cloud::Update()
 {
 	//当たり判定セット
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
 
 	//ランダムに移動方向を変化させる
 	moveChangeTimer += Time::DeltaTime;
@@ -88,6 +89,8 @@ void Cloud::Draw() const
 		Model::GetInstance().Draw(MODEL_ID::CLOUD_MODEL,
 			parameter.mat.GetPosition() + cloudPositions.at(i), 0.4f, parameter.mat.GetRotateDegree(), cloudsizes.at(i), true);
 	}
+
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 4, GetColor(255, 0, 0), GetColor(255, 0, 0), false);
 }
 void Cloud::OnCollide(Actor& other, CollisionParameter colpara)
 {
@@ -96,5 +99,9 @@ void Cloud::OnCollide(Actor& other, CollisionParameter colpara)
 		moveVec = colpara.colVelosity;
 		moveSpeed = FlowSpeed;
 		moveChangeTimer = 0.0f;
+	}
+	if (colpara.colID == COL_ID::CLOUD_TORNADO_COL)
+	{
+		parameter.isDead = true;
 	}
 }

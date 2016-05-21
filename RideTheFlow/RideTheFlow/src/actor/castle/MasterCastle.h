@@ -17,6 +17,10 @@ private:
 	Vector3 mScale;
 	Vector3 mPosition;
 	Vector3 toPoint;
+
+	float mSecondAttack;
+	float mArrowNumber;
+
 	float attackTime;
 	float castleTime;
 	float attackRag;
