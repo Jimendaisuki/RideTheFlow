@@ -33,6 +33,10 @@ mScale(30,30,30)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
+	mSecondAttack = SecondAttack;
+	mArrowNumber = ArrowNumber;
+	mAttackTime = 0.0f;
+	isLook = false;
 }
 
 Castle::~Castle()
@@ -45,28 +49,31 @@ void Castle::Update()
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
+
+	//プレイヤーが見えているかどうか
+	if (isLook)
+	{
+		mArrowNumber = ArrowNumber;
+		mSecondAttack = SecondAttack;
+	}
+	else
+	{
+		mArrowNumber = NotLookArrow;
+		mSecondAttack = NotLookSecondAttack;
+	}
+	isLook = true;
+
 	attackRag += Time::DeltaTime;
 	mAttackTime += Time::DeltaTime;
-	//if (mAttackTime >= SecondAttack&&attackRag >= 0.03f&&arrowCount < ArrowNumber&&
-	//	Vector3::Distance(playerMat.GetPosition(), mPosition) <= AttackRange&&
-	//	abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
-	//{
-	//	attackRag = 0.0f;
-	//	arrowCount++;
-	//	world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition()));
-	//	if (arrowCount >= ArrowNumber)
-	//	{
-	//		arrowCount = 0;
-	//		mAttackTime = 0.0f;
-	//	}
-	//}
-	if (mAttackTime >= SecondAttack&&attackRag >= 0.03f&&arrowCount < ArrowNumber&&
+
+	if (mAttackTime >= mSecondAttack&&attackRag >= 0.03f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= AttackRange&&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition()));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition(), *this));
 		if (arrowCount >= ArrowNumber)
 		{
 			arrowCount = 0;
@@ -82,5 +89,14 @@ void Castle::Draw() const
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	parameter.isDead = true;
+
+	//全部見えてなかったら
+	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
+	{
+		isLook = false;
+	}
+	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
+	{
+		parameter.isDead = true;
+	}
 }

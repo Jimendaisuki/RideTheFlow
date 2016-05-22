@@ -35,6 +35,7 @@ playerPosSeve(Vector3::Zero),
 leapTimer(0.0f)
 {
 	parameter.isDead = false;
+	parameter.id = ACTOR_ID::CAMERA_ACTOR;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
@@ -139,7 +140,7 @@ void MonhanCameraActor::Update()
 	{
 		//カメラが止まる範囲設定
 		cameraMovePos = Vector3(restPosition.x, playerMat.GetPosition().y, restPosition.z);
-		Effect::GetInstance().DashEffect(world , playerMat.GetPosition());
+		Effect::GetInstance().DashEffect(world, playerMat.GetFront().Normalized() * 100 + playerMat.GetPosition());
 		if (posSeveFlag)
 		{
 			//ダッシュカメラの初期設定
@@ -152,7 +153,7 @@ void MonhanCameraActor::Update()
 				*Vector3(150,0,150);
 			springParameter.stiffness = 0.5f;
 		}
-					//視野角設定
+	    //視野角設定
 		if (cameraFovFlag)
 		{
 			fov = Math::Lerp(60.0f,MaxFov,leapTimer);
@@ -218,8 +219,8 @@ void MonhanCameraActor::Draw() const
 	//DrawFormatString(0, 400, GetColor(0, 0, 0), "セーブ距離   %f", dashCameraDistance);
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "実際距離   %f", Vector3::Distance(playerMat.GetPosition(), cameraMovePos));
 	//DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateup   %f", rotateUp);
-	//DrawFormatString(0, 356, GetColor(0, 0, 0), "視野角   %f",fov);
-	//DrawLine3D(Vector3::ToVECTOR(playerMat.GetFront().Normalized()*50+playerMat.GetPosition()),Vector3::ToVECTOR(playerMat.GetPosition()),2);
+	DrawFormatString(0, 356, GetColor(0, 0, 0), "視野角   %f",fov);
+	DrawLine3D(Vector3::ToVECTOR(playerMat.GetFront().Normalized()*100+playerMat.GetPosition()),Vector3::ToVECTOR(playerMat.GetPosition()),2);
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

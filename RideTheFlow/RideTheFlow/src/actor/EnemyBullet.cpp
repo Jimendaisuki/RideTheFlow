@@ -7,7 +7,9 @@
 #include "../actor/castle/CastleParameter.h"
 #include "../math/Math.h"
 
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint) :
+#include "../UIactor/Effect.h"
+
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
 speed(3.0f),
@@ -30,6 +32,8 @@ rotate(Vector3::Zero)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	distance = (mToPoint + mRandomTarget)- mPosition;
+
+	parent = &parent_;
 }
 EnemyBullet::~EnemyBullet()
 {
@@ -87,4 +91,5 @@ void EnemyBullet::Draw() const
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	parameter.isDead = true;
+	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
 }
