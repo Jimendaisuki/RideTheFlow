@@ -37,6 +37,7 @@ void WorldActor::Draw() const{
 	//全キャラ描画
 	std::for_each(managers.begin(), managers.end(),
 		[&](ActorManagerPair pair){pair.second->Draw(); });
+
 	//全エフェクト描画
 	std::for_each(UImanagers.begin(), UImanagers.end(),
 		[&](UIActorManagerPair UIpair){UIpair.second->Draw(); });

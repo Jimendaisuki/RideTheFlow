@@ -431,6 +431,9 @@
     <ClInclude Include="src\actor\particle\TornadoParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\actor\particle\WindSetting.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Model\boonStage.pmd" />

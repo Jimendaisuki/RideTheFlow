@@ -1,20 +1,28 @@
 #pragma once
 
+//ï`âÊèáÇÕÇ±Ç±Ç≈í≤êÆâ¬î\
 enum ACTOR_ID{
 	BEGIN_ACTOR,
+	
+	//======ìßñæìxÇàµÇÌÇ»Ç¢======//
 	STAGE_ACTOR,
+	ISLAND_ACTOR,
 	PLAYER_ACTOR,
 	ENEMY_ACTOR,
 	ENEMY_BULLET,
 	CAMERA_ACTOR,
-	TORNADO_ACTOR,
 	CASTLE_ACTOR,
-	ISLAND_ACTOR,
-	SAND_ACTOR,
+
+	//======ìßñæìxÇàµÇ§======//
 	PARTICLE_ACTOR,
-	EFFECT_ACTOR,
-	WIND_ACTOR,
+	SAND_ACTOR,
 	CLOUD_ACTOR,
+	WIND_ACTOR,
+	TORNADO_ACTOR,
+	
+	//========2DUI========//
+	EFFECT_ACTOR,
+
 	END_ACTOR
 };
 

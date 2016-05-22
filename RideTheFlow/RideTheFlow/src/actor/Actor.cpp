@@ -221,8 +221,12 @@ CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
 	for (int i = 0; i < dashPositionSize; i++)
 	{
 		wind.startPos = dashPositions.at(i);
-		wind.endPos = wind.startPos + other.parameter.height;
+		wind.endPos = wind.startPos;
+		wind.endPos.y = other.parameter.height.y;
 		colpara = Collisin::GetInstace().SphereCapsule(cloud, wind);
+
+		DrawCapsule3D(wind.startPos.ToVECTOR(), wind.endPos.ToVECTOR(), wind.radius, 10, GetColor(0, 125, 200), 0, 1);
+
 		if (colpara.colFlag)
 		{
 			colpara.colID = COL_ID::CLOUD_WIND_COL;

@@ -1,10 +1,12 @@
 #include "WindFlowParticle.h"
 #include "../../time/Time.h"
 #include "../../math/Math.h"
+#include "../../game/Random.h"
 
 WindFlowParticle::WindFlowParticle(const std::vector<Vector3>& dashPositions_, float positionHeight_)
 :
 dashPositions(dashPositions_),
+randomPosition(Random::GetInstance().Range(-50.0f, 50.0f), 0.0f, Random::GetInstance().Range(-50.0f, 50.0f)),
 positionHeight(positionHeight_),
 rotate(Vector3::Zero)
 {
@@ -33,12 +35,10 @@ void WindFlowParticle::OnUpdate()
 	if (num > dashPositions.size() - 1)
 		return;
 
-	//移動方向
-	//Vector3 v = dashPositions.at(num);
-	moveParam.pos = dashPositions.at(num);
+	//表示する座標を計算　ダッシュの軌跡から、ランダムな値分ずらす
+	moveParam.pos = dashPositions.at(num) + randomPosition;
 	//Yの値は渡されてきたもので固定
 	moveParam.pos.y = positionHeight;
-
 
 	//アルファ値計算
 	drawParam.alpha = 1.0f * Math::Sin((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 180.0f);

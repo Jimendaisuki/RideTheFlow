@@ -3,9 +3,7 @@
 #include <algorithm>
 #include "WindFlowParticle.h"
 #include "../../game/Random.h"
-
-//生成する流れの高さ最低値　流れの高さ～最低値までが縦の長さ
-static const float HeightMin = -100.0f;
+#include "WindSetting.h"
 
 WindFlow::WindFlow(IWorld& world, Player& player_) :
 Actor(world),
@@ -14,7 +12,7 @@ isSetting(false)
 {
 	parameter.id = ACTOR_ID::WIND_ACTOR;
 	parameter.isDead = false;
-	parameter.height = Vector3::Up * HeightMin;
+	parameter.height = Vector3(0.0f, HeightMax, 0.0f);
 	parameter.radius = 5.0f;
 	ps_parameter.intervalSec = 0.01f;
 	ps_parameter.lifeTimeLimit = 15.0f;
@@ -35,7 +33,11 @@ void WindFlow::Update()
 		for (int i = 0; i < size; i++)
 		{
 			if (i % 5 == 0)
-				dashPositions.push_back(player.ReturnDashPosStorage().at(i));
+			{
+				//地を這うように配置
+				Vector3 pos = Vector3(player.ReturnDashPosStorage().at(i).x, HeightMin, player.ReturnDashPosStorage().at(i).z);
+				dashPositions.push_back(pos);
+			}
 		}
 	}
 	//ダッシュ終了後は座標配列を更新しない
@@ -68,5 +70,5 @@ std::vector<Vector3>& WindFlow::GetDashPositions()
 void WindFlow::Emissive()
 {
 	if (dashPositions.size() > 0)
-		AddParticle(std::make_shared<WindFlowParticle>(dashPositions, Random::GetInstance().Range(HeightMin, dashPositions.at(0).y)));
+		AddParticle(std::make_shared<WindFlowParticle>(dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
 }

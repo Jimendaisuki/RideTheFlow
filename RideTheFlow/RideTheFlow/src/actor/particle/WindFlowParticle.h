@@ -14,6 +14,8 @@ public:
 private:
 	//プレイヤーのダッシュの軌跡
 	std::vector<Vector3> dashPositions;
+	//位置をずらして幅をもたせる
+	Vector3 randomPosition;
 
 	//パーティクルが動くワールド上のY値
 	float positionHeight;

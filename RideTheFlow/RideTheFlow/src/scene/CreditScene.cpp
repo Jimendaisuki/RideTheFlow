@@ -89,8 +89,6 @@ void CreditScene::Update()
 //•`‰æ
 void CreditScene::Draw() const
 {
-	wa.Draw();
-
 	for (int i = 0; i < 10; i++)
 	{
 		for (int j = 0; j < 10; j++)
@@ -104,6 +102,8 @@ void CreditScene::Draw() const
 	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, Vector3(700, 200, -500), Vector3::Zero, Vector3(1));
 	Model::GetInstance().Draw(MODEL_ID::ISLE_2_MODEL, Vector3(400, 200, -500), Vector3::Zero, Vector3(1));
 	Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, Vector3(100, 200, -500), Vector3::Zero, Vector3(1));
+
+	wa.Draw();
 }
 
 //I—¹‚µ‚Ä‚¢‚é‚©H
