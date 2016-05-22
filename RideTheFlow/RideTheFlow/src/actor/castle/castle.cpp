@@ -47,6 +47,19 @@ void Castle::Update()
 	});
 	attackRag += Time::DeltaTime;
 	mAttackTime += Time::DeltaTime;
+	//if (mAttackTime >= SecondAttack&&attackRag >= 0.03f&&arrowCount < ArrowNumber&&
+	//	Vector3::Distance(playerMat.GetPosition(), mPosition) <= AttackRange&&
+	//	abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
+	//{
+	//	attackRag = 0.0f;
+	//	arrowCount++;
+	//	world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition()));
+	//	if (arrowCount >= ArrowNumber)
+	//	{
+	//		arrowCount = 0;
+	//		mAttackTime = 0.0f;
+	//	}
+	//}
 	if (mAttackTime >= SecondAttack&&attackRag >= 0.03f&&arrowCount < ArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= AttackRange&&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)

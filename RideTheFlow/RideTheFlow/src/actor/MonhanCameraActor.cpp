@@ -218,7 +218,7 @@ void MonhanCameraActor::Draw() const
 	//DrawFormatString(0, 400, GetColor(0, 0, 0), "ÉZÅ[Éuãóó£   %f", dashCameraDistance);
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "é¿ç€ãóó£   %f", Vector3::Distance(playerMat.GetPosition(), cameraMovePos));
 	//DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateup   %f", rotateUp);
-	DrawFormatString(0, 356, GetColor(0, 0, 0), "éãñÏäp   %f",fov);
+	//DrawFormatString(0, 356, GetColor(0, 0, 0), "éãñÏäp   %f",fov);
 	//DrawLine3D(Vector3::ToVECTOR(playerMat.GetFront().Normalized()*50+playerMat.GetPosition()),Vector3::ToVECTOR(playerMat.GetPosition()),2);
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)

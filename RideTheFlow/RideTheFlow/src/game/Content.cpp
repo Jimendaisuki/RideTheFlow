@@ -30,12 +30,11 @@ void Content::LoadModel(Model& model, bool async)
 	WorkFolder::SetWorkFolder("res/Model/");
 
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
-	model.Load("arrow.pmd", MODEL_ID::PLAYER_MODEL, async);
 	model.Load("ryuu.pmd", MODEL_ID::TEST_MODEL, async);
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
 
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
-	model.Load("box_x1.x", MODEL_ID::CASTLE_MODEL , async);
+
 
 	//model.Load("boonStage.pmd", MODEL_ID::STAGE_MODEL, async);
 	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
@@ -49,6 +48,17 @@ void Content::LoadModel(Model& model, bool async)
 	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 	//model.Load("cameramap.pmd", MODEL_ID::TEST_STAGE, async);
 
+	model.Load("ballista.mv1", MODEL_ID::BALLISTA_MODEL, async);
+	model.Load("ballista_arrow.mv1", MODEL_ID::BALLISTA_ARROW_MODEL, async);
+	model.Load("cannon.mv1", MODEL_ID::CANNON_MODEL, async);
+	model.Load("cannon_ball.mv1", MODEL_ID::CANNON_BALL_MODEL, async);
+	model.Load("castle.mv1", MODEL_ID::CASTLE_MODEL, async);
+	
+	model.Load("gong.mv1", MODEL_ID::GONG_MODEL, async);
+	model.Load("home.mv1", MODEL_ID::HOME_MODEL, async);
+	model.Load("isle_1.mv1", MODEL_ID::ISLE_1_MODEL, async);
+	model.Load("isle_2.mv1", MODEL_ID::ISLE_2_MODEL, async);
+	model.Load("isle_3.mv1", MODEL_ID::ISLE_3_MODEL, async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 

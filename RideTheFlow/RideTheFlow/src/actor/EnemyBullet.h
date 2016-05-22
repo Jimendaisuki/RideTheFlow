@@ -19,6 +19,12 @@ private:
 	Vector3 mRandomTarget;
 	Vector3 coppyPosition;
 	Vector3 mToPoint;
+
+	//進行方向
+	Vector3 vec;
+	//モデル回転値
+	Vector3 rotate;
+	
 	float time;
 	float speed;
 };

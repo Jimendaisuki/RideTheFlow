@@ -5,11 +5,11 @@ const int Rank = 3;
 //城が積みあがる時間(秒)
 const float RankUpSecond = 5.0f;
 //城が攻撃してくる範囲
-const float AttackRange = 200.0f;
+const float AttackRange = 300.0f;
 //城の攻撃クールタイム(秒)
-const float SecondAttack = 5.0f;
+const float SecondAttack = 1.0f;
 //城が一回に出す矢の本数(本)
-const int ArrowNumber = 2;
+const int ArrowNumber = 10;
 //攻撃の精度(数値が小さいほど高精度)
 const float ArrowAccuracy = 15.0f;
 

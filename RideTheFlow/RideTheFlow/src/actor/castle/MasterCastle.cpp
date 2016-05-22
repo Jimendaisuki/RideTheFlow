@@ -92,7 +92,7 @@ void MasterCastle::Update()
 
 void MasterCastle::Draw() const
 {
-	DrawFormatString(0, 128, GetColor(0, 0, 0), "startPosition   %f %f %f", Vector3::Direction(playerMat.GetPosition(), parameter.mat.GetPosition()).x, Vector3::Direction(playerMat.GetPosition(), parameter.mat.GetPosition()).y, Vector3::Direction(playerMat.GetPosition(), parameter.mat.GetPosition()).z);
+	//DrawFormatString(0, 128, GetColor(0, 0, 0), "startPosition   %f %f %f", Vector3::Direction(playerMat.GetPosition(), parameter.mat.GetPosition()).x, Vector3::Direction(playerMat.GetPosition(), parameter.mat.GetPosition()).y, Vector3::Direction(playerMat.GetPosition(), parameter.mat.GetPosition()).z);
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_MODEL, parameter.mat);
 	//DrawLine3D(Vector3::ToVECTOR(playerMat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition()), GetColor(clor,0,0));
 }

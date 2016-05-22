@@ -32,7 +32,7 @@ frame(Random::GetInstance().Range(1, 2))
 	drawParam.drawID = MODEL_ID::TORNADOPOLY_MODEL;
 	//drawParam.drawID = MODEL_ID::TORNADOPOLY_MODEL;
 	drawParam.size = 30.0f;
-	drawParam.alpha = 0.9f;
+	drawParam.alpha = 0.8f;
 }
 
 void TornadoParticle::OnUpdate()
@@ -73,5 +73,6 @@ void TornadoParticle::Draw() const
 {
 	//Model::GetInstance().Draw2DBlend(drawParam.drawID, moveParam.pos, frame, drawParam.size, Vector2(50.0f, 0.0f),0.0f,
 	//	false, drawParam.blendMode, drawParam.alpha);
+
 	Model::GetInstance().Draw(drawParam.drawID, moveParam.pos, drawParam.alpha, rotmat.GetRotateDegree(), drawParam.size, true);
 }

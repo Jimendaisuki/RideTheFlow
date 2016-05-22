@@ -22,7 +22,7 @@ timer(0.0f)
 	speed = 300.0f;
 
 	parameter.isDead = false;
-	parameter.height = Vector3(0.0f,300.0f,0.0f);
+	parameter.height = Vector3(0.0f,200.0f,0.0f);
 	parameter.radius = 80;
 	parameter.mat =
 		Matrix4::RotateZ(0) *
@@ -72,6 +72,7 @@ void Tornado::Update()
 void Tornado::Draw() const
 {
 	DrawParticles();
+	
 	//Vector3 TopPos, BottomPos;
 	//BottomPos = Matrix4::GetPosition(parameter.mat);
 	//TopPos = BottomPos + velocity * 1000.0f;

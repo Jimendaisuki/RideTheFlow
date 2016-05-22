@@ -568,7 +568,7 @@ void Player::Draw() const{
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
-	ParameterDraw();
+	//ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
 	//for (int count = 2; count < bonePosStorage.size() ; count++){
