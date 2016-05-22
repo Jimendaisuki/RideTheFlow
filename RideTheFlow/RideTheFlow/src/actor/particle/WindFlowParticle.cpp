@@ -3,8 +3,9 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 
-WindFlowParticle::WindFlowParticle(const std::vector<Vector3>& dashPositions_, float positionHeight_)
+WindFlowParticle::WindFlowParticle(WindFlow& windflow_, const std::vector<Vector3>& dashPositions_, float positionHeight_)
 :
+windFlow(windflow_),
 dashPositions(dashPositions_),
 randomPosition(Random::GetInstance().Range(-50.0f, 50.0f), 0.0f, Random::GetInstance().Range(-50.0f, 50.0f)),
 positionHeight(positionHeight_),
@@ -35,8 +36,8 @@ void WindFlowParticle::OnUpdate()
 	if (num > dashPositions.size() - 1)
 		return;
 
-	//表示する座標を計算　ダッシュの軌跡から、ランダムな値分ずらす
-	moveParam.pos = dashPositions.at(num) + randomPosition;
+	//表示する座標を計算　ダッシュの軌跡からランダムな値分ずらす　＋　タックルヒット後の移動量を追加
+	moveParam.pos = dashPositions.at(num) + randomPosition + windFlow.GetMoveVec();
 	//Yの値は渡されてきたもので固定
 	moveParam.pos.y = positionHeight;
 

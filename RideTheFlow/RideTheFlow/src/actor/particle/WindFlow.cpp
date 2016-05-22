@@ -4,18 +4,24 @@
 #include "WindFlowParticle.h"
 #include "../../game/Random.h"
 #include "WindSetting.h"
+#include "../../time/Time.h"
+
+//タックルされた後の移動速度
+static const float MoveSpeed = 400.0f;
 
 WindFlow::WindFlow(IWorld& world, Player& player_) :
 Actor(world),
 player(player_),
-isSetting(false)
+isSetting(false),
+vec(Vector3::Zero),
+speed(MoveSpeed)
 {
 	parameter.id = ACTOR_ID::WIND_ACTOR;
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f, HeightMax, 0.0f);
-	parameter.radius = 5.0f;
-	ps_parameter.intervalSec = 0.01f;
-	ps_parameter.lifeTimeLimit = 15.0f;
+	parameter.radius = 10.0f;
+	ps_parameter.intervalSec = 0.003f;
+	ps_parameter.lifeTimeLimit = 20.0f;
 	ps_parameter.sameEmissiveNum = 1;
 	dashPositions = player.ReturnDashPosStorage();
 }
@@ -49,6 +55,9 @@ void WindFlow::Update()
 	//パーティクル更新
 	UpdateParticles();
 
+	//タックルされたら移動
+	move += vec * speed * Time::DeltaTime;
+
 	//システム寿命が来たらアクターも寿命に
 	if (ps_parameter.isDead)
 		parameter.isDead = true;
@@ -59,7 +68,10 @@ void WindFlow::Draw() const
 }
 void WindFlow::OnCollide(Actor& other, CollisionParameter colpara)
 {
-
+	if (colpara.colID == COL_ID::PLAYER_WIND_COL)
+	{
+		vec = colpara.colVelosity;
+	}
 }
 
 std::vector<Vector3>& WindFlow::GetDashPositions()
@@ -67,8 +79,13 @@ std::vector<Vector3>& WindFlow::GetDashPositions()
 	return dashPositions;
 }
 
+Vector3& WindFlow::GetMoveVec()
+{
+	return move;
+}
+
 void WindFlow::Emissive()
 {
 	if (dashPositions.size() > 0)
-		AddParticle(std::make_shared<WindFlowParticle>(dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
+		AddParticle(std::make_shared<WindFlowParticle>(*this,dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
 }
