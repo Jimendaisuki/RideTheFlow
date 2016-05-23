@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
@@ -93,7 +94,7 @@
     <ClCompile Include="src\UIactor\SpeedLine.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
-    <ClCompile Include="src\actor\EnemyBullet.cpp" />
+    <ClCompile Include="src\actor\enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\actor\particle\Particle.cpp" />
     <ClCompile Include="src\actor\particle\ParticleSystem.cpp" />
     <ClCompile Include="src\actor\particle\WindFlowParticle.cpp" />
@@ -147,9 +148,11 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actor\enemy\ArmyEnemy.h" />
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\Cloud.h" />
+    <ClInclude Include="src\actor\enemy\EnemyParameter.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Damege.h" />
@@ -166,7 +169,7 @@
     <ClInclude Include="src\actor\TitleCameraActor.h" />
     <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\castle\CastleBlock.h" />
-    <ClInclude Include="src\actor\EnemyBullet.h" />
+    <ClInclude Include="src\actor\enemy\EnemyBullet.h" />
     <ClInclude Include="src\actor\particle\WindFlow.h" />
     <ClInclude Include="src\graphic\BlendMode.h" />
     <ClInclude Include="src\actor\MonhanCameraActor.h" />

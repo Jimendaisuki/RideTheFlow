@@ -8,6 +8,7 @@
 #include "../camera/Camera.h"
 #include "../actor/Stage.h"
 #include "../actor/Cloud.h"
+#include "../actor/enemy/ArmyEnemy.h"
 //コンストラクタ
 EndhingScene::EndhingScene()
 {
@@ -28,15 +29,16 @@ void EndhingScene::Initialize()
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<ZerudaCameraActor>(wa));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa,Vector3(10,-3,20)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 100.0f, 100.0f * (j - 2))));
-		}
-	}
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(120,-100,200)));
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	for (int j = 0; j < 5; j++)
+	//	{
+	//		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 100.0f, 100.0f * (j - 2))));
+	//	}
+	//}
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(120,-100,200)));
 	//for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
 	//{
 	//	if (i % 2 == 0)

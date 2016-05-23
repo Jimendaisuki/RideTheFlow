@@ -196,8 +196,6 @@ void MonhanCameraActor::Update()
 		}
 	}
 
-
-
 	//ƒoƒlƒJƒƒ‰
 	Vector3 stretch = (position - restPosition);
 	Vector3 force = -springParameter.stiffness * stretch;

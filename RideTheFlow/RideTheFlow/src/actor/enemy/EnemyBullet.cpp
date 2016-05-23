@@ -1,10 +1,10 @@
 #include "EnemyBullet.h"
 
-#include "Collision.h"
-#include "../world/IWorld.h"
-#include"../graphic/Model.h"
-#include "../time/Time.h"
-#include "../actor/castle/CastleParameter.h"
+#include "../Collision.h"
+#include "../../world/IWorld.h"
+#include"../../graphic/Model.h"
+#include "../../time/Time.h"
+#include "../castle/CastleParameter.h"
 
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint) :
 Actor(world),

@@ -1,7 +1,7 @@
 #ifndef ENEMY_VARISTOR_BULLET_H_
 #define ENEMY_VARISTOR_BULLET_H_
 
-#include "Actor.h"
+#include "../Actor.h"
 #include <memory>
 
 class EnemyBullet :public Actor, public std::enable_shared_from_this<EnemyBullet>

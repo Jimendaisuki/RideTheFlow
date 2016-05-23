@@ -4,7 +4,7 @@
 #include "../../graphic/Sprite.h"
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
-#include "../EnemyBullet.h"
+#include "../enemy/EnemyBullet.h"
 #include "castle.h"
 #include "../../game/Random.h"
 #include "CastleParameter.h"

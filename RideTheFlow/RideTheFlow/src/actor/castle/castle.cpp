@@ -5,7 +5,7 @@
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
 
-#include "../EnemyBullet.h"
+#include"../enemy/EnemyBullet.h"
 
 #include"CastleParameter.h"
 
