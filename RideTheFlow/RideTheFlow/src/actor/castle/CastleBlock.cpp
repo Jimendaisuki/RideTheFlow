@@ -54,11 +54,11 @@ void CastleBlock::Update()
 	risingSpeed += risingAddSpeed * Time::DeltaTime;
 	tornadeRadius += tornadeAddRadius * Time::DeltaTime;
 
-	//ƒ‚ƒfƒ‹‰ñ“]
-	rotate += Vector3(
-		2.0f,
-		2.0f,
-		0.0f);
+	////ƒ‚ƒfƒ‹‰ñ“]
+	//rotate += Vector3(
+	//	2.0f,
+	//	2.0f,
+	//	0.0f);
 
 	//‰ñ“]‰Á‚¦‚é‘O‚ÌÀ•W
 	position += tornadeMove;

@@ -73,7 +73,7 @@ void Game1::Draw()
 
 void Game1::Finalize()
 {
-	mSceneManager.End();
+  	mSceneManager.End();
 	DeleteShader(mPixelShader);
 	DeleteGraph(mRenderTarget);
 }

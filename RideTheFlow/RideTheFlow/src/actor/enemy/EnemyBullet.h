@@ -7,7 +7,7 @@
 class EnemyBullet :public Actor, public std::enable_shared_from_this<EnemyBullet>
 {
 public:
-	EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint);
+	EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent);
 	~EnemyBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -19,6 +19,12 @@ private:
 	Vector3 mRandomTarget;
 	Vector3 coppyPosition;
 	Vector3 mToPoint;
+
+	//進行方向
+	Vector3 vec;
+	//モデル回転値
+	Vector3 rotate;
+	
 	float time;
 	float speed;
 };

@@ -338,6 +338,7 @@ void Player::Update(){
 		}
 		if (tp.animTime > tackleAnimAttackTiming){
 			world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
+			world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
 			parameter.height = tp.tackleT.Normalized() * 30.0f;
 		}
 	}
@@ -568,7 +569,7 @@ void Player::Draw() const{
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
-	ParameterDraw();
+	//ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
 	//for (int count = 2; count < bonePosStorage.size() ; count++){

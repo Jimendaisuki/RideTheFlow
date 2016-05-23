@@ -39,6 +39,7 @@ private:
 	// —´‚Æ’e
 	CollisionParameter Player_vs_Bullet(const Actor& other) const;
 	CollisionParameter Player_vs_Tornado(const Actor& other) const;
+	CollisionParameter Player_vs_Wind(const Actor& other) const;
 
 	/* •—ˆ³vs */
 	// •—ˆ³‚Æ’e

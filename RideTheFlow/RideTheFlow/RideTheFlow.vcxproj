@@ -154,6 +154,7 @@
     <ClInclude Include="src\actor\Cloud.h" />
     <ClInclude Include="src\actor\enemy\EnemyParameter.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
+    <ClInclude Include="src\actor\particle\WindSetting.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Damege.h" />
     <ClInclude Include="src\UIactor\Effect.h" />

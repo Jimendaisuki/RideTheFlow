@@ -5,11 +5,11 @@ const int Rank = 3;
 //城が積みあがる時間(秒)
 const float RankUpSecond = 5.0f;
 //城が攻撃してくる範囲
-const float AttackRange = 1000.0f;
+const float AttackRange = 400.0f;
 //城の攻撃クールタイム(秒)
-const float SecondAttack = 2.0f;
+const float SecondAttack = 0.5f;
 //城が一回に出す矢の本数(本)
-const int ArrowNumber = 10;
+const int ArrowNumber = 1;
 
 //城がプレイヤーが見えてないときの一回に出す矢の本数(本)
 const int NotLookArrow = 1;

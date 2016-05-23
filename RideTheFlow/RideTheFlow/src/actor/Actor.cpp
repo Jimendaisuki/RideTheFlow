@@ -22,6 +22,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 
 	colFunc[COL_ID::SPHERE_CAPSULE] = std::bind(&Actor::BoundarySphere_Capsule, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_TORNADO_COL] = std::bind(&Actor::Player_vs_Tornado, this, std::placeholders::_1);
+	colFunc[COL_ID::PLAYER_WIND_COL] = std::bind(&Actor::Player_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::CLOUD_WIND_COL] = std::bind(&Actor::Cloud_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYERTOCASTLELINE_CLOUD_COL] = std::bind(&Actor::PlayerCastleLine_vs_Cloud, this, std::placeholders::_1);
 	colFunc[COL_ID::CLOUD_TORNADO_COL] = std::bind(&Actor::Cloud_vs_Tornado, this, std::placeholders::_1);
@@ -109,6 +110,50 @@ CollisionParameter Actor::Player_vs_Tornado(const Actor& other) const{
 		colpara.colVelosity = parameter.height.Normalized();
 		colpara.colID = COL_ID::PLAYER_TORNADO_COL;
 	}
+	return colpara;
+}
+
+CollisionParameter Actor::Player_vs_Wind(const Actor& other) const{
+	//CollisionParameter colpara;
+	//if (HitCheck_Capsule_Capsule(parameter.mat.GetPosition(), parameter.mat.GetPosition() + parameter.height, parameter.radius,
+	//	other.parameter.mat.GetPosition(), other.parameter.mat.GetPosition() + other.parameter.height, other.parameter.radius)){
+	//	colpara.colFlag = true;
+	//	colpara.colVelosity = parameter.height.Normalized();
+	//	colpara.colID = COL_ID::PLAYER_TORNADO_COL;
+	//}
+	CollisionParameter colpara;
+
+	Capsule player;
+	player.startPos = parameter.mat.GetPosition();
+	player.endPos = parameter.mat.GetPosition() + parameter.height;
+	player.radius = parameter.radius;
+
+	WindFlow* w = static_cast<WindFlow*>(const_cast<Actor*>(&other));
+	std::vector<Vector3> dashPositions = w->GetDashPositions();
+	int dashPositionSize = dashPositions.size();
+	if (dashPositionSize < 2)
+	{		
+		colpara.colID = COL_ID::PLAYER_WIND_COL;
+		return colpara;
+	}
+
+	Capsule wind;
+	wind.radius = other.parameter.radius;
+	for (int i = 0; i < dashPositionSize; i++)
+	{
+		wind.startPos = dashPositions.at(i);
+		wind.endPos = wind.startPos;
+		wind.endPos.y = other.parameter.height.y;
+		colpara = Collisin::GetInstace().CapsuleCapsule(player, wind);
+
+		if (colpara.colFlag)
+		{
+			colpara.colID = COL_ID::PLAYER_WIND_COL;
+			colpara.colVelosity = Vector3(parameter.height.x, 0.0f, parameter.height.z).Normalized();
+			return colpara;
+		}
+	}
+	colpara.colID = COL_ID::PLAYER_WIND_COL;
 	return colpara;
 }
 
@@ -209,6 +254,7 @@ CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
 	WindFlow* w = static_cast<WindFlow*>(const_cast<Actor*>(&other));
 	std::vector<Vector3> dashPositions = w->GetDashPositions();
 	int dashPositionSize = dashPositions.size();
+	Vector3 move = w->GetMoveVec();
 
 	if (dashPositionSize < 2)
 	{
@@ -220,17 +266,19 @@ CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
 	wind.radius = other.parameter.radius;
 	for (int i = 0; i < dashPositionSize; i++)
 	{
-		wind.startPos = dashPositions.at(i);
-		wind.endPos = wind.startPos + other.parameter.height;
+		wind.startPos = dashPositions.at(i) + move;
+		wind.endPos = wind.startPos;
+		wind.endPos.y = other.parameter.height.y;
 		colpara = Collisin::GetInstace().SphereCapsule(cloud, wind);
+
 		if (colpara.colFlag)
 		{
-			colpara.colID = COL_ID::CLOUD_WIND_COL;
 			if (i == dashPositionSize - 1)
 				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i) - dashPositions.at(i - 1));
 			else
 				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i + 1) - dashPositions.at(i));
 
+			colpara.colID = COL_ID::CLOUD_WIND_COL;
 			return colpara;
 		}
 	}

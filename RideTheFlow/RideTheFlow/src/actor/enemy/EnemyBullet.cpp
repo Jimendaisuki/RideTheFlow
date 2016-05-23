@@ -1,19 +1,24 @@
 #include "EnemyBullet.h"
 
-#include "../Collision.h"
-#include "../../world/IWorld.h"
-#include"../../graphic/Model.h"
-#include "../../time/Time.h"
-#include "../castle/CastleParameter.h"
+#include "Collision.h"
+#include "../world/IWorld.h"
+#include"../graphic/Model.h"
+#include "../time/Time.h"
+#include "../actor/castle/CastleParameter.h"
+#include "../math/Math.h"
 
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint) :
+#include "../UIactor/Effect.h"
+
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
 speed(3.0f),
 distance(0, 0, 0),
 mPosition(position),
+mScale(1.0f),
 coppyPosition(position),
-mToPoint(toPoint)
+mToPoint(toPoint),
+rotate(Vector3::Zero)
 {
 	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
@@ -27,6 +32,8 @@ mToPoint(toPoint)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	distance = (mToPoint + mRandomTarget)- mPosition;
+
+	parent = &parent_;
 }
 EnemyBullet::~EnemyBullet()
 {
@@ -34,32 +41,56 @@ EnemyBullet::~EnemyBullet()
 }
 void EnemyBullet::Update()
 {
-	time += Time::DeltaTime*speed;
+	time += Time::DeltaTime * speed;
 	if (coppyPosition.y < mToPoint.y)
 	{
 		float InitialVelocity = sqrt(2 * 9.8f*(mToPoint.y - coppyPosition.y) - mPosition.y);
 		float vertexTime = InitialVelocity / 9.8f;
-		mPosition.x += distance.x / vertexTime * speed*Time::DeltaTime;
-		mPosition.z += distance.z / vertexTime * speed*Time::DeltaTime;
-		mPosition.y = (InitialVelocity*time - 9.8f / 2.0f * pow(time, 2));
+		//進行方向を計算
+		vec = Vector3(
+			distance.x / vertexTime * speed * Time::DeltaTime,
+			InitialVelocity*time - 9.8f / 2.0f * pow(time, 2),
+			distance.z / vertexTime * speed * Time::DeltaTime);
 	}
 	else
 	{
 		float vertexTime = sqrt((2 * (coppyPosition.y - mToPoint.y)) / 9.8f);
-		mPosition.y = -(1.0f / 2.0f) * 9.8f*pow(time, 2);
-		mPosition.x += distance.x / vertexTime *speed*Time::DeltaTime;
-		mPosition.z += distance.z / vertexTime *speed*Time::DeltaTime;
+		//進行方向を計算
+		vec = Vector3(
+			distance.x / vertexTime * speed * Time::DeltaTime,
+			-(1.0f / 2.0f) * 9.8f*pow(time, 2),
+			distance.z / vertexTime * speed * Time::DeltaTime);
 	}
-	parameter.mat = Matrix4::Translate(mPosition+Vector3(0.0f,coppyPosition.y,0.0f));
+
+	//移動
+	mPosition += vec;
+
 	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
+
+
+	//進行方向を分ける
+	Vector3 vXZ = Vector3(vec.x, 0.0f, vec.z).Normalized();
+	Vector3 vYZ = Vector3(0.0f, vec.y, vec.z).Normalized();
+	//回転計算
+	rotate.x = Math::Degree(Math::Atan2(Math::Abs(vYZ.y), Math::Abs(vYZ.z)));
+	rotate.y = Math::Degree(Math::Atan2(vXZ.x, vXZ.z));
+
+	//マトリックス計算
+	parameter.mat =
+		Matrix4::Scale(mScale) *
+		Matrix4::RotateZ(0) *
+		Matrix4::RotateX(rotate.x) *
+		Matrix4::RotateY(rotate.y) *
+		Matrix4::Translate(mPosition + Vector3(0.0f, coppyPosition.y, 0.0f));
 }
 
 void EnemyBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
+	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat.GetPosition(), 1.0f, parameter.mat.GetRotateDegree(), mScale, true);
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	parameter.isDead = true;
+	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
 }

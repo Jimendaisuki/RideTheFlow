@@ -15,7 +15,7 @@ static const float MinSize = 10.0f;
 static const float MaxSize = 50.0f;
 
 //—¬‚ê‚É—¬‚³‚ê‚Ä‚¢‚éŽž‚Ì‘¬“x
-static const float FlowSpeed = 40.0f;
+static const float FlowSpeed = 80.0f;
 
 Cloud::Cloud(IWorld& world, const Vector3& position_) :
 Actor(world),
