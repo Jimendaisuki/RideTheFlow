@@ -29,7 +29,7 @@ void EndhingScene::Initialize()
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<ZerudaCameraActor>(wa));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa,Vector3(10,-3,20)));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa,Vector3(10,-90,20)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	//for (int i = 0; i < 5; i++)
 	//{

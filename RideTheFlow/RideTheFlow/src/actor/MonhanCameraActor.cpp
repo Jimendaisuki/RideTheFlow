@@ -203,6 +203,7 @@ void MonhanCameraActor::Update()
 	Vector3 acceleration = force / springParameter.mass;
 	velocity =springParameter.friction * (velocity + acceleration);
 	position += velocity;
+	parameter.mat.SetFront(Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized());
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Target.Set(playerMat.GetPosition());

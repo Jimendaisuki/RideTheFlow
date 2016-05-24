@@ -26,6 +26,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::CLOUD_WIND_COL] = std::bind(&Actor::Cloud_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYERTOCASTLELINE_CLOUD_COL] = std::bind(&Actor::PlayerCastleLine_vs_Cloud, this, std::placeholders::_1);
 	colFunc[COL_ID::CLOUD_TORNADO_COL] = std::bind(&Actor::Cloud_vs_Tornado, this, std::placeholders::_1);
+	colFunc[COL_ID::ARMYENEMY_STAGE_COL] = std::bind(&Actor::ArmyEnemy_vs_Stage, this, std::placeholders::_1);
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
@@ -339,6 +340,23 @@ CollisionParameter Actor::PlayerCastleLine_vs_Cloud(const Actor& other) const
 		}
 	colpara.colID = COL_ID::PLAYERTOCASTLELINE_CLOUD_COL;
 	return colpara;
+}
+
+CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
+{
+	CollisionParameter colpara;
+	Line armyEnemy;
+	armyEnemy.startPos = parameter.mat.GetPosition();
+	armyEnemy.endPos = parameter.mat.GetPosition() - Vector3::Down*parameter.radius;
+
+	ModelData stage;
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MFrameIndex = -1;
+
+	colpara = Collisin::GetInstace().ModelLine(stage, armyEnemy);
+	colpara.colID = COL_ID::ARMYENEMY_STAGE_COL;
+	return colpara;
+
 }
 
 // å„Ç≈çÌèú

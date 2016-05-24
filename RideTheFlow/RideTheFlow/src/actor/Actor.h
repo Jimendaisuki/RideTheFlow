@@ -68,6 +68,7 @@ private:
 	//é‚ÆƒvƒŒƒCƒ„[‚ğŒ‹‚ñ‚¾ü‚Æ‰_‚Ì‚ ‚½‚è”»’è
 	CollisionParameter PlayerCastleLine_vs_Cloud(const Actor& other) const;
 
+	CollisionParameter ArmyEnemy_vs_Stage(const Actor& other)const;
 	/* Œã‚Åíœ
 	// ü‚Æ” ‚Ì“–‚½‚è”»’è
 	CollisionParameter SegmentBoxAABB(const Actor& other)const;

@@ -1,13 +1,14 @@
 #include "EnemyBullet.h"
 
-#include "Collision.h"
-#include "../world/IWorld.h"
-#include"../graphic/Model.h"
-#include "../time/Time.h"
-#include "../actor/castle/CastleParameter.h"
-#include "../math/Math.h"
+#include "../Collision.h"
+#include "../../world/IWorld.h"
+#include"../../graphic/Model.h"
+#include "../../time/Time.h"
+#include "../../time/Time.h"
+#include "../../math/Math.h"
+#include "../castle/CastleParameter.h"
 
-#include "../UIactor/Effect.h"
+#include "../../UIactor/Effect.h"
 
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_) :
 Actor(world),

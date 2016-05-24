@@ -36,7 +36,7 @@ void ArmyEnemy::Update()
 		cameraMat = other.GetParameter().mat;
 	});
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
-
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	//敵とプレイヤーの角度を求める
 	playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
 		Math::Sqrt(Math::Pow(playerMat.GetPosition().z - mPosition.z, 2) +
@@ -65,33 +65,38 @@ void ArmyEnemy::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition()));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition(),*this));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;
 			attackTime = 0.0f;
 		}
 	}
-	
-
 	if (playerAngle <= ArmyNear)
 	{
 		//移動
 		mPosition += Vector3::Direction(mPosition, playerMat.GetPosition()).Normalized()*
 			Vector3(1, 0, 1)*ArmySpeed*Time::DeltaTime;
 	}
+	mPosition -= 1.0f*Time::DeltaTime;
 	parameter.mat = Matrix4::Translate(mPosition);
+	clor = 0.0f;
 }
 void ArmyEnemy::Draw() const
 {
 	//Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
-	DrawFormatString(0, 128, GetColor(0, 0, 0), "なす角 xy  %f", playerAngle);
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 1, GetColor(255, 255, 255), 1, true);
+	DrawFormatString(0, 128, GetColor(0, 0, 0), "Yの値  %f", mPosition.y);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 1, GetColor(clor, clor, clor), 1, true);
 }
 void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
 	{
 		isLook = false;
+	}
+	if (colpara.colID == COL_ID::ARMYENEMY_STAGE_COL)
+	{
+		mPosition = colpara.colPos;
+		clor = 200.0f;
 	}
 }
