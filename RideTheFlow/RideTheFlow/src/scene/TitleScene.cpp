@@ -137,6 +137,11 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
+	// ÉVÅ[ÉìèIóπ
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
+	{
+		mIsEnd = true;
+	}
 	
 	switch (status)
 	{
