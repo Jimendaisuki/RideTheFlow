@@ -84,7 +84,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
-    <ClCompile Include="src\actor\enemy\ShellBullet.cpp" />
+    <ClCompile Include="src\actor\enemy\CannonEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\CannonBullet.cpp" />
+    <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
@@ -154,9 +156,11 @@
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\Cloud.h" />
+    <ClInclude Include="src\actor\enemy\CannonEnemy.h" />
     <ClInclude Include="src\actor\enemy\EnemyParameter.h" />
-    <ClInclude Include="src\actor\enemy\ShellBullet.h" />
+    <ClInclude Include="src\actor\enemy\CannonBullet.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
+    <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\WindSetting.h" />
     <ClInclude Include="src\UIactor\Blood.h" />

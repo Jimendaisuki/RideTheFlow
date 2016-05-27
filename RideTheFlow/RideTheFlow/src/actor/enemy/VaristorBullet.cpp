@@ -1,4 +1,4 @@
-#include "ShellBullet.h"
+#include "VaristorBullet.h"
 
 #include "../../world/IWorld.h"
 #include"../../graphic/Model.h"
@@ -6,11 +6,12 @@
 #include "../../time/Time.h"
 #include "../../math/Math.h"
 #include "../castle/CastleParameter.h"
+#include "../enemy/EnemyParameter.h"
 #include "../Collision.h"
 
 #include "../../UIactor/Effect.h"
 
-ShellBullet::ShellBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
+VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
 speed(3.0f),
@@ -20,9 +21,9 @@ mScale(1.0f),
 coppyPosition(position),
 mToPoint(toPoint)
 {
-	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-		GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
+	mRandomTarget = Vector3(GetRand(VaristorArrowAccuracy * 2) - VaristorArrowAccuracy,
+		GetRand(VaristorArrowAccuracy * 2) - VaristorArrowAccuracy,
+		GetRand(VaristorArrowAccuracy * 2) - VaristorArrowAccuracy);
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
@@ -32,14 +33,14 @@ mToPoint(toPoint)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	distance = (mToPoint + mRandomTarget) - mPosition;
-
 	parent = &parent_;
+
 }
-ShellBullet::~ShellBullet()
+VaristorBullet::~VaristorBullet()
 {
 
 }
-void ShellBullet::Update()
+void VaristorBullet::Update()
 {
 	time += Time::DeltaTime * speed;
 	if (coppyPosition.y < mToPoint.y)
@@ -74,12 +75,12 @@ void ShellBullet::Update()
 		Matrix4::Translate(mPosition + Vector3(0.0f, coppyPosition.y, 0.0f));
 }
 
-void ShellBullet::Draw() const
+void VaristorBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat.GetPosition(), 1.0f, parameter.mat.GetRotateDegree(), mScale, true);
+	Model::GetInstance().Draw(MODEL_ID::BALLISTA_ARROW_MODEL, parameter.mat);
 }
 
-void ShellBullet::OnCollide(Actor& other, CollisionParameter colpara)
+void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	parameter.isDead = true;
 	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);

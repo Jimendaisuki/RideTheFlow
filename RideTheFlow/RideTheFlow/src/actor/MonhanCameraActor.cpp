@@ -203,7 +203,9 @@ void MonhanCameraActor::Update()
 	Vector3 acceleration = force / springParameter.mass;
 	velocity =springParameter.friction * (velocity + acceleration);
 	position += velocity;
-	parameter.mat.SetFront(Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized());
+
+
+
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Target.Set(playerMat.GetPosition());
@@ -214,12 +216,13 @@ void MonhanCameraActor::Update()
 }
 void MonhanCameraActor::Draw() const
 {
-	//DrawFormatString(0, 128, GetColor(0, 0, 0), "startPosition   %f %f %f", playerMat.GetPosition().x, playerMat.GetPosition().y, playerMat.GetPosition().z);
+	//DrawFormatString(0, 128, GetColor(0, 0, 0), "camerPosition   %f %f %f", parameter.mat.GetPosition().x, parameter.mat.GetPosition().y, parameter.mat.GetPosition().z);
 	//DrawFormatString(0, 400, GetColor(0, 0, 0), "ÉZÅ[Éuãóó£   %f", dashCameraDistance);
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "é¿ç€ãóó£   %f", Vector3::Distance(playerMat.GetPosition(), cameraMovePos));
 	//DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateup   %f", rotateUp);
 	DrawFormatString(0, 356, GetColor(0, 0, 0), "éãñÏäp   %f",fov);
-	DrawLine3D(Vector3::ToVECTOR(playerMat.GetFront().Normalized()*100+playerMat.GetPosition()),Vector3::ToVECTOR(playerMat.GetPosition()),2);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront()*20+parameter.mat.GetPosition()), 5.0f, 1, GetColor(255, 255, 255), 1, true);
+
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

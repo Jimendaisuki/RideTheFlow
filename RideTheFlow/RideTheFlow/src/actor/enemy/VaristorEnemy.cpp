@@ -4,8 +4,9 @@
 #include "../../graphic/Model.h"
 #include "EnemyParameter.h"
 #include "../../time/Time.h"
-#include "EnemyBullet.h"
+#include "VaristorBullet.h"
 #include "../../math/Math.h"
+#include "../Player.h"
 
 VaristorEnemy::VaristorEnemy(IWorld& world, Vector3 position) :
 Actor(world),
@@ -16,6 +17,8 @@ attackTime(0),
 arrowCount(0),
 playerAngle(0),
 mPosition(position),
+toPoint(Vector3::Zero),
+rotate(Vector3::Zero),
 isLook(true)
 {
 	parameter.isDead = false;
@@ -29,8 +32,10 @@ VaristorEnemy::~VaristorEnemy()
 }
 void VaristorEnemy::Update()
 {
+	TackleParameter tp;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
+		tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	});
 	world.EachActor(ACTOR_ID::CAMERA_ACTOR, [&](const Actor& other){
 		cameraMat = other.GetParameter().mat;
@@ -56,6 +61,15 @@ void VaristorEnemy::Update()
 	}
 	isLook = true;
 
+	//ダッシュ中以外はカメラの前に矢を放つ
+	if (tp.dashFlag)
+	{
+		toPoint = playerMat.GetPosition();
+	}
+	else
+	{
+		toPoint = playerMat.GetFront().Normalized()*cameraFrontAttack + playerMat.GetPosition();
+	}
 	//攻撃
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
@@ -66,22 +80,23 @@ void VaristorEnemy::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, playerMat.GetPosition(), *this));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition, toPoint, *this));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;
 			attackTime = 0.0f;
 		}
 	}
-	mPosition -= 1.0f*Time::DeltaTime;
 	parameter.mat = Matrix4::Translate(mPosition);
-	clor = 0.0f;
+	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized();
+	rotate.y = Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f;
 }
 void VaristorEnemy::Draw() const
 {
 	//Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
 	DrawFormatString(0, 128, GetColor(0, 0, 0), "Yの値  %f", mPosition.y);
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 1, GetColor(clor, clor, clor), 1, true);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 1, GetColor(clor, clor, clor), 1, true);
+	Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, parameter.mat.GetPosition(),rotate);
 }
 void VaristorEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

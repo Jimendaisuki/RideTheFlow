@@ -4,11 +4,11 @@
 #include "../Actor.h"
 #include <memory>
 
-class ShellBullet :public Actor, public std::enable_shared_from_this<ShellBullet>
+class CannonBullet :public Actor, public std::enable_shared_from_this<CannonBullet>
 {
 public:
-	ShellBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent);
-	~ShellBullet();
+	CannonBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float rotateZ);
+	~CannonBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
@@ -22,5 +22,7 @@ private:
 	Vector3 vec;
 	float time;
 	float speed;
+	float mRotateY;
+	float mRotateZ;
 };
 #endif
