@@ -204,7 +204,10 @@
     <ClCompile Include="src\actor\enemy\EnemyBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\UIactor\fadePanel\FadePanel.cpp">
+    <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor\enemy\ShellBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -446,11 +449,15 @@
     <ClInclude Include="src\actor\enemy\EnemyBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\UIactor\fadePanel\FadePanel.h">
+    <ClInclude Include="src\actor\enemy\VaristorEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actor\enemy\ShellBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Model\boonStage.pmd" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ position(position_),
 moveSpeed(Random::GetInstance().Range(10.0f, 20.0f)),
 moveChangeTimer(0.0f),
 moveChangeTime(Random::GetInstance().Range(30.0f, 50.0f)),
+windOutTimer(500.0f),
 up(Vector3::Up),
 front(Vector3::Forward),
 left(Vector3::Left)
@@ -45,10 +46,13 @@ left(Vector3::Left)
 		0.0f,
 		Random::GetInstance().Range(-1.0f, 1.0f)));
 	
+	////テクスチャのアルファを抜き取る
+	//MV1SetMaterialDrawAlphaTestAll(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), true, DX_CMP_GREATEREQUAL, 100);
+	//MV1SetMaterialDrawAlphaTestAll(Model::GetInstance().GetHandle(MODEL_ID::CLOUD_MODEL), true, DX_CMP_GREATEREQUAL, 80);
 }
 Cloud::~Cloud()
 {
-
+	
 }
 
 void Cloud::Update()
@@ -57,17 +61,27 @@ void Cloud::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
 
-	//ランダムに移動方向を変化させる
 	moveChangeTimer += Time::DeltaTime;
+	windOutTimer += Time::DeltaTime;
+	//一定時間に達した場合、ランダムに移動方向を変化させる
 	if (moveChangeTimer >= moveChangeTime)
 	{
-		moveChangeTimer = 0.0f;
-		moveChangeTime = Random::GetInstance().Range(30.0f, 50.0f);
-		moveVec = Vector3::Normalize(Vector3(
-			Random::GetInstance().Range(-1.0f, 1.0f),
-			0.0f,
-			Random::GetInstance().Range(-1.0f, 1.0f)));
+		Reset();
+	}
+	//ステージの端に達した場合、原点に向かわせる
+	if (IsStageOut())
+	{
+		Vector3 v = -parameter.mat.GetPosition();
+		v.y = 0;
+		v.Normalize();
+		moveVec = v;
 		moveSpeed = Random::GetInstance().Range(5.0f, 10.0f);
+	}
+
+	//流れから離れた場合、３秒かけてスピードを落とす
+	if (windOutTimer <= 3.0f)
+	{
+		moveSpeed -= 16.0f * (3.0f - windOutTimer) * Time::DeltaTime;
 	}
 
 	//セルフビルボード計算
@@ -99,9 +113,27 @@ void Cloud::OnCollide(Actor& other, CollisionParameter colpara)
 		moveVec = colpara.colVelosity;
 		moveSpeed = FlowSpeed;
 		moveChangeTimer = 0.0f;
+		windOutTimer = 0.0f;
 	}
 	if (colpara.colID == COL_ID::CLOUD_TORNADO_COL)
 	{
 		parameter.isDead = true;
 	}
+}
+
+void Cloud::Reset()
+{
+	moveChangeTimer = 0.0f;
+	moveChangeTime = Random::GetInstance().Range(30.0f, 50.0f);
+	moveVec = Vector3::Normalize(Vector3(
+		Random::GetInstance().Range(-1.0f, 1.0f),
+		0.0f,
+		Random::GetInstance().Range(-1.0f, 1.0f)));
+	moveSpeed = Random::GetInstance().Range(5.0f, 10.0f);
+}
+
+bool Cloud::IsStageOut()
+{
+	//原点から1400以上離れていれば場外
+	return Vector3::Distance(Vector3::Zero, parameter.mat.GetPosition()) > 1400.0f;
 }

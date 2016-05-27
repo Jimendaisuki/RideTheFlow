@@ -63,8 +63,10 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("isle_2.mv1", MODEL_ID::ISLE_2_MODEL, async);
 	model.Load("isle_3.mv1", MODEL_ID::ISLE_3_MODEL, async);
 
-	WorkFolder::SetWorkFolder("res/Model2D/");
+	model.Load("ship.mv1", MODEL_ID::SHIP_MODEL, async);
 
+	WorkFolder::SetWorkFolder("res/Model2D/");
+	
 	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));
 	model.Load2D("sand.png", MODEL_ID::SAND_2D);
 	model.Load2D("wind.png", MODEL_ID::WIND_2D);
