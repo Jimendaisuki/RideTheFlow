@@ -84,6 +84,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\ShellBullet.cpp" />
+    <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
@@ -153,6 +155,8 @@
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\Cloud.h" />
     <ClInclude Include="src\actor\enemy\EnemyParameter.h" />
+    <ClInclude Include="src\actor\enemy\ShellBullet.h" />
+    <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\WindSetting.h" />
     <ClInclude Include="src\UIactor\Blood.h" />

@@ -1,16 +1,16 @@
-#include "EnemyBullet.h"
+#include "ShellBullet.h"
 
-#include "../Collision.h"
 #include "../../world/IWorld.h"
 #include"../../graphic/Model.h"
 #include "../../time/Time.h"
 #include "../../time/Time.h"
 #include "../../math/Math.h"
 #include "../castle/CastleParameter.h"
+#include "../Collision.h"
 
 #include "../../UIactor/Effect.h"
 
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_) :
+ShellBullet::ShellBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
 speed(3.0f),
@@ -18,8 +18,7 @@ distance(0, 0, 0),
 mPosition(position),
 mScale(1.0f),
 coppyPosition(position),
-mToPoint(toPoint),
-rotate(Vector3::Zero)
+mToPoint(toPoint)
 {
 	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
@@ -32,15 +31,15 @@ rotate(Vector3::Zero)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	distance = (mToPoint + mRandomTarget)- mPosition;
+	distance = (mToPoint + mRandomTarget) - mPosition;
 
 	parent = &parent_;
 }
-EnemyBullet::~EnemyBullet()
+ShellBullet::~ShellBullet()
 {
 
 }
-void EnemyBullet::Update()
+void ShellBullet::Update()
 {
 	time += Time::DeltaTime * speed;
 	if (coppyPosition.y < mToPoint.y)
@@ -70,29 +69,17 @@ void EnemyBullet::Update()
 
 	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
 
-
-	//進行方向を分ける
-	Vector3 vXZ = Vector3(vec.x, 0.0f, vec.z).Normalized();
-	Vector3 vYZ = Vector3(0.0f, vec.y, vec.z).Normalized();
-	//回転計算
-	rotate.x = Math::Degree(Math::Atan2(Math::Abs(vYZ.y), Math::Abs(vYZ.z)));
-	rotate.y = Math::Degree(Math::Atan2(vXZ.x, vXZ.z));
-
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Scale(mScale) *
-		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(rotate.x) *
-		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(mPosition + Vector3(0.0f, coppyPosition.y, 0.0f));
 }
 
-void EnemyBullet::Draw() const
+void ShellBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat.GetPosition(), 1.0f, parameter.mat.GetRotateDegree(), mScale, true);
 }
 
-void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
+void ShellBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	parameter.isDead = true;
 	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
