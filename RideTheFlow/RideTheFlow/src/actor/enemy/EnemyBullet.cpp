@@ -7,10 +7,10 @@
 #include "../../time/Time.h"
 #include "../../math/Math.h"
 #include "../castle/CastleParameter.h"
-
+#include "../../math/Quaternion.h"
 #include "../../UIactor/Effect.h"
 
-EnemyBullet::EnemyBullet(IWorld& world, Vector3 position,Vector3 toPoint, Actor& parent_) :
+EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
 speed(3.0f),
@@ -32,7 +32,7 @@ rotate(Vector3::Zero)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	distance = (mToPoint + mRandomTarget)- mPosition;
+	distance = (mToPoint + mRandomTarget) - mPosition;
 
 	parent = &parent_;
 }
@@ -42,6 +42,8 @@ EnemyBullet::~EnemyBullet()
 }
 void EnemyBullet::Update()
 {
+	prevPosition = mPosition;
+
 	time += Time::DeltaTime * speed;
 	if (coppyPosition.y < mToPoint.y)
 	{
@@ -70,26 +72,20 @@ void EnemyBullet::Update()
 
 	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
 
-
-	//進行方向を分ける
-	Vector3 vXZ = Vector3(vec.x, 0.0f, vec.z).Normalized();
-	Vector3 vYZ = Vector3(0.0f, vec.y, vec.z).Normalized();
-	//回転計算
-	rotate.x = Math::Degree(Math::Atan2(Math::Abs(vYZ.y), Math::Abs(vYZ.z)));
-	rotate.y = Math::Degree(Math::Atan2(vXZ.x, vXZ.z));
-
+	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
+	//進行方向計算
+	vec = mPosition - prevPosition;
+	vec.Normalize();
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale) *
-		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(rotate.x) *
-		Matrix4::RotateY(rotate.y) *
-		Matrix4::Translate(mPosition + Vector3(0.0f, coppyPosition.y, 0.0f));
+		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), vec).Normalized(), Vector3::Inner(Vector3(0,0,-1),vec)) *
+		Matrix4::Translate(mPosition);
 }
 
 void EnemyBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat.GetPosition(), 1.0f, parameter.mat.GetRotateDegree(), mScale, true);
+	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)

@@ -458,5 +458,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Model\boonStage.pmd" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
