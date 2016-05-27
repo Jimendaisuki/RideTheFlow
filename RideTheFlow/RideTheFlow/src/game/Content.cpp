@@ -16,9 +16,12 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("sand.png", SPRITE_ID::SAND_SPRITE);
 	sprite.Load("speedLine.png", SPRITE_ID::SPEED_SPRITE);
 	sprite.Load("blood.png", SPRITE_ID::BLOOD_SPRITE);
-	sprite.Load("damege.png", SPRITE_ID::DAMEGE_SPRITE);
+	sprite.Load("damage.png", SPRITE_ID::DAMAGE_SPRITE);
 	sprite.Load("staminagauge.png", SPRITE_ID::STAMINA_SPRITE);
 	sprite.Load("staminaback.png", SPRITE_ID::STAMINA_BACK_SPRITE);
+	sprite.Load("title_kiryuu.png", SPRITE_ID::TITLE_TEXT);
+	sprite.Load("title_pressany.png", SPRITE_ID::TITLE_PRESS);
+	sprite.Load("title_pressanyback.png", SPRITE_ID::TITLE_PRESS_BACK);
 
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");
@@ -60,8 +63,10 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("isle_2.mv1", MODEL_ID::ISLE_2_MODEL, async);
 	model.Load("isle_3.mv1", MODEL_ID::ISLE_3_MODEL, async);
 
-	WorkFolder::SetWorkFolder("res/Model2D/");
+	model.Load("ship.mv1", MODEL_ID::SHIP_MODEL, async);
 
+	WorkFolder::SetWorkFolder("res/Model2D/");
+	
 	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));
 	model.Load2D("sand.png", MODEL_ID::SAND_2D);
 	model.Load2D("wind.png", MODEL_ID::WIND_2D);

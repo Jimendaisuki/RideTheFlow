@@ -47,5 +47,5 @@ void Damege::Update()
 
 void Damege::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::DAMEGE_SPRITE, Vector2::Zero, Vector2::Zero, 1.0f - Math::Clamp(*nowHP / maxHP, 0.0f, 1.0f), scale, 0.0f, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::DAMAGE_SPRITE, Vector2::Zero, Vector2::Zero, 1.0f - Math::Clamp(*nowHP / maxHP, 0.0f, 1.0f), scale, 0.0f, true, false);
 }

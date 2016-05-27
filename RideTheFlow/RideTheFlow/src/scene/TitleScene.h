@@ -4,6 +4,15 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 
+enum TITLE_STATUS
+{
+	TITLE_BEGIN,
+	TITLE_DRAGON_IN,
+	TITLE_TEXTURE_IN,
+	TITLE_STANDBY,
+	TITLE_END
+};
+
 class  TitleScene :public IScene{
 public:
 	//コンストラクタ 

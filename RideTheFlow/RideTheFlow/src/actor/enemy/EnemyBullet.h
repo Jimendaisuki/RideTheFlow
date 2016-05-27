@@ -20,12 +20,15 @@ private:
 	Vector3 coppyPosition;
 	Vector3 mToPoint;
 
-	//進行方向
+	//xz進行方向
 	Vector3 vec;
 	//モデル回転値
 	Vector3 rotate;
 	
 	float time;
 	float speed;
+
+	//１フレーム前の座標
+	Vector3 prevPosition;
 };
 #endif

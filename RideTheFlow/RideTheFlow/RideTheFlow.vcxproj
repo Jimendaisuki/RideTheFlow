@@ -95,6 +95,7 @@
     <ClCompile Include="src\UIactor\Blood.cpp" />
     <ClCompile Include="src\UIactor\Damege.cpp" />
     <ClCompile Include="src\UIactor\Effect.cpp" />
+    <ClCompile Include="src\UIactor\fadePanel\FadePanel.cpp" />
     <ClCompile Include="src\UIactor\SpeedLine.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Damege.h" />
     <ClInclude Include="src\UIactor\Effect.h" />
+    <ClInclude Include="src\UIactor\fadePanel\FadePanel.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
     <ClInclude Include="src\actor\particle\Particle.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="src\world\WorldActor.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="res\Model\boonStage.pmd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
