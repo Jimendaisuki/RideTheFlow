@@ -89,20 +89,22 @@ void CreditScene::Update()
 //•`‰æ
 void CreditScene::Draw() const
 {
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	for (int j = 0; j < 10; j++)
-	//	{
-	//		Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, Vector3(100 + i * 20, -80, 100 + j * 20), Vector3::Zero, Vector3(1.5f));
-	//		Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, Vector3(-200 + i * 30, -80, 200 + j * 30), Vector3::Zero, Vector3(1.5f));
-	//		Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, Vector3(-500 + i * 100, -80, -500 + j * 100), Vector3::Zero, Vector3(2.0f));
-	//	}
-	//}
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, Vector3(100 + i * 20, -80, 100 + j * 20), Vector3::Zero, Vector3(1.5f));
+			Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, Vector3(-200 + i * 30, -80, 200 + j * 30), Vector3::Zero, Vector3(1.5f));
+			Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, Vector3(-500 + i * 100, -80, -500 + j * 100), Vector3::Zero, Vector3(2.0f));
+		}
+	}
 
-	//Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, Vector3(700, 200, -500), Vector3::Zero, Vector3(1));
-	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_MODEL, Vector3(400, 200, -500), Vector3::Zero, Vector3(1));
-	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, Vector3(100, 200, -500), Vector3::Zero, Vector3(1));
+	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, Vector3(700, 200, -500), Vector3::Zero, Vector3(1));
+	Model::GetInstance().Draw(MODEL_ID::ISLE_2_MODEL, Vector3(400, 200, -500), Vector3::Zero, Vector3(1));
+	Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, Vector3(100, 200, -500), Vector3::Zero, Vector3(1));
+	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, Vector3(300, 200, 500), Vector3::Zero, Vector3(1));
 
+	
 	wa.Draw();
 }
 
