@@ -27,6 +27,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::PLAYERTOCASTLELINE_CLOUD_COL] = std::bind(&Actor::PlayerCastleLine_vs_Cloud, this, std::placeholders::_1);
 	colFunc[COL_ID::CLOUD_TORNADO_COL] = std::bind(&Actor::Cloud_vs_Tornado, this, std::placeholders::_1);
 	colFunc[COL_ID::ARMYENEMY_STAGE_COL] = std::bind(&Actor::ArmyEnemy_vs_Stage, this, std::placeholders::_1);
+	colFunc[COL_ID::BULLET_WIND_COL] = std::bind(&Actor::Bullet_vs_Wind, this, std::placeholders::_1);
 
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
@@ -357,6 +358,15 @@ CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
 	colpara.colID = COL_ID::ARMYENEMY_STAGE_COL;
 	return colpara;
 
+}
+
+CollisionParameter Actor::Bullet_vs_Wind(const Actor& other) const{
+	CollisionParameter colpara;
+
+	colpara = Cloud_vs_Wind(other);
+	colpara.colID = COL_ID::BULLET_WIND_COL;
+
+	return colpara;
 }
 
 // å„Ç≈çÌèú

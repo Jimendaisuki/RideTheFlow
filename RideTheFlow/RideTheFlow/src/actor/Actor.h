@@ -69,6 +69,8 @@ private:
 	CollisionParameter PlayerCastleLine_vs_Cloud(const Actor& other) const;
 
 	CollisionParameter ArmyEnemy_vs_Stage(const Actor& other)const;
+	// 弾と風の当たり判定(球 vs カプセルの集合)
+	CollisionParameter Bullet_vs_Wind(const Actor& other) const;
 	/* 後で削除
 	// 線と箱の当たり判定
 	CollisionParameter SegmentBoxAABB(const Actor& other)const;

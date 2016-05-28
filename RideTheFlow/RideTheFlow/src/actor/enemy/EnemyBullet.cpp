@@ -10,6 +10,9 @@
 #include "../../math/Quaternion.h"
 #include "../../UIactor/Effect.h"
 
+//流れの影響を受ける割合
+static const float WindPercentage = 100.0f;
+
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
@@ -19,7 +22,9 @@ mPosition(position),
 mScale(1.0f),
 coppyPosition(position),
 mToPoint(toPoint),
-rotate(Vector3::Zero)
+rotate(Vector3::Zero),
+windVec(Vector3::Zero),
+isWindCol(false)
 {
 	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
 		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
@@ -42,6 +47,8 @@ EnemyBullet::~EnemyBullet()
 }
 void EnemyBullet::Update()
 {
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+
 	prevPosition = mPosition;
 
 	time += Time::DeltaTime * speed;
@@ -67,6 +74,10 @@ void EnemyBullet::Update()
 		mPosition.y = -(1.0f / 2.0f) * 9.8f*pow(time, 2);
 	}
 
+	//流れの向きを加味
+	if (isWindCol)
+		vec = Vector3::Lerp(vec, windVec, WindPercentage / 100.0f);
+
 	//移動
 	mPosition += vec;
 
@@ -81,6 +92,10 @@ void EnemyBullet::Update()
 		Matrix4::Scale(mScale) *
 		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), vec).Normalized(), Vector3::Inner(Vector3(0,0,-1),vec)) *
 		Matrix4::Translate(mPosition);
+
+	//流れの向きとフラグをリセット
+	windVec = Vector3::Zero;
+	isWindCol = false;
 }
 
 void EnemyBullet::Draw() const
@@ -90,6 +105,14 @@ void EnemyBullet::Draw() const
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	parameter.isDead = true;
-	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
+	if (colpara.colID == COL_ID::BULLET_WIND_COL)
+	{
+		windVec = colpara.colVelosity;
+		isWindCol = true;
+	}
+	//else
+	//{
+	//	parameter.isDead = true;
+	//	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
+	//}
 }

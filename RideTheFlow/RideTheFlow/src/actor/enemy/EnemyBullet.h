@@ -30,5 +30,9 @@ private:
 
 	//１フレーム前の座標
 	Vector3 prevPosition;
+	//流れとのヒット時、流れの向き
+	Vector3 windVec;
+	//流れとヒットしているか？
+	bool isWindCol;
 };
 #endif
