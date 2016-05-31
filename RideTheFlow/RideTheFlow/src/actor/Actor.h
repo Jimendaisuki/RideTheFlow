@@ -55,7 +55,8 @@ private:
 	CollisionParameter Tornado_vs_IsLand(const Actor& other) const;
 	// 竜巻と風圧の当たり判定
 
-	
+	//竜巻と敵のあたり判定
+	CollisionParameter Tornado_vs_Enemy(const Actor& other) const;
 
 	/*  */
 	CollisionParameter BoundarySphere_Capsule(const Actor& other)  const;
@@ -67,10 +68,11 @@ private:
 
 	//城とプレイヤーを結んだ線と雲のあたり判定
 	CollisionParameter PlayerCastleLine_vs_Cloud(const Actor& other) const;
-
+	//軍隊とステージのあたり判定
 	CollisionParameter ArmyEnemy_vs_Stage(const Actor& other)const;
 	// 弾と風の当たり判定(球 vs カプセルの集合)
 	CollisionParameter Bullet_vs_Wind(const Actor& other) const;
+
 	/* 後で削除
 	// 線と箱の当たり判定
 	CollisionParameter SegmentBoxAABB(const Actor& other)const;

@@ -8,22 +8,23 @@
 #include "../castle/CastleParameter.h"
 #include "../enemy/EnemyParameter.h"
 #include "../Collision.h"
-
+#include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
+#include "../../math/Quaternion.h"
 
-VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
+VaristorBullet::VaristorBullet(IWorld& world, Vector3 position,Actor& parent_, float rotateY, float attackAngleZ) :
 Actor(world),
 time(0),
-speed(3.0f),
-distance(0, 0, 0),
+speed(VaristorSpeed),
 mPosition(position),
 mScale(1.0f),
-coppyPosition(position),
-mToPoint(toPoint)
+mRotateY(rotateY),
+mRotateZ(attackAngleZ),
+windVec(Vector3::Zero),
+isWindCol(false)
 {
-	mRandomTarget = Vector3(GetRand(VaristorArrowAccuracy * 2) - VaristorArrowAccuracy,
-		GetRand(VaristorArrowAccuracy * 2) - VaristorArrowAccuracy,
-		GetRand(VaristorArrowAccuracy * 2) - VaristorArrowAccuracy);
+	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
+	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
@@ -32,7 +33,6 @@ mToPoint(toPoint)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	distance = (mToPoint + mRandomTarget) - mPosition;
 	parent = &parent_;
 
 }
@@ -42,37 +42,34 @@ VaristorBullet::~VaristorBullet()
 }
 void VaristorBullet::Update()
 {
-	time += Time::DeltaTime * speed;
-	if (coppyPosition.y < mToPoint.y)
-	{
-		float InitialVelocity = sqrt(2 * 9.8f*(mToPoint.y - coppyPosition.y) - mPosition.y);
-		float vertexTime = InitialVelocity / 9.8f;
-		//進行方向を計算
-		vec = Vector3(
-			distance.x / vertexTime * speed * Time::DeltaTime,
-			0.0f,
-			distance.z / vertexTime * speed * Time::DeltaTime);
-		mPosition.y = InitialVelocity*time - 9.8f / 2.0f * pow(time, 2);
-	}
-	else
-	{
-		float vertexTime = sqrt((2 * (coppyPosition.y - mToPoint.y)) / 9.8f);
-		//進行方向を計算
-		vec = Vector3(
-			distance.x / vertexTime * speed * Time::DeltaTime,
-			0.0f,
-			distance.z / vertexTime * speed * Time::DeltaTime);
-		mPosition.y = -(1.0f / 2.0f) * 9.8f*pow(time, 2);
-	}
-
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+	time += VaristorSpeed*Time::DeltaTime;
+	//進行方向を計算
+	vec = Vector3(
+		VaristorInitialVelocity*Math::Cos(mRotateY),
+		VaristorInitialVelocity*Math::Sin(mRotateZ+20) - 9.8f*time,
+		VaristorInitialVelocity*Math::Sin(-mRotateY));
+	//流れの向きを加味
+	if (isWindCol)
+		vec = Vector3::Lerp(vec, windVec, VaristorWindPercentage / 100.0f);
 	//移動
-	mPosition += vec;
-
+	mPosition += vec*VaristorSpeed*Time::DeltaTime;
 	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
 
+	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
+
+	vec.Normalize();
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Translate(mPosition + Vector3(0.0f, coppyPosition.y, 0.0f));
+		Matrix4::Scale(mScale) *
+		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), vec).Normalized(), Vector3::Inner(Vector3(0, 0, -1), vec)) *
+		Matrix4::Translate(mPosition);
+
+	//流れの向きとフラグをリセット
+	windVec = Vector3::Zero;
+	isWindCol = false;
+
+	
 }
 
 void VaristorBullet::Draw() const
@@ -82,6 +79,12 @@ void VaristorBullet::Draw() const
 
 void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	parameter.isDead = true;
-	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
+	if (colpara.colID == COL_ID::BULLET_WIND_COL)
+	{
+		windVec = colpara.colVelosity;
+		isWindCol = true;
+	}
+
+	//parameter.isDead = true;
+	//Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
 }

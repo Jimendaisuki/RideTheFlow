@@ -7,11 +7,11 @@
 #include "../../time/Time.h"
 #include "../../math/Math.h"
 #include "../castle/CastleParameter.h"
+#include "EnemyParameter.h"
 #include "../../math/Quaternion.h"
 #include "../../UIactor/Effect.h"
 
-//—¬‚ê‚Ì‰e‹¿‚ğó‚¯‚éŠ„‡
-static const float WindPercentage = 100.0f;
+
 
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
@@ -76,7 +76,7 @@ void EnemyBullet::Update()
 
 	//—¬‚ê‚ÌŒü‚«‚ğ‰Á–¡
 	if (isWindCol)
-		vec = Vector3::Lerp(vec, windVec, WindPercentage / 100.0f);
+		vec = Vector3::Lerp(vec, windVec, ArmyWindPercentage / 100.0f);
 
 	//ˆÚ“®
 	mPosition += vec;

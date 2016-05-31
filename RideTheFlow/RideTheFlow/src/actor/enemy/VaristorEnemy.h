@@ -14,17 +14,15 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
-	Matrix4 playerMat;
-	Matrix4 cameraMat;
 	Vector3 mPosition;
-	Vector3 toPoint;
 	Vector3 rotate;
+	Matrix4 playerMat;
+	float playerDot;
 
+	//UŒ‚ŠÖŒW
 	float mSecondAttack;
 	float mArrowNumber;
-
 	float playerAngle;
-
 	float attackTime;
 	float attackRag;
 	int arrowCount;

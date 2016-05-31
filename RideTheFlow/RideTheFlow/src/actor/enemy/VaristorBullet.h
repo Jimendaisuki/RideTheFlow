@@ -7,7 +7,7 @@
 class VaristorBullet :public Actor, public std::enable_shared_from_this<VaristorBullet>
 {
 public:
-	VaristorBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_);
+	VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ);
 	~VaristorBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -20,6 +20,16 @@ private:
 	Vector3 coppyPosition;
 	Vector3 mToPoint;
 	Vector3 vec;
+	float mRotateY;
+	float mRotateZ;
+
+	//１フレーム前の座標
+	Vector3 prevPosition;
+	//流れとのヒット時、流れの向き
+	Vector3 windVec;
+	//流れとヒットしているか？
+	bool isWindCol;
+
 	float time;
 	float speed;
 };

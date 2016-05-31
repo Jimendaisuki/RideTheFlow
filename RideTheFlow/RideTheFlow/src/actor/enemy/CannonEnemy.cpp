@@ -8,27 +8,22 @@
 #include "../../math/Math.h"
 #include "../Player.h"
 #include  "../../Def.h"
+#include "../../math/Quaternion.h"
 
 CannonEnemy::CannonEnemy(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),
-cameraMat(Matrix4::Identity),
 attackRag(0),
 attackTime(0),
 arrowCount(0),
 playerAngle(0),
+playerDot(0),
 mPosition(position),
-isLook(true),
-toPoint(Vector3::Zero)
+isLook(true)
 {
 	parameter.isDead = false;
 	parameter.mat = Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
-	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized();
-	rotate = Vector3(0.0f, Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f, 0.0f);
-	restRotate = rotate;
-	rotateVelocity = Vector3::Zero;
-	test = 0.0f;
 }
 CannonEnemy::~CannonEnemy()
 {
@@ -41,15 +36,20 @@ void CannonEnemy::Update()
 		playerMat = other.GetParameter().mat;
 		tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	});
-	world.EachActor(ACTOR_ID::CAMERA_ACTOR, [&](const Actor& other){
-		cameraMat = other.GetParameter().mat;
-	});
+	//あたり判定
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
-
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
+	//プレイヤーの前
+	Vector3 playerFront = playerMat.GetFront().Normalized()*cameraFrontAttack + playerMat.GetPosition();
 	//敵とプレイヤーの角度を求める
-	playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
+	float playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
 		Math::Sqrt(Math::Pow(playerMat.GetPosition().z - mPosition.z, 2) +
 		Math::Pow(playerMat.GetPosition().x - mPosition.x, 2))) *
+		180 / 3.1415f;
+	//敵が放つ攻撃の角度
+	float attackAngleZ = atan2(playerFront.y - mPosition.y,
+		Math::Sqrt(Math::Pow(playerFront.z - mPosition.z, 2) +
+		Math::Pow(playerFront.x - mPosition.x, 2))) *
 		180 / 3.1415f;
 
 	//プレイヤーが見えているかどうか
@@ -63,32 +63,32 @@ void CannonEnemy::Update()
 		mArrowNumber = NotLookCannonShellNum;
 		mSecondAttack = NotLookCannonAttackTime;
 	}
-	//ダッシュ中以外はカメラの前に矢を放つ
+	isLook = true;
+
+	//ダッシュ中以外はプレイヤーの前に矢を放つ
 	if (tp.dashFlag)
 	{
-		toPoint = playerMat.GetPosition();
+		playerDot = Vector3::Dot(parameter.mat.GetLeft(), playerMat.GetPosition());
+		attackAngleZ = playerAngle;
 	}
 	else
 	{
-		toPoint = playerMat.GetFront().Normalized()*cameraFrontAttack+playerMat.GetPosition();
+		playerDot = Vector3::Dot(parameter.mat.GetLeft(), playerFront*cameraFrontAttack);
 	}
 
-	isLook = true;
+	//右にいるか左にいるかを確かめ旋回する
+	if (Math::Abs(playerDot) >= 2.0f)
+	{
+    	if (playerDot > 0)
+		{
+			rotate.y += ConnonSwingSpeed*Time::DeltaTime;
+		}
+		else
+		{
+			rotate.y -= ConnonSwingSpeed*Time::DeltaTime;
+		}
+	}
 
-
-	Vector3 v = (playerMat.GetPosition() - parameter.mat.GetPosition()).Normalized();
-	restRotate.y = Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f;
-
-	Vector3 stretch = (rotate - restRotate);
-	Vector3 force = -ConnonSwingSpeed * stretch;
-	Vector3 acceleration = force / 2.0f;
-	rotateVelocity = 0.5f * (rotateVelocity + acceleration);
-	rotate += rotateVelocity;
-
-	float rotateZ = atan2(playerMat.GetPosition().y - mPosition.y,
-		Math::Sqrt(Math::Pow(playerMat.GetPosition().z - mPosition.z, 2) +
-		Math::Pow(playerMat.GetPosition().x - mPosition.x, 2))) *
-		180 / 3.1415f;
 
 	//攻撃
 	attackRag += Time::DeltaTime;
@@ -100,25 +100,31 @@ void CannonEnemy::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this,rotate.y,rotateZ));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this,rotate.y-90,attackAngleZ));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;
 			attackTime = 0.0f;
 		}
 	}
-	parameter.mat = Matrix4::Translate(mPosition);
+	//マトリックス計算
+	parameter.mat =
+		Quaternion::RotateAxis(Vector3::Up,rotate.y) *
+		Matrix4::Translate(mPosition);
 
 }
 void CannonEnemy::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat.GetPosition(),rotate);
-	//DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateY   %f", rotateZ);
+	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat.GetPosition(),rotate-Vector3(0,90,0));
 }
 void CannonEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
 	{
 		isLook = false;
+	}
+	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
+	{
+		parameter.isDead = true;
 	}
 }

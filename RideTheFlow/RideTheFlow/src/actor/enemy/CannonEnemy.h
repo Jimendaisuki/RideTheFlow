@@ -16,15 +16,8 @@ public:
 private:
 	Vector3 mPosition;
 	Vector3 rotate;
-	Vector3 restRotate;
-	Vector3 rotateVelocity;
-	float test;
-
-
-	//UŒ‚‚Ìs‚«‚Â‚­æŠÖŒW
 	Matrix4 playerMat;
-	Matrix4 cameraMat;
-	Vector3 toPoint;
+	float playerDot;
 
 	//UŒ‚ŠÖŒW
 	float mSecondAttack;

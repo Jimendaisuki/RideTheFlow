@@ -8,23 +8,20 @@
 #include "../castle/CastleParameter.h"
 #include "../enemy/EnemyParameter.h"
 #include "../Collision.h"
-
+#include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 
-CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float rotateZ) :
+CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ) :
 Actor(world),
 time(0),
-speed(0.5f),
-distance(0, 0, 0),
+speed(CannonSpeed),
 mPosition(position),
 mScale(1.0f),
-coppyPosition(position),
 mRotateY(rotateY),
-mRotateZ(rotateZ)
+mRotateZ(attackAngleZ)
 {
-	mRandomTarget = Vector3(GetRand(CannonShellAccuracy * 2) - CannonShellAccuracy,
-		GetRand(CannonShellAccuracy * 2) - CannonShellAccuracy,
-		GetRand(CannonShellAccuracy * 2) - CannonShellAccuracy);
+	mRotateY += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
+	mRotateZ += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
@@ -33,14 +30,8 @@ mRotateZ(rotateZ)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	distance = (mToPoint + mRandomTarget) - mPosition;
 	parent = &parent_;
 
-	Matrix4 playerMat;
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
-	});
-	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized();
 }
 CannonBullet::~CannonBullet()
 {
@@ -48,19 +39,22 @@ CannonBullet::~CannonBullet()
 }
 void CannonBullet::Update()
 {
-	time += Time::DeltaTime * speed;
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+	time += CannonSpeed*Time::DeltaTime;
 	//進行方向を計算
 		vec = Vector3(
 			CannonInitialVelocity*Math::Cos(mRotateY),
 			CannonInitialVelocity*Math::Sin(mRotateZ) - 9.8f*time,
 			CannonInitialVelocity*Math::Sin(-mRotateY));
+	
 	//移動
-	mPosition += vec;
-
-
-
+		mPosition += vec*CannonSpeed*Time::DeltaTime;
+	//流れの向きを加味
+		if (isWindCol)
+			vec = Vector3::Lerp(vec, windVec, CannonWindPercentage / 100.0f);
 
 	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
+
 
 	//マトリックス計算
 	parameter.mat =
@@ -69,12 +63,17 @@ void CannonBullet::Update()
 
 void CannonBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
-
+	Model::GetInstance().Draw(MODEL_ID::CANNON_BALL_MODEL, parameter.mat);
 }
 
 void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	parameter.isDead = true;
-	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
+	if (colpara.colID == COL_ID::BULLET_WIND_COL)
+	{
+		windVec = colpara.colVelosity;
+		isWindCol = true;
+	}
+
+	//parameter.isDead = true;
+	//Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
 }
