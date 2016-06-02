@@ -52,8 +52,7 @@ void Game1::Update()
 	Keyboard::GetInstance().Update();
 	GamePad::GetInstance().Update();
 	// EscÉLÅ[ì¸óÕÇ≈ã≠êßèIóπ
-	if (Keyboard::GetInstance().KeyTriggerDown(KEY_INPUT_ESCAPE) ||
-		(GamePad::GetInstance().ButtonStateDown(PAD_INPUT_9) && GamePad::GetInstance().ButtonStateDown(PAD_INPUT_10)))
+	if (Keyboard::GetInstance().KeyTriggerDown(KEY_INPUT_ESCAPE))
 	{
 		GameFrame::GameEnd();
 		return;

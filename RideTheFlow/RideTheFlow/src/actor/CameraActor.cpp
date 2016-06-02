@@ -35,8 +35,8 @@ void CameraActor::Update()
 }
 void CameraActor::Draw() const
 {	
-	//TextDraw::GetInstance().Draw(Point::Zero, target.GetPosition());
-	//TextDraw::GetInstance().Draw(Point(0,16), target.GetScale());
+	//TextDraw::Draw(Point::Zero, target.GetPosition());
+	//TextDraw::Draw(Point(0,16), target.GetScale());
 }
 void CameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

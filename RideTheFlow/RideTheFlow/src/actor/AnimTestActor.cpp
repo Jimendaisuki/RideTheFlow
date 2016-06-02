@@ -64,9 +64,9 @@ void AnimTestActor::Draw() const
 	//Anime::GetInstance().PlayAnime(MODEL_ID::TEST_MODEL, 0, animetime);
 	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, parameter.mat);
 
-	TextDraw::GetInstance().Draw(Vector3(animetime * 6.0f));
-	TextDraw::GetInstance().Draw(Point(0, 20), parameter.mat.GetRotate());
-	//TextDraw::GetInstance().Draw(Point(0, 40), parameter.mat);
+	TextDraw::Draw(Vector3(animetime * 6.0f));
+	TextDraw::Draw(Point(0, 20), parameter.mat.GetRotate());
+	//TextDraw::Draw(Point(0, 40), parameter.mat);
 }
 void AnimTestActor::OnCollide(Actor& other, CollisionParameter colpara)
 {
