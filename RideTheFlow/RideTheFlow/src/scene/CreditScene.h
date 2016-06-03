@@ -30,4 +30,8 @@ private:
 	int timeTest;
 	Vector3 position;
 	std::vector<Vector3>boonPositions;
+
+	Vector2 leftstick;
+	Vector2 rightstick;
+	std::vector<bool>buttons;
 };

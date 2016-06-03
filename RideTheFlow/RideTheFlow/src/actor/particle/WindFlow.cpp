@@ -65,6 +65,15 @@ void WindFlow::Update()
 void WindFlow::Draw() const
 {
 	DrawParticles();
+
+	//for (Vector3 i : dashPositions)
+	//{
+	//	Vector3 top = i;
+	//	top.y = HeightMax;
+	//	Vector3 bottom = i;
+	//	bottom.y = HeightMin;
+	//	DrawCapsule3D(bottom.ToVECTOR(), top.ToVECTOR(), parameter.radius, 10, 1, 1, 0);
+	//}
 }
 void WindFlow::OnCollide(Actor& other, CollisionParameter colpara)
 {

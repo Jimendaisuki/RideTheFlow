@@ -82,6 +82,13 @@ public:
 	///</summary>
 	static Vector3 Backward;
 
+	//色
+	static Vector3 White;
+	static Vector3 Black;
+	static Vector3 Blue;
+	static Vector3 Red;
+	static Vector3 Green;
+
 public:
 	///<summary>
 	/// 自身のベクトルの大きさ（長さ）を返す

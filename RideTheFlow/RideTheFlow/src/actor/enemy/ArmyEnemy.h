@@ -18,6 +18,8 @@ private:
 	Matrix4 playerMat;
 	Matrix4 cameraMat;
 	Vector3 mPosition;
+	Vector3 toPoint;
+	Vector3 rotate;
 
 	float mSecondAttack;
 	float mArrowNumber;
@@ -27,8 +29,8 @@ private:
 	float attackTime;
 	float attackRag;
 	int arrowCount;
-	float clor;
 	bool isLook;
+
 };
 
 #endif

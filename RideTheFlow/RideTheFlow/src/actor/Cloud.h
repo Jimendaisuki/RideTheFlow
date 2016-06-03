@@ -13,12 +13,16 @@ public:
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
+	//数値リセット
+	void Reset();
+	//ステージの外に出ているか？
+	bool IsStageOut();
+
 private:
 	//雲の位置をばらつかせるための配列
 	std::vector<Vector3> cloudPositions;
 	//サイズ
 	std::vector<float> cloudsizes;
-
 
 	//現在の座標
 	Vector3 position;
@@ -29,6 +33,8 @@ private:
 	//移動方向切り替え用タイマー
 	float moveChangeTimer;
 	float moveChangeTime;
+	//流れから離れた時間タイマー
+	float windOutTimer;
 
 	//セルフビルボード計算用、カメラから計算
 	Vector3 up;
