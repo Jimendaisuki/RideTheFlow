@@ -11,6 +11,11 @@ Vector3 Vector3::Right = Vector3(1, 0, 0);
 Vector3 Vector3::Left = Vector3(-1, 0, 0);
 Vector3 Vector3::Forward = Vector3(0, 0, -1);
 Vector3 Vector3::Backward = Vector3(0, 0, 1);
+Vector3 Vector3::White = Vector3(255,	255,	255);
+Vector3 Vector3::Black = Vector3(0,		0,		0);
+Vector3 Vector3::Blue  = Vector3(0,		0,		255);
+Vector3 Vector3::Red   = Vector3(255,	0,		0);
+Vector3 Vector3::Green = Vector3(0,		255,	0);
 
 Vector3::Vector3()
 : x(0), y(0), z(0)
