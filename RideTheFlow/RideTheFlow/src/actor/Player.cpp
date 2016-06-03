@@ -14,11 +14,11 @@
 #include "particle\WindFlow.h"
 
 //ボーンの数
-const int boneCount = 33;
+const int boneCount = 38;
 //波の周波
 const float waveCount = 0.52f;
 //モデルのスケール
-const Vector3 scale = Vector3(0.01f);
+const Vector3 scale = Vector3(3.0f);
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
@@ -569,7 +569,7 @@ void Player::Draw() const{
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
-	//ParameterDraw();
+	ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
 	//for (int count = 2; count < bonePosStorage.size() ; count++){
