@@ -289,7 +289,7 @@ void TitleScene::Draw() const
 {
 	wo.Draw();
 
-	TextDraw::GetInstance().Draw("TitleScene");
+	TextDraw::Draw("TitleScene");
 	//DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
 	//DrawFormatString(0, 160, GetColor(255, 0, 0), "R,F		: ダメージ演出");
 	//DrawFormatString(0, 180, GetColor(255, 0, 0), "T,G		: スタミナ増減");
