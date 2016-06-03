@@ -111,7 +111,7 @@ void TitleCameraActor::Liner(float sec)
 void TitleCameraActor::BeziersCurve(float sec)
 {
 	float b = time / sec;
-	float a = 1 - b;
+	float a = 1.0f - b;
 
 	/* à íuéZèo */
 	p.x = a * a * a * frames[0].x + 3 * a*a*b*frames[1].x + 3 * a*b*b*frames[2].x + b*b*b*frames[3].x;

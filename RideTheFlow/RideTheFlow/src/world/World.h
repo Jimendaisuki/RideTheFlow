@@ -21,7 +21,10 @@ public:
 	virtual void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func) override;
 	virtual void EachUIActor(EFFECT_ID id, std::function<void(const UIActor&)> func) override;
 
+	virtual ActorPtr GetPlayer() const override;
+	virtual ActorPtr GetCamera() const override;
+
 private:
 	WorldActor actors;
-
+	ActorPtr   playerActor, cameraActor;
 };

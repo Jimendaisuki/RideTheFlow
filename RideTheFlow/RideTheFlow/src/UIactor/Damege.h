@@ -4,7 +4,7 @@
 class Damege : public UIActor
 {
 public:
-	Damege(IWorld& world, float& HP_);
+	Damege(IWorld& world, float& HP_, float maxHP_);
 	~Damege();
 	virtual void Update() override;
 	virtual void Draw() const override;

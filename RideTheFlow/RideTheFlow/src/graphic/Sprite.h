@@ -90,6 +90,11 @@ public:
 	///</summary>
 	void Draw(const SPRITE_ID& id, const Vector2& position, const Point& size, const Vector2& origin, float alpha, const Vector2& scale, float angle, bool trans, bool turn);
 	///<summary>
+	///<summary>
+	/// 通常画像の描画(アセット名、座標、表示矩形サイズ、原点、アルファ値、拡大率、回転率、透過、反転)
+	///</summary>
+	void Draw(const SPRITE_ID& id, const Vector2& position, const RECT& rect, const Vector2& origin, float alpha, const Vector2& scale, float angle, bool trans, bool turn);
+	///<summary>
 
 	///<summary>
 	/// ブレンド画像の描画(アセット名、座標、原点、拡大率、回転率、ブレンドモード)

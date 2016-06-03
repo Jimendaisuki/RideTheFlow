@@ -25,7 +25,9 @@ UIActor(world)
 
 Stamina::~Stamina()
 {
-	//delete nowStamina;
+	// ƒ|ƒCƒ“ƒ^‰ð•ú
+	maxStamina = nullptr;
+	nowStamina = nullptr;
 }
 
 void Stamina::Update()
