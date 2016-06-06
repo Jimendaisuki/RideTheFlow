@@ -1,4 +1,12 @@
 #pragma once
+#include "../../math/Vector2.h"
+
+enum FADE_STATUS
+{
+	STANDBY	= 0,
+	FadeIn	= 1,
+	FadeOut = 2
+};
 
 class FadePanel
 {
@@ -18,4 +26,18 @@ public:
 	void FadeIn(float sec);
 	void FadeOut(float sec);
 	bool IsAction();
+	bool IsFullBlack();
+	bool IsFullClear();
+
+private:
+	void Setting(float time);
+
+private:
+	FADE_STATUS status;
+
+	float time;
+	float actionTime;
+	float alpha;
+	bool isAction;
+	Vector2 scale;
 };

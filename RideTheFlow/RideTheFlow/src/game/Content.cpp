@@ -19,9 +19,29 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("damage.png", SPRITE_ID::DAMAGE_SPRITE);
 	sprite.Load("staminagauge.png", SPRITE_ID::STAMINA_SPRITE);
 	sprite.Load("staminaback.png", SPRITE_ID::STAMINA_BACK_SPRITE);
-	sprite.Load("title_kiryuu.png", SPRITE_ID::TITLE_TEXT);
-	sprite.Load("title_pressany.png", SPRITE_ID::TITLE_PRESS);
-	sprite.Load("title_pressanyback.png", SPRITE_ID::TITLE_PRESS_BACK);
+	sprite.Load("title_kiryuu.png", SPRITE_ID::TITLE_TEXT_SPRITE);
+	sprite.Load("title_pressany.png", SPRITE_ID::TITLE_PRESS_SPRITE);
+	sprite.Load("title_pressanyback.png", SPRITE_ID::TITLE_PRESS_BACK_SPRITE);
+	sprite.Load("roll_1.png", SPRITE_ID::MENU_ROLL_1_SPRITE);
+	sprite.Load("roll_2.png", SPRITE_ID::MENU_ROLL_2_SPRITE);
+	sprite.Load("roll_3.png", SPRITE_ID::MENU_ROLL_3_SPRITE);
+	sprite.Load("startgame.png", SPRITE_ID::START_GAME_SPRITE);
+	sprite.Load("startgameback.png", SPRITE_ID::START_GAME_BACK_SPRITE);
+	sprite.Load("backtogame.png", SPRITE_ID::BACK_TO_GAME_SPRITE);
+	sprite.Load("backtogameback.png", SPRITE_ID::BACK_TO_GAME_BACK_SPRITE);
+	sprite.Load("backtomenu.png", SPRITE_ID::BACK_TO_MENU_SPRITE);
+	sprite.Load("backtomenuback.png", SPRITE_ID::BACK_TO_MENU_BACK_SPRITE);
+	sprite.Load("exitgame.png", SPRITE_ID::EXIT_GAME_SPRITE);
+	sprite.Load("exitgameback.png", SPRITE_ID::EXIT_GAME_BACK_SPRITE);
+	sprite.Load("manual.png", SPRITE_ID::MANUAL_SPRITE);
+	sprite.Load("manualback.png", SPRITE_ID::MANUAL_BACK_SPRITE);
+	sprite.Load("manual1.png", SPRITE_ID::MANUAL_1_SPRITE);
+	sprite.Load("manual2.png", SPRITE_ID::MANUAL_2_SPRITE);
+	sprite.Load("manual3.png", SPRITE_ID::MANUAL_3_SPRITE);
+	sprite.Load("manual4.png", SPRITE_ID::MANUAL_4_SPRITE);
+	sprite.Load("point.png", SPRITE_ID::POINT_SPRITE);
+	sprite.Load("blackscreen.png", SPRITE_ID::BLACK_SCREEN);
+
 
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");

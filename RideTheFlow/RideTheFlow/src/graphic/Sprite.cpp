@@ -156,6 +156,17 @@ void Sprite::Draw(const SPRITE_ID& id, const Vector2& position, const Point& siz
 	DefaultBlend();
 }
 
+// 通常画像の描画(アセット名、座標、表示矩形サイズ、原点、アルファ値、拡大率、回転率、透過、反転)
+void Sprite::Draw(const SPRITE_ID& id, const Vector2& position, const RECT& rect, const Vector2& origin = Vector2::Zero, float alpha = 1.0f, const Vector2& scale = Vector2::One, float angle = 0.0f, bool trans = true, bool turn = false)
+{
+	int handle = DerivationGraph(rect.left, rect.top, rect.right - rect.left, rect.bottom, m_sprites[id]);
+	AlphaBlend(alpha);
+	DrawRotaGraph3((int)position.x, (int)position.y, (int)origin.x, (int)origin.y,
+		(double)scale.x, (double)scale.y, (double)angle * PI / 180.0, handle, trans, turn);
+	DeleteGraph(handle);
+	DefaultBlend();
+}
+
 void Sprite::DrawBlend(const SPRITE_ID& id, const Vector2& position, const Vector2& origin, const Vector2& scale, float angle, const int& blendmode)
 {
 	SetDrawBlendMode(blendmode, 255);

@@ -219,7 +219,7 @@
     <ClCompile Include="src\UIactor\fadePanel\FadePanel.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\AirGun.cpp">
+    <ClCompile Include="src\UIactor\menuPanel\MenuPanel.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -476,7 +476,10 @@
     <ClInclude Include="src\UIactor\fadePanel\FadePanel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\AirGun.h">
+    <ClInclude Include="src\UIactor\Beziers.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIactor\menuPanel\MenuPanel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

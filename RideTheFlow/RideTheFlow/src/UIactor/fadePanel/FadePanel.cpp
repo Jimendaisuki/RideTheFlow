@@ -4,65 +4,84 @@
 #include "../../time/Time.h"
 #include "../../Def.h"
 
-float time = 0;
-float actionTime = 0;
-float alpha = 1;
-Vector2 scale = Vector2::Zero;
-bool isAction = false;
-bool isIn = true;
 const Vector2 HD = Vector2(1920, 1080);
-const Vector2 resSize = Vector2(1920, 1080);
+const Vector2 resSize = Vector2(800, 600);
 
 void FadePanel::Initialize()
 {
 	/* 初期設定 */
-	scale.x = (float)WINDOW_WIDTH / HD.x;
-	scale.y = (float)WINDOW_HEIGHT / HD.y;
+	scale.x = (float)WINDOW_WIDTH  / resSize.x;
+	scale.y = (float)WINDOW_HEIGHT / resSize.y;
 	isAction = false;
 	alpha = 1;
 	time = 0;
 	actionTime = 0;
-
-	isIn = true;
+	status = FADE_STATUS::STANDBY;
 }
 
 void FadePanel::Update()
 {
 	if (!isAction) return;
 
-	if (time <= 0.0f) isAction = false;
-	else
+	// 処理
+	if (time <= 0.0f) status = FADE_STATUS::STANDBY;
+	else time -= Time::DeltaTime;
+
+	switch (status)
 	{
-		time -= Time::DeltaTime;
-		if (isIn)	alpha -= (Time::DeltaTime / actionTime);
-		else		alpha += (Time::DeltaTime / actionTime);
+	case FADE_STATUS::FadeIn:
+		alpha -= (Time::DeltaTime / actionTime);
+		break;
+	case FADE_STATUS::FadeOut:
+		alpha += (Time::DeltaTime / actionTime);
+		break;
+	default:
+		isAction = false;
+		break;
 	}
 
+	// 一応抜け出し用
+	if (alpha < 0.0f || 1.0f < alpha) status = FADE_STATUS::STANDBY;
+	// アルファクランプ
 	alpha = Math::Clamp(alpha, 0.0f, 1.0f);
 }
 
 void FadePanel::Draw()const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::DAMAGE_SPRITE, Vector2::Zero, Vector2::Zero, alpha, scale, 0.0f, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, alpha, scale, 0.0f, false, false);
 }
 
 void FadePanel::FadeIn(float sec_)
 {
-	isAction = true;
-	isIn = true;
-	actionTime = sec_;
-	time = actionTime;
+	status = FADE_STATUS::FadeIn;
+	Setting(sec_);
 }
 
 void FadePanel::FadeOut(float sec_)
 {
-	isAction = true;
-	isIn = false;
-	actionTime = sec_;
-	time = actionTime;
+	status = FADE_STATUS::FadeOut;
+	Setting(sec_);
 }
 
 bool FadePanel::IsAction()
 {
 	return isAction;
 }
+
+bool FadePanel::IsFullBlack()
+{
+	return alpha >= 1.0f;
+}
+
+bool FadePanel::IsFullClear()
+{
+	return alpha <= 0.0f;
+}
+
+void FadePanel::Setting(float time_)
+{
+	isAction = true;
+	actionTime = time_;
+	time = actionTime;
+}
+
