@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\AirGun.cpp" />
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonBullet.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actor\AirGun.h" />
     <ClInclude Include="src\actor\enemy\ArmyEnemy.h" />
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
