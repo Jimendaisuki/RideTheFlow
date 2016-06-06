@@ -19,6 +19,7 @@ enum ACTOR_ID{
 	CLOUD_ACTOR,
 	WIND_ACTOR,
 	TORNADO_ACTOR,
+	AIR_GUN_ACTOR,
 	
 	//========2DUI========//
 	EFFECT_ACTOR,
