@@ -14,7 +14,7 @@ SpeedLine::SpeedLine(IWorld& world, float angle_) :
 UIActor(world)
 {
 	parameter.isDead = false;
-	parameter.id	 = EFFECT_ID::SPEED_EFFECT;
+	parameter.id	 = UI_ID::SPEED_UI;
 
 	/* ‰Šúİ’è */
 	alpha = 0.0f;
@@ -46,7 +46,7 @@ SpeedLine::SpeedLine(IWorld& world, float angle_, Vector3 position_) :
 UIActor(world)
 {
 	parameter.isDead = false;
-	parameter.id = EFFECT_ID::SPEED_EFFECT;
+	parameter.id = UI_ID::SPEED_UI;
 
 	/* ‰Šúİ’è */
 	alpha = 0.0f;
@@ -88,7 +88,7 @@ velocity(velocity_),
 rotate(rotate_)
 {
 	parameter.isDead = false;
-	parameter.id = EFFECT_ID::SPEED_EFFECT;
+	parameter.id = UI_ID::SPEED_UI;
 
 	/* ‰Šúİ’è */
 	alpha = 0.0f;

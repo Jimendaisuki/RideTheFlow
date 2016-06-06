@@ -41,6 +41,7 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("manual4.png", SPRITE_ID::MANUAL_4_SPRITE);
 	sprite.Load("point.png", SPRITE_ID::POINT_SPRITE);
 	sprite.Load("blackscreen.png", SPRITE_ID::BLACK_SCREEN);
+	sprite.Load("tornadopolytex.png", SPRITE_ID::TORNADO_SPRITE);
 
 
 	//sprite.Load("title.png");

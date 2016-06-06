@@ -30,8 +30,8 @@ void World::Add(ACTOR_ID id, ActorPtr actor){
 	actors.Add(id, actor);
 }
 
-void World::UIAdd(EFFECT_ID id, UIActorPtr actor){
-	actors.EffectAdd(id, actor);
+void World::UIAdd(UI_ID id, UIActorPtr actor){
+	actors.UIAdd(id, actor);
 }
 
 bool World::IsEnd()const{
@@ -48,7 +48,7 @@ void World::EachActor(ACTOR_ID id, std::function<void(const Actor&)> func)
 {
 	actors.EachActor(id, func);
 }
-void World::EachUIActor(EFFECT_ID id, std::function<void(const UIActor&)> func)
+void World::EachUIActor(UI_ID id, std::function<void(const UIActor&)> func)
 {
 	actors.EachUIActor(id, func);
 }

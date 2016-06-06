@@ -14,7 +14,7 @@ Damege::Damege(IWorld& world, float& HP_, float maxHP_) :
 UIActor(world)
 {
 	parameter.isDead = false;
-	parameter.id = EFFECT_ID::DAMAGE_EFFECT;
+	parameter.id = UI_ID::DAMAGE_UI;
 
 	/* èâä˙ê›íË */
 	scale.x = (float)WINDOW_WIDTH / HD.x;

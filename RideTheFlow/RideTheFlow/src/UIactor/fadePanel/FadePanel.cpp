@@ -13,7 +13,8 @@ void FadePanel::Initialize()
 	scale.x = (float)WINDOW_WIDTH  / resSize.x;
 	scale.y = (float)WINDOW_HEIGHT / resSize.y;
 	isAction = false;
-	alpha = 1;
+	alpha = 1.0f;
+	maxAlpha = 1.0f;
 	time = 0;
 	actionTime = 0;
 	status = FADE_STATUS::STANDBY;
@@ -41,9 +42,9 @@ void FadePanel::Update()
 	}
 
 	// 一応抜け出し用
-	if (alpha < 0.0f || 1.0f < alpha) status = FADE_STATUS::STANDBY;
+	if (alpha < 0.0f || maxAlpha < alpha) status = FADE_STATUS::STANDBY;
 	// アルファクランプ
-	alpha = Math::Clamp(alpha, 0.0f, 1.0f);
+	alpha = Math::Clamp(alpha, 0.0f, maxAlpha);
 }
 
 void FadePanel::Draw()const
@@ -57,9 +58,10 @@ void FadePanel::FadeIn(float sec_)
 	Setting(sec_);
 }
 
-void FadePanel::FadeOut(float sec_)
+void FadePanel::FadeOut(float sec_, float maxAlpha_)
 {
 	status = FADE_STATUS::FadeOut;
+	maxAlpha = maxAlpha_;
 	Setting(sec_);
 }
 
