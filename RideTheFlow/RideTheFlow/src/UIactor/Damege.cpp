@@ -10,7 +10,7 @@ const float offset    = 20.0f;
 const Vector2 HD	  = Vector2(1920, 1080);
 const Vector2 resSize = Vector2(1920, 1080);
 
-Damege::Damege(IWorld& world, float& HP_) :
+Damege::Damege(IWorld& world, float& HP_, float maxHP_) :
 UIActor(world)
 {
 	parameter.isDead = false;
@@ -28,12 +28,13 @@ UIActor(world)
 	//});
 
 	nowHP = &HP_;
-	maxHP = *nowHP;
+	maxHP = maxHP_;
 }
 
 Damege::~Damege()
 {
-
+	// ƒ|ƒCƒ“ƒ^‰ð•ú
+	nowHP = nullptr;
 }
 
 void Damege::Update()

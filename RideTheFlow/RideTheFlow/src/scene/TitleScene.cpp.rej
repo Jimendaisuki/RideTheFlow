@@ -1,0 +1,11 @@
+diff a/RideTheFlow/RideTheFlow/src/scene/TitleScene.cpp b/RideTheFlow/RideTheFlow/src/scene/TitleScene.cpp	(rejected hunks)
+@@ -230,6 +230,9 @@
+ 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::G))testStamina--;
+ 	}
+ 
++	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M))MenuPanel::GetInstance().Action();
++
++
+ 	wo.Update();
+ 	MenuPanel::GetInstance().Update();
+ 	FadePanel::GetInstance().Update();

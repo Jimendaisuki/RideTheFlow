@@ -219,10 +219,7 @@
     <ClCompile Include="src\UIactor\fadePanel\FadePanel.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\particle\SandParticle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\actor\particle\Sand.cpp">
+    <ClCompile Include="src\UIactor\menuPanel\MenuPanel.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -479,10 +476,10 @@
     <ClInclude Include="src\UIactor\fadePanel\FadePanel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\particle\SandParticle.h">
+    <ClInclude Include="src\UIactor\Beziers.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\particle\Sand.h">
+    <ClInclude Include="src\UIactor\menuPanel\MenuPanel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

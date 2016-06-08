@@ -17,4 +17,7 @@ public:
 	//子オブジェクトを巡回
 	virtual void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func) = 0;
 	virtual void EachUIActor(EFFECT_ID id, std::function<void(const UIActor&)> func) = 0;
+
+	virtual ActorPtr GetPlayer() const = 0;
+	virtual ActorPtr GetCamera() const = 0;
 };
