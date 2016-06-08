@@ -18,6 +18,8 @@ struct ParticleSystemParameter
 	float lifeTimeLimit;
 	//寿命かどうか
 	bool isDead;
+	//システム生成時に１度放出を行うか？
+	bool trigger;
 };
 
 class ParticleSystem
@@ -54,6 +56,8 @@ protected:
 	float lifeTime;
 	//放出計測用
 	float emissiveTimer;
+	//初期放出完了フラグ
+	bool isTriggerEnd;
 
 	ParticleSystemParameter ps_parameter;
 };

@@ -52,7 +52,6 @@ void Content::LoadModel(Model& model, bool async)
 {
 	WorkFolder::SetWorkFolder("res/Model/");
 
-	model.Load("test.x", MODEL_ID::BEGIN_MODEL, async, 0, true);
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("dra_test.pmx", MODEL_ID::TEST_MODEL, async);
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
@@ -95,6 +94,8 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("Castle/castle_base.pmx", MODEL_ID::CASTLE_BASE_MODEL, async);
 	model.Load("Castle/castle_Top.pmx", MODEL_ID::CASTLE_TOP_MODEL, async);
 	model.Load("Castle/castle_Top2.pmx", MODEL_ID::CASTLE_TOP2_MODEL, async);
+
+	model.Load("sun.x", MODEL_ID::CASTLE_ADD_MODEL, async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	

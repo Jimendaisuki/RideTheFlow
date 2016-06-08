@@ -9,6 +9,7 @@
 #include "../../game/Random.h"
 #include "CastleParameter.h"
 #include "CastleTop.h"
+#include "../particle/CastleAdd.h"
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position) :
 Actor(world),
@@ -54,6 +55,10 @@ void MasterCastle::Update()
 		rankUp = true;
 		castleTime = 0.0f;
 		rankUpRag = true;
+
+		//城出現時のパーティクルを生成
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition + Vector3(0.0f, parameter.radius * 2, 0.0f) + Vector3(0.0f, 20.0f*(Rank - mRank), 0.0f) + Vector3(0, 10 * (Rank - mRank), 0)));
+
 	}
 	else
 	{
