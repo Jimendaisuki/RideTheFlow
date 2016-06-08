@@ -11,6 +11,9 @@
 #include "../actor/enemy/ArmyEnemy.h"
 #include "../actor/enemy/VaristorEnemy.h"
 #include "../actor/enemy/CannonEnemy.h"
+#include "../actor/enemy/ShipEnemy.h"
+#include "../actor/enemy/DoragonSpearEnemy.h"
+#include "../actor/enemy/ShipVaristorEnemy.h"
 //コンストラクタ
 EndhingScene::EndhingScene()
 {
@@ -30,10 +33,11 @@ void EndhingScene::Initialize()
 	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<VaristorEnemy>(wa,Vector3(10,-50,20)));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CannonEnemy>(wa, Vector3(60, -50, 20)));
 	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa, Vector3(40, -50, 30)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
+	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -50, 0)));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
+
 	//for (int i = 0; i < 5; i++)
 	//{
 	//	for (int j = 0; j < 5; j++)

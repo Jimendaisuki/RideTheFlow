@@ -78,4 +78,6 @@ class Collisin{
 	CollisionParameter PushedBack_SphereCapsule(const Sphere& s, const Capsule& c) const;
 	//
 	Vector3 PushedBack_CapsuleCapsule(const Capsule& c1, const Capsule& c2) const;
+
+	CollisionParameter PushedBack_SphereSphere(const Sphere& s1, const Sphere& s2) const;
 };
