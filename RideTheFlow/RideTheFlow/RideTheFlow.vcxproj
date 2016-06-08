@@ -83,10 +83,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actor\castle\CastleCannon.cpp" />
+    <ClCompile Include="src\actor\castle\CastleDoragonSpear.cpp" />
+    <ClCompile Include="src\actor\castle\CastleTop.cpp" />
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonBullet.cpp" />
+    <ClCompile Include="src\actor\enemy\DoragonSpearEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\ShipCannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\ShipEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\ShipVaristorEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
@@ -154,14 +160,20 @@
     <ClCompile Include="src\world\WorldActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actor\castle\CastleCannon.h" />
+    <ClInclude Include="src\actor\castle\CastleDoragonSpear.h" />
+    <ClInclude Include="src\actor\castle\CastleTop.h" />
     <ClInclude Include="src\actor\enemy\ArmyEnemy.h" />
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\Cloud.h" />
     <ClInclude Include="src\actor\enemy\CannonEnemy.h" />
+    <ClInclude Include="src\actor\enemy\DoragonSpearEnemy.h" />
     <ClInclude Include="src\actor\enemy\EnemyParameter.h" />
     <ClInclude Include="src\actor\enemy\CannonBullet.h" />
+    <ClInclude Include="src\actor\enemy\ShipCannonEnemy.h" />
     <ClInclude Include="src\actor\enemy\ShipEnemy.h" />
+    <ClInclude Include="src\actor\enemy\ShipVaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
@@ -243,6 +255,18 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="res\Model\boonStage.pmd" />
+    <None Include="res\Model\Castle\castle_base.pmx" />
+    <None Include="res\Model\Castle\castle_base.vmd" />
+    <None Include="res\Model\Castle\castle_Master.pmx" />
+    <None Include="res\Model\Castle\castle_Master.vmd" />
+    <None Include="res\Model\Castle\castle_Top.pmx" />
+    <None Include="res\Model\Castle\castle_Top.vmd" />
+    <None Include="res\Model\Castle\castle_Top2.pmx" />
+    <None Include="res\Model\Castle\castle_Top2.vmd" />
+    <None Include="res\Model\dragonspear.pmx" />
+    <None Include="res\Model\dragonspear.vmd" />
+    <None Include="res\Model\dragonspear_tube.pmx" />
+    <None Include="res\Model\dragonspear_tube.vmd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -55,7 +55,7 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("ballista_arrow.mv1", MODEL_ID::BALLISTA_ARROW_MODEL, async);
 	model.Load("cannon.mv1", MODEL_ID::CANNON_MODEL, async);
 	model.Load("cannon_ball.mv1", MODEL_ID::CANNON_BALL_MODEL, async);
-	model.Load("castle.mv1", MODEL_ID::CASTLE_MODEL, async);
+
 	
 	model.Load("gong.mv1", MODEL_ID::GONG_MODEL, async);
 	model.Load("home.mv1", MODEL_ID::HOME_MODEL, async);
@@ -64,12 +64,23 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("isle_3.mv1", MODEL_ID::ISLE_3_MODEL, async);
 
 	model.Load("ship.mv1", MODEL_ID::SHIP_MODEL, async);
+	model.Load("dragonspear.pmx", MODEL_ID::DORAGON_SPEAR_MODEL);
+	model.Load("dragonspear_tube.pmx", MODEL_ID::DORAGON_SPEAR_TUBE_MODEL);
+
+	model.Load("dragonspear_tube.pmx", MODEL_ID::DORAGON_SPEAR_TUBE_MODEL);
+
+	model.Load("Castle/castle_Master.pmx", MODEL_ID::CASTLE_MASTER_MODEL, async);
+	model.Load("Castle/castle_base.pmx", MODEL_ID::CASTLE_BASE_MODEL, async);
+	model.Load("Castle/castle_Top.pmx", MODEL_ID::CASTLE_TOP_MODEL, async);
+	model.Load("Castle/castle_Top2.pmx", MODEL_ID::CASTLE_TOP2_MODEL, async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	
 	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));
 	model.Load2D("sand.png", MODEL_ID::SAND_2D);
 	model.Load2D("wind.png", MODEL_ID::WIND_2D);
+
+	
 
 	//model.Load("m1.pmx", async);
 	//model.Load("m3.pmd", async);

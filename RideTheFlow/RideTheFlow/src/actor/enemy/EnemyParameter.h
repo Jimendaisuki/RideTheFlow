@@ -46,7 +46,7 @@ const float VaristorAttackMinAngle = -45.0f;
 //バリスタの初速度
 const float VaristorInitialVelocity = 60.0f;
 //バリスタの旋回速度
-const float VaristorSwingSpeed = 50.0f;
+const float VaristorSwingSpeed = 100.0f;
 
 //バリスタからプレイヤーが見えていないときの攻撃クールタイム
 const float NotLookVaristorAttackTime = 10.0f;
@@ -65,7 +65,7 @@ const float VaristorWindPercentage = 100.0f;
 //大砲の弾スピード
 const float CannonSpeed = 3.0f;
 //大砲の攻撃クールタイム
-const float CannonAttackTime = 10.0f;
+const float CannonAttackTime = 0.1f;
 //大砲の攻撃範囲
 const float CannonRange = 300.0f;
 //大砲が一回に発射する砲弾の数
@@ -93,28 +93,64 @@ const float CannonWindPercentage = 100.0f;
 /****敵の船****/
 
 //船のスピード
-const float ShipSpeed = 3.0f;
-//船の攻撃クールタイム
-const float ShipAttackTime = 10.0f;
-//船の攻撃範囲
-const float ShipRange = 300.0f;
-//船が一回に発射する砲弾の数
-const int ShipShellNum = 1;
-//船の発射できるZを軸にした最高角度（度）
-const float  ShipAttackMaxAngle = 45.0f;
-//船の発射できるZを軸にした最低角度（度）
-const float ShipAttackMinAngle = -45.0f;
-//船の玉の初速度
-const float ShipInitialVelocity = 100.0f;
+const float ShipSpeed = 50.0f;
+//船の定位置の高さに戻るスピード
+const float ShipDownSpeed = 10.0f;
 //船の旋回速度
-const float ShipSwingSpeed = 50.0f;
-
-//船からプレイヤーが見えていないときの攻撃クールタイム
-const float NotLookShipAttackTime = 30.0f;
-//船からプレイヤーが見えていないときの一回に発射する砲弾の数
-const float NotLookShipShellNum = 1;
-
-//船攻撃精度(小さいほど高精度)
-const float ShipAttackAccuracy = 10.0f;
+const float ShipSwingSpeed = 25.0f;
 //船の攻撃が流れの影響を受ける割合
 const float ShipWindPercentage = 100.0f;
+
+//船バリスタの攻撃クールタイム
+const float ShipVaristorAttackTime = 4.0f;
+//船バリスタが一回に発射する矢の数
+const int ShipVaristorArrorwNum = 2;
+//船バリスタの攻撃範囲
+const float ShipVaristorRange = 300.0f;
+//船バリスタが発射できるZを軸にした最高角度（度）
+const float ShipVaristorAttackMaxAngle = 45.0f;
+//船バリスタが発射できるZを軸にした最小角度（度）
+const float ShipVaristorAttackMinAngle = -45.0f;
+//船バリスタの初速度
+const float ShipVaristorInitialVelocity = 60.0f;
+//船バリスタの旋回速度
+const float ShipVaristorSwingSpeed = 100.0f;
+
+//船バリスタからプレイヤーが見えていないときの攻撃クールタイム
+const float ShipNotLookVaristorAttackTime = 10.0f;
+//船バリスタからプレイヤーが見えていないときの一回に発射する矢の本数
+const float ShipNotLookVaristorArrowNum = 2;
+
+
+//船大砲の攻撃クールタイム
+const float ShipCannonAttackTime = 10.0f;
+//船大砲の攻撃範囲
+const float ShipCannonRange = 300.0f;
+//船大砲が一回に発射する砲弾の数
+const int ShipCannonShellNum = 1;
+//船大砲の発射できるZを軸にした最高角度（度）
+const float  ShipCannonAttackMaxAngle = 45.0f;
+//船大砲の発射できるZを軸にした最低角度（度）
+const float ShipCannonAttackMinAngle = -45.0f;
+//船大砲の玉の初速度
+const float ShipCannonInitialVelocity = 100.0f;
+//船大砲の旋回速度
+const float ShipConnonSwingSpeed = 50.0f;
+
+//船大砲からプレイヤーが見えていないときの攻撃クールタイム
+const float ShipNotLookCannonAttackTime = 30.0f;
+//船大砲からプレイヤーが見えていないときの一回に発射する砲弾の数
+const float ShipNotLookCannonShellNum = 1;
+
+
+/***撃龍槍***/
+
+//撃龍槍のクールタイム
+const float DoragonSpearAttackTime = 3.0f;
+//プレイヤーが撃龍槍圏内に入った時から攻撃する時までの時間
+const float DoragonSpearWithinTime = 0.1f;
+//撃龍槍が最大に伸びるまでの時間
+const float DoragonSpearMaxTime = 10.0f;
+//撃龍槍が完全に出てそこにとどまる時間
+const float DoragonSpearStopTime = 1.0f;
+

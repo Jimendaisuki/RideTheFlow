@@ -1,8 +1,9 @@
-#include "CannonEnemy.h"
+#include "CastleCannon.h"
+
 #include "../Collision.h"
 #include "../../world/IWorld.h"
 #include "../../graphic/Model.h"
-#include "EnemyParameter.h"
+#include "CastleParameter.h"
 #include "../../time/Time.h"
 #include "../enemy/CannonBullet.h"
 #include "../../math/Math.h"
@@ -10,7 +11,7 @@
 #include  "../../Def.h"
 #include "../../math/Quaternion.h"
 
-CannonEnemy::CannonEnemy(IWorld& world, Vector3 position) :
+CastleCannon::CastleCannon(IWorld& world, Vector3 position,Castle& _castle,float rotateY) :
 Actor(world),
 playerMat(Matrix4::Identity),
 attackRag(0),
@@ -19,17 +20,20 @@ arrowCount(0),
 playerAngle(0),
 playerDot(0),
 mPosition(position),
+mScale(2.0f),
 isLook(true)
 {
 	parameter.isDead = false;
 	parameter.mat = Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
+	mRotateY = rotateY;
+	castle = &_castle;
 }
-CannonEnemy::~CannonEnemy()
+CastleCannon::~CastleCannon()
 {
 
 }
-void CannonEnemy::Update()
+void CastleCannon::Update()
 {
 	TackleParameter tp;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
@@ -38,9 +42,8 @@ void CannonEnemy::Update()
 	});
 	//あたり判定
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	//プレイヤーの前
-	Vector3 playerFront = playerMat.GetFront().Normalized()*cameraFrontAttack + playerMat.GetPosition();
+	Vector3 playerFront = playerMat.GetFront().Normalized()*CastleCameraFrontAttack + playerMat.GetPosition();
 	//敵とプレイヤーの角度を求める
 	float playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
 		Math::Sqrt(Math::Pow(playerMat.GetPosition().z - mPosition.z, 2) +
@@ -55,13 +58,13 @@ void CannonEnemy::Update()
 	//プレイヤーが見えているかどうか
 	if (isLook)
 	{
-		mArrowNumber = CannonShellNum;
-		mSecondAttack = CannonAttackTime;
+		mArrowNumber = CastleCannonNumber;
+		mSecondAttack = CastleCannonSecondAttack;
 	}
 	else
 	{
-		mArrowNumber = NotLookCannonShellNum;
-		mSecondAttack = NotLookCannonAttackTime;
+		mArrowNumber = CastleCannonNotLookAttack;
+		mSecondAttack = CastleCannonNotLookSecondAttack;
 	}
 	isLook = true;
 
@@ -73,59 +76,45 @@ void CannonEnemy::Update()
 	}
 	else
 	{
-		playerDot = Vector3::Dot(parameter.mat.GetLeft(), playerFront*cameraFrontAttack);
+		playerDot = Vector3::Dot(parameter.mat.GetLeft(), playerFront*CastleCameraFrontAttack);
 	}
-
-	//右にいるか左にいるかを確かめ旋回する
-	if (Math::Abs(playerDot) >= 2.0f)
-	{
-    	if (playerDot > 0)
-		{
-			rotate.y += ConnonSwingSpeed*Time::DeltaTime;
-		}
-		else
-		{
-			rotate.y -= ConnonSwingSpeed*Time::DeltaTime;
-		}
-	}
-
 
 	//攻撃
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
 	if (attackTime >= mSecondAttack&&attackRag >= 0.03f&&arrowCount < mArrowNumber&&
-		Vector3::Distance(playerMat.GetPosition(), mPosition) <= CannonRange &&
-		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f&&
-		playerAngle <= CannonAttackMaxAngle&&playerAngle >= CannonAttackMinAngle)
+		Vector3::Distance(playerMat.GetPosition(), mPosition) <= CastleCannonAttackRange)
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this,rotate.y-90,attackAngleZ));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition+Vector3(0,10,0), *this, mRotateY - 90, attackAngleZ));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;
 			attackTime = 0.0f;
 		}
 	}
+	//ベースの城が死んだら死ぬ
+	if (castle->GetParameter().isDead)
+	{
+		parameter.isDead = true;
+	}
+	//城の速度を足す
+	mPosition += castle->GetVelocity()*Time::DeltaTime;
 	//マトリックス計算
 	parameter.mat =
-		Quaternion::RotateAxis(Vector3::Up,rotate.y) *
-		Matrix4::Translate(mPosition);
-
+		Matrix4::Scale(mScale)*
+	Quaternion::RotateAxis(Vector3::Up, mRotateY-90) *
+	Matrix4::Translate(mPosition);
 }
-void CannonEnemy::Draw() const
+void CastleCannon::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 5, 20, 1, 1, FALSE);
 }
-void CannonEnemy::OnCollide(Actor& other, CollisionParameter colpara)
+void CastleCannon::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
 	{
 		isLook = false;
-	}
-	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
-	{
-		parameter.isDead = true;
 	}
 }

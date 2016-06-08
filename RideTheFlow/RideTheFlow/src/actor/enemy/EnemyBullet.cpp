@@ -6,7 +6,6 @@
 #include "../../time/Time.h"
 #include "../../time/Time.h"
 #include "../../math/Math.h"
-#include "../castle/CastleParameter.h"
 #include "EnemyParameter.h"
 #include "../../math/Quaternion.h"
 #include "../../UIactor/Effect.h"
@@ -26,9 +25,9 @@ rotate(Vector3::Zero),
 windVec(Vector3::Zero),
 isWindCol(false)
 {
-	mRandomTarget = Vector3(GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-		GetRand(ArrowAccuracy * 2) - ArrowAccuracy,
-		GetRand(ArrowAccuracy * 2) - ArrowAccuracy);
+	mRandomTarget = Vector3(GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
+		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
+		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy);
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
