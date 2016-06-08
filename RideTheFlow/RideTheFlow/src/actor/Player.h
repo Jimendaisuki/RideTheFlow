@@ -4,7 +4,7 @@
 #include <memory>
 
 struct TackleParameter{
-	bool tackleFlag, tackleEndFlag,dashFlag;
+	bool tackleFlag, tackleEndFlag,dashFlag,tackleColFlag,tornadoTatchFlag,airGunFlag;
 	Matrix4 tackleRotate;
 	float tackleAngle;
 	Vector3 tackleT;

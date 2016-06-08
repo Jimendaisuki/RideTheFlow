@@ -20,9 +20,13 @@ void World::Draw() const{
 }
 void World::Clear(){
 	actors.Clear();
+	playerActor = nullptr;
+	cameraActor = nullptr;
 }
 
 void World::Add(ACTOR_ID id, ActorPtr actor){
+	if (id == ACTOR_ID::PLAYER_ACTOR)		playerActor = actor;
+	else if (id == ACTOR_ID::CAMERA_ACTOR)	cameraActor = actor;
 	actors.Add(id, actor);
 }
 
@@ -47,4 +51,14 @@ void World::EachActor(ACTOR_ID id, std::function<void(const Actor&)> func)
 void World::EachUIActor(EFFECT_ID id, std::function<void(const UIActor&)> func)
 {
 	actors.EachUIActor(id, func);
+}
+
+ActorPtr World::GetPlayer() const
+{
+	return playerActor;
+}
+
+ActorPtr World::GetCamera() const
+{
+	return cameraActor;
 }

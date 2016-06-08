@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 #include "Collision.h"
 #include "../world/IWorld.h"
 #include "../graphic/Sprite.h"
@@ -12,61 +12,62 @@
 #include "tornado\Tornado.h"
 #include "../game/Random.h"
 #include "particle\WindFlow.h"
+#include "AirGun.h"
 
-//ƒ{[ƒ“‚Ì”
-const int boneCount = 33;
-//”g‚Ìü”g
+//ãƒœãƒ¼ãƒ³ã®æ•°
+const int boneCount = 38;
+//æ³¢ã®å‘¨æ³¢
 const float waveCount = 0.52f;
-//ƒ‚ƒfƒ‹‚ÌƒXƒP[ƒ‹
-const Vector3 scale = Vector3(0.01f);
+//ãƒ¢ãƒ‡ãƒ«ã®ã‚¹ã‚±ãƒ¼ãƒ«
+const Vector3 scale = Vector3(3.0f);
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
-/*************************************************ƒŠƒ“ƒNŒN‚ª•Ï‚¦‚é‚Æ‚±‚ë*************************************************/
-//testƒR[ƒhA“®‚«‚ÌØ‚è‘Ö‚¦true‚Ì‹­ã‚È‚µ
+/*************************************************ãƒªãƒ³ã‚¯å›ãŒå¤‰ãˆã‚‹ã¨ã“ã‚*************************************************/
+//testã‚³ãƒ¼ãƒ‰ã€å‹•ãã®åˆ‡ã‚Šæ›¿ãˆtrueã®æ™‚å¼·å¼±ãªã—
 bool changeMotion = true;
 
-//changeMotion‚ªtrue‚Ì‚É”½‰f‚³‚ê‚é
-//‚­‚Ë‚­‚Ë‚Ìã‰º‚Ì‰ñ“]‘¬“x
+//changeMotionãŒtrueã®æ™‚ã«åæ˜ ã•ã‚Œã‚‹
+//ãã­ãã­ã®ä¸Šä¸‹ã®å›è»¢é€Ÿåº¦
 const float leftAngleSpeed = 270.0f;
-//‚­‚Ë‚­‚Ë‚Ìã‰º‚Ì‰ñ“]‚ÌU‚ê•
+//ãã­ãã­ã®ä¸Šä¸‹ã®å›è»¢ã®æŒ¯ã‚Œå¹…
 const float leftMoveRange = 10.0f;
-//‚­‚Ë‚­‚Ë‚Ì¶‰E‚Ì‰ñ“]‘¬“x
+//ãã­ãã­ã®å·¦å³ã®å›è»¢é€Ÿåº¦
 const float upAngleSpeed = 225.0f;
-//‚­‚Ë‚­‚Ë‚Ì¶‰E‚Ì‰ñ“]‚ÌU‚ê•
+//ãã­ãã­ã®å·¦å³ã®å›è»¢ã®æŒ¯ã‚Œå¹…
 const float upMoveRange = 10.0f;
 
-//changeMotion‚ªfalse‚Ì‚É”½‰f‚³‚ê‚é
-//‚­‚Ë‚­‚Ë‚ÌLeft²‰ñ“]‘¬“x
+//changeMotionãŒfalseã®æ™‚ã«åæ˜ ã•ã‚Œã‚‹
+//ãã­ãã­ã®Leftè»¸å›è»¢é€Ÿåº¦
 const float angleSpeed = 270.0f;
 
-//ƒXƒs[ƒh
+//ã‚¹ãƒ”ãƒ¼ãƒ‰
 const float speed = 100.0f;
-//‰ñ“]ƒXƒs[ƒh
+//å›è»¢ã‚¹ãƒ”ãƒ¼ãƒ‰
 const float rotateSpeed = 150.0f;
-//‰ñ“]‚ÌAngle
+//å›è»¢æ™‚ã®Angle
 const float ryuuRotateAngle = 2.5f;
 
-//ƒ^ƒbƒNƒ‹‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒXƒs[ƒh
+//ã‚¿ãƒƒã‚¯ãƒ«ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒ”ãƒ¼ãƒ‰
 const float tackleAnimSpeed = 20.0f;
-//ƒ^ƒbƒNƒ‹‚Ì“ü‚èo‚Ì‚ÌƒuƒŒƒ“ƒhƒXƒs[ƒh(ã‹L‚ÌƒXƒs[ƒh€‚P‚OˆÊ‚ª–ÚˆÀ‚Á‚Û‚¢(?))
+//ã‚¿ãƒƒã‚¯ãƒ«ã®å…¥ã‚Šå‡ºã®æ™‚ã®ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚¹ãƒ”ãƒ¼ãƒ‰(ä¸Šè¨˜ã®ã‚¹ãƒ”ãƒ¼ãƒ‰Ã·ï¼‘ï¼ä½ãŒç›®å®‰ã£ã½ã„(?))
 const float tackleAnimBlendSpeed = 2.0f;
-//ƒ^ƒbƒNƒ‹‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‚Ç‚ÌƒtƒŒ[ƒ€‚Å‚ ‚½‚è”»’è‚ğo‚·‚©
+//ã‚¿ãƒƒã‚¯ãƒ«ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ã©ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã‚ãŸã‚Šåˆ¤å®šã‚’å‡ºã™ã‹
 const float tackleAnimAttackTiming = 37.0f;
 
-//‘Ò‹@ƒ‚[ƒVƒ‡ƒ“‚Ö‚ÌƒuƒŒƒ“ƒh—¦
+//å¾…æ©Ÿãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã¸ã®ãƒ–ãƒ¬ãƒ³ãƒ‰ç‡
 const float waitAnimBlendSpeed = 2.0f;
 
-//‰Á‘¬‚Å‚«‚éŠÔ
+//åŠ é€Ÿã§ãã‚‹æ™‚é–“
 const float dashMaxTime = 5.0f;
-//‰Á‘¬‚·‚éÛ‚Ì‰Á‘¬“x
+//åŠ é€Ÿã™ã‚‹éš›ã®åŠ é€Ÿåº¦
 const float dashAccele = 1.0f;
-//‰Á‘¬‚ÌÅ‘åƒXƒs[ƒh
+//åŠ é€Ÿæ™‚ã®æœ€å¤§ã‚¹ãƒ”ãƒ¼ãƒ‰
 const float dashMaxSpeed = 1.5f;
-//‰Á‘¬ƒQ[ƒW‚Ì‰ñ•œ‘¬“x
+//åŠ é€Ÿã‚²ãƒ¼ã‚¸ã®å›å¾©é€Ÿåº¦
 const float dashHealSpeed = 2.0f;
 
-//ƒm[ƒ}ƒ‹or’â~‚©‚ç‚Ì‰Á‘¬“x
+//ãƒãƒ¼ãƒãƒ«æ™‚oråœæ­¢æ™‚ã‹ã‚‰ã®åŠ é€Ÿåº¦
 const float normalSpeedAccele = 1.0f;
 
 /************************************************************************************************************************/
@@ -76,7 +77,7 @@ Actor(world),
 position(Vector3(0,0,0)),
 tornadeTimer(0.0f)
 {
-	//paramter‚Ì‰Šú‰»
+	//paramterã®åˆæœŸåŒ–
 	parameter.isDead = false;
 	parameter.radius = 8.0f;
 	parameter.mat =
@@ -86,25 +87,25 @@ tornadeTimer(0.0f)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
-	//‘€ì
+	//æ“ä½œ
 	vec = Vector3::Zero;
 
-	//‚­‚Ë‚­‚Ë‚³‚¹‚éˆ×‚Ìangle‚Q‚Â
+	//ãã­ãã­ã•ã›ã‚‹ç‚ºã®angleï¼’ã¤
 	upAngle = 0;
 	leftAngle = 0;
 	
-	//ƒfƒoƒbƒNƒR[ƒh(ƒfƒoƒbƒN•\¦‚³‚ê‚Ä‚¢‚é‚à‚Ì‚Ìƒ{[ƒ“‚Ìƒiƒ“ƒo[)
+	//ãƒ‡ãƒãƒƒã‚¯ã‚³ãƒ¼ãƒ‰(ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹ã‚‚ã®ã®ãƒœãƒ¼ãƒ³ã®ãƒŠãƒ³ãƒãƒ¼)
 	boneSelect = 0;
 
-	//ƒJƒƒ‰‚Ìã‰º¶‰E‚Ìrotate
+	//ã‚«ãƒ¡ãƒ©ã®ä¸Šä¸‹å·¦å³ã®rotate
 	rotateUp = 0;
 	rotateLeft = 0;
 
-	//ƒ_ƒ[ƒW‚ğó‚¯‚½Û‚Ìƒpƒ‰ƒ[ƒ^[‚Ì‰Šú‰»
+	//ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸéš›ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®åˆæœŸåŒ–
 	damageFlag = false;
 	damageCount = 0;
 
-	//ƒ^ƒbƒNƒ‹‚Ìƒpƒ‰ƒ[ƒ^[‚Ì‰Šú‰»
+	//ã‚¿ãƒƒã‚¯ãƒ«ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã®åˆæœŸåŒ–
 	tp.tackleFlag = false;
 	tp.tackleEndFlag = false;
 	tp.tackleRotate = Matrix4::Identity;
@@ -112,26 +113,26 @@ tornadeTimer(0.0f)
 	tp.tackleT = Vector3(0, 0, -1);
 	tp.dashFlag = false;
 
-	//‰ñ“]‚ÌƒfƒBƒŒƒC‚ğ‚©‚¯‚é‚½‚ß‚É—p‚¢‚é‘OƒtƒŒ[ƒ€‚ÌƒxƒNƒgƒ‹(y = 0.01f‚Ì——R‚Í‚Ò‚Á‚½‚è‚¾‚ÆƒoƒO‚ğ¶‚¶‚é‚©‚ç)
+	//å›è»¢ã®ãƒ‡ã‚£ãƒ¬ã‚¤ã‚’ã‹ã‘ã‚‹ãŸã‚ã«ç”¨ã„ã‚‹å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒ™ã‚¯ãƒˆãƒ«(y = 0.01fã®ç†ç”±ã¯ã´ã£ãŸã‚Šã ã¨ãƒã‚°ã‚’ç”Ÿã˜ã‚‹ã‹ã‚‰)
 	beforeVec = Vector3(0.0f,0.01f,-1.0f);
 
-	//ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹‚ğæ“¾‚·‚é(ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‚½‚ß‚É)
+	//ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«ã‚’å–å¾—ã™ã‚‹(ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãŸã‚ã«)
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶ƒ^ƒCƒ€
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å†ç”Ÿã‚¿ã‚¤ãƒ 
 	tp.animTime = 0;
-	//ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒuƒŒƒ“ƒh
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ–ãƒ¬ãƒ³ãƒ‰
 	animBlend = 0;
-	//‘Ò‹@ƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒAƒ^ƒbƒ`‚µ‚½‚©‚Ç‚¤‚©”»’f
+	//å¾…æ©Ÿã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã‚¢ã‚¿ãƒƒãƒã—ãŸã‹ã©ã†ã‹åˆ¤æ–­
 	waitAnimSet = false;
 
-	//‰Šúƒ{[ƒ“
+	//åˆæœŸãƒœãƒ¼ãƒ³
 	vertexVec = new Vector3[boneCount];
-	//posStorage‚É‰½‚à‚È‚¢‚Æ‚«‚Ìƒ{[ƒ“‚Ì•ûŒü
+	//posStorageã«ä½•ã‚‚ãªã„ã¨ãã®ãƒœãƒ¼ãƒ³ã®æ–¹å‘
 	nonPosStorageVec = Vector3(0, 0, 1);
 	for (int i = 0; i < boneCount; i++){
-		//ƒ{[ƒ“‚Ìó‘Ô‚ğƒŠƒZƒbƒg
+		//ãƒœãƒ¼ãƒ³ã®çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆ
 		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
-		//‰ŠúˆÊ’uƒ{[ƒ“‚ÌˆÊ’u‚ğæ“¾
+		//åˆæœŸä½ç½®ãƒœãƒ¼ãƒ³ã®ä½ç½®ã‚’å–å¾—
 		vertexVec[i] = Matrix4::ToMatrix4(
 			MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition() *
 			Matrix4::Scale(scale);
@@ -139,11 +140,11 @@ tornadeTimer(0.0f)
 		bonePosStorage.push_back(vertexVec[i]);
 	}
 
-	//‰Á‘¬ƒQ[ƒW‚Ì‰ñ•œ’†
+	//åŠ é€Ÿã‚²ãƒ¼ã‚¸ã®å›å¾©ä¸­
 	dashHealFlag = false;
-	//‰Á‘¬—p‚ÌƒXƒs[ƒh
+	//åŠ é€Ÿç”¨ã®ã‚¹ãƒ”ãƒ¼ãƒ‰
 	dashSpeed = 1.0f;
-	//‰Á‘¬‚Å‚«‚éŠÔ
+	//åŠ é€Ÿã§ãã‚‹æ™‚é–“
 	dashTime = 0.0f;
 }
 Player::~Player(){
@@ -157,7 +158,7 @@ void Player::Update(){
 
 		bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++){
-		//‰ŠúˆÊ’uƒ{[ƒ“‚ÌˆÊ’u‚ğæ“¾
+		//åˆæœŸä½ç½®ãƒœãƒ¼ãƒ³ã®ä½ç½®ã‚’å–å¾—
 	bonePosStorage.push_back(Matrix4::ToMatrix4(
 		MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition());
 	}
@@ -166,7 +167,7 @@ void Player::Update(){
 
 	auto input = DINPUT_JOYSTATE();
 
-	// “ü—Íó‘Ô‚ğæ“¾
+	// å…¥åŠ›çŠ¶æ…‹ã‚’å–å¾—
 	GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
 	Vector3 rightStick = Vector3(input.Rx, input.Ry, input.Rz).Normalized();
 	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
@@ -237,6 +238,9 @@ void Player::Update(){
 		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 		tp.tackleT = trueVec;
 		tp.animTime = 0.0f;
+		tp.tornadoTatchFlag = false;
+		tp.tackleColFlag = false;
+		tp.airGunFlag = false;
 	}
 
 	if (dashTime >= dashMaxTime){
@@ -314,7 +318,7 @@ void Player::Update(){
 		}
 	}
 	else{
-		// Ä¶ŠÔ‚ği‚ß‚é
+		// å†ç”Ÿæ™‚é–“ã‚’é€²ã‚ã‚‹
 		tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 		forntVec = tp.tackleT;
 		if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
@@ -327,7 +331,7 @@ void Player::Update(){
 		if (tp.tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
 		else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
 
-		// Ä¶ŠÔ‚ªƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‘Ä¶ŠÔ‚É’B‚µ‚½‚çÄ¶ŠÔ‚ğ‚O‚É–ß‚·
+		// å†ç”Ÿæ™‚é–“ãŒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ç·å†ç”Ÿæ™‚é–“ã«é”ã—ãŸã‚‰å†ç”Ÿæ™‚é–“ã‚’ï¼ã«æˆ»ã™
 		if (tp.animTime >= totalTime - 10.0f)
 		{
 			tp.animTime = 0.0f;
@@ -336,22 +340,31 @@ void Player::Update(){
 			animBlend = 0.0f;
 			waitAnimSet = false;
 		}
+		if (tp.tackleColFlag){
+			if (!tp.tornadoTatchFlag && !tp.airGunFlag){
+				world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world,position, tp.tackleT));
+				tp.airGunFlag = true;
+			}
+		}
 		if (tp.animTime > tackleAnimAttackTiming){
-			world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-			world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
+			if (!tp.tackleColFlag){
+				world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
+				world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
+			}
 			parameter.height = tp.tackleT.Normalized() * 30.0f;
+			tp.tackleColFlag = true;
 		}
 	}
 
 	animBlend = Math::Clamp(animBlend, 0.0f, 1.0f);
 
-	//ƒ{[ƒ“‚Ìî•ñØ‚è‘Ö‚¦
+	//ãƒœãƒ¼ãƒ³ã®æƒ…å ±åˆ‡ã‚Šæ›¿ãˆ
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X))
 		boneSelect++;
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
 		boneSelect--;
 
-	////ƒ{[ƒ“‚Ìî•ñØ‚è‘Ö‚¦
+	////ãƒœãƒ¼ãƒ³ã®æƒ…å ±åˆ‡ã‚Šæ›¿ãˆ
 	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
 	//	rotateY += 360.0f * Time::DeltaTime;
 	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
@@ -365,13 +378,13 @@ void Player::Update(){
 
 	playerRot.SetUp(up);
 	playerRot.SetLeft(left);
-	//ƒ}ƒgƒŠƒbƒNƒX‚ÌÄŒvZ
+	//ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã®å†è¨ˆç®—
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		playerRot * 
 		Matrix4::Translate(position);
 
-	//‚­‚Ë‚­‚Ë‚ÌŠp“x‚ÌƒXƒs[ƒh
+	//ãã­ãã­ã®è§’åº¦ã®ã‚¹ãƒ”ãƒ¼ãƒ‰
 	if (changeMotion){
 		upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f,1.5f) * dashSpeed * Time::DeltaTime;
 		leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f,1.5f) * dashSpeed * Time::DeltaTime;
@@ -439,22 +452,22 @@ void Player::Update(){
 	}
 }
 void Player::Draw() const{
-	//œ‚Ì”‚¾‚¯—pˆÓ‚·‚é
+	//éª¨ã®æ•°ã ã‘ç”¨æ„ã™ã‚‹
 	Vector3* drawVertexVec = new Vector3[boneCount];
 	Matrix4* drawMatrixVec = new Matrix4[boneCount];
-	Matrix4* localDrawMatrixVec = new Matrix4[boneCount];
+	Matrix4* localDrawMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
 	Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	for (int i = 0; i < boneCount; i++){
 		drawVertexVec[i] = vertexVec[i];
 		drawMatrixVec[i] = parameter.mat;
 	}
 
-	//æ“ª‚ğŒ´“_‚ÉˆÚ“®
+	//å…ˆé ­ã‚’åŸç‚¹ã«ç§»å‹•
 	drawVertexVec[0] = vertexVec[0];
 
-	////æ“ª‚Ì‚‚³‚ğ‹‚ß‚éˆ×Å’¸“_‚ÌˆÊ’u‚Ü‚Å‚ÌŒvZ‚ğs‚¤
+	////å…ˆé ­ã®é«˜ã•ã‚’æ±‚ã‚ã‚‹ç‚ºæœ€é ‚ç‚¹ã®ä½ç½®ã¾ã§ã®è¨ˆç®—ã‚’è¡Œã†
 	//for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
 	//	Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
 	//	Vector3 boneUp = Vector3(0, 1, 0);
@@ -462,24 +475,24 @@ void Player::Draw() const{
 	//	boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
 	//
 	//	Matrix4 drawMat = 
-	//		//ƒ{[ƒ“‚Ì’·‚³‹‚ß‚Ä“®‚©‚·
+	//		//ãƒœãƒ¼ãƒ³ã®é•·ã•æ±‚ã‚ã¦å‹•ã‹ã™
 	//		Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-	//		//Left²AFront²Šî€‚É‰ñ“]
+	//		//Leftè»¸ã€Frontè»¸åŸºæº–ã«å›è»¢
 	//		Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
 	//		Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
 	//		Matrix4::Translate(drawVertexVec[count - 1]);
 	//	drawVertexVec[count] = drawMat.GetPosition();
 	//}
 	//
-	//æ“ª‚Ì‚‚³‚ğ‘ã“ü
+	//å…ˆé ­ã®é«˜ã•ã‚’ä»£å…¥
 	//drawVertexVec[0] = -drawVertexVec[boneCount / (int)(2.0f / waveCount)];
 
-	//ƒ}ƒgƒŠƒbƒNƒX‚àÄŒvZ
+	//ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã‚‚å†è¨ˆç®—
 	drawMatrixVec[0] =
 		Matrix4::Scale(scale) *
 		Matrix4::Translate(drawVertexVec[0]);
 
-	//æ“ª‚Ì‚‚³‚ğİ’è‚µ‚½ó‘Ô‚ÅÄŒvZ
+	//å…ˆé ­ã®é«˜ã•ã‚’è¨­å®šã—ãŸçŠ¶æ…‹ã§å†è¨ˆç®—
 	for (int count = 1; count < boneCount; count++){
 		Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
 		Vector3 boneUp = Vector3(0, 1, 0);
@@ -510,55 +523,85 @@ void Player::Draw() const{
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
-	//‘Š‘ÎÀ•W‚É•ÏŠ·‚µƒZƒbƒg
-	for (int count = 0; count < boneCount; count++){
-		localDrawMatrixVec[count] = drawMatrixVec[count];
+	if (!tp.tackleFlag){
+		//ç›¸å¯¾åº§æ¨™ã«å¤‰æ›ã—ã‚»ãƒƒãƒˆ
+		for (int count = 0; count < boneCount; count++){
+			localDrawMatrixVec[count] = drawMatrixVec[count];
 
-		Matrix4 beforeInvMat = Matrix4::Identity;
-		//e‚Ì‹ts—ñ‚ğ‚©‚¯‚Ä‚¢‚­
-		for (int count2 = 0; count2 < count; count2++){
-			beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
+			Matrix4 beforeInvMat = Matrix4::Identity;
+			//è¦ªã®é€†è¡Œåˆ—ã‚’ã‹ã‘ã¦ã„ã
+			for (int count2 = 0; count2 < count; count2++){
+				beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
+			}
+			localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
 		}
-		localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
-		localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+		for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++){
+			Matrix4 ma = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+			//Matrix4 animSubRotate = Matrix4::Identity;
+			//animSubRotate.SetFront(ma.GetFront().Normalized());
+			//animSubRotate.SetUp(ma.GetUp().Normalized());
+			//animSubRotate.SetLeft(ma.GetLeft().Normalized());
+			//ma = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(ma.GetPosition());
+			localDrawMatrixVec[count] = ma;
+		}
+		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++){
+			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
+				Matrix4::ToMATRIX(
+				localDrawMatrixVec[count]
+				));
+		}
 	}
+	else{
+		//ç›¸å¯¾åº§æ¨™ã«å¤‰æ›ã—ã‚»ãƒƒãƒˆ
+		for (int count = 0; count < boneCount; count++){
+			localDrawMatrixVec[count] = drawMatrixVec[count];
 
-	Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
-	Matrix4 animSubRotate = Matrix4::Identity;
-	animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
-	animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
-	animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+			Matrix4 beforeInvMat = Matrix4::Identity;
+			//è¦ªã®é€†è¡Œåˆ—ã‚’ã‹ã‘ã¦ã„ã
+			for (int count2 = 0; count2 < count; count2++){
+				beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
+			}
+			localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+			localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+		}
 
-	Vector3 front = -tp.tackleT.Normalized();
-	Vector3 up = Vector3(0, 1, 0).Normalized();
-	Vector3 left = Vector3::Cross(up, front).Normalized();
-	up = Vector3::Cross(front, left).Normalized();
-	front = Vector3::Cross(left, up).Normalized();
-	Matrix4 rotateY = Matrix4::Identity;	
-	rotateY.SetFront(front);
-	rotateY.SetUp(up);
-	rotateY.SetLeft(left);
+		Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
+		Matrix4 animSubRotate = Matrix4::Identity;
+		animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
+		animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
+		animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
 
-	localAnimDrawMatrixVec[0] =
-		Matrix4::Scale(scale) *
-		Matrix4::Translate(position);
+		Vector3 front = -tp.tackleT.Normalized();
+		Vector3 up = Vector3(0, 1, 0).Normalized();
+		Vector3 left = Vector3::Cross(up, front).Normalized();
+		up = Vector3::Cross(front, left).Normalized();
+		front = Vector3::Cross(left, up).Normalized();
+		Matrix4 rotateY = Matrix4::Identity;
+		rotateY.SetFront(front);
+		rotateY.SetUp(up);
+		rotateY.SetLeft(left);
 
-	localAnimDrawMatrixVec[1] =
-		Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale())*
-		animSubRotate *
-		rotateY *
-		Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
+		localAnimDrawMatrixVec[0] =
+			Matrix4::Scale(scale) *
+			Matrix4::Translate(position);
 
-	// Ä¶ŠÔ‚ğƒZƒbƒg‚·‚é
-	MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
+		localAnimDrawMatrixVec[1] =
+			Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale())*
+			animSubRotate *
+			rotateY *
+			Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
 
-	for (int count = 0; count < boneCount; count++){
-		MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
-			Matrix4::ToMATRIX(
-			Matrix4::Slerp(
-			localDrawMatrixVec[count]
-			,localAnimDrawMatrixVec[count], animBlend)
-			));
+		// å†ç”Ÿæ™‚é–“ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
+		MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
+
+		for (int count = 0; count < boneCount; count++){
+			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
+				Matrix4::ToMATRIX(
+				Matrix4::Slerp(
+				localDrawMatrixVec[count]
+				, localAnimDrawMatrixVec[count], animBlend)
+				));
+		}
 	}
 
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
@@ -569,7 +612,7 @@ void Player::Draw() const{
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 	
-	//ParameterDraw();
+	ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
 	//for (int count = 2; count < bonePosStorage.size() ; count++){
@@ -593,10 +636,10 @@ void Player::Draw() const{
 void Player::ParameterDraw() const{
 
 	int ModelHandle = modelHandle;
-	// ƒtƒŒ[ƒ€–¼‚Ì•`‰æ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ åã®æç”»
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "Name         %s", MV1GetFrameName(ModelHandle, boneSelect));
 
-	// eƒtƒŒ[ƒ€–¼‚Ì•`‰æ
+	// è¦ªãƒ•ãƒ¬ãƒ¼ãƒ åã®æç”»
 	int Parent = MV1GetFrameParent(ModelHandle, boneSelect);
 	if (Parent == -2)
 	{
@@ -607,46 +650,46 @@ void Player::ParameterDraw() const{
 		DrawFormatString(0, 16, GetColor(255, 255, 255), "Parent Name  %s", MV1GetFrameName(ModelHandle, Parent));
 	}
 
-	// qƒtƒŒ[ƒ€‚Ì”‚ğ•`‰æ
+	// å­ãƒ•ãƒ¬ãƒ¼ãƒ ã®æ•°ã‚’æç”»
 	DrawFormatString(0, 32, GetColor(255, 255, 255), "Child Num    %d", MV1GetFrameChildNum(ModelHandle, boneSelect));
 
-	// ƒtƒŒ[ƒ€‚Ìƒ[ƒ‹ƒhÀ•W‚Ì•`‰æ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã®æç”»
 	VECTOR Position = tp.tackleT;// MV1GetFramePosition(ModelHandle, boneSelect);
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
-	// •ÏŠ·s—ñ‚ğ•`‰æ‚·‚é
+	// å¤‰æ›è¡Œåˆ—ã‚’æç”»ã™ã‚‹
 	MATRIX Matrix =  MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 64, GetColor(255, 255, 255), "   Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 80, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 96, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
 	DrawFormatString(0, 112, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[3][0], Matrix.m[3][1], Matrix.m[3][2], Matrix.m[3][3]);
 
-	// ƒtƒŒ[ƒ€‚Ìƒ[ƒJƒ‹À•W‚©‚çƒ[ƒ‹ƒhÀ•W‚É•ÏŠ·‚·‚és—ñ‚ğ•`‰æ‚·‚é
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‹ã‚‰ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã«å¤‰æ›ã™ã‚‹è¡Œåˆ—ã‚’æç”»ã™ã‚‹
 	Matrix = MV1GetFrameLocalWorldMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 128, GetColor(255, 255, 255), "LW Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 144, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 160, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
 	DrawFormatString(0, 176, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[3][0], Matrix.m[3][1], Matrix.m[3][2], Matrix.m[3][3]);
 
-	// ƒtƒŒ[ƒ€‚Ì•\¦ó‘Ô‚ğ•`‰æ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã®è¡¨ç¤ºçŠ¶æ…‹ã‚’æç”»
 	DrawFormatString(0, 192, GetColor(255, 255, 255), "Visible      %d", MV1GetFrameVisible(ModelHandle, boneSelect));
 
-	// ƒtƒŒ[ƒ€‚É”¼“§–¾—v‘f‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğ•`‰æ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã«åŠé€æ˜è¦ç´ ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’æç”»
 	DrawFormatString(0, 208, GetColor(255, 255, 255), "Semi Trans   %d", MV1GetFrameSemiTransState(ModelHandle, boneSelect));
 
-	// ƒtƒŒ[ƒ€‚ÉŠÜ‚Ü‚ê‚éƒƒbƒVƒ…‚Ì”‚ğ•`‰æ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã«å«ã¾ã‚Œã‚‹ãƒ¡ãƒƒã‚·ãƒ¥ã®æ•°ã‚’æç”»
 	DrawFormatString(0, 224, GetColor(255, 255, 255), "Mesh Num     %d", MV1GetFrameMeshNum(ModelHandle, boneSelect));
 
-	// ƒtƒŒ[ƒ€‚ÉŠÜ‚Ü‚ê‚éOŠpŒ`ƒ|ƒŠƒSƒ“‚Ì”‚ğ•`‰æ
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã«å«ã¾ã‚Œã‚‹ä¸‰è§’å½¢ãƒãƒªã‚´ãƒ³ã®æ•°ã‚’æç”»
 	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, boneSelect));
 
-	//// ƒtƒŒ[ƒ€‚É”¼“§–¾—v‘f‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğ•`‰æ
+	//// ãƒ•ãƒ¬ãƒ¼ãƒ ã«åŠé€æ˜è¦ç´ ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’æç”»
 	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	float gageColorNum = 255.0f * ((dashMaxTime - dashTime) / dashMaxTime);
 	DWORD gageColor = GetColor(255, gageColorNum, gageColorNum);
 	if (dashHealFlag)gageColor = GetColor(0, 0, 255);
-	//// ƒtƒŒ[ƒ€‚É”¼“§–¾—v‘f‚ª‚ ‚é‚©‚Ç‚¤‚©‚ğ•`‰æ
+	//// ãƒ•ãƒ¬ãƒ¼ãƒ ã«åŠé€æ˜è¦ç´ ãŒã‚ã‚‹ã‹ã©ã†ã‹ã‚’æç”»
 	DrawFormatString(0, 272, gageColor, "DashGage   %2.1ff/%2.1ff %s", dashTime, dashMaxTime, dashHealFlag ? "(OVERHEAT)" : "");
 
 	DrawFormatString(0, 288, damageFlag ? GetColor(255, 0, 0) : GetColor(255,255, 255), "Status");
@@ -655,6 +698,9 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::PLAYER_STAGE_COL){
 		position = colpara.colPos;
+	}
+	else if (other.GetParameter().id == ACTOR_ID::TORNADO_ACTOR || other.GetParameter().id == ACTOR_ID::WIND_ACTOR){
+		tp.tornadoTatchFlag = true;
 	}
 	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;

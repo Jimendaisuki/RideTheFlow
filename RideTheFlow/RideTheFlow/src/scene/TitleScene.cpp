@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "../AllInclude.h"
+#include "../Def.h"
 #include "../game/WorkFolder.h"
 #include "../graphic/Model.h"
 #include "../graphic/Sprite.h"
@@ -10,7 +11,6 @@
 #include <sstream>
 #include <iomanip>
 #include "Scene.h"
-#include "../actor/AnimTestActor.h"
 
 #include "../UIactor/Effect.h"
 #include "../actor/Stage.h"
@@ -23,18 +23,8 @@
 #include "../UIactor/Stamina.h"
 
 #include "../UIactor/fadePanel/FadePanel.h"
-
-//コンストラクタ
-TitleScene::TitleScene()
-{
-
-}
-
-//デストラクタ
-TitleScene::~TitleScene()
-{
-
-}
+#include "../UIactor/menuPanel/MenuPanel.h"
+#include "../UIactor/Beziers.h"
 
 float fpsTimer = 0.0f;
 float fps;
@@ -50,32 +40,49 @@ float testStamina = 0;
 float testMaxStamina = 100;
 float testHP = 100;
 
-TITLE_STATUS status;
+CBezier Bez;
 
 /* 竜巻ポリゴン用データ */
-const Vector3 stormPos = Vector3(400.0f, 300.0f, 0.0f);
-const Vector2 sizehalf = Vector2(150, 150);
-int texhandle;
-float x[4] = { stormPos.x + sizehalf.x / 2.0f, stormPos.x - sizehalf.x * 3, stormPos.x - sizehalf.x / 2.0f, stormPos.x + sizehalf.x * 3 };
-float y[4] = { stormPos.y - sizehalf.y, stormPos.y + sizehalf.y, stormPos.y + sizehalf.y, stormPos.y - sizehalf.y };
-float u[4] = { 0, 0, 1, 1 };
-float v[4] = { 0, 1, 1, 0 };
-VERTEX2D Vertex2D_1[6];
-VERTEX2D Vertex2D_2[6];
-float amount_1 = 0;
-float amount_2 = 0;
-int count_1 = 0;
-int count_2 = 0;
-const float stormAlphaEndTime = 2.5f;
-const int stormMaxAlpha = 255 / 3;
-int stormAlpha = 0;
-
+const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
+const Vector2 SIZE_HALF = Vector2(150, 150);
+const float x[4] = { STORM_POS.x + SIZE_HALF.x / 2.0f, STORM_POS.x - SIZE_HALF.x * 3, STORM_POS.x - SIZE_HALF.x / 2.0f, STORM_POS.x + SIZE_HALF.x * 3 };
+const float y[4] = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y - SIZE_HALF.y };
+const float u[4] = { 0, 0, 1, 1 };
+const float v[4] = { 0, 1, 1, 0 };
+const int	StormMaxAlpha		= 255 / 3;
+const float StormAlphaEndTime	= 2.5f;
 /* タイトルテキスト用データ */
-const float titleAlphaEndTime = 4.0f;
-float titleAlpha = 0;
-float pressTextAlpha = 0;
-float pressTextBackAlpha = 0;
-float pressAlphaTime = 0;
+const float TitleAlphaEndTime	= 4.0f;
+
+//コンストラクタ
+TitleScene::TitleScene()
+{
+	// 竜巻テクスチャハンドル
+	texhandle = LoadGraph("res/Sprite/title_storm.png");
+	// ポリゴンデータ作成
+	for (int i = 0; i < 4; i++)
+	{
+		auto start	= i % 4;
+		auto end	= (i + 1) % 4;
+		Vertex2D_1[i].pos = Vector3(x[start], y[start], 0.0f).ToVECTOR();
+		Vertex2D_1[i].rhw = 1.0f;
+		Vertex2D_1[i].dif = GetColorU8(255, 255, 255, 0);
+		Vertex2D_1[i].u = u[i];
+		Vertex2D_1[i].v = v[i];
+	}
+	Vertex2D_1[4] = Vertex2D_1[0];
+	Vertex2D_1[5] = Vertex2D_1[2];
+	for (int i = 0; i < 6; i++)
+	{
+		Vertex2D_2[i] = Vertex2D_1[i];
+	}
+}
+
+//デストラクタ
+TitleScene::~TitleScene()
+{
+
+}
 
 //開始
 void TitleScene::Initialize()
@@ -95,44 +102,35 @@ void TitleScene::Initialize()
 	position = Vector3::Zero;
 
 	wo.UIAdd(EFFECT_ID::STAMINA_EFFECT, std::make_shared<Stamina>(wo, testMaxStamina, testStamina));
-	wo.UIAdd(EFFECT_ID::DAMAGE_EFFECT, std::make_shared<Damege>(wo, testHP));
+	wo.UIAdd(EFFECT_ID::DAMAGE_EFFECT, std::make_shared<Damege>(wo, testHP, 100.0f));
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
 	Camera::GetInstance().Target.Set(position);
 	Camera::GetInstance().Up.Set(Vector3::Up);
 
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(2.0f);
 
 	/* ポリゴンデータ */
-	stormAlpha = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		auto start = (i + count_1) % 4;
-		auto end = (i + 1 + count_1) % 4;
-		Vertex2D_1[i].pos = Vector3(x[start], y[end], 0.0f).ToVECTOR();
-		Vertex2D_1[i].rhw = 1.0f;
-		Vertex2D_1[i].dif = GetColorU8(255, 255, 255, stormAlpha);
-		Vertex2D_1[i].u = u[i];
-		Vertex2D_1[i].v = v[i];
-	}
-	Vertex2D_1[4] = Vertex2D_1[0];
-	Vertex2D_1[5] = Vertex2D_1[2];
-
-	for (int i = 0; i < 6; i++)
-	{
-		Vertex2D_2[i] = Vertex2D_1[i];
-	}
-
-	texhandle = LoadGraph("res/Sprite/title_storm.png");
 	amount_1 = 0;
 	amount_2 = 0;
 	count_1 = 0;
 	count_2 = 0;
+	stormAlpha = 0;
+	for (int i = 0; i < 6; i++)
+	{
+		Vertex2D_1[i].dif.a = stormAlpha;
+		Vertex2D_2[i] = Vertex2D_1[i];
+	}
 
 	/* タイトルテキストデータ */
 	titleAlpha = 0;
+	pressAlphaTime = 0;
+	pressTextAlpha = 0;
+	pressTextBackAlpha = 0;
+
+	/* フェード */
+	FadePanel::GetInstance().Initialize();
+	FadePanel::GetInstance().FadeIn(3.0f);
 }
 
 void TitleScene::Update()
@@ -153,16 +151,17 @@ void TitleScene::Update()
 		status = TITLE_STATUS::TITLE_TEXTURE_IN;
 		break;
 	case TITLE_TEXTURE_IN:
-		stormAlpha += (255.0f * Time::DeltaTime) / stormAlphaEndTime;
-		stormAlpha = Math::Clamp(stormAlpha, 0, stormMaxAlpha);
+		stormAlpha += (255.0f * Time::DeltaTime) / StormAlphaEndTime;
+		stormAlpha = Math::Clamp(stormAlpha, 0, StormMaxAlpha);
 		for (int i = 0; i < 6; i++)
 		{
 			Vertex2D_1[i].dif.a = stormAlpha;
+			Vertex2D_2[i].dif.a = stormAlpha;
 		}
 		
 		if (stormAlpha >= 255 / 4)
 		{
-			titleAlpha += Time::DeltaTime / titleAlphaEndTime;
+			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
 			titleAlpha = Math::Clamp(titleAlpha, 0.0f, 1.0f);
 		}
 
@@ -177,7 +176,7 @@ void TitleScene::Update()
 		// シーン終了
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
 		{
-			FadePanel::GetInstance().FadeOut(1.0f);
+			FadePanel::GetInstance().FadeOut(2.0f);
 			status = TITLE_STATUS::TITLE_END;
 		}
 		break;
@@ -217,10 +216,10 @@ void TitleScene::Update()
 		effectNum = Math::Clamp(effectNum, 0, 4);
 
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
-			FadePanel::GetInstance().FadeOut(1.0f);
+			FadePanel::GetInstance().FadeOut(0.5f);
 		}
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::V)){
-			FadePanel::GetInstance().FadeIn(1.0f);
+			FadePanel::GetInstance().FadeIn(0.5f);
 		}
 
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::R))testHP++;
@@ -231,7 +230,11 @@ void TitleScene::Update()
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::G))testStamina--;
 	}
 
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M))MenuPanel::GetInstance().Action();
+
+
 	wo.Update();
+	MenuPanel::GetInstance().Update();
 	FadePanel::GetInstance().Update();
 
 	Camera::GetInstance().Position.Set(Vector3(0, 100, -200));
@@ -241,32 +244,6 @@ void TitleScene::Update()
 	/* 竜巻ポリゴンの計算 */
 	amount_1 += Time::DeltaTime / 4.0f;
 	amount_2 += Time::DeltaTime / 16.0f;
-
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	auto start = (i + count) % 4;
-	//	auto end = (i + 1 + count) % 4;
-	//	Vertex2D_1[i].pos = Vector3::Lerp(Vector3(x_1[start], y_1[start]), Vector3(x_1[end], y_1[end]), amount).ToVECTOR();
-	//}
-	for (int i = 0; i < 4; i++)
-	{
-		auto start = (i + count_1) % 4;
-		auto end = (i + 1 + count_1) % 4;
-		Vector3 NowPos = Vector3::Lerp(Vector3(x[start], y[start]), Vector3(x[end], y[end]), amount_1);
-		float length = Vector3(NowPos - stormPos).Length();
-		length *= 1.0f + 0.5f - Math::Abs(0.5f - amount_1);
-		Vector3 toVec = (NowPos - stormPos).Normalized();
-		Vertex2D_1[i].pos = stormPos + toVec * length;
-
-		start = (i + count_2) % 4;
-		end = (i + 1 + count_2) % 4;
-		NowPos = Vector3::Lerp(Vector3(x[start], y[start]), Vector3(x[end], y[end]), amount_2);
-		length = Vector3(NowPos - stormPos).Length();
-		length *= 1.0f + 0.5f - Math::Abs(0.5f - amount_2);
-		toVec = (NowPos - stormPos).Normalized();
-		Vertex2D_2[i].pos = stormPos + toVec * length;
-	}
-
 	if (amount_1 >= 1.0f)
 	{
 		amount_1 = 0.0f;
@@ -277,7 +254,10 @@ void TitleScene::Update()
 		amount_2 = 0.0f;
 		count_2++;
 	}
-
+	// 頂点の移動
+	VertexMove(Vertex2D_1, count_1, amount_1);
+	VertexMove(Vertex2D_2, count_2, amount_2);
+	// 共有頂点データコピー
 	Vertex2D_1[4] = Vertex2D_1[0];
 	Vertex2D_1[5] = Vertex2D_1[2];
 	Vertex2D_2[4] = Vertex2D_2[0];
@@ -289,30 +269,37 @@ void TitleScene::Draw() const
 {
 	wo.Draw();
 
-	TextDraw::Draw("TitleScene");
-	//DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
-	//DrawFormatString(0, 160, GetColor(255, 0, 0), "R,F		: ダメージ演出");
-	//DrawFormatString(0, 180, GetColor(255, 0, 0), "T,G		: スタミナ増減");
+	if (!IsStatusBegEnd()) FadePanel::GetInstance().Draw();
+
+	/* 竜巻 */
+	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_2, 2, texhandle, true);
+
+	/* テキスト */
+	// タイトル
+	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_TEXT_SPRITE, Vector2(STORM_POS.x, STORM_POS.y), Vector2(450, 175), titleAlpha, Vector2(0.6f), true, false);
+	// エニープッシュ
+	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + 200), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f), true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + 200), Vector2(500, 50), pressTextAlpha, Vector2(0.6f), true, false);
+
+	MenuPanel::GetInstance().Draw(Scene::GamePlay);
+	if (IsStatusBegEnd()) FadePanel::GetInstance().Draw();
+
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
+	DrawFormatString(0, 160, GetColor(255, 0, 0), "R,F		: ダメージ演出");
+	DrawFormatString(0, 180, GetColor(255, 0, 0), "T,G		: スタミナ増減");
+	DrawFormatString(0, 220, GetColor(255, 0, 0), "M		: メニュー");
+	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: ○");
+	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: ×");
+	DrawFormatString(0, 280, GetColor(255, 0, 0), "C		: フェードアウト");
+	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
 	//DrawFormatString(0, 200, GetColor(0, 0, 0), "FrameNum  : %d", frameNum);
 	//DrawFormatString(0, 220, GetColor(0, 0, 0), "FrameName : %s", MV1GetFrameName(modelHandle, frameNum));
 	//DrawFormatString(0, 240, GetColor(0, 0, 0), "FramePare : %d", frameParentCount);
 	//DrawFormatString(0, 260, GetColor(0, 0, 0), "FrameChild: %d", frameChildCount);
 	//Vector3 position = Vector3::ToVECTOR(MV1GetFramePosition(modelHandle, frameNum));
 	//DrawFormatString(0, 280, GetColor(0, 0, 0), "FramePos  : [%f] [%f] [%f]", position.x, position.y, position.z);
-
-
-	FadePanel::GetInstance().Draw();
-
-	/* 竜巻 */
-	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
-	DrawPolygon2D(Vertex2D_2, 2, texhandle, true);
-	/* テキスト */
-	// タイトル
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_TEXT, Vector2(stormPos.x, stormPos.y), Vector2(450, 175), titleAlpha, Vector2(0.6f), true, false);
-	// エニープッシュ
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK, Vector2(stormPos.x, stormPos.y + 200), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f), true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS, Vector2(stormPos.x, stormPos.y + 200), Vector2(500, 50), pressTextAlpha, Vector2(0.6f), true, false);
-
 }
 
 //終了しているか？
@@ -330,4 +317,44 @@ Scene TitleScene::Next() const
 void TitleScene::End()
 {
 	wo.Clear();
+}
+
+void TitleScene::VertexMove(VERTEX2D vertexs_[], int count_, float time_)
+{
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	auto start = (i + count) % 4;
+	//	auto end = (i + 1 + count) % 4;
+	//	Vertex2D_1[i].pos = Vector3::Lerp(Vector3(x_1[start], y_1[start]), Vector3(x_1[end], y_1[end]), amount).ToVECTOR();
+	//}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	auto start = (i + count_) % 4;
+	//	auto end = (i + 1 + count_) % 4;
+	//	Vector3 NowPos = Vector3::Lerp(Vector3(x[start], y[start]), Vector3(x[end], y[end]), time_);
+	//	float length = Vector3(NowPos - STORM_POS).Length();
+	//	length *= 1.0f + 0.5f - Math::Abs(0.5f - time_);
+	//	Vector3 toVec = (NowPos - STORM_POS).Normalized();
+	//	vertexs_[i].pos = STORM_POS + toVec * length;
+	//}
+	
+	for (int i = 0; i < 4; i++)
+	{
+		auto start	= (i + count_) % 4;
+		auto end	= (i + count_ + 1) % 4;
+		const Vector3 midPos = Vector3(x[start], y[start], 0.0f) + ((Vector3(x[end], y[end], 0.0f) - Vector3(x[start], y[start], 0.0f)) / 2.0f);
+		Vector3 v		= midPos - STORM_POS;
+		Vector3 toVec	= v.Normalized() * v.Length() * 2.0f;
+		Vector3 dirPos	= STORM_POS + toVec;
+		const float a = 1.0f - time_;
+		Vector3 nowPosition = Vector3::Zero;
+		nowPosition.x = a*a*x[start] + 2*a*time_*dirPos.x + time_*time_*x[end];
+		nowPosition.y = a*a*y[start] + 2*a*time_*dirPos.y + time_*time_*y[end];
+		vertexs_[i].pos = nowPosition;
+	}
+}
+
+bool TitleScene::IsStatusBegEnd() const
+{
+	return (status == TITLE_STATUS::TITLE_BEGIN) || (status == TITLE_STATUS::TITLE_END);
 }

@@ -34,6 +34,10 @@ public:
 	virtual void End()override;
 
 private:
+	void VertexMove(VERTEX2D vertexs_[], int count_, float time_);
+	bool IsStatusBegEnd() const;
+
+private:
 	float timer;
 	bool mIsEnd;
 	World wo;
@@ -41,4 +45,23 @@ private:
 	//オブジェクト数
 	int objectcount;
 	Vector3 position;
+
+	// タイトルステータス
+	TITLE_STATUS status;
+
+	/* 竜巻ポリゴン用データ */
+	int			texhandle;
+	int			stormAlpha;
+	int			count_1;
+	int			count_2;
+	float		amount_1;
+	float		amount_2;
+	VERTEX2D	Vertex2D_1[6];
+	VERTEX2D	Vertex2D_2[6];
+
+	/* タイトルテキスト用データ */
+	float titleAlpha;
+	float pressTextAlpha;
+	float pressTextBackAlpha;
+	float pressAlphaTime;
 };
