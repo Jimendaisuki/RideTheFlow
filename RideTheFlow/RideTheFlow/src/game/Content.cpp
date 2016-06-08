@@ -32,6 +32,7 @@ void Content::LoadModel(Model& model, bool async)
 {
 	WorkFolder::SetWorkFolder("res/Model/");
 
+	model.Load("test.x", MODEL_ID::BEGIN_MODEL, async, 0, true);
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("dra_test.pmx", MODEL_ID::TEST_MODEL, async);
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
@@ -47,6 +48,7 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("arrow.pmd", MODEL_ID::ARROW_MODEL, async);
 	model.Load("wind.x", MODEL_ID::WIND_MODEL, async);
 	model.Load("cloud.x", MODEL_ID::CLOUD_MODEL, async);
+	model.Load("sand.x", MODEL_ID::SAND_MODEL, async);
 	model.Load("tornadopoly.x", MODEL_ID::TORNADOPOLY_MODEL, async);
 	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 	//model.Load("cameramap.pmd", MODEL_ID::TEST_STAGE, async);

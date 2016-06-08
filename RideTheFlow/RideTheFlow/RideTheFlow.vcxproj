@@ -91,6 +91,8 @@
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
+    <ClCompile Include="src\actor\particle\Sand.cpp" />
+    <ClCompile Include="src\actor\particle\SandParticle.cpp" />
     <ClCompile Include="src\actor\particle\TornadoParticle.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
     <ClCompile Include="src\UIactor\Damege.cpp" />
@@ -162,6 +164,8 @@
     <ClInclude Include="src\actor\enemy\CannonBullet.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
+    <ClInclude Include="src\actor\particle\Sand.h" />
+    <ClInclude Include="src\actor\particle\SandParticle.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\WindSetting.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
