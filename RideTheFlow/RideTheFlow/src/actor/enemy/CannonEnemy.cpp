@@ -115,7 +115,8 @@ void CannonEnemy::Update()
 }
 void CannonEnemy::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat.GetPosition(),rotate-Vector3(0,90,0));
+	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 5, 20, 1, 1, FALSE);
 }
 void CannonEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

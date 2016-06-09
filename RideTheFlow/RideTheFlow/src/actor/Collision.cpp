@@ -332,3 +332,20 @@ Vector3 Collisin::PushedBack_CapsuleCapsule(const Capsule& c1, const Capsule& c2
 
 	return pushedPosition;
 }
+
+//‹…‚Æ‹…‚Ì‰Ÿ‚µ–ß‚µ
+CollisionParameter Collisin::PushedBack_SphereSphere(const Sphere& s1, const Sphere& s2) const
+{
+	CollisionParameter colpara;
+	int result = HitCheck_Sphere_Sphere(
+		s1.position.ToVECTOR(), s1.radius,
+		s2.position.ToVECTOR(), s2.radius);
+	if (result > 0)
+	{
+		Vector3 vec = (s2.position - s1.position).Normalized();
+		float backRadius = s1.radius + s2.radius;
+		colpara.colPos = vec*backRadius;
+		colpara.colFlag = true;
+	}
+	return colpara;
+}

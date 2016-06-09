@@ -30,6 +30,10 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::ARMYENEMY_STAGE_COL] = std::bind(&Actor::ArmyEnemy_vs_Stage, this, std::placeholders::_1);
 	colFunc[COL_ID::BULLET_WIND_COL] = std::bind(&Actor::Bullet_vs_Wind, this, std::placeholders::_1);
 
+	colFunc[COL_ID::PLAYER_SHIPENEMY_COL] = std::bind(&Actor::Player_vs_ShipEnemy, this, std::placeholders::_1);
+	colFunc[COL_ID::PLAYER_DORAGONSPEAR_COL] = std::bind(&Actor::Player_vs_DoragonSpear, this, std::placeholders::_1);
+	colFunc[COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL] = std::bind(&Actor::Player_vs_DoragonSpearWithin, this, std::placeholders::_1);
+	colFunc[COL_ID::CASTLE_CASTLE_COL] = std::bind(&Actor::Castle_vs_Castle, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -157,6 +161,87 @@ CollisionParameter Actor::Player_vs_Wind(const Actor& other) const{
 		}
 	}
 	colpara.colID = COL_ID::PLAYER_WIND_COL;
+	return colpara;
+}
+
+CollisionParameter Actor::Player_vs_ShipEnemy(const Actor& other) const
+{
+	Actor* player;
+	CollisionParameter colpara;
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		player = const_cast<Actor*>(&other);
+	});
+	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+
+	//ShipEnemy
+	Sphere shipEnemy;
+	shipEnemy.position = parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*parameter.radius;
+	shipEnemy.radius = parameter.radius;
+
+	for (auto boon : boons)
+	{
+		Sphere playerSphere;
+		playerSphere.position = boon;
+		playerSphere.radius = player->parameter.radius;
+		colpara=Collisin::GetInstace().SphereSphere(shipEnemy, playerSphere);
+		colpara.colPos = boon;
+		if (colpara.colFlag)
+			break;
+	}
+	colpara.colID = COL_ID::PLAYER_SHIPENEMY_COL;
+	return colpara;
+}
+
+CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
+{
+	Actor* player;
+	CollisionParameter colpara;
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		player = const_cast<Actor*>(&other);
+	});
+	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+
+	Capsule spear;
+	spear.startPos = parameter.mat.GetPosition() - parameter.mat.GetLeft().Normalized()*10.0f;
+	spear.endPos = parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f;
+	spear.radius = parameter.radius;
+
+	for (auto boon : boons)
+	{
+		Sphere playerSphere;
+		playerSphere.position = boon;
+		playerSphere.radius = player->parameter.radius;
+		colpara = Collisin::GetInstace().SphereCapsule(playerSphere, spear);
+		if (colpara.colFlag)
+			break;
+	}
+	colpara.colID = COL_ID::PLAYER_DORAGONSPEAR_COL;
+	return colpara;
+}
+
+CollisionParameter Actor::Player_vs_DoragonSpearWithin(const Actor& other)const
+{
+	Actor* player;
+	CollisionParameter colpara;
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		player = const_cast<Actor*>(&other);
+	});
+	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+
+	Capsule spear;
+	spear.startPos = parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f;
+	spear.endPos = parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f;
+	spear.radius = parameter.radius;
+	for (auto boon : boons)
+	{
+		Sphere playerSphere;
+		playerSphere.position = boon;
+		playerSphere.radius = player->parameter.radius;
+		colpara = Collisin::GetInstace().SphereCapsule(playerSphere, spear);
+		if (colpara.colFlag)
+			break;
+	}
+	colpara.colID = COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL;
 	return colpara;
 }
 
@@ -310,6 +395,8 @@ CollisionParameter Actor::Cloud_vs_Wind(const Actor& other) const{
 
 
 
+
+
 CollisionParameter Actor::BoundarySphere_Capsule(const Actor& other) const{
 	CollisionParameter colpara;
 
@@ -388,6 +475,27 @@ CollisionParameter Actor::Bullet_vs_Wind(const Actor& other) const{
 	return colpara;
 }
 
+CollisionParameter Actor::Castle_vs_Castle(const Actor& other) const
+{
+	CollisionParameter colpara;
+	Sphere castle1;
+	castle1.radius = parameter.radius;
+	castle1.position = parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f);
+	Sphere castle2;
+	castle2.radius = other.parameter.radius;
+	castle2.position = other.parameter.mat.GetPosition() + Vector3(0.0f, other.parameter.radius, 0.0f);
+
+	colpara = Collisin::GetInstace().SphereSphere(castle1, castle2);
+	colpara.colID = COL_ID::CASTLE_CASTLE_COL;
+
+	if (&other == this)
+	{
+		colpara.colFlag = false;
+	}
+
+ 	return colpara;
+	
+}
 // å„Ç≈çÌèú
 // ê¸Ç∆î†ÇÃìñÇΩÇËîªíË
 //CollisionParameter Actor::SegmentBoxAABB(const Actor& other) const{

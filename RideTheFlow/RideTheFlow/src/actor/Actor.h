@@ -41,7 +41,11 @@ private:
 	CollisionParameter Player_vs_Bullet(const Actor& other) const;
 	CollisionParameter Player_vs_Tornado(const Actor& other) const;
 	CollisionParameter Player_vs_Wind(const Actor& other) const;
-
+	//竜と船の敵
+	CollisionParameter Player_vs_ShipEnemy(const Actor& other) const;
+	//龍と撃龍槍
+	CollisionParameter Player_vs_DoragonSpear(const Actor& other) const;
+	CollisionParameter Player_vs_DoragonSpearWithin(const Actor& other)const;
 	/* 風圧vs */
 	// 風圧と弾
 	// 風圧と竜巻
@@ -73,6 +77,9 @@ private:
 	CollisionParameter ArmyEnemy_vs_Stage(const Actor& other)const;
 	// 弾と風の当たり判定(球 vs カプセルの集合)
 	CollisionParameter Bullet_vs_Wind(const Actor& other) const;
+
+	//上の城と下の城のあたり判定 
+	CollisionParameter Castle_vs_Castle(const Actor& other) const;
 
 	/* 後で削除
 	// 線と箱の当たり判定

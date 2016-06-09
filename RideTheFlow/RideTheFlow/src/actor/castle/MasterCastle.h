@@ -11,6 +11,11 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
+public:
+	bool castleRankUp()
+	{
+		return rankUp;
+	}
 
 private:
 	Matrix4 playerMat;
@@ -18,14 +23,19 @@ private:
 	Vector3 mPosition;
 	Vector3 toPoint;
 
+	//UŒ‚ŠÖŒW
 	float mSecondAttack;
 	float mArrowNumber;
-
 	float attackTime;
-	float castleTime;
 	float attackRag;
-	int mRank;
 	int arrowCount;
-	float clor;
-	bool isLook;
+
+	//Ï‚İd‚È‚ééŠÖŒW
+	bool rankUp;
+	bool rankUpRag;
+	float rankUpRagTimer;
+	float castleTime;
+	int mRank;
+
+	bool downCastle;
 };

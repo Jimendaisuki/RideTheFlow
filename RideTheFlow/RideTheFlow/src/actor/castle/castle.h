@@ -3,23 +3,48 @@
 #include "../../math/Vector3.h"
 #include <memory>
 
+struct CastleEnemyPos
+{
+	Vector3 cannon01;
+	Vector3 cannon02;
+	Vector3 cannon03;
+	Vector3 cannon04;
+	Vector3 Spear01;
+	Vector3 Spear02;
+	Vector3 Spear03;
+	Vector3 Spear04;
+};
+
+
 class Castle : public Actor, public std::enable_shared_from_this<Castle>
 {
 public:
-	Castle(IWorld& world, Vector3 position);
+	Castle(IWorld& world, Vector3 position,Actor& _parent);
 	~Castle();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
-
+public:
+	Vector3 GetVelocity()
+	{
+		return velocity;
+	}
+private:
+	void CastleEnemyPosSet();
 private:
 	Matrix4 playerMat;
 	Vector3 mPosition;
 	Vector3 mScale;
+	Actor* parent;
+	Vector3 velocity;
+
 	bool isLook;
+	bool castleDown;
 	int arrowCount;
 	float attackRag;
 	float mAttackTime;
 	float mSecondAttack;
 	float mArrowNumber;
+
+	CastleEnemyPos castleEnemyPos;
 };
