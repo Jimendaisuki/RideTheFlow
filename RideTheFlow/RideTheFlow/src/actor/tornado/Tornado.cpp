@@ -96,12 +96,6 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 		if (speed > 300.0f * 0.5f)
 		speed *= 0.5f;
 		isHit = true;
-
-		//‚ª‚ê‚«‚ğ”ò‚Î‚·
-		for (int i = 0; i < 3; i++){
-			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleBlock>(world, parameter.mat.GetPosition()));
-		}
-
 		break;
 	case COL_ID::TORNADO_ISLAND_COL:
 		// •‚“‡‚ÆÕ“Ë

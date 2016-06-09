@@ -8,7 +8,7 @@ const float cameraFrontAttack = 10.0f;
 /****“GŒR‘à****/
 
 //ŒR‘à‚ÌƒXƒs[ƒh
-const float ArmySpeed = 50.0f;
+const float ArmySpeed = 5.0f;
 //ŒR‘à‚ÌUŒ‚ƒN[ƒ‹ƒ^ƒCƒ€
 const float ArmyAttackTime = 0.5f;
 //ŒR‘à‚ÌUŒ‚”ÍˆÍ

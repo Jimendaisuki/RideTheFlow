@@ -10,6 +10,7 @@
 #include "CastleParameter.h"
 #include "CastleTop.h"
 #include "../particle/CastleAdd.h"
+#include "CastleBlock.h"
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position) :
 Actor(world),
@@ -98,6 +99,10 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
 	{
 		parameter.isDead = true;
+		//‚ª‚ê‚«‚ð”ò‚Î‚·
+		for (int i = 0; i < 8; i++){
+			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleBlock>(world, mPosition + Vector3(0.0f, Random::GetInstance().Range(-10.0f, 10.0f), 0.0f)));
+		}
 	}
 	if (colpara.colID == COL_ID::ARMYENEMY_STAGE_COL)
 	{

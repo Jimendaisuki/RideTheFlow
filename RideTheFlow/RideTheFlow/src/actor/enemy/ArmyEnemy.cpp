@@ -76,7 +76,7 @@ void ArmyEnemy::Update()
 	//UŒ‚
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
-	if (attackTime >= mSecondAttack&&attackRag >= 0.03f&&arrowCount < mArrowNumber&&
+	if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
 	{
@@ -102,7 +102,13 @@ void ArmyEnemy::Update()
 }
 void ArmyEnemy::Draw() const
 {
-	//Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
+	for (int i = 0; i < 3;i++)
+	for (int j = 0; j < 3; j++)
+	{
+		Matrix4 m;
+		m = Matrix4::RotateX(90) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
+		Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, m);
+	}
 }
 void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

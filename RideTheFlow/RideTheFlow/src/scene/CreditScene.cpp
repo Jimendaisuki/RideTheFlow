@@ -21,11 +21,15 @@
 #include "../actor/Cloud.h"
 #include "../actor/castle/CastleBlock.h"
 #include "../actor/particle/Sand.h"
-
+#include "../actor/enemy/ShipEnemy.h"
+#include "../actor/enemy/ArmyEnemy.h"
 #include "../input/GamePad.h"
 
+static const Vector3 House1Pos = Vector3(-300, -80, 200);
+
 //コンストラクタ
-CreditScene::CreditScene()
+CreditScene::CreditScene():
+armyCreateTimer(0.0f)
 {
 	buttons.clear();
 
@@ -50,10 +54,10 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-
-	for (int i = 0; i < 3; i++)
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
+	for (int i = 0; i < 2; i++)
 	{
-		wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(100 * i, -50, 100 * i)));
+		wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(300 * i, -50, 100 * i)));
 	}
 
 	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
@@ -76,10 +80,23 @@ void CreditScene::Initialize()
 			wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 100.0f, 100.0f * (j - 2))));
 		}
 	}
+
+	armyCreateTimer = 0.0f;
+	armyCount = 0;
 }
 
 void CreditScene::Update()
 {
+	if (armyCount < 10)
+		armyCreateTimer += Time::DeltaTime;
+	if (armyCreateTimer > 10.0f)
+	{
+		armyCreateTimer = 0.0f;
+		wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa, House1Pos));
+		armyCount++;
+	}
+	
+
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
@@ -119,6 +136,8 @@ void CreditScene::Draw() const
 	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, Vector3(100, 200, -500), Vector3::Zero, Vector3(1));
 	//Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, Vector3(300, 200, 500), Vector3::Zero, Vector3(0.4f));
 	
+	Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, House1Pos , Vector3::Zero, Vector3(1.0f));
+
 	wa.Draw();
 	
 	////スティックの入力状態
