@@ -20,6 +20,7 @@
 #include "../game/WorkFolder.h"
 #include "../actor/Cloud.h"
 #include "../actor/castle/CastleBlock.h"
+#include "../actor/particle/Sand.h"
 
 #include "../input/GamePad.h"
 
@@ -49,6 +50,11 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
+
+	for (int i = 0; i < 3; i++)
+	{
+		wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(100 * i, -50, 100 * i)));
+	}
 
 	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
 	{

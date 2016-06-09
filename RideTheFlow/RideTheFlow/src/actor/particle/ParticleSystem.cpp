@@ -19,9 +19,11 @@ ParticleSystem::ParticleSystem()
 	ps_parameter.lifeTimeLimit = 5.0f;
 	ps_parameter.intervalSec = 1.0f;
 	ps_parameter.sameEmissiveNum = 1;
+	ps_parameter.trigger = true;
 
 	lifeTime = 0.0f;
 	emissiveTimer = 0.0f;
+	isTriggerEnd = false;
 }
 
 ParticleSystem::~ParticleSystem()
@@ -31,6 +33,16 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::UpdateParticles()
 {
+	//生成時の放出
+	if (!isTriggerEnd && ps_parameter.trigger)
+	{
+		for (int i = 0; i < ps_parameter.sameEmissiveNum; i++)
+		{
+			Emissive();
+		}
+		isTriggerEnd = true;
+	}
+
 	//システムの寿命計算
 	lifeTime += Time::DeltaTime;
 	if (lifeTime >= ps_parameter.lifeTimeLimit)

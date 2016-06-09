@@ -68,6 +68,7 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("arrow.pmd", MODEL_ID::ARROW_MODEL, async);
 	model.Load("wind.x", MODEL_ID::WIND_MODEL, async);
 	model.Load("cloud.x", MODEL_ID::CLOUD_MODEL, async);
+	model.Load("sand.x", MODEL_ID::SAND_MODEL, async);
 	model.Load("tornadopoly.x", MODEL_ID::TORNADOPOLY_MODEL, async);
 	//model.Load("boonStage.pmd", MODEL_ID::TEST_STAGE, async);
 	//model.Load("cameramap.pmd", MODEL_ID::TEST_STAGE, async);
@@ -94,6 +95,8 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("Castle/castle_base.pmx", MODEL_ID::CASTLE_BASE_MODEL, async);
 	model.Load("Castle/castle_Top.pmx", MODEL_ID::CASTLE_TOP_MODEL, async);
 	model.Load("Castle/castle_Top2.pmx", MODEL_ID::CASTLE_TOP2_MODEL, async);
+
+	model.Load("sun.x", MODEL_ID::CASTLE_ADD_MODEL, async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	

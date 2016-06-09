@@ -99,6 +99,10 @@
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
+    <ClCompile Include="src\actor\particle\CastleAdd.cpp" />
+    <ClCompile Include="src\actor\particle\CastleAddParticle.cpp" />
+    <ClCompile Include="src\actor\particle\Sand.cpp" />
+    <ClCompile Include="src\actor\particle\SandParticle.cpp" />
     <ClCompile Include="src\actor\particle\TornadoParticle.cpp" />
     <ClCompile Include="src\scene\MenuScene.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
@@ -113,7 +117,6 @@
     <ClCompile Include="src\actor\particle\Particle.cpp" />
     <ClCompile Include="src\actor\particle\ParticleSystem.cpp" />
     <ClCompile Include="src\actor\particle\WindFlowParticle.cpp" />
-    <ClCompile Include="src\actor\Sand.cpp" />
     <ClCompile Include="src\actor\Stage.cpp" />
     <ClCompile Include="src\actor\TitleCameraActor.cpp" />
     <ClCompile Include="src\actor\particle\WindFlow.cpp" />
@@ -180,6 +183,10 @@
     <ClInclude Include="src\actor\enemy\ShipVaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
+    <ClInclude Include="src\actor\particle\CastleAdd.h" />
+    <ClInclude Include="src\actor\particle\CastleAddParticle.h" />
+    <ClInclude Include="src\actor\particle\Sand.h" />
+    <ClInclude Include="src\actor\particle\SandParticle.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\WindSetting.h" />
     <ClInclude Include="src\scene\MenuScene.h" />
@@ -195,7 +202,6 @@
     <ClInclude Include="src\actor\particle\ParticlePtr.h" />
     <ClInclude Include="src\actor\particle\ParticleSystem.h" />
     <ClInclude Include="src\actor\particle\WindFlowParticle.h" />
-    <ClInclude Include="src\actor\Sand.h" />
     <ClInclude Include="src\actor\Stage.h" />
     <ClInclude Include="src\actor\TestCapsule.h" />
     <ClInclude Include="src\actor\TitleCameraActor.h" />
@@ -262,6 +268,7 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="res\Model\boonStage.pmd" />
+    <None Include="src\scene\TitleScene.cpp.rej" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
