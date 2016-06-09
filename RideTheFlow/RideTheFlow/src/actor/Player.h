@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "../math/Vector3.h"
 #include <memory>
+class WindFlow;
 
 struct TackleParameter{
 	bool tackleFlag, tackleEndFlag,dashFlag,tackleColFlag,tornadoTatchFlag,airGunFlag;
@@ -31,6 +32,8 @@ public:
 		return dashPosStorage;
 	}
 
+	bool ReturnDead(){ return dead; }
+
 private:
 	//デバック表示まとめ
 	void ParameterDraw()const;
@@ -53,12 +56,10 @@ private:
 	//移動量
 	Vector3 vec;
 
-	//トルネードが発生するまでの時間
-	float tornadeTimer;
-
 	//ダメージを受けた際のパラメーター
 	bool damageFlag;
 	float damageCount;
+	bool dead;
 
 	//タックルのパラメーター
 	TackleParameter tp;
@@ -70,6 +71,10 @@ private:
 	//加速できる時間
 	float dashTime;
 	std::vector<Vector3> dashPosStorage;
+	std::vector<int> tornadoPosStorage;
+	std::shared_ptr<WindFlow> windFlowPtr;
+
+	bool tornadoFlag;
 
 	//posStorageに何もないときのボーンの方向
 	Vector3 nonPosStorageVec;

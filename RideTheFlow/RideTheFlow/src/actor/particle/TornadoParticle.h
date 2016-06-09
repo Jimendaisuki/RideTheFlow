@@ -7,7 +7,7 @@
 class TornadoParticle :public Particle
 {
 public:
-	TornadoParticle(std::weak_ptr<Tornado> tornade_);
+	TornadoParticle(std::weak_ptr<Tornado> tornade_,float radius);
 
 	void OnUpdate() override;
 	void Draw() const override;

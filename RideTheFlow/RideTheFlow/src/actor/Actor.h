@@ -27,6 +27,7 @@ public:
 	virtual void Draw() const = 0;
 	void Collide(COL_ID id, Actor& other);
 	virtual bool IsDead() const{ return parameter.isDead; }
+	void SetIsDead(bool flag){ parameter.isDead = flag; }
 	ActorParameter GetParameter() const;
 
 private:
