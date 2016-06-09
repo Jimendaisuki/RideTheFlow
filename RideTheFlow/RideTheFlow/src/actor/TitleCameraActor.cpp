@@ -1,19 +1,16 @@
 #include "TitleCameraActor.h"
 #include "Collision.h"
+#include "../Def.h"
 #include "../camera/Camera.h"
 #include "../graphic/Model.h"
+#include "../graphic/Sprite.h"
 #include "../time/Time.h"
 #include "../world/IWorld.h"
 
-/* メモ 
-Draw部分でｙ軸が-100されているため、
-2回目以降のboneの位置が-100されている模様
-どこかでリセット
-*/
-
 TitleCameraActor::TitleCameraActor(IWorld& world) :
 Actor(world),
-time(0.0f)
+time(0.0f),
+backAlpha(0.0f)
 {
 	parameter.id = ACTOR_ID::CAMERA_ACTOR;
 	parameter.isDead = false;
@@ -63,6 +60,8 @@ void TitleCameraActor::Update()
 }
 void TitleCameraActor::Draw() const
 {
+	Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, backAlpha, Vector2(WINDOW_WIDTH / 800.0f, WINDOW_HEIGHT / 600.0f), 0.0f, false, false);
+
 	DrawFormatString(0, 300, GetColor(0, 0, 255), "StartPos   : [%f] [%f] [%f]", startPos.x, startPos.y, startPos.z);
 	DrawFormatString(0, 320, GetColor(0, 0, 255), "EndPos	  : [%f] [%f] [%f]", endPos.x, endPos.y, endPos.z);
 	DrawFormatString(0, 340, GetColor(0, 0, 255), "CameraPos  : [%f] [%f] [%f]", cameraPos.x, cameraPos.y, cameraPos.z);
@@ -104,6 +103,9 @@ void TitleCameraActor::Liner(float sec)
 	targetPos = Vector3::Lerp(frames[0], frames[1], time / sec);
 	cameraPos = targetPos - ((frames[1] - frames[0]) * Vector3(1.0f, 0.0f, 1.0f)).Normalized() * 10.0f;
 
+	// 前フレーム保存
+	prePos = targetPos;
+
 	if (time >= sec) time = 0;
 }
 
@@ -114,16 +116,16 @@ void TitleCameraActor::BeziersCurve(float sec)
 	float a = 1.0f - b;
 
 	/* 位置算出 */
-	p.x = a * a * a * frames[0].x + 3 * a*a*b*frames[1].x + 3 * a*b*b*frames[2].x + b*b*b*frames[3].x;
-	p.y = a * a * a * frames[0].y + 3 * a*a*b*frames[1].y + 3 * a*b*b*frames[2].y + b*b*b*frames[3].y;
-	p.z = a * a * a * frames[0].z + 3 * a*a*b*frames[1].z + 3 * a*b*b*frames[2].z + b*b*b*frames[3].z;
+	p.x = a*a*a*frames[0].x + 3*a*a*b*frames[1].x + 3*a*b*b*frames[2].x + b*b*b*frames[3].x;
+	p.y = a*a*a*frames[0].y + 3*a*a*b*frames[1].y + 3*a*b*b*frames[2].y + b*b*b*frames[3].y;
+	p.z = a*a*a*frames[0].z + 3*a*a*b*frames[1].z + 3*a*b*b*frames[2].z + b*b*b*frames[3].z;
 
 	/* カメラ・ターゲット位置更新 */
 	targetPos = Vector3(p.x, p.y, p.z);
 	cameraPos = targetPos - (targetPos - prePos).Normalized() * 50.0f;
 
-	/* 前フレーム保存 */
-	prePos = p;
+	// 前フレーム保存
+	prePos = targetPos;
 
 	if (time >= sec) time = 0;
 }

@@ -25,20 +25,19 @@ public:
 	void Draw() const;
 	void FadeIn(float sec);
 	void FadeOut(float sec, float maxAlpha = 1.0f);
-	bool IsAction();
-	bool IsFullBlack();
-	bool IsFullClear();
-
-private:
-	void Setting(float time);
+	// 変異中か？
+	bool IsAction() const;
+	// 画面が真っ暗か？
+	bool IsFullBlack() const;
+	// 画面が黒くないか？
+	bool IsFullClear() const;
 
 private:
 	FADE_STATUS status;
 
-	float time;
-	float actionTime;
-	float alpha;
-	float maxAlpha;
-	bool isAction;
+	float	actionTime;
+	float	alpha;
+	float	maxAlpha;
+	bool	isAction;
 	Vector2 scale;
 };

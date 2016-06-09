@@ -84,15 +84,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\actor\AirGun.cpp" />
+    <ClCompile Include="src\actor\castle\CastleCannon.cpp" />
+    <ClCompile Include="src\actor\castle\CastleDoragonSpear.cpp" />
+    <ClCompile Include="src\actor\castle\CastleTop.cpp" />
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonBullet.cpp" />
+    <ClCompile Include="src\actor\enemy\DoragonSpearEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\ShipCannonEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\ShipEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\ShipVaristorEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
     <ClCompile Include="src\actor\particle\TornadoParticle.cpp" />
+    <ClCompile Include="src\scene\MenuScene.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
     <ClCompile Include="src\UIactor\Damege.cpp" />
     <ClCompile Include="src\UIactor\Effect.cpp" />
@@ -156,17 +164,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\actor\castle\CastleCannon.h" />
+    <ClInclude Include="src\actor\castle\CastleDoragonSpear.h" />
+    <ClInclude Include="src\actor\castle\CastleTop.h" />
     <ClInclude Include="src\actor\enemy\ArmyEnemy.h" />
     <ClInclude Include="src\actor\castle\CastleParameter.h" />
     <ClInclude Include="src\actor\castle\MasterCastle.h" />
     <ClInclude Include="src\actor\Cloud.h" />
     <ClInclude Include="src\actor\enemy\CannonEnemy.h" />
+    <ClInclude Include="src\actor\enemy\DoragonSpearEnemy.h" />
     <ClInclude Include="src\actor\enemy\EnemyParameter.h" />
     <ClInclude Include="src\actor\enemy\CannonBullet.h" />
+    <ClInclude Include="src\actor\enemy\ShipCannonEnemy.h" />
+    <ClInclude Include="src\actor\enemy\ShipEnemy.h" />
+    <ClInclude Include="src\actor\enemy\ShipVaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\WindSetting.h" />
+    <ClInclude Include="src\scene\MenuScene.h" />
     <ClInclude Include="src\UIactor\Beziers.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Damege.h" />

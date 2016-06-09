@@ -129,6 +129,8 @@ void TitleScene::Initialize()
 	pressTextAlpha = 0;
 	pressTextBackAlpha = 0;
 
+	MenuPanel::GetInstance().Initialize();
+
 	/* フェード */
 	FadePanel::GetInstance().Initialize();
 	FadePanel::GetInstance().FadeIn(3.0f);
@@ -324,7 +326,7 @@ bool TitleScene::IsEnd() const
 //次のシーンを返す
 Scene TitleScene::Next() const
 {
-	return Scene::GamePlay;
+	return Scene::Menu;
 }
 
 void TitleScene::End()

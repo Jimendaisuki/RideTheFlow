@@ -24,7 +24,9 @@ private:
 	Vector3 endPos;
 	Vector3 p;
 	Vector3 prePos;
+	Vector3 velocity;
 	float	time;
+	float	backAlpha;
 	int stageModelHandle;
 
 	std::vector<Vector3> frames;

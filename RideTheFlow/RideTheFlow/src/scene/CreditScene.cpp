@@ -42,7 +42,7 @@ void CreditScene::Initialize()
 	//ƒ‚ƒfƒ‹‚ğˆê’U‰ğ•ú‚µ‚Ä“Ç‚İ‚İ’¼‚·
 	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
 	WorkFolder::SetWorkFolder("res/Model/");
-	Model::GetInstance().Load("ryuu.pmd", MODEL_ID::TEST_MODEL,false);
+	Model::GetInstance().Load("dra_test.pmx", MODEL_ID::TEST_MODEL,false);
 
 	mIsEnd = false;
 

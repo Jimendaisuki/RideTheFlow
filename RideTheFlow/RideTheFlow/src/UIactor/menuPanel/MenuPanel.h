@@ -5,59 +5,18 @@
 #include "../../math/Vector2.h"
 #include "../../scene/Scene.h"
 
-enum MENU_STATUS
-{
-	BEGIN	= 0,
-	OPEN	= 1,
-	SELECT  = 2,
-	MANUAL	= 3,
-	CLOSE	= 4,
-	END		= 5,
-};
-
-//class MenuPanel : public UIActor
-//{
-//public:
-//	MenuPanel(IWorld& world, const Scene nowScene_);
-//	~MenuPanel();
-//	virtual void Update() override;
-//	virtual void Draw() const override;
-//	void DrawMenu() const;
-//	void DrawPause() const;
-//
-//
-//private:
-//	/* 現在のシーン */
-//	Scene	scene;
-//	/* 基本設定 */
-//	Vector2 scale;
-//	Vector2 drawPosition;
-//	float	time;
-//	/* 巻物用変数 */
-//	float	rollAlpha;
-//	float	rollBakcAlpha;
-//	float	moveVec;
-//	Point	size;
-//	/* テキスト用 */
-//	float	textAlpha;
-//	int		selectNum;
-//	int		nowPage;
-//	int		prePage;
-//	/* ステータス */
-//	MENU_STATUS status;
-//
-//	bool	isAction;
-//	bool	isExit;
-//
-//	RECT	rect;
-//	float	selects[3];
-//	float	pages[5];
-//
-//	CBezier bez;
-//};
-
 class MenuPanel
 {
+enum MENU_PANEL_STATUS
+{
+	BEGIN = 0,
+	OPEN = 1,
+	SELECT = 2,
+	MANUAL = 3,
+	CLOSE = 4,
+	END = 5,
+};
+
 private:
 	MenuPanel() = default;
 	~MenuPanel() = default;
@@ -67,24 +26,37 @@ public:
 		static MenuPanel m;
 		return m;
 	}
-
+	// 初期化
 	void Initialize();
+	// 更新
 	void Update();
+	// 描画
 	void Draw();
+	// メニューシーン用
 	void DrawMenu() const;
+	// ポーズシーン用
 	void DrawPause() const;
 	void DrawManual() const;
+	// 未実行なら実行させる
 	void Action(Scene scene_);
-	bool IsEnd() const;
+	// 実行中か？
+	bool IsAction() const;
+	// 戻るを押したか
 	bool IsBackSelect() const;
+	// 実行終了しているか？
+	bool IsEnd() const;
+	// 閉じる
 	void Close();
+	// 止める
+	void Stop();
 
 
 private:
-	MENU_STATUS status;
+	MENU_PANEL_STATUS status;
 	float	backAlpha;
 	float	rollAlpha;
 	float	rollBakcAlpha;
+	float	alphaTime;
 	float	textAlpha;
 	float	time;
 	float	moveVec;
@@ -97,7 +69,7 @@ private:
 	Vector2 scale;
 	bool	isAction;
 	bool	isBackSelect;
-	float	alphaTime;
+	bool	isEnd;
 
 	CBezier bez;
 	Scene	scene;
