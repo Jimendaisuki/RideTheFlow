@@ -23,6 +23,8 @@ const Vector3 scale = Vector3(3.0f);
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
+const float tornadoCreateRadius = 16.0f;
+
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
 bool changeMotion = true;
@@ -59,7 +61,7 @@ const float tackleAnimAttackTiming = 37.0f;
 const float waitAnimBlendSpeed = 2.0f;
 
 //加速できる時間
-const float dashMaxTime = 5.0f;
+const float dashMaxTime = 20.0f;
 //加速する際の加速度
 const float dashAccele = 1.0f;
 //加速時の最大スピード
@@ -75,7 +77,8 @@ const float normalSpeedAccele = 1.0f;
 Player::Player(IWorld& world) :
 Actor(world),
 position(Vector3(0,0,0)),
-tornadeTimer(0.0f)
+windFlowPtr(NULL),
+tornadoFlag(false)
 {
 	//paramterの初期化
 	parameter.isDead = false;
@@ -86,6 +89,7 @@ tornadeTimer(0.0f)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
+	parameter.HP = 10;
 
 	//操作
 	vec = Vector3::Zero;
@@ -251,16 +255,57 @@ void Player::Update(){
 	}
 
 	tp.dashFlag = false;
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT))
-		world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<WindFlow>(world, *this));
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT)){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT)){
+		windFlowPtr = std::make_shared<WindFlow>(world, *this);
+		world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+	}
+	if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT)){
+		tornadoFlag = false;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && !tornadoFlag){
 		if (dashHealFlag){
 			dashPosStorage.clear();
+			tornadoPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
 			dashTime -= dashHealSpeed * Time::DeltaTime;
 		}
 		else{
 			dashPosStorage.push_back(position);
+			float len = 0.0f;
+			if (tornadoPosStorage.size() > 0){
+				int s = tornadoPosStorage[tornadoPosStorage.size() - 1];
+				for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;){
+					len += Vector3::Length(i - i++);
+				}
+			}
+			if (dashPosStorage.size() == 1 || len > 100.0f)
+			tornadoPosStorage.push_back(dashPosStorage.size() - 1);
+
+			bool createTornado = false;
+			if (tornadoPosStorage.size() > 4){
+				if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius){
+					createTornado = true;
+				}
+			}
+			if (createTornado){
+				Vector3 torPos = Vector3(0);
+				for (auto i : tornadoPosStorage){
+					torPos += dashPosStorage[i];
+				}
+				torPos /= tornadoPosStorage.size();
+				float torRad = 0;
+				for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;){
+					torRad += Vector3::Length(i - i++);
+				}
+				torRad /= PI;
+				torRad /= 2.0f;
+				world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero,torRad));
+				windFlowPtr->SetIsDead(true);
+				dashPosStorage.clear();
+				tornadoPosStorage.clear();
+				tornadoFlag = true;
+			}
+
 			dashTime += Time::DeltaTime;
 			dashSpeed += dashAccele * Time::DeltaTime;
 			trueVec.y = 0;
@@ -270,6 +315,7 @@ void Player::Update(){
 	}
 	else{
 		dashPosStorage.clear();
+		tornadoPosStorage.clear();
 		dashSpeed -= dashAccele * Time::DeltaTime;
 		dashTime -= dashHealSpeed * Time::DeltaTime;
 	}
@@ -294,20 +340,6 @@ void Player::Update(){
 			beforeVec *
 			Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
 		position += forntVec;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) &&
-			(Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) ||
-			Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))){
-			tornadeTimer += Time::DeltaTime;
-		}
-		else{
-			tornadeTimer = 0;
-		}
-
-		if (tornadeTimer > 3.0f)
-		{
-			tornadeTimer = 0.0f;
-			world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, position, Vector2(1, 1), Vector3::Zero));
-		}
 
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
 			Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
@@ -580,7 +612,7 @@ void Player::Draw() const{
 		rotateY.SetFront(front);
 		rotateY.SetUp(up);
 		rotateY.SetLeft(left);
-
+		rotateY = Matrix4::Identity;
 		localAnimDrawMatrixVec[0] =
 			Matrix4::Scale(scale) *
 			Matrix4::Translate(position);
@@ -599,12 +631,15 @@ void Player::Draw() const{
 				Matrix4::ToMATRIX(
 				Matrix4::Slerp(
 				localDrawMatrixVec[count]
-				, localAnimDrawMatrixVec[count], animBlend)
+				, localAnimDrawMatrixVec[count], 1)
 				));
 		}
 	}
 
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+	for (auto i : tornadoPosStorage){
+		DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
+	}
 	//if (damageFlag){
 	//	DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
 	//}
@@ -692,7 +727,7 @@ void Player::ParameterDraw() const{
 	//// フレームに半透明要素があるかどうかを描画
 	DrawFormatString(0, 272, gageColor, "DashGage   %2.1ff/%2.1ff %s", dashTime, dashMaxTime, dashHealFlag ? "(OVERHEAT)" : "");
 
-	DrawFormatString(0, 288, damageFlag ? GetColor(255, 0, 0) : GetColor(255,255, 255), "Status");
+	DrawFormatString(0, 288, GetColor(255,255,255), "HP: %d",parameter.HP);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
@@ -704,5 +739,6 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
+		parameter.HP -= 1;
 	}
 }

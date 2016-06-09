@@ -11,11 +11,12 @@
 
 
 const float TornadoDefaltSpeed = 300.0f;
-Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_) :
+Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_,float radius_) :
 Actor(world),
 position(position_),
 velocity(velocity_),
-timer(0.0f)
+timer(0.0f),
+radius(radius_)
 {
 	ACTIVITYTIME = 20.0f;
 	GRAVITY = 3.0f;
@@ -23,7 +24,7 @@ timer(0.0f)
 
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f,200.0f,0.0f);
-	parameter.radius = 80;
+	parameter.radius = radius;
 	parameter.mat =
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
@@ -122,5 +123,5 @@ void Tornado::OnCollide(Actor& other, CollisionParameter colpara)
 
 void Tornado::Emissive()
 {
-	AddParticle(std::make_shared<TornadoParticle>(shared_from_this()));
+	AddParticle(std::make_shared<TornadoParticle>(shared_from_this(),radius));
 }

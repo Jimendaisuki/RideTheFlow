@@ -4,12 +4,12 @@
 #include "../../game/Random.h"
 #include "../../camera/Camera.h"
 
-TornadoParticle::TornadoParticle(std::weak_ptr<Tornado> tornade_)
+TornadoParticle::TornadoParticle(std::weak_ptr<Tornado> tornade_, float radius)
 :
 tornade(tornade_),
 tornadePos(tornade._Get()->GetParameter().mat.GetPosition()),
 tornadeMove(Vector3::Zero),
-tornadeRadius(Random::GetInstance().Range(30.0f, 40.0f)),
+tornadeRadius(Random::GetInstance().Range(radius, radius + 10.0f)),
 tornadeAddRadius(Random::GetInstance().Range(10.0f, 20.0f)),
 tornadeSpeed(700.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
