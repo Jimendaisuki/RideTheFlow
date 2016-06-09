@@ -32,6 +32,8 @@ public:
 		return dashPosStorage;
 	}
 
+	bool ReturnDead(){ return dead; }
+
 private:
 	//デバック表示まとめ
 	void ParameterDraw()const;
@@ -57,6 +59,7 @@ private:
 	//ダメージを受けた際のパラメーター
 	bool damageFlag;
 	float damageCount;
+	bool dead;
 
 	//タックルのパラメーター
 	TackleParameter tp;

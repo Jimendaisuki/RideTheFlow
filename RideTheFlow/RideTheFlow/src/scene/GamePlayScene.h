@@ -4,6 +4,8 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 
+class Player;
+
 class  GamePlayScene :public IScene{
 public:
 	//コンストラクタ 
@@ -29,4 +31,5 @@ private:
 	bool mIsEnd;
 	World wa;
 	std::vector<Vector3>boonPositions;
+	std::shared_ptr<Player> player;
 };
