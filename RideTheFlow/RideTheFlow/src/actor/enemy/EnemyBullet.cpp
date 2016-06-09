@@ -92,8 +92,7 @@ void EnemyBullet::Update()
 		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), vec).Normalized(), Vector3::Inner(Vector3(0,0,-1),vec)) *
 		Matrix4::Translate(mPosition);
 
-	//流れの向きとフラグをリセット
-	windVec = Vector3::Zero;
+	//流れのフラグをリセット
 	isWindCol = false;
 }
 

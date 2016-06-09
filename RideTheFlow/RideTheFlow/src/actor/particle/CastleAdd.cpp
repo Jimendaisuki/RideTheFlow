@@ -15,7 +15,7 @@ Actor(world)
 	ps_parameter.position = position_;
 	ps_parameter.intervalSec = 10000.0f;
 	ps_parameter.lifeTimeLimit = 6.0f;
-	ps_parameter.sameEmissiveNum = 30;
+	ps_parameter.sameEmissiveNum = 10;
 }
 CastleAdd::~CastleAdd()
 {

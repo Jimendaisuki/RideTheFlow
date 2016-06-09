@@ -56,7 +56,7 @@ const float NotLookVaristorArrowNum = 2;
 //バリスタ攻撃精度(小さいほど高精度)
 const float VaristorArrowAccuracy = 10.0f;
 //バリスタの攻撃が流れの影響を受ける割合
-const float VaristorWindPercentage = 100.0f;
+const float VaristorWindPercentage = 75.0f;
 
 
 
@@ -87,7 +87,7 @@ const float NotLookCannonShellNum = 1;
 //大砲攻撃精度(小さいほど高精度)
 const float CannonShellAccuracy = 10.0f;
 //大砲の攻撃が流れの影響を受ける割合
-const float CannonWindPercentage = 100.0f;
+const float CannonWindPercentage = 50.0f;
 
 
 /****敵の船****/
