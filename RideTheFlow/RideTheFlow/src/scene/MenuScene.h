@@ -4,22 +4,21 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 
-class  TitleScene :public IScene
+
+class  MenuScene :public IScene
 {
-enum TITLE_STATUS
+enum MENU_STATUS
 {
-	TITLE_BEGIN,
-	TITLE_DRAGON_IN,
-	TITLE_TEXTURE_IN,
-	TITLE_STANDBY,
-	TITLE_END
+	BEGIN = 0,
+	STANBAY = 1,
+	END = 2
 };
 
 public:
 	//コンストラクタ 
-	TitleScene();
+	MenuScene();
 	//デストラクタ
-	~TitleScene();
+	~MenuScene();
 
 	//更新前初期化
 	virtual void Initialize() override;
@@ -39,30 +38,7 @@ private:
 	bool IsStatusBegEnd() const;
 
 private:
-	float timer;
 	bool mIsEnd;
 	World wo;
-
-	//オブジェクト数
-	int objectcount;
-	Vector3 position;
-
-	// タイトルステータス
-	TITLE_STATUS status;
-
-	/* 竜巻ポリゴン用データ */
-	int			texhandle;
-	int			stormAlpha;
-	int			count_1;
-	int			count_2;
-	float		amount_1;
-	float		amount_2;
-	VERTEX2D	Vertex2D_1[6];
-	VERTEX2D	Vertex2D_2[6];
-
-	/* タイトルテキスト用データ */
-	float titleAlpha;
-	float pressTextAlpha;
-	float pressTextBackAlpha;
-	float pressAlphaTime;
+	MENU_STATUS	status;
 };

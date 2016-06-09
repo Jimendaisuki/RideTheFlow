@@ -76,7 +76,7 @@ const float normalSpeedAccele = 1.0f;
 
 Player::Player(IWorld& world) :
 Actor(world),
-position(Vector3(0,0,0)),
+position(Vector3(0, 0, 0)),
 windFlowPtr(NULL),
 tornadoFlag(false)
 {
@@ -97,7 +97,7 @@ tornadoFlag(false)
 	//くねくねさせる為のangle２つ
 	upAngle = 0;
 	leftAngle = 0;
-	
+
 	//デバックコード(デバック表示されているもののボーンのナンバー)
 	boneSelect = 0;
 
@@ -108,6 +108,7 @@ tornadoFlag(false)
 	//ダメージを受けた際のパラメーターの初期化
 	damageFlag = false;
 	damageCount = 0;
+	dead = false;
 
 	//タックルのパラメーターの初期化
 	tp.tackleFlag = false;
@@ -118,7 +119,7 @@ tornadoFlag(false)
 	tp.dashFlag = false;
 
 	//回転のディレイをかけるために用いる前フレームのベクトル(y = 0.01fの理由はぴったりだとバグを生じるから)
-	beforeVec = Vector3(0.0f,0.01f,-1.0f);
+	beforeVec = Vector3(0.0f, 0.01f, -1.0f);
 
 	//モデルハンドルを取得する(アニメーションのために)
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
@@ -158,328 +159,337 @@ Player::~Player(){
 
 
 void Player::Update(){
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
-
-		bonePosStorage.clear();
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
+	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++){
 		//初期位置ボーンの位置を取得
-	bonePosStorage.push_back(Matrix4::ToMatrix4(
-		MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition());
+		bonePosStorage.push_back(Matrix4::ToMatrix4(
+			MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition());
 	}
 
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
+	if (parameter.HP <= 0)dead = true;
+	if (!dead){
+		if (parameter.HP < 10.0f)
+		parameter.HP += 0.5f * Time::DeltaTime;
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 
-	auto input = DINPUT_JOYSTATE();
+		auto input = DINPUT_JOYSTATE();
 
-	// 入力状態を取得
-	GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
-	Vector3 rightStick = Vector3(input.Rx, input.Ry, input.Rz).Normalized();
-	Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
+		// 入力状態を取得
+		GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
+		Vector3 rightStick = Vector3(input.Rx, input.Ry, input.Rz).Normalized();
+		Vector3 leftStick = Vector3(input.X, input.Y, input.Z).Normalized();
 
-	bool padInputFlag = false;
-	bool leftStickMove = false;
-	if (Vector3::Length(rightStick) > 0.01f){
-		leftStickMove = true;
-		if (Vector3::Length(rightStick) > 0.01f)
-		padInputFlag = true;
-	}
-
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
-		rotateLeft += rotateSpeed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
-		rotateLeft -= rotateSpeed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
-		rotateUp += rotateSpeed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
-		rotateUp -= rotateSpeed * Time::DeltaTime;
-
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
-		vec.x += speed * Time::DeltaTime;
-		leftStickMove = true;
-		if (!tp.tackleFlag){
-			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+		bool padInputFlag = false;
+		bool leftStickMove = false;
+		if (Vector3::Length(rightStick) > 0.01f){
+			leftStickMove = true;
+			if (Vector3::Length(rightStick) > 0.01f)
+				padInputFlag = true;
 		}
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)){
-		vec.x -= speed * Time::DeltaTime;
-		leftStickMove = true;
-		if (!tp.tackleFlag){
-			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+			rotateLeft += rotateSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+			rotateLeft -= rotateSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+			rotateUp += rotateSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+			rotateUp -= rotateSpeed * Time::DeltaTime;
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
+			vec.x += speed * Time::DeltaTime;
+			leftStickMove = true;
+			if (!tp.tackleFlag){
+				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+			}
 		}
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)){
-		vec.z += speed * Time::DeltaTime;
-		leftStickMove = true;
-		if (!tp.tackleFlag){
-			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)){
+			vec.x -= speed * Time::DeltaTime;
+			leftStickMove = true;
+			if (!tp.tackleFlag){
+				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+			}
 		}
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
-		vec.z -= speed * Time::DeltaTime;
-		leftStickMove = true;
-		if (!tp.tackleFlag){
-			animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)){
+			vec.z += speed * Time::DeltaTime;
+			leftStickMove = true;
+			if (!tp.tackleFlag){
+				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+			}
 		}
-	}
-	
-	if (padInputFlag){
-		rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
-		rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
-		vec.x += leftStick.x * speed * Time::DeltaTime;
-		vec.z += leftStick.y * speed * Time::DeltaTime;
-	}
-	rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+			vec.z -= speed * Time::DeltaTime;
+			leftStickMove = true;
+			if (!tp.tackleFlag){
+				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+			}
+		}
 
-	Vector3 cameraPos = Camera::GetInstance().Position.Get();
-	Vector3 cameraFront = (position - (cameraPos - cameraUpMove)).Normalized();
-	Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
-	vec.Normalize();
-	Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
+		if (padInputFlag){
+			rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
+			rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
+			vec.x += leftStick.x * speed * Time::DeltaTime;
+			vec.z += leftStick.y * speed * Time::DeltaTime;
+		}
+		rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
-		tp.tackleFlag = true;
-		animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
-		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-		tp.tackleT = trueVec;
-		tp.animTime = 0.0f;
-		tp.tornadoTatchFlag = false;
-		tp.tackleColFlag = false;
-		tp.airGunFlag = false;
-	}
+		Vector3 cameraPos = Camera::GetInstance().Position.Get();
+		Vector3 cameraFront = (position - (cameraPos - cameraUpMove)).Normalized();
+		Vector3 cameraLeft = Vector3::Cross(cameraFront, Vector3(0, 1, 0)).Normalized();
+		vec.Normalize();
+		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-	if (dashTime >= dashMaxTime){
-		dashHealFlag = true;
-	}
-	if (dashTime <= 0.0f){
-		dashHealFlag = false;
-	}
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
+			tp.tackleFlag = true;
+			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
+			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+			tp.tackleT = trueVec;
+			tp.animTime = 0.0f;
+			tp.tornadoTatchFlag = false;
+			tp.tackleColFlag = false;
+			tp.airGunFlag = false;
+		}
 
-	tp.dashFlag = false;
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT)){
-		windFlowPtr = std::make_shared<WindFlow>(world, *this);
-		world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
-	}
-	if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT)){
-		tornadoFlag = false;
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && !tornadoFlag){
-		if (dashHealFlag){
+		if (dashTime >= dashMaxTime){
+			dashHealFlag = true;
+		}
+		if (dashTime <= 0.0f){
+			dashHealFlag = false;
+		}
+
+		tp.dashFlag = false;
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT)){
+			windFlowPtr = std::make_shared<WindFlow>(world, *this);
+			world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+		}
+		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT)){
+			tornadoFlag = false;
+		}
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && !tornadoFlag){
+			if (dashHealFlag){
+				dashPosStorage.clear();
+				tornadoPosStorage.clear();
+				dashSpeed -= dashAccele * Time::DeltaTime;
+				dashTime -= dashHealSpeed * Time::DeltaTime;
+			}
+			else{
+				dashPosStorage.push_back(position);
+				float len = 0.0f;
+				if (tornadoPosStorage.size() > 0){
+					int s = tornadoPosStorage[tornadoPosStorage.size() - 1];
+					for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;){
+						len += Vector3::Length(i - i++);
+					}
+				}
+				if (dashPosStorage.size() == 1 || len > 100.0f)
+					tornadoPosStorage.push_back(dashPosStorage.size() - 1);
+
+				bool createTornado = false;
+				if (tornadoPosStorage.size() > 4){
+					if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius){
+						createTornado = true;
+					}
+				}
+				if (createTornado){
+					Vector3 torPos = Vector3(0);
+					for (auto i : tornadoPosStorage){
+						torPos += dashPosStorage[i];
+					}
+					torPos /= tornadoPosStorage.size();
+					float torRad = 0;
+					for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;){
+						torRad += Vector3::Length(i - i++);
+					}
+					torRad /= PI;
+					torRad /= 2.0f;
+					world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad));
+					windFlowPtr->SetIsDead(true);
+					dashPosStorage.clear();
+					tornadoPosStorage.clear();
+					tornadoFlag = true;
+				}
+
+				dashTime += Time::DeltaTime;
+				dashSpeed += dashAccele * Time::DeltaTime;
+				trueVec.y = 0;
+				trueVec.Normalized();
+				tp.dashFlag = true;
+			}
+		}
+		else{
 			dashPosStorage.clear();
 			tornadoPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
 			dashTime -= dashHealSpeed * Time::DeltaTime;
 		}
-		else{
-			dashPosStorage.push_back(position);
-			float len = 0.0f;
-			if (tornadoPosStorage.size() > 0){
-				int s = tornadoPosStorage[tornadoPosStorage.size() - 1];
-				for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;){
-					len += Vector3::Length(i - i++);
-				}
+
+		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
+		dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
+
+
+		Vector3 forntVec = Vector3::Zero;
+		if (!tp.tackleFlag){
+			tp.tackleT = trueVec;
+			if (!waitAnimSet)
+				animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
+			tp.animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+			waitAnimSet = true;
+			Vector3 cross = Vector3::Cross(beforeVec.Normalized(), trueVec.Normalized()).Normalized();
+
+			float crossAngle = Vector3::Inner(trueVec, beforeVec);
+			if (crossAngle >= 0)crossAngle = ryuuRotateAngle;
+			else crossAngle = -ryuuRotateAngle;
+			forntVec = (Vector3::Length(trueVec) *
+				beforeVec *
+				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
+			position += forntVec;
+
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+				posStorage.push_back(position);
+				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
 			}
-			if (dashPosStorage.size() == 1 || len > 100.0f)
-			tornadoPosStorage.push_back(dashPosStorage.size() - 1);
-
-			bool createTornado = false;
-			if (tornadoPosStorage.size() > 4){
-				if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius){
-					createTornado = true;
-				}
-			}
-			if (createTornado){
-				Vector3 torPos = Vector3(0);
-				for (auto i : tornadoPosStorage){
-					torPos += dashPosStorage[i];
-				}
-				torPos /= tornadoPosStorage.size();
-				float torRad = 0;
-				for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;){
-					torRad += Vector3::Length(i - i++);
-				}
-				torRad /= PI;
-				torRad /= 2.0f;
-				world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero,torRad));
-				windFlowPtr->SetIsDead(true);
-				dashPosStorage.clear();
-				tornadoPosStorage.clear();
-				tornadoFlag = true;
-			}
-
-			dashTime += Time::DeltaTime;
-			dashSpeed += dashAccele * Time::DeltaTime;
-			trueVec.y = 0;
-			trueVec.Normalized();
-			tp.dashFlag = true;
-		}
-	}
-	else{
-		dashPosStorage.clear();
-		tornadoPosStorage.clear();
-		dashSpeed -= dashAccele * Time::DeltaTime;
-		dashTime -= dashHealSpeed * Time::DeltaTime;
-	}
-
-	dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
-	dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
-
-
-	Vector3 forntVec = Vector3::Zero;
-	if (!tp.tackleFlag){
-		tp.tackleT = trueVec;
-		if (!waitAnimSet)
-		animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
-		tp.animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-		waitAnimSet = true;
-		Vector3 cross = Vector3::Cross(beforeVec.Normalized(), trueVec.Normalized()).Normalized();
-
-		float crossAngle = Vector3::Inner(trueVec, beforeVec);
-		if (crossAngle >= 0)crossAngle = ryuuRotateAngle;
-		else crossAngle = -ryuuRotateAngle;
-		forntVec = (Vector3::Length(trueVec) *
-			beforeVec *
-			Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
-		position += forntVec;
-
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
-			Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
-			Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-			Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
-			posStorage.push_back(position);
-			beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
-		}
-	}
-	else{
-		// 再生時間を進める
-		tp.animTime += tackleAnimSpeed * Time::DeltaTime;
-		forntVec = tp.tackleT;
-		if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
-			tp.tackleEndFlag = true;
-			posStorage.clear();
-			nonPosStorageVec = -tp.tackleT;
-			beforeVec = tp.tackleT;
-		}
-
-		if (tp.tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
-		else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
-
-		// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
-		if (tp.animTime >= totalTime - 10.0f)
-		{
-			tp.animTime = 0.0f;
-			tp.tackleFlag = false;
-			tp.tackleEndFlag = false;
-			animBlend = 0.0f;
-			waitAnimSet = false;
-		}
-		if (tp.tackleColFlag){
-			if (!tp.tornadoTatchFlag && !tp.airGunFlag){
-				world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world,position, tp.tackleT));
-				tp.airGunFlag = true;
-			}
-		}
-		if (tp.animTime > tackleAnimAttackTiming){
-			if (!tp.tackleColFlag){
-				world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-				world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
-			}
-			parameter.height = tp.tackleT.Normalized() * 30.0f;
-			tp.tackleColFlag = true;
-		}
-	}
-
-	animBlend = Math::Clamp(animBlend, 0.0f, 1.0f);
-
-	//ボーンの情報切り替え
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X))
-		boneSelect++;
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
-		boneSelect--;
-
-	////ボーンの情報切り替え
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
-	//	rotateY += 360.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
-	//	rotateY -= 360.0f * Time::DeltaTime
-	Matrix4 playerRot = Matrix4::Identity;
-	Vector3 front = forntVec.Normalized();
-	playerRot.SetFront(front);
-	Vector3 up = Vector3(0, 1, 0).Normalized();
-	Vector3 left = Vector3::Cross(front, up).Normalized();
-	up = Vector3::Cross(up, left).Normalized();
-
-	playerRot.SetUp(up);
-	playerRot.SetLeft(left);
-	//マトリックスの再計算
-	parameter.mat =
-		Matrix4::Scale(scale) *
-		playerRot * 
-		Matrix4::Translate(position);
-
-	//くねくねの角度のスピード
-	if (changeMotion){
-		upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f,1.5f) * dashSpeed * Time::DeltaTime;
-		leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f,1.5f) * dashSpeed * Time::DeltaTime;
-	}
-	else{
-		upAngle -=
-			angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
-		leftAngle -=
-			angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
-	}
-
-	upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
-	leftAngle = Math::InfinityClamp(leftAngle, 0.0f, 360.0f);
-
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(
-		Vector3(0,0,1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +  
-		parameter.mat.GetPosition() + cameraUpMove);
-	Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-	Camera::GetInstance().Up.Set(Vector3(0,1,0));
-	Camera::GetInstance().Update();
-	
-	Vector3* copyVertexVec = new Vector3[boneCount];
-
-	for (int i = 0; i < boneCount; i++){
-		copyVertexVec[i] = vertexVec[i];
-	}
-
-	int storageCount = 0;
-	Vector3 startPos = position;
-	vertexVec[0] = position;
-
-	int deletePosStorageCount = posStorage.size();
-	for (int i = posStorage.size() - 1; i >= 0; i--){
-		if (storageCount + 1 >= boneCount){
-			break;
 		}
 		else{
-			deletePosStorageCount--;
+			// 再生時間を進める
+			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
+			forntVec = tp.tackleT;
+			if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
+				tp.tackleEndFlag = true;
+				posStorage.clear();
+				nonPosStorageVec = -tp.tackleT;
+				beforeVec = tp.tackleT;
+			}
+
+			if (tp.tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
+			else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
+
+			// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
+			if (tp.animTime >= totalTime - 10.0f)
+			{
+				tp.animTime = 0.0f;
+				tp.tackleFlag = false;
+				tp.tackleEndFlag = false;
+				animBlend = 0.0f;
+				waitAnimSet = false;
+			}
+			if (tp.tackleColFlag){
+				if (!tp.tornadoTatchFlag && !tp.airGunFlag){
+					world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world, position, tp.tackleT));
+					tp.airGunFlag = true;
+				}
+			}
+			if (tp.animTime > tackleAnimAttackTiming){
+				if (!tp.tackleColFlag){
+					world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
+					world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
+				}
+				parameter.height = tp.tackleT.Normalized() * 30.0f;
+				tp.tackleColFlag = true;
+			}
 		}
-		if (Vector3::Length(startPos - posStorage[i]) >= Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1])){
-			vertexVec[storageCount + 1] = startPos + (posStorage[i] - startPos).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
+
+		animBlend = Math::Clamp(animBlend, 0.0f, 1.0f);
+
+		//ボーンの情報切り替え
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X))
+			boneSelect++;
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
+			boneSelect--;
+
+		////ボーンの情報切り替え
+		//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
+		//	rotateY += 360.0f * Time::DeltaTime;
+		//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
+		//	rotateY -= 360.0f * Time::DeltaTime
+		Matrix4 playerRot = Matrix4::Identity;
+		Vector3 front = forntVec.Normalized();
+		playerRot.SetFront(front);
+		Vector3 up = Vector3(0, 1, 0).Normalized();
+		Vector3 left = Vector3::Cross(front, up).Normalized();
+		up = Vector3::Cross(up, left).Normalized();
+
+		playerRot.SetUp(up);
+		playerRot.SetLeft(left);
+		//マトリックスの再計算
+		parameter.mat =
+			Matrix4::Scale(scale) *
+			playerRot *
+			Matrix4::Translate(position);
+
+		//くねくねの角度のスピード
+		if (changeMotion){
+			upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::DeltaTime;
+			leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::DeltaTime;
+		}
+		else{
+			upAngle -=
+				angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+			leftAngle -=
+				angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+		}
+
+		upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
+		leftAngle = Math::InfinityClamp(leftAngle, 0.0f, 360.0f);
+
+		Camera::GetInstance().SetRange(0.1f, 9999.0f);
+		Camera::GetInstance().Position.Set(
+			Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+			parameter.mat.GetPosition() + cameraUpMove);
+		Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+		Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
+		Camera::GetInstance().Update();
+
+		Vector3* copyVertexVec = new Vector3[boneCount];
+
+		for (int i = 0; i < boneCount; i++){
+			copyVertexVec[i] = vertexVec[i];
+		}
+
+		int storageCount = 0;
+		Vector3 startPos = position;
+		vertexVec[0] = position;
+
+		int deletePosStorageCount = posStorage.size();
+		for (int i = posStorage.size() - 1; i >= 0; i--){
+			if (storageCount + 1 >= boneCount){
+				break;
+			}
+			else{
+				deletePosStorageCount--;
+			}
+			if (Vector3::Length(startPos - posStorage[i]) >= Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1])){
+				vertexVec[storageCount + 1] = startPos + (posStorage[i] - startPos).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
+				startPos = vertexVec[storageCount + 1];
+				storageCount++;
+			}
+		}
+		while (!(storageCount + 1 >= boneCount)){
+			vertexVec[storageCount + 1] = startPos + nonPosStorageVec.Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
 			startPos = vertexVec[storageCount + 1];
 			storageCount++;
 		}
+
+
+		int defaltSize = posStorage.size();
+		for (int i = 0; i < deletePosStorageCount; i++)
+			posStorage.erase(posStorage.begin());
+
+		SAFE_DELETE_ARRAY(copyVertexVec);
+		if (damageFlag){
+			damageCount += Time::DeltaTime;
+			if (damageCount > 0.3f){
+				damageFlag = false;
+				damageCount = 0;
+			}
+		}
 	}
-	while (!(storageCount + 1 >= boneCount)){
-		vertexVec[storageCount + 1] = startPos + nonPosStorageVec.Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
-		startPos = vertexVec[storageCount + 1];
-		storageCount++;
-	}
-
-
-	int defaltSize = posStorage.size();
-	for (int i = 0; i < deletePosStorageCount; i++)
-	posStorage.erase(posStorage.begin());
-
-	SAFE_DELETE_ARRAY(copyVertexVec);
-	if (damageFlag){
-		damageCount += Time::DeltaTime;
-		if (damageCount > 1.0f){
-			damageFlag = false;
-			damageCount = 0;
+	else{
+		for (int i = 0; i < boneCount; i++){
+			vertexVec[i] -= Vector3(0, 1, 0) * speed * Time::DeltaTime;
 		}
 	}
 }
@@ -646,7 +656,7 @@ void Player::Draw() const{
 
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
-	
+
 	ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
@@ -654,11 +664,11 @@ void Player::Draw() const{
 	//	int Color = GetColor(0, 0, 255);
 	//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
 	//}
-	
+
 	if (dashPosStorage.size() > 1)
 	for (int count = 0; count < dashPosStorage.size() - 1; count++){
 		int Color = GetColor(0, 0, 255);
-		DrawLine3D(dashPosStorage[count],dashPosStorage[count + 1], Color);
+		DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
 	}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
@@ -693,7 +703,7 @@ void Player::ParameterDraw() const{
 	DrawFormatString(0, 48, GetColor(255, 255, 255), "Position     x:%f y:%f z:%f", Position.x, Position.y, Position.z);
 
 	// 変換行列を描画する
-	MATRIX Matrix =  MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
+	MATRIX Matrix = MV1GetFrameLocalMatrix(ModelHandle, boneSelect);
 	DrawFormatString(0, 64, GetColor(255, 255, 255), "   Matrix    %f %f %f %f", Matrix.m[0][0], Matrix.m[0][1], Matrix.m[0][2], Matrix.m[0][3]);
 	DrawFormatString(0, 80, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[1][0], Matrix.m[1][1], Matrix.m[1][2], Matrix.m[1][3]);
 	DrawFormatString(0, 96, GetColor(255, 255, 255), "             %f %f %f %f", Matrix.m[2][0], Matrix.m[2][1], Matrix.m[2][2], Matrix.m[2][3]);
@@ -727,7 +737,7 @@ void Player::ParameterDraw() const{
 	//// フレームに半透明要素があるかどうかを描画
 	DrawFormatString(0, 272, gageColor, "DashGage   %2.1ff/%2.1ff %s", dashTime, dashMaxTime, dashHealFlag ? "(OVERHEAT)" : "");
 
-	DrawFormatString(0, 288, GetColor(255,255,255), "HP: %d",parameter.HP);
+	DrawFormatString(0, 288, GetColor(255, 255, 255), "HP: %f", parameter.HP);
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {

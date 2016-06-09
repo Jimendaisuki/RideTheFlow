@@ -36,7 +36,7 @@ Blood::Blood(IWorld& world_, const Vector3 position_) :
 UIActor(world_)
 {
 	parameter.isDead = false;
-	parameter.id	 = EFFECT_ID::BLOOD_EFFECT;
+	parameter.id	 = UI_ID::BLOOD_UI;
 
 	/* ‰Šúİ’è */
 	alpha     = 1.0f;
@@ -82,7 +82,7 @@ Blood::Blood(IWorld& world_, const Vector3 position_, const Actor& player_) :
 UIActor(world_)
 {
 	parameter.isDead = false;
-	parameter.id = EFFECT_ID::BLOOD_EFFECT;
+	parameter.id = UI_ID::BLOOD_UI;
 
 	/* ‰Šúİ’è */
 	alpha = 1.0f;

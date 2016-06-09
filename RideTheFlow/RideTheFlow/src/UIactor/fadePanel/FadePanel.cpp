@@ -13,8 +13,8 @@ void FadePanel::Initialize()
 	scale.x = (float)WINDOW_WIDTH  / resSize.x;
 	scale.y = (float)WINDOW_HEIGHT / resSize.y;
 	isAction = false;
-	alpha = 1;
-	time = 0;
+	alpha = 1.0f;
+	maxAlpha = 1.0f;
 	actionTime = 0;
 	status = FADE_STATUS::STANDBY;
 }
@@ -23,17 +23,15 @@ void FadePanel::Update()
 {
 	if (!isAction) return;
 
-	// 処理
-	if (time <= 0.0f) status = FADE_STATUS::STANDBY;
-	else time -= Time::DeltaTime;
-
 	switch (status)
 	{
 	case FADE_STATUS::FadeIn:
 		alpha -= (Time::DeltaTime / actionTime);
+		if (IsFullClear()) status = FADE_STATUS::STANDBY;
 		break;
 	case FADE_STATUS::FadeOut:
 		alpha += (Time::DeltaTime / actionTime);
+		if (IsFullBlack()) status = FADE_STATUS::STANDBY;
 		break;
 	default:
 		isAction = false;
@@ -41,9 +39,9 @@ void FadePanel::Update()
 	}
 
 	// 一応抜け出し用
-	if (alpha < 0.0f || 1.0f < alpha) status = FADE_STATUS::STANDBY;
+	if (alpha < 0.0f || maxAlpha < alpha) status = FADE_STATUS::STANDBY;
 	// アルファクランプ
-	alpha = Math::Clamp(alpha, 0.0f, 1.0f);
+	alpha = Math::Clamp(alpha, 0.0f, maxAlpha);
 }
 
 void FadePanel::Draw()const
@@ -54,34 +52,29 @@ void FadePanel::Draw()const
 void FadePanel::FadeIn(float sec_)
 {
 	status = FADE_STATUS::FadeIn;
-	Setting(sec_);
+	isAction = true;
+	actionTime = sec_;
 }
 
-void FadePanel::FadeOut(float sec_)
+void FadePanel::FadeOut(float sec_, float maxAlpha_)
 {
 	status = FADE_STATUS::FadeOut;
-	Setting(sec_);
+	maxAlpha = maxAlpha_;
+	isAction = true;
+	actionTime = sec_;
 }
 
-bool FadePanel::IsAction()
+bool FadePanel::IsAction() const
 {
 	return isAction;
 }
 
-bool FadePanel::IsFullBlack()
+bool FadePanel::IsFullBlack() const
 {
 	return alpha >= 1.0f;
 }
 
-bool FadePanel::IsFullClear()
+bool FadePanel::IsFullClear() const
 {
 	return alpha <= 0.0f;
 }
-
-void FadePanel::Setting(float time_)
-{
-	isAction = true;
-	actionTime = time_;
-	time = actionTime;
-}
-

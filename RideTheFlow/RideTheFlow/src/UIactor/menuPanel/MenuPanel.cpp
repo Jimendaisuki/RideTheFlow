@@ -5,6 +5,8 @@
 #include "../../input/Keyboard.h"
 #include "../../math/Math.h"
 #include "../../time/Time.h"
+#include "../../world/IWorld.h"
+#include "../../actor/Actor.h"
 
 const Vector2 HD = Vector2(1920, 1080);
 const Vector2 SCREEN_CENTER = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
@@ -12,7 +14,11 @@ const Vector2 RES_SIZE_1 = Vector2(175, 967);
 const Vector2 RES_SIZE_2 = Vector2(1574, 967);
 const Vector2 TEXT_SIZE = Vector2(150.0f, 700.0f);
 const float MOVE_WIDTH = (RES_SIZE_2.x - RES_SIZE_1.x) / 2;
-const float DELEY_TIME = 0.0f;
+const float DELEY_TIME = 0.1f;
+const float LX[6] = { 0.0f, WINDOW_WIDTH / 3.0f * 1.3f, WINDOW_WIDTH / 10.0f, 0.0f, WINDOW_WIDTH / 8.0f, WINDOW_WIDTH / 3.0f };
+const float LY[6] = { 0.0f, -WINDOW_HEIGHT / 15.0f * 1.3f, 0, WINDOW_HEIGHT * 3.0f / 7.0f, WINDOW_HEIGHT * 9.0f / 10.0f, WINDOW_HEIGHT };
+const float RX[5] = { WINDOW_WIDTH, WINDOW_WIDTH * 0.9f, WINDOW_WIDTH * 1.1f, WINDOW_WIDTH , WINDOW_WIDTH * 0.8f};
+const float RY[5] = { 0.0f, WINDOW_HEIGHT / 10.0f, WINDOW_HEIGHT * 0.25f, WINDOW_HEIGHT * 0.6f, WINDOW_HEIGHT };
 
 void MenuPanel::Initialize()
 {
@@ -20,7 +26,6 @@ void MenuPanel::Initialize()
 	scale.x = (float)WINDOW_WIDTH  / HD.x;
 	scale.y = (float)WINDOW_HEIGHT / HD.y;
 	drawPosition = SCREEN_CENTER;
-
 	time = 0;
 
 	/* 巻物設定 */
@@ -32,6 +37,9 @@ void MenuPanel::Initialize()
 	rect.right	= RES_SIZE_1.x;
 	rect.bottom = RES_SIZE_1.y;
 	
+	/* 雲設定 */
+	alphaTime = 0.0f;
+
 	/* テキスト設定 */
 	textAlpha = 0;
 	selectNum = 0;
@@ -48,9 +56,12 @@ void MenuPanel::Initialize()
 		pages[i] = 0.0f;
 	}
 
+
 	/* 実行用設定 */
-	isAction = true;
-	status = MENU_STATUS::BEGIN;
+	isAction	 = false;
+	isBackSelect = false;
+	isEnd		 = false;
+	status = MENU_PANEL_STATUS::BEGIN;
 }
 
 void MenuPanel::Update()
@@ -60,28 +71,45 @@ void MenuPanel::Update()
 	switch (status)
 	{
 	case BEGIN:		// 巻物が左に移動
+		// ポーズ時の暗転 
+		if (scene == Scene::GamePlay)
+		{
+			if (backAlpha < 0.7f)
+			{
+				backAlpha += Time::DeltaTime * 4;
+				backAlpha = Math::Clamp(backAlpha, 0.0f, 0.7f);
+			}
+		}
+		// 処理
 		time += Time::DeltaTime;
+		rollAlpha = time;
+		alphaTime = time;
+
 		moveVec = MOVE_WIDTH * scale.x * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, Math::Clamp(time, 0.0f, 1.0f));
 		drawPosition = SCREEN_CENTER - Vector2(moveVec, 0.0f);
-		rollAlpha = time;
+
+		// ステータス切り替え
 		if (time >= 1)
 		{
-			status = MENU_STATUS::OPEN;
+			status = MENU_PANEL_STATUS::OPEN;
 			rollBakcAlpha = 1.0f;
 			time = -DELEY_TIME;
 		}
 		break;
 	case OPEN:		// 巻物開く
+		// 処理
 		time += Time::DeltaTime;
+
 		moveVec = MOVE_WIDTH * scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
 		size = Point(moveVec / scale.x, 0) + RES_SIZE_1.ToPoint();
 		rect.left = moveVec / scale.x;
 		rect.right = rect.left + RES_SIZE_1.x;
 
+		// ステータス切り替え
 		if (time >= 1.0f)
 		{
 			time = 1.0f;
-			status = MENU_STATUS::SELECT;
+			status = MENU_PANEL_STATUS::SELECT;
 		}
 		break;
 	case SELECT:	// セレクト
@@ -105,22 +133,32 @@ void MenuPanel::Update()
 		}
 		selects[selectNum] = 1;
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT))	selectNum++;
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT))	selectNum--;
+		// 入力処理
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT) || 
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::LEFT))	
+			selectNum++;
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::RIGHT))
+			selectNum--;
 		if (selectNum > 2) selectNum = 0;
 		if (selectNum < 0) selectNum = 2;
 
-		// ステータス変更
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N))
+		// ステータス切り替え
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1))
 		{
-			if (selectNum == 0)	status = MENU_STATUS::CLOSE;
+			if (selectNum == 0)	status = MENU_PANEL_STATUS::CLOSE;
 			else if (selectNum == 1)
 			{
 				prePage = 0;
 				nowPage = 1;
-				status = MENU_STATUS::MANUAL;
+				status = MENU_PANEL_STATUS::MANUAL;
 			}
-			else if (selectNum == 2) status = MENU_STATUS::CLOSE;
+			else if (selectNum == 2)
+			{
+				isBackSelect = true;
+				Close();
+			}
 		}
 		break;
 	case MANUAL:	// 操作説明画面
@@ -138,7 +176,7 @@ void MenuPanel::Update()
 		if (pages[prePage] > 0.0f)
 		{
 			pages[prePage] -= Time::DeltaTime;
-			return;
+			break;
 		}
 		pages[prePage] = Math::Clamp(pages[prePage], 0.0f, 1.0f);
 		// フェードイン
@@ -149,11 +187,12 @@ void MenuPanel::Update()
 		}
 		pages[nowPage] = Math::Clamp(pages[nowPage], 0.0f, 1.0f);
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B))
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (nowPage <= 1)
 			{
-				status = MENU_STATUS::SELECT;
+				status = MENU_PANEL_STATUS::SELECT;
 				prePage = 1;
 				nowPage = 0;
 				return;
@@ -161,11 +200,12 @@ void MenuPanel::Update()
 			prePage = nowPage;
 			nowPage--;
 		}		
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N))
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1))
 		{
 			if (nowPage > 3)
 			{
-				status = MENU_STATUS::SELECT;
+				status = MENU_PANEL_STATUS::SELECT;
 				prePage = 4;
 				nowPage = 1;
 				return;
@@ -196,12 +236,26 @@ void MenuPanel::Update()
 		{
 			time = 0.0f;
 			rollBakcAlpha = 0.0f;
-			status = MENU_STATUS::END;
+			status = MENU_PANEL_STATUS::END;
 		}
 		break;
 	case END:		// フェードアウトから終了
-		if (rollAlpha >= 0.0f) rollAlpha -= Time::DeltaTime;
-		else isAction = false;
+		if (rollAlpha >= 0.0f)
+		{
+			rollAlpha -= Time::DeltaTime;
+			alphaTime = rollAlpha;
+		}
+		else
+		{
+			if (backAlpha > 0)
+			{
+				backAlpha -= Time::DeltaTime * 3;
+				return;
+			}
+			backAlpha = 0.0f;
+			isAction = false;
+			isEnd = true;
+		}
 		break;
 	default:
 		isAction = false;
@@ -209,15 +263,30 @@ void MenuPanel::Update()
 	}
 }
 
-void MenuPanel::Draw(Scene scene) const
+void MenuPanel::Draw()
 {
+	if (scene == Scene::GamePlay) Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, backAlpha, Vector2(WINDOW_WIDTH / 800.0f, WINDOW_HEIGHT / 600.0f), 0.0f, false, false);
+
 	/* 巻物の描画 */
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_3_SPRITE, drawPosition + Vector2(moveVec, 0.0f), size, RES_SIZE_1 / 2, rollBakcAlpha, scale, 180.0f, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_3_SPRITE, drawPosition + Vector2(moveVec, 0.0f), size, RES_SIZE_1 / 2 - Vector2(-5, 0), rollBakcAlpha, scale, 180.0f, true, false);
 	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_2_SPRITE, drawPosition, rect, RES_SIZE_1 / 2, rollAlpha, scale, 0.0f, true, false);
 	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_1_SPRITE, drawPosition, RES_SIZE_1 / 2, rollAlpha, scale, 0.0f);
 
+	for (int i = 0; i < 6; i++)
+	{
+		Vector2 position = Vector2(-100.0f, LY[i]);
+		float v = (LX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, position + Vector2(v, 0.0f), Vector2(400, 300), alphaTime, Vector2(1.0f * scale.x, 0.8f * scale.y));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		Vector2 position = Vector2(WINDOW_WIDTH + 100.0f, RY[i]);
+		float v = (RX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, position + Vector2(v, 0.0f), Vector2(400, 300), alphaTime, Vector2(1.0f * scale.x, 0.8f * scale.y));
+	}
+
 	/* セレクト描画 */
-	if (scene == Scene::Title) DrawMenu();
+	if (scene == Scene::Menu) DrawMenu();
 	else if (scene == Scene::GamePlay) DrawPause();
 
 	/* マニュアル描画 */
@@ -275,9 +344,37 @@ void MenuPanel::DrawManual() const
 {
 
 }
-
-void MenuPanel::Action()
+// 未実行なら実行
+void MenuPanel::Action(Scene scene_)
 {
 	if (isAction) return;
+	/* 現在のシーンを取得 */
+	scene = scene_;
 	Initialize();
+	isAction = true;
+}
+// 実行中か？
+bool MenuPanel::IsAction() const
+{
+	return isAction;
+}
+
+bool MenuPanel::IsBackSelect() const
+{
+	return isBackSelect;
+}
+
+bool MenuPanel::IsEnd() const
+{
+	return isEnd;
+}
+
+void MenuPanel::Close()
+{
+	status = MENU_PANEL_STATUS::CLOSE;
+}
+
+void MenuPanel::Stop()
+{
+	isAction = false;
 }

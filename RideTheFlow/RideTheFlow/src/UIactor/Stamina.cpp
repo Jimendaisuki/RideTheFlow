@@ -14,7 +14,7 @@ UIActor(world)
 {
 	/* èâä˙ê›íË */
 	parameter.isDead = false;
-	parameter.id = EFFECT_ID::STAMINA_EFFECT;
+	parameter.id = UI_ID::STAMINA_UI;
 	scale.x = (float)WINDOW_WIDTH  / HD.x;
 	scale.y = (float)WINDOW_HEIGHT / HD.y;
 

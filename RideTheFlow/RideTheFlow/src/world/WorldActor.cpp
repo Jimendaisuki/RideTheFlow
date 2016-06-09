@@ -5,8 +5,8 @@
 WorldActor::WorldActor(){
 	for (int i = ACTOR_ID::BEGIN_ACTOR; i <= ACTOR_ID::END_ACTOR; ++i)
 		managers.emplace(ACTOR_ID(i), std::make_shared<ActorManager>());
-	for (int i = EFFECT_ID::BEGIN_EFFECT; i <= EFFECT_ID::END_EFFECT; ++i)
-		UImanagers.emplace(EFFECT_ID(i), std::make_shared<UIActorManager>());
+	for (int i = UI_ID::BEGIN_UI; i <= UI_ID::END_UI; ++i)
+		UImanagers.emplace(UI_ID(i), std::make_shared<UIActorManager>());
 }
 WorldActor::~WorldActor(){
 
@@ -45,7 +45,7 @@ void WorldActor::Draw() const{
 void WorldActor::Add(ACTOR_ID id, ActorPtr actor){
 	managers[id]->Add(actor);
 }
-void WorldActor::EffectAdd(EFFECT_ID id, UIActorPtr UIactor){
+void WorldActor::UIAdd(UI_ID id, UIActorPtr UIactor){
 	UImanagers[id]->Add(UIactor);
 }
 void WorldActor::Clear(){
@@ -67,7 +67,7 @@ void WorldActor::EachActor(ACTOR_ID id, std::function<void(const Actor&)> func)
 {
 	managers[id]->EachActor(func);
 }
-void WorldActor::EachUIActor(EFFECT_ID id, std::function<void(const UIActor&)> func)
+void WorldActor::EachUIActor(UI_ID id, std::function<void(const UIActor&)> func)
 {
 	UImanagers[id]->EachActor(func);
 }
