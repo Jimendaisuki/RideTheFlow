@@ -13,18 +13,18 @@ rotmat(Matrix4::Identity),
 mat(Matrix4::Identity),
 addAlpha(Random::GetInstance().Range(-0.5f,-0.4f)),
 rotationSpeed(Random::GetInstance().Range(-180.0f, 180.0f)),
-addSizeSpeed(Random::GetInstance().Range(0.02f,0.04f)),
+addSizeSpeed(Random::GetInstance().Range(0.01f,0.03f)),
 timer(0.0f)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 5.0f;
+	lifeParam.lifeTimeLimit = 4.0f;
 	lifeParam.isDead = false;
 
 	moveParam.pos = position_;
 
 	drawParam.drawID = MODEL_ID::CASTLE_ADD_MODEL;
-	drawParam.size = 0.09f + Random::GetInstance().Range(-0.05f, 0.02f);
-	drawParam.alpha = 0.9f;
+	drawParam.size = 0.07f + Random::GetInstance().Range(-0.05f, 0.02f);
+	drawParam.alpha = 1.0f;
 }
 
 void CastleAddParticle::OnUpdate()

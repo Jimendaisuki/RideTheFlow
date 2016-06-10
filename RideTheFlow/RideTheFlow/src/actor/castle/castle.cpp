@@ -8,6 +8,8 @@
 #include "CastleDoragonSpear.h"
 
 #include"CastleParameter.h"
+#include "CastleBlock.h"
+#include "../../game/Random.h"
 
 Castle::Castle(IWorld& world, Vector3 position,Actor& _parent) :
 Actor(world),
@@ -74,6 +76,10 @@ void Castle::Update()
 	if (parent->GetParameter().isDead)
 	{
 		parameter.isDead = true;
+		//‚ª‚ê‚«‚ð”ò‚Î‚·
+		for (int i = 0; i < 8; i++){
+			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleBlock>(world, mPosition + Vector3(0.0f, Random::GetInstance().Range(-10.0f, 10.0f), 0.0f)));
+		}
 	}
 
 	parameter.mat =

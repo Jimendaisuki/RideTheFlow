@@ -8,7 +8,7 @@ const float cameraFrontAttack = 10.0f;
 /****“GŒR‘à****/
 
 //ŒR‘à‚ÌƒXƒs[ƒh
-const float ArmySpeed = 50.0f;
+const float ArmySpeed = 5.0f;
 //ŒR‘à‚ÌUŒ‚ƒN[ƒ‹ƒ^ƒCƒ€
 const float ArmyAttackTime = 0.5f;
 //ŒR‘à‚ÌUŒ‚”ÍˆÍ
@@ -56,7 +56,7 @@ const float NotLookVaristorArrowNum = 2;
 //ƒoƒŠƒXƒ^UŒ‚¸“x(¬‚³‚¢‚Ù‚Ç‚¸“x)
 const float VaristorArrowAccuracy = 10.0f;
 //ƒoƒŠƒXƒ^‚ÌUŒ‚‚ª—¬‚ê‚Ì‰e‹¿‚ğó‚¯‚éŠ„‡
-const float VaristorWindPercentage = 100.0f;
+const float VaristorWindPercentage = 75.0f;
 
 
 
@@ -87,7 +87,7 @@ const float NotLookCannonShellNum = 1;
 //‘å–CUŒ‚¸“x(¬‚³‚¢‚Ù‚Ç‚¸“x)
 const float CannonShellAccuracy = 10.0f;
 //‘å–C‚ÌUŒ‚‚ª—¬‚ê‚Ì‰e‹¿‚ğó‚¯‚éŠ„‡
-const float CannonWindPercentage = 100.0f;
+const float CannonWindPercentage = 50.0f;
 
 
 /****“G‚Ì‘D****/

@@ -13,6 +13,8 @@
 #include "../game/Random.h"
 #include "particle\WindFlow.h"
 #include "AirGun.h"
+#include "../UIactor/Damege.h"
+#include "../UIactor/Stamina.h"
 
 //ボーンの数
 const int boneCount = 38;
@@ -89,7 +91,10 @@ tornadoFlag(false)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	parameter.HP = 10;
+	parameter.HP = 50;
+
+	//ダメージ演出用のUIを追加
+	world.UIAdd(UI_ID::DAMAGE_UI, std::make_shared<Damege>(world, parameter.HP, parameter.HP));
 
 	//操作
 	vec = Vector3::Zero;
@@ -151,6 +156,9 @@ tornadoFlag(false)
 	dashSpeed = 1.0f;
 	//加速できる時間
 	dashTime = 0.0f;
+
+	//ダッシュのスタミナゲージUIを追加
+	world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
 }
 Player::~Player(){
 	SAFE_DELETE_ARRAY(vertexVec);
@@ -169,7 +177,7 @@ void Player::Update(){
 
 	if (parameter.HP <= 0)dead = true;
 	if (!dead){
-		if (parameter.HP < 10.0f)
+		if (parameter.HP < 50.0f)
 		parameter.HP += 0.5f * Time::DeltaTime;
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 

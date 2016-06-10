@@ -34,4 +34,7 @@ private:
 	Vector2 leftstick;
 	Vector2 rightstick;
 	std::vector<bool>buttons;
+
+	float armyCreateTimer;
+	int armyCount;
 };

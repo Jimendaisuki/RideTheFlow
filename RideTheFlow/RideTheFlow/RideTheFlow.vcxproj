@@ -104,6 +104,7 @@
     <ClCompile Include="src\actor\particle\Sand.cpp" />
     <ClCompile Include="src\actor\particle\SandParticle.cpp" />
     <ClCompile Include="src\actor\particle\TornadoParticle.cpp" />
+    <ClCompile Include="src\scene\MenuScene.cpp" />
     <ClCompile Include="src\UIactor\Blood.cpp" />
     <ClCompile Include="src\UIactor\Damege.cpp" />
     <ClCompile Include="src\UIactor\Effect.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="src\actor\particle\SandParticle.h" />
     <ClInclude Include="src\actor\particle\TornadoParticle.h" />
     <ClInclude Include="src\actor\particle\WindSetting.h" />
+    <ClInclude Include="src\scene\MenuScene.h" />
     <ClInclude Include="src\UIactor\Beziers.h" />
     <ClInclude Include="src\UIactor\Blood.h" />
     <ClInclude Include="src\UIactor\Damege.h" />

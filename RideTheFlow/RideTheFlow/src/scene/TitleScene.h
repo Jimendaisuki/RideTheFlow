@@ -4,6 +4,8 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 
+class  TitleScene :public IScene
+{
 enum TITLE_STATUS
 {
 	TITLE_BEGIN,
@@ -13,7 +15,6 @@ enum TITLE_STATUS
 	TITLE_END
 };
 
-class  TitleScene :public IScene{
 public:
 	//コンストラクタ 
 	TitleScene();

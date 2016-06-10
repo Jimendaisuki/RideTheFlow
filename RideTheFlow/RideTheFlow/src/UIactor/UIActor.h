@@ -9,7 +9,7 @@ class IWorld;
 
 struct UIActorParameter
 {
-	EFFECT_ID id;
+	UI_ID id;
 	bool isDead;
 };
 
