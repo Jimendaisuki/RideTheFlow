@@ -58,6 +58,7 @@ void CannonBullet::Update()
 
 	//マトリックス計算
 	parameter.mat =
+		Matrix4::Scale(Vector3(4)) *
 		Matrix4::Translate(mPosition);
 }
 
