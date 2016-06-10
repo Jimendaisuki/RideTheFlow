@@ -17,7 +17,7 @@ addSizeSpeed(Random::GetInstance().Range(0.01f,0.03f)),
 timer(0.0f)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 4.0f;
+	lifeParam.lifeTimeLimit = 2.0f;
 	lifeParam.isDead = false;
 
 	moveParam.pos = position_;
@@ -31,18 +31,10 @@ void CastleAddParticle::OnUpdate()
 {
 	drawParam.size += addSizeSpeed * Time::DeltaTime;
 
-	if (lifeParam.lifeTime >= 1.5f)
-		drawParam.alpha += addAlpha * Time::DeltaTime;
-
-	xrot += rotationSpeed * Time::DeltaTime;
-	yrot += rotationSpeed * Time::DeltaTime;
-	rotmat =
-		Matrix4::RotateX(xrot) *
-		Matrix4::RotateY(yrot);
+	drawParam.alpha += addAlpha * Time::DeltaTime;
 
 	mat = 
 		Matrix4::Scale(drawParam.size) *
-		rotmat *
 		Matrix4::Translate(moveParam.pos);
 }
 
