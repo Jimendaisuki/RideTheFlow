@@ -123,6 +123,10 @@ void ShipCannonEnemy::Update()
 		}
 	}
 
+	if (mSe->GetParameter().isDead)
+	{
+		parameter.isDead = true;
+	}
 
 	if (mLeft)
 		mPosition = mSe->GetShipEnemyPos().cannonPosLeft;

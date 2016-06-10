@@ -40,8 +40,6 @@ void CastleCannon::Update()
 		playerMat = other.GetParameter().mat;
 		tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	});
-	//あたり判定
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	//プレイヤーの前
 	Vector3 playerFront = playerMat.GetFront().Normalized()*CastleCameraFrontAttack + playerMat.GetPosition();
 	//敵とプレイヤーの角度を求める
@@ -56,7 +54,7 @@ void CastleCannon::Update()
 		180 / 3.1415f;
 
 	//プレイヤーが見えているかどうか
-	if (isLook)
+	if (castle->isLookPlayer())
 	{
 		mArrowNumber = CastleCannonNumber;
 		mSecondAttack = CastleCannonSecondAttack;
@@ -67,6 +65,8 @@ void CastleCannon::Update()
 		mSecondAttack = CastleCannonNotLookSecondAttack;
 	}
 	isLook = true;
+
+	//城の大砲は旋回するよ
 
 	//ダッシュ中以外はプレイヤーの前に矢を放つ
 	if (tp.dashFlag)
@@ -113,8 +113,4 @@ void CastleCannon::Draw() const
 }
 void CastleCannon::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
-	{
-		isLook = false;
-	}
 }

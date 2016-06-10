@@ -4,7 +4,6 @@
 //どのくらいカメラの前の場所に通常攻撃するか(ダッシュ中は無効)
 const float cameraFrontAttack = 10.0f;
 
-
 /****敵軍隊****/
 
 //軍隊のスピード
@@ -123,7 +122,7 @@ const float ShipNotLookVaristorArrowNum = 2;
 
 
 //船大砲の攻撃クールタイム
-const float ShipCannonAttackTime = 10.0f;
+const float ShipCannonAttackTime = 5.0f;
 //船大砲の攻撃範囲
 const float ShipCannonRange = 300.0f;
 //船大砲が一回に発射する砲弾の数
@@ -146,11 +145,11 @@ const float ShipNotLookCannonShellNum = 1;
 /***撃龍槍***/
 
 //撃龍槍のクールタイム
-const float DoragonSpearAttackTime = 3.0f;
+const float DoragonSpearAttackTime = 10.0f;
 //プレイヤーが撃龍槍圏内に入った時から攻撃する時までの時間
 const float DoragonSpearWithinTime = 0.1f;
 //撃龍槍が最大に伸びるまでの時間
 const float DoragonSpearMaxTime = 10.0f;
 //撃龍槍が完全に出てそこにとどまる時間
-const float DoragonSpearStopTime = 1.0f;
+const float DoragonSpearStopTime = 2.0f;
 

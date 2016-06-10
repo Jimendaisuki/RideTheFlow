@@ -116,6 +116,11 @@ void DoragonSpearEnemy::Update()
 		Matrix4::Translate(mSe->GetShipEnemyPos().spearPos+
 		parameter.mat.GetLeft().Normalized()*2+
 		parameter.mat.GetUp().Normalized()*2);
+
+	if (mSe->GetParameter().isDead)
+	{
+		parameter.isDead = true;
+	}
 }
 
 void DoragonSpearEnemy::Draw() const
