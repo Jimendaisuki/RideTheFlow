@@ -1,5 +1,6 @@
 #pragma once
 #include "../AllInclude.h"
+#include "../Def.h"
 #include "../actor/ID.h"
 #include "../graphic/Sprite.h"
 #include <map>

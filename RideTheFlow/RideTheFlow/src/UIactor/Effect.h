@@ -24,9 +24,9 @@ public:
 	}
 
 	// ダッシュエフェクト
-	void DashEffect(IWorld& wa);
-	void DashEffect(IWorld& wa, Vector3 position);
-	void StepEffect(IWorld& wa, EffectDirection ed);
+	void DashEffect(IWorld& wo);
+	void DashEffect(IWorld& wo, Vector3 position);
+	void StepEffect(IWorld& wo, EffectDirection ed);
 
 	void DamegeEffect(IWorld& wo, const Vector3 position);
 	//void DamegeEffect(IWorld& wo, const Vector3 position, const Actor& player);
