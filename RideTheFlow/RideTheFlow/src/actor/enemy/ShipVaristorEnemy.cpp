@@ -127,6 +127,11 @@ void ShipVaristorEnemy::Update()
 	else
 		mPosition = mSe->GetShipEnemyPos().varistorPosRight;
 
+	if (mSe->GetParameter().isDead)
+	{
+		parameter.isDead = true;
+	}
+
 	//マトリックス計算
 	parameter.mat =
 		Quaternion::RotateAxis(Vector3::Up, rotate.y) *

@@ -1,6 +1,9 @@
 #include "WorldActor.h"
 #include<algorithm>
 #include "../actor/ID.h"
+#include <algorithm>
+#include "../actor/Actor.h"
+#include "../actor/ActorPtr.h"
 
 WorldActor::WorldActor(){
 	for (int i = ACTOR_ID::BEGIN_ACTOR; i <= ACTOR_ID::END_ACTOR; ++i)
@@ -45,6 +48,7 @@ void WorldActor::Draw() const{
 void WorldActor::Add(ACTOR_ID id, ActorPtr actor){
 	managers[id]->Add(actor);
 }
+
 void WorldActor::UIAdd(UI_ID id, UIActorPtr UIactor){
 	UImanagers[id]->Add(UIactor);
 }
@@ -70,4 +74,15 @@ void WorldActor::EachActor(ACTOR_ID id, std::function<void(const Actor&)> func)
 void WorldActor::EachUIActor(UI_ID id, std::function<void(const UIActor&)> func)
 {
 	UImanagers[id]->EachActor(func);
+}
+int WorldActor::GetActorCount(ACTOR_ID id,ACTOR_ID id2)
+{
+	int count = 0;
+	if (managers[id]->getlist().size() < 1)return 0;
+
+	for (auto i : managers[id]->getlist()){
+		if (i->GetParameter().id ==id2 )
+			count++;
+	}
+	return count;
 }

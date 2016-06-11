@@ -14,6 +14,7 @@ public:
 	virtual bool IsEnd()const = 0;
 	virtual void SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID) = 0;
 
+	virtual int GetActorCount(ACTOR_ID id,ACTOR_ID id2)=0 ;
 	//子オブジェクトを巡回
 	virtual void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func) = 0;
 	virtual void EachUIActor(UI_ID id, std::function<void(const UIActor&)> func) = 0;

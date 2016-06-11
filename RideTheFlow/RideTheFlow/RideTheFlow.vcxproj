@@ -94,6 +94,7 @@
     <ClCompile Include="src\actor\enemy\ShipCannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\ShipEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\ShipVaristorEnemy.cpp" />
+    <ClCompile Include="src\actor\enemy\SoldierEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="src\actor\enemy\ShipCannonEnemy.h" />
     <ClInclude Include="src\actor\enemy\ShipEnemy.h" />
     <ClInclude Include="src\actor\enemy\ShipVaristorEnemy.h" />
+    <ClInclude Include="src\actor\enemy\SoldierEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\particle\CastleAdd.h" />

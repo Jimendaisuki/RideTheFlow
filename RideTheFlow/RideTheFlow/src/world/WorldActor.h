@@ -24,6 +24,7 @@ public:
 	void UIAdd(UI_ID id, UIActorPtr UIactor);
 	void Clear();
 	void SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID);
+	int GetActorCount(ACTOR_ID id,ACTOR_ID id2);
 
 	//子オブジェクトを巡回
 	void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func);

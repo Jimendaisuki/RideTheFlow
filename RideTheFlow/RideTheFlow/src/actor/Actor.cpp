@@ -34,6 +34,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::PLAYER_DORAGONSPEAR_COL] = std::bind(&Actor::Player_vs_DoragonSpear, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL] = std::bind(&Actor::Player_vs_DoragonSpearWithin, this, std::placeholders::_1);
 	colFunc[COL_ID::CASTLE_CASTLE_COL] = std::bind(&Actor::Castle_vs_Castle, this, std::placeholders::_1);
+	colFunc[COL_ID::SHIP_ISLAND_COL] = std::bind(&Actor::Ship_vs_Island, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -495,6 +496,22 @@ CollisionParameter Actor::Castle_vs_Castle(const Actor& other) const
 
  	return colpara;
 	
+}
+
+CollisionParameter Actor::Ship_vs_Island(const Actor& other) const
+{
+	CollisionParameter colpara;
+	Sphere shipEnemy;
+	shipEnemy.position = parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*parameter.radius;
+	shipEnemy.radius = parameter.radius;
+	Sphere isLand;
+	isLand.position = other.parameter.mat.GetPosition();
+	isLand.radius = other.parameter.radius*3.0f;
+
+	colpara = Collisin::GetInstace().SphereSphere(shipEnemy, isLand);
+	colpara.colPos = other.GetParameter().mat.GetPosition();
+	colpara.colID = COL_ID::SHIP_ISLAND_COL;
+	return colpara;
 }
 // å„Ç≈çÌèú
 // ê¸Ç∆î†ÇÃìñÇΩÇËîªíË

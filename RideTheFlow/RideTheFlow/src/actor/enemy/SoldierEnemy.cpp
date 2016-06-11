@@ -1,4 +1,4 @@
-#include "ArmyEnemy.h"
+#include "SoldierEnemy.h"
 #include "../Collision.h"
 #include "../../world/IWorld.h"
 #include "../../graphic/Model.h"
@@ -7,8 +7,11 @@
 #include "EnemyBullet.h"
 #include "../../math/Math.h"
 #include "../Player.h"
+#include "../castle/castle.h"
+#include "ShipEnemy.h"
+#include "../castle/CastleParameter.h"
 
-ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
+SoldierEnemy::SoldierEnemy(IWorld& world, Vector3 position, Castle& castle, float rotateY) :
 Actor(world),
 playerMat(Matrix4::Identity),
 cameraMat(Matrix4::Identity),
@@ -18,20 +21,22 @@ arrowCount(0),
 playerAngle(0),
 mPosition(position),
 toPoint(Vector3::Zero),
-rotate(Vector3::Zero),
+mRotateY(rotateY),
 isLook(true)
 {
-	parameter.id = ACTOR_ID::ARMY_ENEMY_ACTOR;
 	parameter.isDead = false;
-	parameter.mat = Matrix4::Translate(mPosition);
+	parameter.mat =
+		Matrix4::RotateY(rotateY),
+		Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
-	
+	mCastle = &castle;
+
 }
-ArmyEnemy::~ArmyEnemy()
+SoldierEnemy::~SoldierEnemy()
 {
 
 }
-void ArmyEnemy::Update()
+void SoldierEnemy::Update()
 {
 	TackleParameter tp;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
@@ -44,23 +49,18 @@ void ArmyEnemy::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 
-	//敵とプレイヤーの角度を求める
-	playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
-		Math::Sqrt(Math::Pow(playerMat.GetPosition().z - mPosition.z, 2) +
-		           Math::Pow(playerMat.GetPosition().x - mPosition.x, 2))) *
-		           180 / 3.1415f;
-
 	//プレイヤーが見えているかどうか
-	if (isLook)
+	if (mCastle->isLookPlayer())
 	{
-		mArrowNumber = ArmyArrorwNum;
-		mSecondAttack = ArmyAttackTime;
+		mArrowNumber = CastleSoldierNumber;
+		mSecondAttack = CastleSoldierSecondAttack;
 	}
 	else
 	{
-		mArrowNumber = NotLookArmyArrorwNum;
-		mSecondAttack = NotLookArmyAttackTime;
+		mArrowNumber = CastleSoldierNotLookAttack;
+		mSecondAttack = CastleSoldierNotLookSecondAttack;
 	}
+
 
 	//ダッシュ中以外はカメラの前に矢を放つ
 	if (tp.dashFlag)
@@ -78,41 +78,29 @@ void ArmyEnemy::Update()
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
 	if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
-		Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
+		Vector3::Distance(playerMat.GetPosition(), mPosition) <= CastleSoldierAttackRange &&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, toPoint,*this));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, toPoint, *this));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;
 			attackTime = 0.0f;
 		}
 	}
-	if (playerAngle <= ArmyNear)
-	{
-		//移動
-		mPosition += Vector3::Direction(mPosition, playerMat.GetPosition()).Normalized()*
-			Vector3(1, 0, 1)*ArmySpeed*Time::DeltaTime;
-	}
-	mPosition -= 1.0f*Time::DeltaTime;
-	parameter.mat = Matrix4::Translate(mPosition);
-	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized();
-	rotate.y = Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f;
+	mPosition += mCastle->GetVelocity()*Time::DeltaTime;
+	parameter.mat =
+		Matrix4::RotateY(mRotateY)*
+		Matrix4::Translate(mPosition);
 }
-void ArmyEnemy::Draw() const
+void SoldierEnemy::Draw() const
 {
-	for (int i = 0; i < 3;i++)
-	for (int j = 0; j < 3; j++)
-	{
-		Matrix4 m;
-		m = Matrix4::RotateX(90) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
-		Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, m);
-	}
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 5, 20, 0, 0, FALSE);
+	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 10, 20, 255, 255, FALSE);
 }
-void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
+void SoldierEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
 	{

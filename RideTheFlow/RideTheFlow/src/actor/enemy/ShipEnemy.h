@@ -41,6 +41,8 @@ private:
 
 	Vector3 coppyPos;
 	Vector3 coppySpear;
+
+	Vector3 isLandPos;
 	//çUåÇä÷åW
 	float mSecondAttack;
 	float mArrowNumber;
@@ -49,8 +51,8 @@ private:
 	float attackRag;
 	int arrowCount;
 	bool isLook;
-
-
+	float isLandDot;
+	bool isLandCol;
 	float playerDot;
 	float shipAngle;
 
