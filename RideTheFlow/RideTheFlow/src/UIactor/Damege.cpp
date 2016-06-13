@@ -1,6 +1,5 @@
 #include "Damege.h"
 #include "../math/Math.h"
-#include "../Def.h"
 
 //#include "../actor/Actor.h"
 //#include "../world/IWorld.h"
@@ -20,13 +19,6 @@ UIActor(world)
 	scale.x = (float)WINDOW_WIDTH / HD.x;
 	scale.y = (float)WINDOW_HEIGHT / HD.y;
 
-	/* プレイヤーのHPを取得 */
-	//world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other)
-	//{
-	//	maxHP = other.parameter.HP;
-	//	nowHP = maxHP;
-	//});
-
 	nowHP = &HP_;
 	maxHP = maxHP_;
 }
@@ -39,11 +31,7 @@ Damege::~Damege()
 
 void Damege::Update()
 {
-	/* プレイヤーのHPを取得 */
-	//world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other)
-	//{
-	//	nowHP = other.parameter.HP;
-	//});
+
 }
 
 void Damege::Draw() const

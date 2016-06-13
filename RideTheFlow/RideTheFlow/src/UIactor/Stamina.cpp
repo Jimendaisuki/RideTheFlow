@@ -1,13 +1,11 @@
 #include "Stamina.h"
 #include "../math/Math.h"
-#include "../Def.h"
-#include "../actor/Actor.h"
 #include "../world/IWorld.h"
-
-#include "../input/Keyboard.h"
 
 const Vector2 HD = Vector2(1920, 1080);
 const Vector2 resSize = Vector2(1625, 125);
+const float	  offset = resSize.x - 1530.0f;
+const float	  gageX = resSize.x - offset;
 const Vector2 DrawPosition = Vector2(100, 0);
 Stamina::Stamina(IWorld& world, float& maxStamina_, float& nowStamina_) :
 UIActor(world)
@@ -39,5 +37,5 @@ void Stamina::Update()
 void Stamina::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::STAMINA_BACK_SPRITE , DrawPosition, Vector2::Zero, 1, scale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAMINA_SPRITE, DrawPosition, Point(resSize.x * (*nowStamina / *maxStamina), resSize.y), Vector2::Zero, 1, scale, 0, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAMINA_SPRITE, DrawPosition, Point(offset / 2.0f + gageX * (((*maxStamina - *nowStamina) / *maxStamina)), resSize.y), Vector2::Zero, 1, scale, 0, true, false);
 }

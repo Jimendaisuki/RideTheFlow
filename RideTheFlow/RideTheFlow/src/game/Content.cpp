@@ -42,7 +42,9 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("point.png", SPRITE_ID::POINT_SPRITE);
 	sprite.Load("blackscreen.png", SPRITE_ID::BLACK_SCREEN);
 	sprite.Load("tornadopolytex.png", SPRITE_ID::TORNADO_SPRITE);
-
+	sprite.Load("failedback.png", SPRITE_ID::FAILED_BACK_1_SPRITE);
+	sprite.Load("failed.png", SPRITE_ID::FAILED_SPRITE);
+	sprite.Load("clear.png", SPRITE_ID::CLEAR_SPRITE);
 
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");

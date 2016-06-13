@@ -4,32 +4,25 @@
 #include "../game/WorkFolder.h"
 #include "../graphic/Model.h"
 #include "../graphic/Sprite.h"
-#include "../sound/Sound.h"
 #include "../input/GamePad.h"
 #include "../input/Keyboard.h"
-#include "../game/Random.h"
-#include "../graphic/TextDraw.h"
-#include <sstream>
-#include <iomanip>
-#include "Scene.h"
+#include "../sound/Sound.h"
 
-#include "../UIactor/Effect.h"
-#include "../actor/Stage.h"
-#include "../actor/TitleCameraActor.h"
+#include "../math/Math.h"
 #include "../time/Time.h"
 
+#include "../actor/Stage.h"
 #include "../actor/CameraActor.h"
-#include "../math/Math.h"
-#include "../UIactor/Damege.h"
-#include "../UIactor/Stamina.h"
+#include "../actor/TitleCameraActor.h"
 
 #include "../UIactor/fadePanel/FadePanel.h"
 #include "../UIactor/menuPanel/MenuPanel.h"
-#include "../UIactor/Beziers.h"
+#include "../UIactor/Clear.h"
+#include "../UIactor/Failure.h"
 
-float fpsTimer = 0.0f;
-float fps;
-int effectNum = 0;
+float	fpsTimer = 0.0f;
+float	fps;
+int		effectNum = 0;
 
 int	modelHandle = 0;
 int frameCount = 0;
@@ -39,9 +32,7 @@ int frameChildCount = 0;
 
 float testStamina = 0;
 float testMaxStamina = 100;
-float testHP = 100;
-
-CBezier Bez;
+float testHP = 0;
 
 /* 竜巻ポリゴン用データ */
 const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
@@ -74,9 +65,7 @@ TitleScene::TitleScene()
 	Vertex2D_1[4] = Vertex2D_1[0];
 	Vertex2D_1[5] = Vertex2D_1[2];
 	for (int i = 0; i < 6; i++)
-	{
 		Vertex2D_2[i] = Vertex2D_1[i];
-	}
 }
 
 //デストラクタ
@@ -89,7 +78,6 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	timer = 0.0f;
-	objectcount = 0;
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
@@ -101,9 +89,9 @@ void TitleScene::Initialize()
 	frameChildCount = MV1GetFrameChildNum(modelHandle, frameNum);
 
 	position = Vector3::Zero;
-
-	wo.UIAdd(UI_ID::DAMAGE_UI, std::make_shared<Damege>(wo, testHP, 100.0f));
-	wo.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(wo, testMaxStamina, testStamina));
+	
+	//wo.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wo));
+	//wo.UIAdd(UI_ID::CLEAR_UI, std::make_shared<Clear>(wo));
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
@@ -128,12 +116,13 @@ void TitleScene::Initialize()
 	pressAlphaTime = 0;
 	pressTextAlpha = 0;
 	pressTextBackAlpha = 0;
+	pressScale = 0;
 
 	MenuPanel::GetInstance().Initialize();
 
 	/* フェード */
 	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(3.0f);
+	FadePanel::GetInstance().FadeIn(2.0f);
 }
 
 void TitleScene::Update()
@@ -160,22 +149,21 @@ void TitleScene::Update()
 		}
 		
 		if (stormAlpha >= 255 / 4)
-		{
 			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
-			titleAlpha = Math::Clamp(titleAlpha, 0.0f, 1.0f);
-		}
 
 		if (titleAlpha >= 1.0f)
 			status = TITLE_STATUS::TITLE_STANDBY;
 		break;
 	case TITLE_STANDBY:
 		// 入力待機
-		if (pressTextAlpha <= 1) pressTextAlpha += Time::DeltaTime;
-		pressAlphaTime += Time::DeltaTime * 3;
-		pressTextBackAlpha = Math::Sin(Math::Degree(pressAlphaTime));
+		if (pressTextAlpha < 1) 
+			pressTextAlpha += Time::DeltaTime;
+		pressAlphaTime += Time::DeltaTime * 60 * 3;
+		pressAlphaTime = (int)pressAlphaTime % 360;
+		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
 		// シーン終了
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
 			GamePad::GetInstance().AnyTriggerDown())
 		{
 			FadePanel::GetInstance().FadeOut(2.0f);
@@ -184,6 +172,10 @@ void TitleScene::Update()
 		break;
 	case TITLE_END:
 		// フェードアウト
+		pressTextAlpha -= Time::DeltaTime;
+		pressTextAlpha = Math::Clamp(pressTextAlpha, 0.0f, 1.0f);
+		pressTextBackAlpha = pressTextAlpha;
+		pressScale = (1.0f - pressTextAlpha) / 8.0f;
 		if (!FadePanel::GetInstance().IsAction())
 			mIsEnd = true;
 		break;
@@ -195,12 +187,12 @@ void TitleScene::Update()
 	/* 竜巻ポリゴンの計算 */
 	amount_1 += Time::DeltaTime / 4.0f;
 	amount_2 += Time::DeltaTime / 16.0f;
-	if (amount_1 >= 1.0f)
+	if (amount_1 > 1.0f)
 	{
 		amount_1 = 0.0f;
 		count_1++;
 	}
-	if (amount_2 >= 1.0f)
+	if (amount_2 > 1.0f)
 	{
 		amount_2 = 0.0f;
 		count_2++;
@@ -294,16 +286,14 @@ void TitleScene::Draw() const
 	// タイトル
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_TEXT_SPRITE, Vector2(STORM_POS.x, STORM_POS.y), Vector2(450, 175), titleAlpha, Vector2(0.6f), true, false);
 	// エニープッシュ
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f), true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextAlpha, Vector2(0.6f), true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f + pressScale), true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextAlpha, Vector2(0.6f + pressScale), true, false);
 
 	MenuPanel::GetInstance().Draw();
 	if (IsStatusBegEnd()) FadePanel::GetInstance().Draw();
 
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
-	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%f", fps);
-	DrawFormatString(0, 160, GetColor(255, 0, 0), "R,F		: ダメージ演出");
-	DrawFormatString(0, 180, GetColor(255, 0, 0), "T,G		: スタミナ増減");
+	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%.1f", fps);
 	DrawFormatString(0, 220, GetColor(255, 0, 0), "M		: メニュー");
 	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: ○");
 	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: ×");
@@ -350,24 +340,7 @@ void TitleScene::VertexMove(VERTEX2D vertexs_[], int count_, float time_)
 		nowPosition.y = a*a*y[start] + 2 * a*time_*dirPos.y + time_*time_*y[end];
 		vertexs_[i].pos = nowPosition;
 	}
-
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	auto start = (i + count) % 4;
-	//	auto end = (i + 1 + count) % 4;
-	//	Vertex2D_1[i].pos = Vector3::Lerp(Vector3(x_1[start], y_1[start]), Vector3(x_1[end], y_1[end]), amount).ToVECTOR();
-	//}
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	auto start = (i + count_) % 4;
-	//	auto end = (i + 1 + count_) % 4;
-	//	Vector3 NowPos = Vector3::Lerp(Vector3(x[start], y[start]), Vector3(x[end], y[end]), time_);
-	//	float length = Vector3(NowPos - STORM_POS).Length();
-	//	length *= 1.0f + 0.5f - Math::Abs(0.5f - time_);
-	//	Vector3 toVec = (NowPos - STORM_POS).Normalized();
-	//	vertexs_[i].pos = STORM_POS + toVec * length;
-	//}
-	}
+}
 
 bool TitleScene::IsStatusBegEnd() const
 {

@@ -43,8 +43,6 @@ private:
 	bool mIsEnd;
 	World wo;
 
-	//オブジェクト数
-	int objectcount;
 	Vector3 position;
 
 	// タイトルステータス
@@ -65,4 +63,5 @@ private:
 	float pressTextAlpha;
 	float pressTextBackAlpha;
 	float pressAlphaTime;
+	float pressScale;
 };
