@@ -50,6 +50,9 @@ private:
 	float dashCameraDistance;
 	bool cameraFovFlag;
 	bool cameraFovEndFlag;
+
+	bool noCamera;
+	float testTimer;
 };
 
 #endif

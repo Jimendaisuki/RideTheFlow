@@ -57,6 +57,9 @@ leapTimer(0.0f)
 	cameraFovFlag = true;
 	cameraFovEndFlag = false;
 
+	testTimer = 0.0f;
+	noCamera = false;
+
 }
 MonhanCameraActor::~MonhanCameraActor()
 {
@@ -74,7 +77,7 @@ void MonhanCameraActor::Update()
 	Vector3 up = Vector3::Cross(left, tp.tackleT).Normalized();
 
 	//デフォルトでのカメラ
-	if (!tp.tackleFlag&&/*!tp.dashFlag&&*/!posMove2)
+	if (!tp.tackleFlag&&!tp.dashFlag&&!posMove2)
 	{
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
 			rotateLeft += rotateSpeed * Time::DeltaTime;
@@ -86,6 +89,19 @@ void MonhanCameraActor::Update()
 			rotateUp -= rotateSpeed * Time::DeltaTime;
 		rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 		restPosition = DefaultCamera();
+	}
+
+	if (tp.dashFlag)
+	{
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+			rotateLeft += rotateSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+			rotateLeft -= rotateSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+			rotateUp += rotateSpeed * Time::DeltaTime;
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+			rotateUp -= rotateSpeed * Time::DeltaTime;
+		rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 	}
 
 
@@ -127,7 +143,7 @@ void MonhanCameraActor::Update()
 	if (posMove2)
 	{
 		leapTimer += 1.0f / 2.0f*Time::DeltaTime;
-		restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, leapTimer)+(playerMat.GetPosition()-playerPosSeve);
+		restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, leapTimer) + (playerMat.GetPosition() - playerPosSeve);
 		if (leapTimer >= 1.0f)
 		{
 			leapTimer = 0.0f;
@@ -138,21 +154,17 @@ void MonhanCameraActor::Update()
 	//ダッシュ処理
 	if (tp.dashFlag)
 	{
-		//カメラが止まる範囲設定
-		cameraMovePos = Vector3(restPosition.x, playerMat.GetPosition().y, restPosition.z);
-		Effect::GetInstance().DashEffect(world, playerMat.GetFront().Normalized() * 100 + playerMat.GetPosition());
+		float cameraDis = Vector3::Distance(Vector3(position.x, playerMat.GetPosition().y, position.z),
+			playerMat.GetPosition());
 		if (posSeveFlag)
 		{
-			//ダッシュカメラの初期設定
+			//実際いる距離を求める
+			restPosition = DashCmaera();
+			dashCameraDistance = 200;
 			posSeveFlag = false;
-			dashCameraDistance = Vector3::Distance(playerMat.GetPosition(),
-				Vector3(DashCmaera().x, playerMat.GetPosition().y,
-				DashCmaera().z));
-			restPosition = DashCmaera()
-				+ Vector3::Direction(restPosition, playerMat.GetPosition()).Normalized()
-				*Vector3(150, 0, 150);
 			springParameter.stiffness = 0.5f;
 		}
+
 		//視野角設定
 		if (cameraFovFlag)
 		{
@@ -164,33 +176,32 @@ void MonhanCameraActor::Update()
 				cameraFovFlag = false;
 			}
 		}
-		//一定の範囲を超えたら追尾
-		if (Vector3::Distance(playerMat.GetPosition(), cameraMovePos) >= dashCameraDistance)
+
+		//カメラの右左の入力をここに
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) ||
+			Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
 		{
+			springParameter.stiffness = 3.0f;
+			restPosition = DashCmaera();
+		}
+		else if (dashCameraDistance <= cameraDis)
+		{
+			springParameter.stiffness = 0.5f;
 			restPosition = DashCmaera();
 		}
 		else
 		{
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT)||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
-			{
-				springParameter.stiffness = 3.0f;
-			}
-			else
-			{
-				springParameter.stiffness = 0.5f;
-			}
 			rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
 				playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
 		}
 	}
-	//ダッシュ後の後処理
 	else if (!posSeveFlag)
 	{
+		posSeveFlag = true;
+		noCamera = false;
+		springParameter.stiffness = 3.0f;
 		cameraFovEndFlag = true;
 		cameraFovFlag = true;
-		posSeveFlag = true;
-		springParameter.stiffness = 4.0f;
 	}
 	//ダッシュ後視野角を戻す
 	if (cameraFovEndFlag)
@@ -206,14 +217,88 @@ void MonhanCameraActor::Update()
 		}
 	}
 
+
+	//if (tp.dashFlag)
+	//{
+	//	//カメラが止まる範囲設定
+	//	cameraMovePos = Vector3(restPosition.x, playerMat.GetPosition().y, restPosition.z);
+	//	Effect::GetInstance().DashEffect(world, playerMat.GetFront().Normalized() * 100 + playerMat.GetPosition());
+	//	if (posSeveFlag)
+	//	{
+	//		//ダッシュカメラの初期設定
+	//		posSeveFlag = false;
+	//		dashCameraDistance = Vector3::Distance(playerMat.GetPosition(),
+	//			Vector3(DashCmaera().x, playerMat.GetPosition().y,
+	//			DashCmaera().z));
+	//		restPosition = DashCmaera()
+	//			+ Vector3::Direction(restPosition, playerMat.GetPosition()).Normalized()
+	//			*Vector3(150, 0, 150);
+	//		springParameter.stiffness = 0.5f;
+	//	}
+	//	//視野角設定
+	//	if (cameraFovFlag)
+	//	{
+	//		fov = Math::Lerp(60.0f, MaxFov, leapTimer);
+	//		leapTimer += Time::DeltaTime;
+	//		if (leapTimer >= 1.0f)
+	//		{
+	//			leapTimer = 1.0f;
+	//			cameraFovFlag = false;
+	//		}
+	//	}
+
+	//	testTimer += Time::DeltaTime;
+	//	//一定の範囲を超えたら追尾
+	//	if (Vector3::Distance(playerMat.GetPosition(), cameraMovePos) >= dashCameraDistance)
+	//	{
+	//		springParameter.stiffness = 0.5f;
+	//		restPosition = DashCmaera();
+	//	}
+	//	else if (testTimer >= 2.0f)
+	//	{
+	//		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT)||
+	//			Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+	//		{
+	//			springParameter.stiffness = 3.0f;
+	//		}
+	//		else
+	//		{
+	//			springParameter.stiffness = 0.0f;
+	//		}
+	//		rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
+	//			playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
+	//	}
+	//}
+	////ダッシュ後の後処理
+	//else if (!posSeveFlag)
+	//{
+	//	cameraFovEndFlag = true;
+	//	cameraFovFlag = true;
+	//	posSeveFlag = true;
+	//	springParameter.stiffness = 4.0f;
+
+	//	testTimer = 0.0f;
+	//}
+	////ダッシュ後視野角を戻す
+	//if (cameraFovEndFlag)
+	//{
+	//	//rotateLeft = -45;
+	//	leapTimer -= 3 * Time::DeltaTime;
+	//	fov = Math::Lerp(60.0f, MaxFov, leapTimer);
+	//	if (leapTimer <= 0.0f)
+	//	{
+	//		leapTimer = 0.0f;
+	//		cameraFovEndFlag = false;
+	//		springParameter.stiffness = 3.0f;
+	//	}
+	//}
+
 	//バネカメラ
 	Vector3 stretch = (position - restPosition);
 	Vector3 force = -springParameter.stiffness * stretch;
 	Vector3 acceleration = force / springParameter.mass;
-	velocity =springParameter.friction * (velocity + acceleration);
+	velocity = springParameter.friction * (velocity + acceleration);
 	position += velocity;
-
-
 
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
@@ -228,8 +313,9 @@ void MonhanCameraActor::Draw() const
 	//DrawFormatString(0, 128, GetColor(0, 0, 0), "camerPosition   %f %f %f", parameter.mat.GetPosition().x, parameter.mat.GetPosition().y, parameter.mat.GetPosition().z);
 	//DrawFormatString(0, 400, GetColor(0, 0, 0), "セーブ距離   %f", dashCameraDistance);
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "実際距離   %f", Vector3::Distance(playerMat.GetPosition(), cameraMovePos));
-	//DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateup   %f", rotateUp);
-	DrawFormatString(0, 356, GetColor(0, 0, 0), "視野角   %f",fov);
+	//DrawFormatString(0, 256, GetColor(0, 0, 0), "今の距離   %f", Vector3::Distance(Vector3(position.x, playerMat.GetPosition().y, position.z),
+	//	playerMat.GetPosition()));
+	//DrawFormatString(0, 356, GetColor(0, 0, 0), "昔の距離   %f", dashCameraDistance);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront()*20+parameter.mat.GetPosition()), 5.0f, 1, GetColor(255, 255, 255), 1, true);
 
 }
@@ -246,6 +332,6 @@ Vector3 MonhanCameraActor::DefaultCamera()
 Vector3 MonhanCameraActor::DashCmaera()
 {
 	rotateLeft = -45;
-	return Vector3(0, 0, 1) *150 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+	return Vector3(0, 0, 1) * 150 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 		playerMat.GetPosition() + cameraUpMove;
 }
