@@ -58,7 +58,14 @@ ActorPtr World::GetPlayer() const
 	return playerActor;
 }
 
+
 ActorPtr World::GetCamera() const
 {
 	return cameraActor;
+}
+
+int World::GetActorCount(ACTOR_ID id,ACTOR_ID id2)
+{
+	int count = actors.GetActorCount(id,id2);
+	return count;
 }

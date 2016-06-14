@@ -7,6 +7,7 @@
 #include "../../time/Time.h"
 #include "../../world/IWorld.h"
 #include "../../actor/Actor.h"
+#include "../../game/GameFrame.h"
 
 const Vector2 HD = Vector2(1920, 1080);
 const Vector2 SCREEN_CENTER = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
@@ -55,6 +56,7 @@ void MenuPanel::Initialize()
 	{
 		pages[i] = 0.0f;
 	}
+	textScale = 1.0f;
 
 
 	/* 実行用設定 */
@@ -119,18 +121,17 @@ void MenuPanel::Update()
 			pages[prePage] -= Time::DeltaTime;
 			return;
 		}
+		pages[prePage] = 0.0f;
 		// OPEN → SELECT
 		if (textAlpha < 1.0f)
 		{
 			textAlpha += Time::DeltaTime;
 			return;
 		}
-
+		textAlpha = 1.0f;
 		// 選択肢によるアルファ変更
 		for (int i = 0; i < 3; i++)
-		{
 			selects[i] = 0;
-		}
 		selects[selectNum] = 1;
 
 		// 入力処理
@@ -147,7 +148,13 @@ void MenuPanel::Update()
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1))
 		{
-			if (selectNum == 0)	status = MENU_PANEL_STATUS::CLOSE;
+			if (selectNum == 0)
+			{
+				if (scene == Scene::Menu)
+					status = MENU_PANEL_STATUS::PUSH;
+				else if (scene == Scene::GamePlay)
+					status = MENU_PANEL_STATUS::CLOSE;
+			}
 			else if (selectNum == 1)
 			{
 				prePage = 0;
@@ -156,36 +163,40 @@ void MenuPanel::Update()
 			}
 			else if (selectNum == 2)
 			{
-				isBackSelect = true;
-				Close();
+				if (scene == Scene::Menu)
+					GameFrame::GameEnd();
+				else if (scene == Scene::GamePlay)
+				{
+					isBackSelect = true;
+					Close();
+				}
 			}
 		}
 		break;
 	case MANUAL:	// 操作説明画面
 		// SELECT → MANUAL
-		if (textAlpha >= 0.0f)
+		if (textAlpha > 0.0f)
 		{
 			textAlpha -= Time::DeltaTime * 2.0f;
 			for (int i = 0; i < 3; i++)
-			{
 				selects[selectNum] = textAlpha;
-			}
 			return;
 		}
+		textAlpha = 0.0f;
 		// フェードアウト
 		if (pages[prePage] > 0.0f)
 		{
 			pages[prePage] -= Time::DeltaTime;
 			break;
 		}
-		pages[prePage] = Math::Clamp(pages[prePage], 0.0f, 1.0f);
+		pages[prePage] = 0.0f;
 		// フェードイン
 		if (pages[nowPage] < 1.0f) 
 		{
 			pages[nowPage] += Time::DeltaTime;
 			break;
 		}
-		pages[nowPage] = Math::Clamp(pages[nowPage], 0.0f, 1.0f);
+		pages[nowPage] = 1.0f;
 
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
@@ -239,8 +250,13 @@ void MenuPanel::Update()
 			status = MENU_PANEL_STATUS::END;
 		}
 		break;
+	case PUSH:
+		selects[selectNum] -= Time::DeltaTime * 2.5f;
+		textScale += Time::DeltaTime / 5.0;
+		isEnd = true;
+		break;
 	case END:		// フェードアウトから終了
-		if (rollAlpha >= 0.0f)
+		if (rollAlpha > 0.0f)
 		{
 			rollAlpha -= Time::DeltaTime;
 			alphaTime = rollAlpha;
@@ -252,6 +268,7 @@ void MenuPanel::Update()
 				backAlpha -= Time::DeltaTime * 3;
 				return;
 			}
+			rollAlpha = 0.0f;
 			backAlpha = 0.0f;
 			isAction = false;
 			isEnd = true;
@@ -299,17 +316,17 @@ void MenuPanel::Draw()
 void MenuPanel::DrawMenu() const
 {
 	/* テキストの描画 */
-	Vector2 textDrawPos_s = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 3.0f / 4.0f, WINDOW_HEIGHT / 5.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_BACK_SPRITE, textDrawPos_s, Vector2(TEXT_SIZE.x / 2, 0.0f), textAlpha, scale, true, false);
-	Vector2 textDrawPos_m = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 1.0f / 4.0f, WINDOW_HEIGHT / 5.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, Vector2(TEXT_SIZE.x / 2, 0.0f), textAlpha, scale, true, false);
-	Vector2 textDrawPos_b = Vector2(SCREEN_CENTER.x - (moveVec - SCREEN_CENTER.x) * 2.0f / 3.0f, WINDOW_HEIGHT / 5.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_BACK_SPRITE, textDrawPos_b, Vector2(TEXT_SIZE.x / 2, 0.0f), textAlpha, scale, true, false);
+	Vector2 textDrawPos_s = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 3.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_BACK_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Vector2 textDrawPos_m = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 1.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Vector2 textDrawPos_b = Vector2(SCREEN_CENTER.x - (moveVec - SCREEN_CENTER.x) * 2.0f / 3.0f, WINDOW_HEIGHT / 2.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_BACK_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
 
 	/* テキスト強調用 */
-	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_SPRITE, textDrawPos_s, Vector2(TEXT_SIZE.x / 2, 0.0f), selects[0], scale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, Vector2(TEXT_SIZE.x / 2, 0.0f), selects[1], scale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_SPRITE, textDrawPos_b, Vector2(TEXT_SIZE.x / 2, 0.0f), selects[2], scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, selects[0], scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, selects[1], scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], scale * textScale, true, false);
 	float posX[3] = { textDrawPos_s.x, textDrawPos_m.x, textDrawPos_b.x };
 	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(scale.x), true, false);
 
@@ -325,17 +342,17 @@ void MenuPanel::DrawMenu() const
 void MenuPanel::DrawPause() const
 {
 	/* テキストの描画 */
-	Vector2 textDrawPos_s = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 3.0f / 4.0f, WINDOW_HEIGHT / 5.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_BACK_SPRITE, textDrawPos_s, Vector2(TEXT_SIZE.x / 2, 0.0f), textAlpha, scale, true, false);
-	Vector2 textDrawPos_m = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 1.0f / 4.0f, WINDOW_HEIGHT / 5.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, Vector2(TEXT_SIZE.x / 2, 0.0f), textAlpha, scale, true, false);
-	Vector2 textDrawPos_b = Vector2(SCREEN_CENTER.x - (moveVec - SCREEN_CENTER.x) * 2.0f / 3.0f, WINDOW_HEIGHT / 5.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_BACK_SPRITE, textDrawPos_b, Vector2(TEXT_SIZE.x / 2, 0.0f), textAlpha, scale, true, false);
+	Vector2 textDrawPos_s = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 3.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_BACK_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Vector2 textDrawPos_m = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 1.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Vector2 textDrawPos_b = Vector2(SCREEN_CENTER.x - (moveVec - SCREEN_CENTER.x) * 2.0f / 3.0f, WINDOW_HEIGHT / 2.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_BACK_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
 
 	/* テキスト強調用 */
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_SPRITE, textDrawPos_s, Vector2(TEXT_SIZE.x / 2, 0.0f), selects[0], scale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, Vector2(TEXT_SIZE.x / 2, 0.0f), selects[1], scale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_SPRITE, textDrawPos_b, Vector2(TEXT_SIZE.x / 2, 0.0f), selects[2], scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, selects[0], scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, selects[1], scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], scale * textScale, true, false);
 	float posX[3] = { textDrawPos_s.x, textDrawPos_m.x, textDrawPos_b.x };
 	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(scale.x), true, false);
 }

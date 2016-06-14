@@ -1,5 +1,4 @@
 #include "SpeedLine.h"
-#include "../Def.h"
 #include "../game/Random.h"
 #include "../math/Math.h"
 #include "../time/Time.h"

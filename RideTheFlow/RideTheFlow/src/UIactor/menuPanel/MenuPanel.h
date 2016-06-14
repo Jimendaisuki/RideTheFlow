@@ -9,12 +9,13 @@ class MenuPanel
 {
 enum MENU_PANEL_STATUS
 {
-	BEGIN = 0,
-	OPEN = 1,
-	SELECT = 2,
-	MANUAL = 3,
-	CLOSE = 4,
-	END = 5,
+	BEGIN	= 0,
+	OPEN	= 1,
+	SELECT	= 2,
+	MANUAL	= 3,
+	CLOSE	= 4,
+	PUSH	= 5,
+	END		= 6,
 };
 
 private:
@@ -67,6 +68,7 @@ private:
 	float	pages[5];
 	Vector2 drawPosition;
 	Vector2 scale;
+	float	textScale;
 	bool	isAction;
 	bool	isBackSelect;
 	bool	isEnd;

@@ -2,7 +2,6 @@
 #include "../game/Random.h"
 #include "../math/Math.h"
 #include "../time/Time.h"
-#include "../Def.h"
 #include "../world/IWorld.h"
 
 /*

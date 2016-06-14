@@ -13,6 +13,14 @@ struct CastleEnemyPos
 	Vector3 Spear02;
 	Vector3 Spear03;
 	Vector3 Spear04;
+	Vector3 Soldier01;
+	Vector3 Soldier02;
+	Vector3 Soldier03;
+	Vector3 Soldier04;
+	Vector3 Soldier05;
+	Vector3 Soldier06;
+	Vector3 Soldier07;
+	Vector3 Soldier08;
 };
 
 
@@ -28,6 +36,10 @@ public:
 	Vector3 GetVelocity()
 	{
 		return velocity;
+	}
+	bool isLookPlayer()
+	{
+		return isLook;
 	}
 private:
 	void CastleEnemyPosSet();
@@ -45,6 +57,7 @@ private:
 	float mAttackTime;
 	float mSecondAttack;
 	float mArrowNumber;
+
 
 	CastleEnemyPos castleEnemyPos;
 };

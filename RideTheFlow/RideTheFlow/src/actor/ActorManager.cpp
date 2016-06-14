@@ -46,4 +46,10 @@ void ActorManager::EachActor(std::function<void(Actor&)> func)
 {
 	std::for_each(actorPtr.begin(), actorPtr.end(),
 		[&](const ActorPtr& actor) {func(*actor); });
+
+}
+
+std::list<ActorPtr> ActorManager::getlist()
+{
+	return actorPtr;
 }

@@ -36,7 +36,7 @@ void FroatingIsland::Update()
 
 void FroatingIsland::Draw() const
 {
-	DrawSphere3D(Matrix4::GetPosition(parameter.mat), parameter.radius, 8, GetColor(0, 255, 200), GetColor(255, 255, 255), TRUE);
+	DrawSphere3D(Matrix4::GetPosition(parameter.mat), 50, 8, 1,1, TRUE);
 }
 
 void FroatingIsland::OnCollide(Actor& other, CollisionParameter colpara)

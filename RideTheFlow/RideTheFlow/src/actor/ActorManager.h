@@ -22,6 +22,8 @@ public:
 
 	//q‚ğ„‰ñ
 	void EachActor(std::function<void(Actor&)> func);
+
+	std::list<ActorPtr> getlist();
 private:
 	std::list<ActorPtr> actorPtr;
 };

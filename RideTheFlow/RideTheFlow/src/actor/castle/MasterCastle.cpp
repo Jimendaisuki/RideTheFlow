@@ -11,8 +11,9 @@
 #include "CastleTop.h"
 #include "../particle/CastleAdd.h"
 #include "CastleBlock.h"
-
-MasterCastle::MasterCastle(IWorld& world, Vector3 position) :
+#include "../enemy/ArmyEnemy.h"
+#include "../enemy/ShipEnemy.h"
+MasterCastle::MasterCastle(IWorld& world, Vector3 position,bool spawnShip) :
 Actor(world),
 attackTime(0),
 castleTime(0),
@@ -24,7 +25,10 @@ playerMat(Matrix4::Identity),
 rankUp(false),
 rankUpRag(false),
 rankUpRagTimer(0),
-mScale(45,45,45)
+mScale(45, 45, 45),
+spawanArmyTimer(0.0f),
+spawnShipTimer(0.0f),
+mSpawnShip(spawnShip)
 {
     parameter.radius = 35;
 	parameter.isDead = false;
@@ -80,6 +84,27 @@ void MasterCastle::Update()
 		mPosition.y -= 50.0f*Time::DeltaTime;
 	}
 	downCastle = true;
+
+
+	if (mSpawnShip)
+	{
+		spawnShipTimer += Time::DeltaTime;
+		if (spawnShipTimer >= SpawnShipEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR)<SpawnMaxShipEnemey)
+		{
+			world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, parameter.mat.GetFront()*-3+parameter.mat.GetUp()*5 + mPosition));
+			spawnShipTimer = 0.0f;
+		}
+	}
+	else
+	{
+		spawanArmyTimer += Time::DeltaTime;
+		if (spawanArmyTimer >= SpawnArmyEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::ARMY_ENEMY_ACTOR)<SpawnMaxArmyEnemy)
+		{
+			world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, parameter.mat.GetFront()*-2 + mPosition));
+			spawanArmyTimer = 0.0f;
+		}
+	}
+	
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*
@@ -88,7 +113,9 @@ void MasterCastle::Update()
 
 void MasterCastle::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, parameter.mat);}
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, parameter.mat);
+	//DrawFormatString(0, 500, GetColor(0, 0, 0), "敵の数   %d", world.GetActorCount(ACTOR_ID::ENEMY_ACTOR,ACTOR_ID::ARMY_ENEMY_ACTOR));
+}
 
 void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
