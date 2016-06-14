@@ -62,7 +62,7 @@ CollisionParameter Actor::Player_vs_Stage(const Actor& other) const{
 
 	/* ModelData */
 	ModelData stage;
-	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_ACTION_RANGE_MODEL);
 	stage.MFrameIndex = -1;
 
 	bool flag = false;

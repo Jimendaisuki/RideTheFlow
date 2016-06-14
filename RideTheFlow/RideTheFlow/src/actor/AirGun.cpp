@@ -1,6 +1,7 @@
 #include "AirGun.h"
 #include "Collision.h"
 #include "../time/Time.h"
+#include "../graphic/Model.h"
 
 AirGun::AirGun(IWorld& world, Vector3 position_, Vector3 velocity_) :
 Actor(world),
@@ -20,7 +21,10 @@ void AirGun::Update(){
 	}
 }
 void AirGun::Draw() const{
-	DrawSphere3D(position, 10.0f, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), true);
+	//DrawSphere3D(position, 10.0f, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), true);
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_1_MODEL, position, Vector3::Zero, Vector3(0.05f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_2_MODEL, position, Vector3::Zero, Vector3(0.05f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_3_MODEL, position, Vector3::Zero, Vector3(0.05f));
 }
 void AirGun::OnCollide(Actor& other, CollisionParameter colpara){
 
