@@ -10,6 +10,7 @@ void Camera::Update()
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F)){
 		freeCamera = !freeCamera;
 		free_Position = Position;
+		free_Target.Set(free_Position.Get() + Vector3(0, 0, 1));
 		startTarget = free_Target.Get();
 		free_Up = Up;
 		rotateUp = 0;
