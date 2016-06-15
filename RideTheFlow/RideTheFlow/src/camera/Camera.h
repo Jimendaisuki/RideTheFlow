@@ -5,7 +5,11 @@
 class Camera
 {
 private:
-	Camera() = default;
+	Camera(){
+		free_Position.Set(Vector3(0,0,0));// 視点の座標
+		free_Target.Set(Vector3(0,0,1));	// 注視点の座標
+		free_Up.Set(Vector3(0,1,0));
+	}
 	~Camera() = default;
 
 public:
@@ -81,4 +85,13 @@ public:
 	CPosition Position;// 視点の座標
 	CTarget Target;	// 注視点の座標
 	CUp Up;			// 上方向
+	CPosition free_Position;// 視点の座標
+	CTarget free_Target;	// 注視点の座標
+	CUp free_Up;
+	Vector3 startTarget;
+	float speed = 5.0f;
+	float rotateSpeed = 1.0f;
+	float rotateUp = 0.0f;
+	Vector3 beforeVec = Vector3(0,0,1);
+	bool freeCamera = false;
 };
