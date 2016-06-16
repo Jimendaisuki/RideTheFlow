@@ -28,5 +28,5 @@ public:
 	void DashEffect(IWorld& wo, Vector3 position);
 	void StepEffect(IWorld& wo, EffectDirection ed);
 
-	void DamegeEffect(IWorld& wo, const Vector3 position);
+	void DamegeEffect(IWorld& wo, const Vector3 enemyPosition);
 };
