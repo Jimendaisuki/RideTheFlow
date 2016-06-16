@@ -24,6 +24,7 @@ toPoint(Vector3::Zero),
 mRotateY(rotateY),
 isLook(true)
 {
+	parameter.HP = 1.0f;
 	parameter.isDead = false;
 	parameter.mat =
 		Matrix4::RotateY(rotateY),

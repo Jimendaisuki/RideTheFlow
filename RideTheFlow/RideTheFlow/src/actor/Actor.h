@@ -83,7 +83,10 @@ private:
 
 	//‘D‚Æ•‚“‡‚Ì‚ ‚½‚è”»’è
 	CollisionParameter Ship_vs_Island(const Actor& other) const;
-
+	//•—‚Æ“G‚Ì‚ ‚½‚è”»’è
+	CollisionParameter Enemy_vs_Wind(const Actor& other) const;
+	//•—‚Æé‚Ì‚ ‚½‚è”»’è
+	CollisionParameter Castle_vs_Wind(const Actor& other) const;
 	/* Œã‚Åíœ
 	// ü‚Æ” ‚Ì“–‚½‚è”»’è
 	CollisionParameter SegmentBoxAABB(const Actor& other)const;

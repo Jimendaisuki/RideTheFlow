@@ -75,7 +75,7 @@ void WorldActor::EachUIActor(UI_ID id, std::function<void(const UIActor&)> func)
 {
 	UImanagers[id]->EachActor(func);
 }
-int WorldActor::GetActorCount(ACTOR_ID id,ACTOR_ID id2)
+int WorldActor::GetActorCount(ACTOR_ID id, ACTOR_ID id2)
 {
 	int count = 0;
 	if (managers[id]->getlist().size() < 1)return 0;

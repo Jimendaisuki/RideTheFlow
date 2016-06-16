@@ -21,6 +21,8 @@ mPosition(position),
 rotate(Vector3::Zero),
 isLook(true)
 {
+	parameter.HP = 7.0f;
+
 	parameter.isDead = false;
 	parameter.mat = Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
@@ -40,6 +42,7 @@ void VaristorEnemy::Update()
 	//あたり判定
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR , COL_ID::TORNADO_ENEMY_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
 	//プレイヤーの前
 	Vector3 playerFront = playerMat.GetFront().Normalized()*cameraFrontAttack + playerMat.GetPosition();
 	//敵とプレイヤーの角度を求める
@@ -121,6 +124,10 @@ void VaristorEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		isLook = false;
 	}
 	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
+	{
+		parameter.isDead = true;
+	}
+	if (colpara.colID == COL_ID::ENEMY_WIND_COL&&colpara.colFlag)
 	{
 		parameter.isDead = true;
 	}

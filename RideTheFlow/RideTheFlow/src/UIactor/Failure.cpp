@@ -3,8 +3,6 @@
 #include "../time/Time.h"
 #include "../world/IWorld.h"
 
-const Vector2 DrawPosition = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-const Vector2 resSize = Vector2(1574.0f, 967.0f);
 const Vector2 DefScale = (WINDOW_WIDTH / 1920.0f, WINDOW_HEIGHT / 1080.0f);
 
 Failure::Failure(IWorld& world_) :
@@ -44,6 +42,6 @@ void Failure::Update()
 void Failure::Draw() const
 {
 	float alpha = textAlpha - backAlpha * Math::Clamp(scale / 3.5f, 0.0f, 1.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::FAILED_BACK_1_SPRITE, DrawPosition, resSize / 2, backAlpha, DefScale * scale, 0, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::FAILED_SPRITE, DrawPosition, Vector2(650.0f, 175.0f) / 2, alpha, Vector2::One, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::FAILED_BACK_1_SPRITE, Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), Vector2(1574.0f, 967.0f) / 2, backAlpha, DefScale * scale, 0, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::FAILED_SPRITE, Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), Vector2(650.0f, 175.0f) / 2, alpha, Vector2::One, true, false);
 }

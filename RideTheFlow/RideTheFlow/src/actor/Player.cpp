@@ -26,7 +26,7 @@ const Vector3 scale = Vector3(3.0f);
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
-const float tornadoCreateRadius = 16.0f;
+const float tornadoCreateRadius = 128.0f;
 
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
@@ -168,6 +168,9 @@ Player::~Player(){
 
 
 void Player::Update(){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)){
+		moveFlag = !moveFlag;
+	}
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++){
@@ -352,6 +355,7 @@ void Player::Update(){
 			forntVec = (Vector3::Length(trueVec) *
 				beforeVec *
 				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
+			if (moveFlag)
 			position += forntVec;
 
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||

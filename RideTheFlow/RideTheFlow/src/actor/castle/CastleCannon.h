@@ -21,7 +21,8 @@ private:
 	float mScale;
 	float mRotateY;
 	float playerDot;
-
+	float backDot;
+	float angle;
 	//UŒ‚ŠÖŒW
 	float mSecondAttack;
 	float mArrowNumber;

@@ -90,4 +90,6 @@ private:
 	float animBlend;
 	//待機アニメーションをアタッチしたかどうか判断
 	bool waitAnimSet;
+
+	bool moveFlag = true;
 };

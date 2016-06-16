@@ -4,18 +4,15 @@
 #include "../../time/Time.h"
 #include "../../Def.h"
 
-const Vector2 HD = Vector2(1920, 1080);
-const Vector2 resSize = Vector2(800, 600);
+const Vector2 scale = Vector2((float)WINDOW_WIDTH / 800, (float)WINDOW_HEIGHT / 600);
 
 void FadePanel::Initialize()
 {
 	/* èâä˙ê›íË */
-	scale.x = (float)WINDOW_WIDTH  / resSize.x;
-	scale.y = (float)WINDOW_HEIGHT / resSize.y;
 	isAction = false;
-	alpha = 1.0f;
-	maxAlpha = 1.0f;
-	actionTime = 0;
+	alpha		= 1.0f;
+	maxAlpha	= 1.0f;
+	actionTime	= 0;
 	status = FADE_STATUS::STANDBY;
 }
 
