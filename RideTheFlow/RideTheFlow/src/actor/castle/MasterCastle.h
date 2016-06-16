@@ -36,9 +36,13 @@ private:
 	float rankUpRagTimer;
 	float castleTime;
 	int mRank;
-
+	//oŒ»‚·‚é“GŠÖŒW
 	float spawanArmyTimer;
 	float spawnShipTimer;
 	bool mSpawnShip;
 	bool downCastle;
+
+	//–³“GŠÖŒW
+	bool damage;
+	float InvincibleTimer;
 };

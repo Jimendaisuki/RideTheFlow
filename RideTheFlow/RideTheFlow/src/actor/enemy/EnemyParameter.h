@@ -91,15 +91,23 @@ const float CannonWindPercentage = 50.0f;
 
 /****敵の船****/
 
+//船のHP
+const float ShipHp = 10.0f;
+//船がトルネードで受けるダメージ
+const float ShipDamegeTornado = 2.5f;
+//船が流れで受けるダメージ
+const float ShipDamegeWind = 0.5f;
+
+//船の無敵時間
+const float ShipInvincibleTime = 3.0f;
+
+
 //船のスピード
 const float ShipSpeed = 50.0f;
-//船の定位置の高さに戻るスピード
-const float ShipDownSpeed = 10.0f;
+//船の高さを変えるスピード
+const float ShipUpDownSpeed = 50.0f;
 //船の旋回速度
 const float ShipSwingSpeed = 25.0f;
-//船の攻撃が流れの影響を受ける割合
-const float ShipWindPercentage = 100.0f;
-
 //船バリスタの攻撃クールタイム
 const float ShipVaristorAttackTime = 4.0f;
 //船バリスタが一回に発射する矢の数
@@ -147,7 +155,7 @@ const float ShipNotLookCannonShellNum = 1;
 //撃龍槍のクールタイム
 const float DoragonSpearAttackTime = 10.0f;
 //プレイヤーが撃龍槍圏内に入った時から攻撃する時までの時間
-const float DoragonSpearWithinTime = 0.1f;
+const float DoragonSpearWithinTime = 2.0f;
 //撃龍槍が最大に伸びるまでの時間
 const float DoragonSpearMaxTime = 10.0f;
 //撃龍槍が完全に出てそこにとどまる時間

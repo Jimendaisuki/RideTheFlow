@@ -24,12 +24,14 @@ arrowCount(0),
 playerAngle(0),
 shipAngle(0),
 isLandDot(0),
+shipLow(1.0f),
 mPosition(position),
-
+invincibleTimer(0.0f),
 isLook(true),
 isLandCol(false)
 {
 	parameter.id = ACTOR_ID::SHIP_ENEMY_ACTOR;
+	parameter.HP = ShipHp;
 	parameter.isDead = false;
 	parameter.mat =
 		Matrix4::Scale(1.0f) *
@@ -39,7 +41,6 @@ isLandCol(false)
 		Matrix4::Translate(position);
 	parameter.radius = 40.0f;
 	playerDot = 0.0f;
-	coppyPos = position;
 
 	ShipEnemyPosition();
 
@@ -66,7 +67,8 @@ void ShipEnemy::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_SHIPENEMY_COL);
-
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR, COL_ID::SHIP_ISLAND_COL);
 	ShipEnemyPosition();
 
 	//プレイヤーの前
@@ -100,28 +102,48 @@ void ShipEnemy::Update()
 			}
 		}
 	}
-	else
+	
+	mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::DeltaTime;
+	if (!isLandCol)
+		mPosition += Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*
+		Vector3(0.0f, ShipUpDownSpeed, 0.0f)*Time::DeltaTime;
+
+	//浮島を迂回する
+	if (isLandCol)
 	{
 		Vector3 vec = (isLandPos - parameter.mat.GetPosition()).Normalized();
-		isLandDot = Vector2::Dot(Vector2(-parameter.mat.GetFront().x, -parameter.mat.GetFront().z),
-			Vector2(vec.x, vec.z));
+		isLandDot = Vector2::Dot(Vector2(parameter.mat.GetFront().x, parameter.mat.GetFront().z), Vector2(vec.x, vec.z));
+
+		shipLow = 0.5f;
+		if (isLandDot <= 0)
+		{
+			shipAngle -= 50.0f*Time::DeltaTime;
+		}
+		else
+		{
+			shipAngle += 50.0f*Time::DeltaTime;
+		}
+		mPosition += Vector3::Direction(isLandPos, parameter.mat.GetPosition()).Normalized()*Vector3(1,0,1);
 	}
+	else
+	{
+		shipLow = 1.0f;
+	}
+	isLandCol = false;
+	//無敵時間
+	if (!damege)
+	{
+		invincibleTimer += Time::DeltaTime;
+		if (invincibleTimer >= ShipInvincibleTime)
+		{
+			damege = true;
+			invincibleTimer = 0.0f;
+		}
+	}
+	//HPが0になったら死ぬ
+	if (parameter.HP <= 0)
+		parameter.isDead = true;
 	
-	mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed*Time::DeltaTime;
-	//元の高さに戻る
-	if (coppyPos.y - parameter.mat.GetPosition().y > 1.0f)
-	{
-		mPosition.y += ShipDownSpeed*Time::DeltaTime;
-	}
-	else if (coppyPos.y - parameter.mat.GetPosition().y < -1.0f)
-	{
-		mPosition.y -= ShipDownSpeed*Time::DeltaTime;
-	}
-
-
-
-
-
 	//マトリックス計算
 	parameter.mat =
 		Quaternion::RotateAxis(Vector3::Up,shipAngle)*
@@ -132,7 +154,7 @@ void ShipEnemy::Draw() const
 {
 	//モデルの方向が違う
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
-	DrawFormatString(0, 400, GetColor(0, 0, 0), "islandDot   %f", isLandDot);
+	DrawFormatString(0, 432, GetColor(0, 0, 0), "ShipHp   %f", parameter.HP);
 
 
 }
@@ -142,10 +164,6 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		isLook = false;
 	}
-	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
-	{
-		parameter.isDead = true;
-	}
 	if (colpara.colID == COL_ID::PLAYER_SHIPENEMY_COL)
 	{
 		mPosition += Vector3::Direction(colpara.colPos, parameter.mat.GetPosition() + parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*25.0f)*100*Time::DeltaTime;
@@ -154,6 +172,22 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		isLandCol = true;
 		isLandPos = colpara.colPos;
+	}
+
+	//ダメージ関係
+	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL&&damege)
+	{
+		parameter.HP -= ShipDamegeTornado;
+		damege = false;
+	}
+	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
+	{
+		mPosition += colpara.colVelosity;
+		if (damege)
+		{
+			parameter.HP -= ShipDamegeWind;
+			damege = false;
+		}
 	}
 }
 

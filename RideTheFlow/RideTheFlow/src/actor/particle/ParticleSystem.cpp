@@ -66,6 +66,10 @@ void ParticleSystem::UpdateParticles()
 			Emissive();
 		}
 	}
+
+	std::for_each(particles.begin(), particles.end(),
+		[](ParticlePtr par){par->Update();
+	});
 }
 
 void ParticleSystem::DrawParticles() const

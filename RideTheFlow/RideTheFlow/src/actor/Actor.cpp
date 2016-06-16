@@ -35,6 +35,8 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL] = std::bind(&Actor::Player_vs_DoragonSpearWithin, this, std::placeholders::_1);
 	colFunc[COL_ID::CASTLE_CASTLE_COL] = std::bind(&Actor::Castle_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::SHIP_ISLAND_COL] = std::bind(&Actor::Ship_vs_Island, this, std::placeholders::_1);
+	colFunc[COL_ID::ENEMY_WIND_COL] = std::bind(&Actor::Enemy_vs_Wind, this, std::placeholders::_1);
+	colFunc[COL_ID::CASTLE_WIND_COL ] = std::bind(&Actor::Castle_vs_Wind, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -63,7 +65,7 @@ CollisionParameter Actor::Player_vs_Stage(const Actor& other) const{
 
 	/* ModelData */
 	ModelData stage;
-	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_ACTION_RANGE_MODEL);
 	stage.MFrameIndex = -1;
 
 	bool flag = false;
@@ -506,13 +508,67 @@ CollisionParameter Actor::Ship_vs_Island(const Actor& other) const
 	shipEnemy.radius = parameter.radius;
 	Sphere isLand;
 	isLand.position = other.parameter.mat.GetPosition();
-	isLand.radius = other.parameter.radius*3.0f;
+	isLand.radius = other.parameter.radius;
 
 	colpara = Collisin::GetInstace().SphereSphere(shipEnemy, isLand);
 	colpara.colPos = other.GetParameter().mat.GetPosition();
 	colpara.colID = COL_ID::SHIP_ISLAND_COL;
 	return colpara;
 }
+
+CollisionParameter Actor::Enemy_vs_Wind(const Actor& other) const
+{
+	CollisionParameter colpara;
+	colpara = Cloud_vs_Wind(other);
+	colpara.colID = COL_ID::ENEMY_WIND_COL;
+	return colpara;
+}
+CollisionParameter Actor::Castle_vs_Wind(const Actor& other) const
+{
+	CollisionParameter colpara;
+	Sphere castle;
+	castle.position = parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f);
+	castle.radius = parameter.radius;
+
+	WindFlow* w = static_cast<WindFlow*>(const_cast<Actor*>(&other));
+	std::vector<Vector3> dashPositions = w->GetDashPositions();
+	int dashPositionSize = dashPositions.size();
+	Vector3 move = w->GetMoveVec();
+
+	if (dashPositionSize < 2)
+	{
+		colpara.colID = COL_ID::CASTLE_WIND_COL;
+		return colpara;
+	}
+
+	Capsule wind;
+	wind.radius = other.parameter.radius;
+	for (int i = 0; i < dashPositionSize; i++)
+	{
+		wind.startPos = dashPositions.at(i) + move;
+		wind.endPos = wind.startPos;
+		wind.endPos.y = other.parameter.height.y;
+		colpara = Collisin::GetInstace().SphereCapsule(castle, wind);
+
+		if (colpara.colFlag)
+		{
+			if (i == dashPositionSize - 1)
+				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i) - dashPositions.at(i - 1));
+			else
+				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i + 1) - dashPositions.at(i));
+
+			colpara.colID = COL_ID::CASTLE_WIND_COL;
+			return colpara;
+		}
+	}
+	colpara.colID = COL_ID::CLOUD_WIND_COL;
+	return colpara;
+
+}
+
+
+
+
 // Œã‚Åíœ
 // ü‚Æ” ‚Ì“–‚½‚è”»’è
 //CollisionParameter Actor::SegmentBoxAABB(const Actor& other) const{

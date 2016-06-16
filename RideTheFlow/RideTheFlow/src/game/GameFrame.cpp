@@ -14,6 +14,7 @@ void GameFrame::Run()
 	SetLogDrawOutFlag(FALSE);
 	SetOutApplicationLogValidFlag(FALSE);
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, COLOR_BIT_DEPTH, REFRESH_RATE);
+	
 	SetBackgroundColor(0, 0, 0);
 	SetMainWindowText(GAMENAME);
 	SetZBufferBitDepth(24);

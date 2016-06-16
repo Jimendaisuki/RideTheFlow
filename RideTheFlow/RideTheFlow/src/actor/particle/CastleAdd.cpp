@@ -15,7 +15,7 @@ Actor(world)
 	ps_parameter.position = position_;
 	ps_parameter.intervalSec = 10000.0f;
 	ps_parameter.lifeTimeLimit = 6.0f;
-	ps_parameter.sameEmissiveNum = 4;
+	ps_parameter.sameEmissiveNum = 6;
 }
 CastleAdd::~CastleAdd()
 {
@@ -46,5 +46,5 @@ void CastleAdd::Emissive()
 		Vector3(
 		Random::GetInstance().Range(-1.0f, 1.0f),
 		Random::GetInstance().Range(-0.1f, 0.1f),
-		Random::GetInstance().Range(-1.0f, 1.0f)) * 50.0f));
+		Random::GetInstance().Range(-1.0f, 1.0f)) * 30.0f));
 }
