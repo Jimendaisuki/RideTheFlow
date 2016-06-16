@@ -60,9 +60,10 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
-	model.Load("map.pmd", MODEL_ID::TEST_STAGE, async);
+	model.Load("field.mv1", MODEL_ID::TEST_STAGE, async);
+	model.Load("action_range.mv1", MODEL_ID::STAGE_ACTION_RANGE_MODEL, async);
+	model.Load("sky_dome_11.X", MODEL_ID::SKY_MODEL, async);
 
-	model.Load("sky_dome_11.x", MODEL_ID::SKY_MODEL, async);
 	model.Load("arrow.mv1", MODEL_ID::ARROW_MODEL, async);
 	model.Load("wind.x", MODEL_ID::WIND_MODEL, async);
 	model.Load("cloud.x", MODEL_ID::CLOUD_MODEL, async);
@@ -90,7 +91,12 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("Castle/castle_4.mv1", MODEL_ID::CASTLE_TOP_MODEL, async);
 	model.Load("Castle/castle_3.mv1", MODEL_ID::CASTLE_TOP2_MODEL, async);
 
-	model.Load("sun.x", MODEL_ID::CASTLE_ADD_MODEL, async);
+	model.Load("smoke1.x", MODEL_ID::CASTLE_ADD_1_MODEL, async);
+	model.Load("smoke2.x", MODEL_ID::CASTLE_ADD_2_MODEL, async);
+	model.Load("smoke3.x", MODEL_ID::CASTLE_ADD_3_MODEL, async);
+	model.Load("airball1.x", MODEL_ID::AIR_BALL_1_MODEL, async);
+	model.Load("airball2.x", MODEL_ID::AIR_BALL_2_MODEL, async);
+	model.Load("airball3.x", MODEL_ID::AIR_BALL_3_MODEL, async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	

@@ -10,7 +10,7 @@
 #include"CastleParameter.h"
 #include "CastleBlock.h"
 #include "../../game/Random.h"
-
+#include "../particle/CastleAdd.h"
 
 Castle::Castle(IWorld& world, Vector3 position, Actor& _parent) :
 Actor(world),
@@ -54,6 +54,9 @@ damage(true)
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0));
+
+	//城出現時のパーティクルを生成
+	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position));
 }
 
 
