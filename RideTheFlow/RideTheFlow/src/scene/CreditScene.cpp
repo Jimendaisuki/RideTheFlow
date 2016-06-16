@@ -24,6 +24,7 @@
 #include "../actor/enemy/ShipEnemy.h"
 #include "../actor/enemy/ArmyEnemy.h"
 #include "../input/GamePad.h"
+#include "../actor/FogActor.h"
 
 static const Vector3 House1Pos = Vector3(-300, -80, 200);
 
@@ -55,6 +56,7 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 	for (int i = 0; i < 2; i++)
 	{
 		wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(300 * i, -50, 100 * i)));

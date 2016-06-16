@@ -97,6 +97,7 @@
     <ClCompile Include="src\actor\enemy\SoldierEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
+    <ClCompile Include="src\actor\FogActor.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
     <ClCompile Include="src\UIactor\FlowRoot.cpp" />
     <ClCompile Include="src\UIactor\MiniMap.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="src\actor\enemy\SoldierEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
+    <ClInclude Include="src\actor\FogActor.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />
     <ClInclude Include="src\UIactor\FlowRoot.h" />
     <ClInclude Include="src\UIactor\MiniMap.h" />

@@ -6,6 +6,7 @@ enum ACTOR_ID{
 	
 	//======“§–¾“x‚ðˆµ‚í‚È‚¢======//
 	STAGE_ACTOR,
+	FOG_ACTOR,
 	ISLAND_ACTOR,
 	PLAYER_ACTOR,
 	ENEMY_ACTOR,
