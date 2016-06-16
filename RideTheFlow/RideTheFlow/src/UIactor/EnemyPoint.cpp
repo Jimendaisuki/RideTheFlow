@@ -41,7 +41,7 @@ void EnemyPoint::Update()
 	}
 
 	Vector3 enemyPos = enemy->GetParameter().mat.GetPosition();
-	Vector2 pos = Vector2(-enemyPos.x, enemyPos.z);
+	Vector2 pos = Vector2(enemyPos.x, -enemyPos.z);
 	if (pos.Length() != 0.0f)
 		drawPosition = MAP_POSITION + pos.Normalized() * pos.Length() * ReSIZE;
 	else

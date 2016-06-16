@@ -100,8 +100,8 @@ void TitleScene::Initialize()
 
 	/* マップテスト用 */
 	//wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo));
-	//wo.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wo));
-
+	/*wo.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wo));
+*/
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
 	Camera::GetInstance().Target.Set(position);
@@ -275,8 +275,8 @@ void TitleScene::Update()
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M))MenuPanel::GetInstance().Action(Scene::GamePlay);
 
 
-	Camera::GetInstance().Position.Set(Vector3(0, 800, -800));
-	Camera::GetInstance().Target.Set(Vector3(0, 0, 0));
+	Camera::GetInstance().Position.Set(Vector3(0, 100, -100));
+	Camera::GetInstance().Target.Set(Vector3(0, 100, 0));
 	Camera::GetInstance().Update();
 }
 

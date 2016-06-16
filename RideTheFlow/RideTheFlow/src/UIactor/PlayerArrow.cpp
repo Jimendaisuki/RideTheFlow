@@ -33,15 +33,15 @@ void PlayerArrow::Update()
 	Vector3 playerFront = Vector3(player->GetParameter().mat.GetFront() * Vector3(1, 0, 1)).Normalized();
 	if (playerFront.Length() != 0)
 	{
-		angle_ = Vector3::Inner(playerFront, Vector3::Forward);
-		if (Vector3::Dot(playerFront, Vector3::Left) < 0.0f)
+		angle_ = Vector3::Inner(playerFront, -Vector3::Forward);
+		if (Vector3::Dot(playerFront, Vector3::Left) > 0.0f)
 			angle_ *= -1;
 	}
 
 	/* プレイヤーデータ */
 	// ポジション
 	Vector3 playerPos = player->GetParameter().mat.GetPosition();
-	Vector2 pos = Vector2(-playerPos.x, playerPos.z);
+	Vector2 pos = Vector2(playerPos.x, -playerPos.z);
 	if (pos.Length() != 0.0f)
 		drawPos_ = MAP_POSITION + pos.Normalized() * pos.Length() * ReSIZE;
 	else
@@ -57,4 +57,6 @@ void PlayerArrow::Update()
 void PlayerArrow::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::MAP_PLAYER_SPRITE, drawPos_, Vector2(32, 32), 1.0f, Scale / 2.0f, angle_, true, false);
+	Vector3 a = player->GetParameter().mat.GetPosition();
+	DrawFormatString(0, 600, GetColor(255, 255, 255), "FPS:		[%f][%f][%f]", a.x, a.y, a.z);
 }

@@ -34,5 +34,5 @@ void MiniMap::Update()
 
 void MiniMap::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP_SPRITE, MAP_POSITION, Vector2(256, 256), 1.0f, Scale, -30, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP_SPRITE, MAP_POSITION, Vector2(256, 256), 1.0f, Scale, 0, true, false);
 }
