@@ -22,6 +22,7 @@ rotate(Vector3::Zero),
 isLook(true)
 {
 	parameter.id = ACTOR_ID::ARMY_ENEMY_ACTOR;
+	parameter.HP = 1.0f;
 	parameter.isDead = false;
 	parameter.mat = Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
@@ -43,6 +44,8 @@ void ArmyEnemy::Update()
 	});
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
 
 	//敵とプレイヤーの角度を求める
 	playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
@@ -121,5 +124,15 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::ARMYENEMY_STAGE_COL)
 	{
 		mPosition = colpara.colPos;
+	}
+	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
+	{
+		parameter.isDead = true;
+	}
+	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
+	{
+		//仕様確認
+		parameter.isDead = true;
+		//mPosition += colpara.colVelosity*5.0f +Vector3(0, 10, 0)*Time::DeltaTime;
 	}
 }

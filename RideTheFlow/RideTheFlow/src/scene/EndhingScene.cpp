@@ -36,9 +36,9 @@ void EndhingScene::Initialize()
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa, Vector3(40, -50, 30)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -50, 0),true));
-	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
-
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -50, 0),false));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
+	wa.Add(ACTOR_ID::ISLAND_ACTOR , std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3::Zero,1,1));
 
 	//for (int i = 0; i < 5; i++)

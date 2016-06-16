@@ -38,25 +38,27 @@ private:
 	Vector3 mPosition;
 	Vector3 rotate;
 	Matrix4 playerMat;
-
-	Vector3 coppyPos;
-	Vector3 coppySpear;
-
 	Vector3 isLandPos;
+	ShipEnemyPos shipEnemyPos;
 	//UŒ‚ŠÖŒW
 	float mSecondAttack;
 	float mArrowNumber;
 	float playerAngle;
 	float attackTime;
 	float attackRag;
+	float playerDot;
 	int arrowCount;
 	bool isLook;
-	float isLandDot;
-	bool isLandCol;
-	float playerDot;
-	float shipAngle;
 
-	ShipEnemyPos shipEnemyPos;
+	//•‚—V“‡ŠÖŒW
+	float isLandDot;
+	float shipAngle;
+	float shipLow;
+	bool isLandCol;
+
+	//–³“GŠÖŒW
+	float invincibleTimer;
+	bool damege;
 
 };
 #endif

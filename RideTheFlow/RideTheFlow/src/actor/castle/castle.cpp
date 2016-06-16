@@ -12,17 +12,20 @@
 #include "../../game/Random.h"
 
 
-Castle::Castle(IWorld& world, Vector3 position,Actor& _parent) :
+Castle::Castle(IWorld& world, Vector3 position, Actor& _parent) :
 Actor(world),
 arrowCount(0),
 attackRag(0.0f),
 playerMat(Matrix4::Identity),
 mPosition(position),
-mScale(30,30,30),
+mScale(30, 30, 30),
 mAttackTime(0.0f),
 castleDown(true),
-isLook(false)
+isLook(false),
+InvincibleTimer(0.0f),
+damage(true)
 {
+	parameter.HP = BaseCastleHp;
 	parameter.isDead = false;
 	parameter.radius = 17;
 	parameter.height = Vector3(0.0f,34.0f,0.0f);
@@ -67,6 +70,8 @@ void Castle::Update()
 	//当たり判定
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
 	//城に当たったらストップ
 	if (castleDown)
 	{
@@ -91,7 +96,16 @@ void Castle::Update()
 		}
 	}
 
-
+	//無敵時間
+	if (!damage)
+	{
+		InvincibleTimer += Time::DeltaTime;
+		if (CastleInvincibleTime <= InvincibleTimer)
+		{
+			InvincibleTimer = 0.0f;
+			damage = true;
+		}
+	}
 
 	parameter.mat =
 		Matrix4::Scale(mScale) *
@@ -111,10 +125,17 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		isLook = false;
 	}
-	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
+	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL&&damage)
 	{
-		//ここにダメージ
+		parameter.HP -= CastleDamegeTornado;
+		damage = false;
 	}
+	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
+	{
+		parameter.HP -= CastleDamegeWind;
+		damage = false;
+	}
+
 	if (colpara.colID == COL_ID::CASTLE_CASTLE_COL&&colpara.colFlag)
 	{
 		castleDown = false;

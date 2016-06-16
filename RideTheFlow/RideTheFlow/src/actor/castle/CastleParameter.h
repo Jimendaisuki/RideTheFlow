@@ -1,21 +1,35 @@
 #pragma once
 
+
+
 //プレイヤーのどのぐらい前に攻撃するか
 const float CastleCameraFrontAttack = 10.0f;
+//マスター城のHP
+const float MasterCastleHp = 10.0f;
+//ベース(砲台とかある)の城のHP
+const float BaseCastleHp = 10.0f;
+
+//城がトルネードで受けるダメージ
+const float CastleDamegeTornado = 2.5f;
+//城が流れで受けるダメージ
+const float CastleDamegeWind = 0.5f;
+
+//城の無敵時間
+const float CastleInvincibleTime = 3.0f;
 
 //城の上に積み重なる城の段数
-const int Rank = 4;
+const int Rank = 1;
 //城が積みあがる時間(秒)
 const float RankUpSecond = 8.0f;
 
 //城が排出する軍隊の時間
-const float SpawnArmyEnemyTime = 2.0f;
+const float SpawnArmyEnemyTime = 5.0f;
 //城が排出する軍隊の最大軍隊数
 const int SpawnMaxArmyEnemy = 10;
 
 /**浮島の城限定**/
 //城が排出する船の時間
-const float SpawnShipEnemyTime = 1.0f;
+const float SpawnShipEnemyTime = 100.0f;
 //城が排出する船の最大船数
 const int SpawnMaxShipEnemey = 5;
 
@@ -26,7 +40,8 @@ const float CastleCannonAttackRange = 400.0f;
 const float CastleCannonSecondAttack = 5.0f;
 //城が一回に出す大砲の弾の数
 const int CastleCannonNumber = 1;
-
+//城の大砲の旋回速度
+const float CastleCannonSwingSpeed = 20.0f;
 //城の大砲からプレイヤーが見えてないときの一回に出す大砲の弾の数
 const int CastleCannonNotLookAttack = 1;
 //城の大砲からプレイヤーが見えてないときの攻撃クールタイム(秒)

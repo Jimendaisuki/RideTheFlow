@@ -21,6 +21,7 @@ playerAngle(0),
 playerDot(0),
 mPosition(position),
 mScale(2.0f),
+angle(0.0f),
 isLook(true)
 {
 	parameter.isDead = false;
@@ -28,6 +29,7 @@ isLook(true)
 	parameter.radius = 10.0f;
 	mRotateY = rotateY;
 	castle = &_castle;
+
 }
 CastleCannon::~CastleCannon()
 {
@@ -65,19 +67,33 @@ void CastleCannon::Update()
 		mSecondAttack = CastleCannonNotLookSecondAttack;
 	}
 	isLook = true;
-
-	//城の大砲は旋回するよ
-
 	//ダッシュ中以外はプレイヤーの前に矢を放つ
 	if (tp.dashFlag)
 	{
-		playerDot = Vector3::Dot(parameter.mat.GetLeft(), playerMat.GetPosition());
+		playerDot = Vector3::Dot(parameter.mat.GetFront(), playerMat.GetPosition());
 		attackAngleZ = playerAngle;
 	}
 	else
 	{
-		playerDot = Vector3::Dot(parameter.mat.GetLeft(), playerFront*CastleCameraFrontAttack);
+		playerDot = Vector3::Dot(parameter.mat.GetFront(), playerFront*CastleCameraFrontAttack);
 	}
+
+	//城の大砲は旋回するよ
+	if (Math::Abs(playerDot) >= 0.1f)
+	{
+		if (playerDot < 0 && angle < 90)
+		{
+			mRotateY += CastleCannonSwingSpeed*Time::DeltaTime;
+			angle += CastleCannonSwingSpeed*Time::DeltaTime;
+		}
+		if (playerDot > 0 && angle > -90)
+		{
+			mRotateY -= CastleCannonSwingSpeed*Time::DeltaTime;
+			angle -= CastleCannonSwingSpeed*Time::DeltaTime;
+		}
+		angle = Math::Clamp(angle, -90.0f, 90.0f);
+	}
+
 
 	//攻撃
 	attackRag += Time::DeltaTime;
@@ -109,7 +125,10 @@ void CastleCannon::Update()
 }
 void CastleCannon::Draw() const
 {
+	DrawFormatString(0, 400, GetColor(0, 0, 0), "angle %f", angle);
+	DrawFormatString(0, 432, GetColor(0, 0, 0), "mrotateY %f", mRotateY);
 	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
+	DrawLine3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 255);
 }
 void CastleCannon::OnCollide(Actor& other, CollisionParameter colpara)
 {

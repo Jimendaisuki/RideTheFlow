@@ -12,7 +12,7 @@ Actor(world)
 	HP = 50;
 
 	parameter.isDead = false;
-	parameter.radius = 10;
+	parameter.radius = 200;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -36,7 +36,7 @@ void FroatingIsland::Update()
 
 void FroatingIsland::Draw() const
 {
-	DrawSphere3D(Matrix4::GetPosition(parameter.mat), 50, 8, 1,1, TRUE);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 20, 1, 1, FALSE);
 }
 
 void FroatingIsland::OnCollide(Actor& other, CollisionParameter colpara)

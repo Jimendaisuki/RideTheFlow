@@ -58,6 +58,7 @@ private:
 	float mSecondAttack;
 	float mArrowNumber;
 
-
+	bool damage;
+	float InvincibleTimer;
 	CastleEnemyPos castleEnemyPos;
 };
