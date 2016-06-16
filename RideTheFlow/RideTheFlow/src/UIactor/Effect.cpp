@@ -42,7 +42,7 @@ void Effect::StepEffect(IWorld& wo, EffectDirection ed)
 	}
 }
 
-void Effect::DamegeEffect(IWorld& wo, const Vector3 position)
+void Effect::DamegeEffect(IWorld& wo, const Vector3 enemyPosition)
 {
-	wo.UIAdd(UI_ID::BLOOD_UI, std::make_shared<Blood>(wo, position));
+	wo.UIAdd(UI_ID::BLOOD_UI, std::make_shared<Blood>(wo, enemyPosition));
 }
