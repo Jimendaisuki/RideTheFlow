@@ -39,5 +39,4 @@ private:
 	float	alpha;
 	float	maxAlpha;
 	bool	isAction;
-	Vector2 scale;
 };

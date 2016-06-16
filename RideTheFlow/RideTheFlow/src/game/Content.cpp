@@ -14,14 +14,22 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("images.png", SPRITE_ID::ENEMY_SPRITE);
 	sprite.Load("smoke.png", SPRITE_ID::BEGIN_SPRITE);
 	sprite.Load("sand.png", SPRITE_ID::SAND_SPRITE);
+	/* エフェクト */
 	sprite.Load("speedLine.png", SPRITE_ID::SPEED_SPRITE);
 	sprite.Load("blood.png", SPRITE_ID::BLOOD_SPRITE);
 	sprite.Load("damage.png", SPRITE_ID::DAMAGE_SPRITE);
+	/* ミニマップ */
+	sprite.Load("minimap.png", SPRITE_ID::MINIMAP_SPRITE);
+	sprite.Load("playerpoint.png", SPRITE_ID::MAP_PLAYER_SPRITE);
+	sprite.Load("enemypoint.png", SPRITE_ID::ENEMY_SPRITE);
+	/* スタミナゲージ */
 	sprite.Load("staminagauge.png", SPRITE_ID::STAMINA_SPRITE);
 	sprite.Load("staminaback.png", SPRITE_ID::STAMINA_BACK_SPRITE);
+	/* タイトルシーン */
 	sprite.Load("title_kiryuu.png", SPRITE_ID::TITLE_TEXT_SPRITE);
 	sprite.Load("title_pressany.png", SPRITE_ID::TITLE_PRESS_SPRITE);
 	sprite.Load("title_pressanyback.png", SPRITE_ID::TITLE_PRESS_BACK_SPRITE);
+	/* メニュー・ポーズ */
 	sprite.Load("roll_1.png", SPRITE_ID::MENU_ROLL_1_SPRITE);
 	sprite.Load("roll_2.png", SPRITE_ID::MENU_ROLL_2_SPRITE);
 	sprite.Load("roll_3.png", SPRITE_ID::MENU_ROLL_3_SPRITE);
@@ -40,11 +48,13 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("manual3.png", SPRITE_ID::MANUAL_3_SPRITE);
 	sprite.Load("manual4.png", SPRITE_ID::MANUAL_4_SPRITE);
 	sprite.Load("point.png", SPRITE_ID::POINT_SPRITE);
-	sprite.Load("blackscreen.png", SPRITE_ID::BLACK_SCREEN);
 	sprite.Load("tornadopolytex.png", SPRITE_ID::TORNADO_SPRITE);
+	/* ゲームリザルト */
 	sprite.Load("failedback.png", SPRITE_ID::FAILED_BACK_1_SPRITE);
 	sprite.Load("failed.png", SPRITE_ID::FAILED_SPRITE);
 	sprite.Load("clear.png", SPRITE_ID::CLEAR_SPRITE);
+	/* フェード */
+	sprite.Load("blackscreen.png", SPRITE_ID::BLACK_SCREEN);
 
 	//sprite.Load("title.png");
 	//model.Load2D("particleSprite.png");

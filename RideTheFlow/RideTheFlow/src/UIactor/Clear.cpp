@@ -2,8 +2,6 @@
 #include "../time/Time.h"
 #include "../math/Math.h"
 
-const Vector2 DrawPosition = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-
 Clear::Clear(IWorld& world_) :
 UIActor(world_)
 {
@@ -38,5 +36,5 @@ void Clear::Update()
 
 void Clear::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::CLEAR_SPRITE, DrawPosition, Vector2(650.0f, 175.0f) / 2, textAlpha - subAlpha, Vector2::One, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::CLEAR_SPRITE, Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), Vector2(650.0f, 175.0f) / 2, textAlpha - subAlpha, Vector2::One, true, false);
 }

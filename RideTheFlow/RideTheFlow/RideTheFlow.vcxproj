@@ -97,6 +97,9 @@
     <ClCompile Include="src\actor\enemy\SoldierEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
+    <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
+    <ClCompile Include="src\UIactor\FlowRoot.cpp" />
+    <ClCompile Include="src\UIactor\MiniMap.cpp" />
     <ClCompile Include="src\actor\MonhanCameraActor.cpp" />
     <ClCompile Include="src\actor\castle\MasterCastle.cpp" />
     <ClCompile Include="src\actor\Cloud.cpp" />
@@ -113,6 +116,7 @@
     <ClCompile Include="src\UIactor\fadePanel\FadePanel.cpp" />
     <ClCompile Include="src\UIactor\Failure.cpp" />
     <ClCompile Include="src\UIactor\menuPanel\MenuPanel.cpp" />
+    <ClCompile Include="src\UIactor\PlayerArrow.cpp" />
     <ClCompile Include="src\UIactor\SpeedLine.cpp" />
     <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
@@ -187,6 +191,9 @@
     <ClInclude Include="src\actor\enemy\SoldierEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
+    <ClInclude Include="src\UIactor\EnemyPoint.h" />
+    <ClInclude Include="src\UIactor\FlowRoot.h" />
+    <ClInclude Include="src\UIactor\MiniMap.h" />
     <ClInclude Include="src\actor\particle\CastleAdd.h" />
     <ClInclude Include="src\actor\particle\CastleAddParticle.h" />
     <ClInclude Include="src\actor\particle\Sand.h" />
@@ -202,6 +209,7 @@
     <ClInclude Include="src\UIactor\fadePanel\FadePanel.h" />
     <ClInclude Include="src\UIactor\Failure.h" />
     <ClInclude Include="src\UIactor\menuPanel\MenuPanel.h" />
+    <ClInclude Include="src\UIactor\PlayerArrow.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />
     <ClInclude Include="src\actor\particle\Particle.h" />

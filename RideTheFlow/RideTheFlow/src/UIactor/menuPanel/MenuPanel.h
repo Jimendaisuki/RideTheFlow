@@ -32,12 +32,11 @@ public:
 	// 更新
 	void Update();
 	// 描画
-	void Draw();
+	void Draw() const;
 	// メニューシーン用
 	void DrawMenu() const;
 	// ポーズシーン用
 	void DrawPause() const;
-	void DrawManual() const;
 	// 未実行なら実行させる
 	void Action(Scene scene_);
 	// 実行中か？
@@ -67,7 +66,6 @@ private:
 	int		prePage;
 	float	pages[5];
 	Vector2 drawPosition;
-	Vector2 scale;
 	float	textScale;
 	bool	isAction;
 	bool	isBackSelect;

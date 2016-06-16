@@ -29,5 +29,4 @@ public:
 	void StepEffect(IWorld& wo, EffectDirection ed);
 
 	void DamegeEffect(IWorld& wo, const Vector3 position);
-	//void DamegeEffect(IWorld& wo, const Vector3 position, const Actor& player);
 };

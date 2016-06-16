@@ -19,6 +19,8 @@
 #include "../UIactor/menuPanel/MenuPanel.h"
 #include "../UIactor/Clear.h"
 #include "../UIactor/Failure.h"
+#include "../UIactor/MiniMap.h"
+#include "../actor/Player.h"
 
 float	fpsTimer = 0.0f;
 float	fps;
@@ -83,6 +85,9 @@ void TitleScene::Initialize()
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	//wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
 	
+	//WorkFolder::SetWorkFolder("res/Model/");
+	//Model::GetInstance().Load("dra_test.pmx", MODEL_ID::TEST_MODEL, false);
+
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
 	frameCount = MV1GetFrameNum(modelHandle);
 	frameParentCount = MV1GetFrameParent(modelHandle, frameNum);
@@ -92,6 +97,10 @@ void TitleScene::Initialize()
 	
 	//wo.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wo));
 	//wo.UIAdd(UI_ID::CLEAR_UI, std::make_shared<Clear>(wo));
+
+	/* マップテスト用 */
+	//wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo));
+	//wo.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wo));
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
@@ -266,8 +275,8 @@ void TitleScene::Update()
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M))MenuPanel::GetInstance().Action(Scene::GamePlay);
 
 
-	Camera::GetInstance().Position.Set(Vector3(0, 100, -200));
-	Camera::GetInstance().Target.Set(Vector3(0, 100, 0));
+	Camera::GetInstance().Position.Set(Vector3(0, 800, -800));
+	Camera::GetInstance().Target.Set(Vector3(0, 0, 0));
 	Camera::GetInstance().Update();
 }
 

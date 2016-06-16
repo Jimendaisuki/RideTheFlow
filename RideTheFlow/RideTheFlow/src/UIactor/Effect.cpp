@@ -46,7 +46,3 @@ void Effect::DamegeEffect(IWorld& wo, const Vector3 position)
 {
 	wo.UIAdd(UI_ID::BLOOD_UI, std::make_shared<Blood>(wo, position));
 }
-//void Effect::DamegeEffect(IWorld& wo, const Vector3 position, const Actor& player)
-//{
-//	wo.UIAdd(EFFECT_ID::BLOOD_EFFECT, std::make_shared<Blood>(wo, position, player));
-//}

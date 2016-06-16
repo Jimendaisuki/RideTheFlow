@@ -9,8 +9,8 @@
 #include "../../actor/Actor.h"
 #include "../../game/GameFrame.h"
 
-const Vector2 HD = Vector2(1920, 1080);
 const Vector2 SCREEN_CENTER = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+const Vector2 Scale = Vector2((float)WINDOW_WIDTH / 1920.0f, (float)WINDOW_HEIGHT / 1080.0f);
 const Vector2 RES_SIZE_1 = Vector2(175, 967);
 const Vector2 RES_SIZE_2 = Vector2(1574, 967);
 const Vector2 TEXT_SIZE = Vector2(150.0f, 700.0f);
@@ -20,12 +20,12 @@ const float LX[6] = { 0.0f, WINDOW_WIDTH / 3.0f * 1.3f, WINDOW_WIDTH / 10.0f, 0.
 const float LY[6] = { 0.0f, -WINDOW_HEIGHT / 15.0f * 1.3f, 0, WINDOW_HEIGHT * 3.0f / 7.0f, WINDOW_HEIGHT * 9.0f / 10.0f, WINDOW_HEIGHT };
 const float RX[5] = { WINDOW_WIDTH, WINDOW_WIDTH * 0.9f, WINDOW_WIDTH * 1.1f, WINDOW_WIDTH , WINDOW_WIDTH * 0.8f};
 const float RY[5] = { 0.0f, WINDOW_HEIGHT / 10.0f, WINDOW_HEIGHT * 0.25f, WINDOW_HEIGHT * 0.6f, WINDOW_HEIGHT };
+float LV[6] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+float RV[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
 void MenuPanel::Initialize()
 {
 	/* 初期設定 */
-	scale.x = (float)WINDOW_WIDTH  / HD.x;
-	scale.y = (float)WINDOW_HEIGHT / HD.y;
 	drawPosition = SCREEN_CENTER;
 	time = 0;
 
@@ -87,7 +87,7 @@ void MenuPanel::Update()
 		rollAlpha = time;
 		alphaTime = time;
 
-		moveVec = MOVE_WIDTH * scale.x * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, Math::Clamp(time, 0.0f, 1.0f));
+		moveVec = MOVE_WIDTH * Scale.x * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, Math::Clamp(time, 0.0f, 1.0f));
 		drawPosition = SCREEN_CENTER - Vector2(moveVec, 0.0f);
 
 		// ステータス切り替え
@@ -102,9 +102,9 @@ void MenuPanel::Update()
 		// 処理
 		time += Time::DeltaTime;
 
-		moveVec = MOVE_WIDTH * scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
-		size = Point(moveVec / scale.x, 0) + RES_SIZE_1.ToPoint();
-		rect.left = moveVec / scale.x;
+		moveVec = MOVE_WIDTH * Scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
+		size = Point(moveVec / Scale.x, 0) + RES_SIZE_1.ToPoint();
+		rect.left = moveVec / Scale.x;
 		rect.right = rect.left + RES_SIZE_1.x;
 
 		// ステータス切り替え
@@ -238,9 +238,9 @@ void MenuPanel::Update()
 		}
 		time -= Time::DeltaTime;
 
-		moveVec = MOVE_WIDTH * scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
-		size = Point(moveVec / scale.x, 0) + RES_SIZE_1.ToPoint();
-		rect.left = moveVec / scale.x;
+		moveVec = MOVE_WIDTH * Scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
+		size = Point(moveVec / Scale.x, 0) + RES_SIZE_1.ToPoint();
+		rect.left = moveVec / Scale.x;
 		rect.right = rect.left + RES_SIZE_1.x;
 
 		if (time <= 0.0f)
@@ -278,28 +278,38 @@ void MenuPanel::Update()
 		isAction = false;
 		break;
 	}
+
+	/* 雲処理 */
+	for (int i = 0; i < 6; i++)
+	{	// 左側
+		Vector2 position = Vector2(-100.0f, LY[i]);
+		LV[i] = (LX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
+	}
+	for (int i = 0; i < 5; i++)
+	{	// 右側
+		Vector2 position = Vector2(WINDOW_WIDTH + 100.0f, RY[i]);
+		RV[i] = (RX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
+	}
 }
 
-void MenuPanel::Draw()
+void MenuPanel::Draw() const
 {
 	if (scene == Scene::GamePlay) Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, backAlpha, Vector2(WINDOW_WIDTH / 800.0f, WINDOW_HEIGHT / 600.0f), 0.0f, false, false);
-
+	
 	/* 巻物の描画 */
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_3_SPRITE, drawPosition + Vector2(moveVec, 0.0f), size, RES_SIZE_1 / 2 - Vector2(-5, 0), rollBakcAlpha, scale, 180.0f, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_2_SPRITE, drawPosition, rect, RES_SIZE_1 / 2, rollAlpha, scale, 0.0f, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_1_SPRITE, drawPosition, RES_SIZE_1 / 2, rollAlpha, scale, 0.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_3_SPRITE, drawPosition + Vector2(moveVec, 0.0f), size, RES_SIZE_1 / 2 - Vector2(-5, 0), rollBakcAlpha, Scale, 180.0f, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_2_SPRITE, drawPosition, rect, RES_SIZE_1 / 2, rollAlpha, Scale, 0.0f, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_1_SPRITE, drawPosition, RES_SIZE_1 / 2, rollAlpha, Scale, 0.0f);
 
 	for (int i = 0; i < 6; i++)
 	{
 		Vector2 position = Vector2(-100.0f, LY[i]);
-		float v = (LX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
-		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, position + Vector2(v, 0.0f), Vector2(400, 300), alphaTime, Vector2(1.0f * scale.x, 0.8f * scale.y));
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, position + Vector2(LV[i], 0.0f), Vector2(400, 300), alphaTime, Vector2(Scale.x, 0.8f * Scale.y));
 	}
 	for (int i = 0; i < 5; i++)
 	{
 		Vector2 position = Vector2(WINDOW_WIDTH + 100.0f, RY[i]);
-		float v = (RX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
-		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, position + Vector2(v, 0.0f), Vector2(400, 300), alphaTime, Vector2(1.0f * scale.x, 0.8f * scale.y));
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, position + Vector2(RV[i], 0.0f), Vector2(400, 300), alphaTime, Vector2(Scale.x, 0.8f * Scale.y));
 	}
 
 	/* セレクト描画 */
@@ -307,28 +317,28 @@ void MenuPanel::Draw()
 	else if (scene == Scene::GamePlay) DrawPause();
 
 	/* マニュアル描画 */
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_1_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[1], scale, 0.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_2_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[2], scale, 0.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_3_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[3], scale, 0.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_4_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[4], scale, 0.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_1_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[1], Scale, 0.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_2_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[2], Scale, 0.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_3_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[3], Scale, 0.0f);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_4_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[4], Scale, 0.0f);
 }
 
 void MenuPanel::DrawMenu() const
 {
 	/* テキストの描画 */
 	Vector2 textDrawPos_s = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 3.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_BACK_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_BACK_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, textAlpha, Scale, true, false);
 	Vector2 textDrawPos_m = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 1.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, textAlpha, Scale, true, false);
 	Vector2 textDrawPos_b = Vector2(SCREEN_CENTER.x - (moveVec - SCREEN_CENTER.x) * 2.0f / 3.0f, WINDOW_HEIGHT / 2.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_BACK_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_BACK_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, textAlpha, Scale, true, false);
 
 	/* テキスト強調用 */
-	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, selects[0], scale * textScale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, selects[1], scale * textScale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::START_GAME_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, selects[0], Scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, selects[1], Scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], Scale * textScale, true, false);
 	float posX[3] = { textDrawPos_s.x, textDrawPos_m.x, textDrawPos_b.x };
-	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(scale.x), true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(Scale.x), true, false);
 
 	/* 中心から移動用
 	Point size = Point(move * 2 / scale.x, 0) + RES_SIZE_1.ToPoint();
@@ -343,24 +353,20 @@ void MenuPanel::DrawPause() const
 {
 	/* テキストの描画 */
 	Vector2 textDrawPos_s = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 3.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_BACK_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_BACK_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, textAlpha, Scale, true, false);
 	Vector2 textDrawPos_m = Vector2(SCREEN_CENTER.x + (moveVec - SCREEN_CENTER.x) * 1.0f / 4.0f, WINDOW_HEIGHT / 2.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_BACK_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, textAlpha, Scale, true, false);
 	Vector2 textDrawPos_b = Vector2(SCREEN_CENTER.x - (moveVec - SCREEN_CENTER.x) * 2.0f / 3.0f, WINDOW_HEIGHT / 2.0f);
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_BACK_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, textAlpha, scale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_BACK_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, textAlpha, Scale, true, false);
 
 	/* テキスト強調用 */
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, selects[0], scale * textScale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, selects[1], scale * textScale, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_GAME_SPRITE, textDrawPos_s, TEXT_SIZE / 2.0f, selects[0], Scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_SPRITE, textDrawPos_m, TEXT_SIZE / 2.0f, selects[1], Scale * textScale, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::BACK_TO_MENU_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], Scale * textScale, true, false);
 	float posX[3] = { textDrawPos_s.x, textDrawPos_m.x, textDrawPos_b.x };
-	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(scale.x), true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(Scale.x), true, false);
 }
 
-void MenuPanel::DrawManual() const
-{
-
-}
 // 未実行なら実行
 void MenuPanel::Action(Scene scene_)
 {
