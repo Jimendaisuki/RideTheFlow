@@ -28,6 +28,7 @@ isWindCol(false)
 	mRandomTarget = Vector3(GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
 		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
 		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy);
+	parameter.id = ACTOR_ID::ENEMY_BULLET;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =

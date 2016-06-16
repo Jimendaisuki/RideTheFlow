@@ -23,6 +23,7 @@ playerWithin(false),
 attackSpear(false),
 endAttack(false)
 {
+	parameter.id = ACTOR_ID::ENEMY_BULLET;
 	parameter.isDead = false;
 	parameter.radius = 6.0f;
 	parameter.mat =

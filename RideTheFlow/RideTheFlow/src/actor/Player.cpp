@@ -15,6 +15,7 @@
 #include "AirGun.h"
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
+#include "../UIactor/Effect.h"
 
 //ボーンの数
 const int boneCount = 38;
@@ -758,5 +759,9 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
 		parameter.HP -= 1;
+	}
+	else if (other.GetParameter().id == ACTOR_ID::ENEMY_BULLET)
+	{
+		Effect::GetInstance().DamegeEffect(world, colpara.colPos);
 	}
 }

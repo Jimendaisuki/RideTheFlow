@@ -25,6 +25,7 @@ isWindCol(false)
 {
 	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
 	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
+	parameter.id = ACTOR_ID::ENEMY_BULLET;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =

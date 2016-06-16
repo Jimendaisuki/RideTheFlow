@@ -22,6 +22,7 @@ mRotateZ(attackAngleZ)
 {
 	mRotateY += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
 	mRotateZ += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
+	parameter.id = ACTOR_ID::ENEMY_BULLET;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
