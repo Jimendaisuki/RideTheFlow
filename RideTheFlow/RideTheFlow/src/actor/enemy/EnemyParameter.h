@@ -103,7 +103,7 @@ const float ShipInvincibleTime = 3.0f;
 
 
 //船のスピード
-const float ShipSpeed = 50.0f;
+const float ShipSpeed = 25.0f;
 //船の高さを変えるスピード
 const float ShipUpDownSpeed = 50.0f;
 //船の旋回速度

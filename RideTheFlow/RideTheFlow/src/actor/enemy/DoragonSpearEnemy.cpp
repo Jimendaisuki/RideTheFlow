@@ -11,7 +11,7 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
-DoragonSpearEnemy::DoragonSpearEnemy(IWorld& world, Vector3 position,ShipEnemy& se) :
+DoragonSpearEnemy::DoragonSpearEnemy(IWorld& world, Vector3 position,ShipEnemy& se,Actor& _parent) :
 Actor(world),
 coolTimer(0),
 preparationTimer(0),
@@ -40,6 +40,7 @@ endAttack(false)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
+	parent=&_parent;
 	mSe = &se;
 }
 
