@@ -766,6 +766,6 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::ENEMY_BULLET)
 	{
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition);
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 }
