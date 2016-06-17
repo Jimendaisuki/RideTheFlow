@@ -7,14 +7,13 @@
 class DoragonSpearEnemy :public Actor, public std::enable_shared_from_this<DoragonSpearEnemy>
 {
 public:
-	DoragonSpearEnemy(IWorld& world, Vector3 position,ShipEnemy& se);
+	DoragonSpearEnemy(IWorld& world, Vector3 position,ShipEnemy& se,Actor& _parent);
 	~DoragonSpearEnemy();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 private:
 	ShipEnemy* mSe;
-
 	Matrix4 tubeMat;
 
 	Vector3 mPosition;
