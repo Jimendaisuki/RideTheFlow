@@ -66,8 +66,8 @@ void Content::LoadModel(Model& model, bool async)
 	WorkFolder::SetWorkFolder("res/Model/");
 
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
-	//model.Load("dra_test.pmx", MODEL_ID::TEST_MODEL, async);
 	model.Load("dra_test.pmx", MODEL_ID::TEST_MODEL, async);
+	//model.Load("dragon.mv1", MODEL_ID::TEST_MODEL, async);
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
@@ -108,6 +108,14 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("airball1.x", MODEL_ID::AIR_BALL_1_MODEL, async);
 	model.Load("airball2.x", MODEL_ID::AIR_BALL_2_MODEL, async);
 	model.Load("airball3.x", MODEL_ID::AIR_BALL_3_MODEL, async);
+
+	model.Load("castle_break1.mv1",MODEL_ID::CASTLE_BREAK_1_MODEL,async);
+	model.Load("castle_break2.mv1",MODEL_ID::CASTLE_BREAK_2_MODEL,async);
+	model.Load("castle_break3.mv1",MODEL_ID::CASTLE_BREAK_3_MODEL,async);
+	model.Load("castle_break4.mv1",MODEL_ID::CASTLE_BREAK_4_MODEL,async);
+	model.Load("castle_break5.mv1",MODEL_ID::CASTLE_BREAK_5_MODEL,async);
+	model.Load("castle_break6.mv1",MODEL_ID::CASTLE_BREAK_6_MODEL,async);
+	model.Load("castle_break7.mv1",MODEL_ID::CASTLE_BREAK_7_MODEL,async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	

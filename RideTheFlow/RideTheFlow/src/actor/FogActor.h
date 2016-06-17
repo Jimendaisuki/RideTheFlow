@@ -14,4 +14,5 @@ public:
 private:
 	Vector3 position;
 	float fogTotalPower;
+	float angle;
 };

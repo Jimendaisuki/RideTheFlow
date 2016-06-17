@@ -64,23 +64,38 @@ CollisionParameter Actor::Player_vs_Stage(const Actor& other) const{
 	sphere.radius = parameter.radius;
 
 	/* ModelData */
-	ModelData stage;
-	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_ACTION_RANGE_MODEL);
-	stage.MFrameIndex = -1;
+	//対移動制限
+	ModelData range;
+	range.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_ACTION_RANGE_MODEL);
+	range.MFrameIndex = -1;
+	bool rangeflag = false;
 
-	bool flag = false;
-
-	colpara = Collisin::GetInstace().ModelSphere(stage, sphere);
-
+	colpara = Collisin::GetInstace().ModelSphere(range, sphere);
 	/* ResultData */
 	while (colpara.colFlag){
 		sphere.position += colpara.colPos.Normalized() * 1.0f;
-		flag = true;
+		rangeflag = true;
+		colpara = Collisin::GetInstace().ModelSphere(range, sphere);
+	}
+
+	//対ステージ
+	ModelData stage;
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
+	stage.MFrameIndex = -1;
+	bool stageflag = false;
+
+	colpara = Collisin::GetInstace().ModelSphere(stage, sphere);
+	/* ResultData */
+	while (colpara.colFlag){
+		sphere.position += colpara.colPos.Normalized() * 1.0f;
+		stageflag = true;
 		colpara = Collisin::GetInstace().ModelSphere(stage, sphere);
 	}
+
 	colpara.colPos = sphere.position;
-	colpara.colFlag = flag;
 	colpara.colID = COL_ID::PLAYER_STAGE_COL;
+	if (stageflag || rangeflag)
+		colpara.colFlag = true;
 
 	return colpara;
 }

@@ -13,7 +13,7 @@
 const float TornadoDefaltSpeed = 300.0f;
 Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_,float radius_) :
 Actor(world),
-position(position_.x,0.0f,position.z),
+position(position_.x, 0.0f, position_.z),
 velocity(velocity_),
 timer(0.0f),
 radius(radius_)

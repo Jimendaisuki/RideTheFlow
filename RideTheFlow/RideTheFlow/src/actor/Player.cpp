@@ -657,8 +657,6 @@ void Player::Draw() const{
 				));
 		}
 	}
-	for (int i = 0; i < MV1GetMeshNum(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL)); i++)
-	MV1SetMeshDrawBlendMode(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i, DX_BLENDMODE_ADD);
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	for (auto i : tornadoPosStorage){
 		DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);

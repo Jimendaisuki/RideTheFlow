@@ -9,18 +9,20 @@
 FogActor::FogActor(IWorld& world) :
 Actor(world),
 position(Vector3::Zero),
-fogTotalPower(0.0f)
+fogTotalPower(0.0f),
+angle(0.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::FOG_ACTOR;
 	SetFogEnable(TRUE);
+	SetFogColor(240, 240, 255);
 }
 FogActor::~FogActor()
 {
 
 }
 
-float angle;
+
 
 void FogActor::Update()
 {
@@ -37,13 +39,13 @@ void FogActor::Update()
 	Vector3 cross = Vector3::Cross(front, toOrigin);
 	float dot = Vector3::Dot(Camera::GetInstance().Up.Get(), cross);
 
-
-	Math::Clamp(length, 1.0f, 2000.0f);
-	Math::Clamp(angle, 1.0f, 180.0f);
+	length = Math::Clamp(length, 1.0f, 2000.0f) * 1.0f;
+	angle = Math::Clamp(angle, 1.0f, 180.0f) * 4.0f;
 	float fogPower = length * angle;
-	float fogMaxPower = 2000.0f * 180.0f * 500.0f;
+	float fogMaxPower = 2000.0f * 180.0f * 400.0f;
 
 	fogTotalPower = fogMaxPower / fogPower;
+	fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, 1500.0f);
 
 	SetFogStartEnd(0.0f, fogTotalPower);
 }
