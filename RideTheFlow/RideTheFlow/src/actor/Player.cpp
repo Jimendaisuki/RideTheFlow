@@ -54,11 +54,11 @@ const float rotateSpeed = 150.0f;
 const float ryuuRotateAngle = 2.5f;
 
 //タックルのアニメーションのスピード
-const float tackleAnimSpeed = 60.0f;
+const float tackleAnimSpeed = 100.0f;
 //タックルの入り出の時のブレンドスピード(上記のスピード÷１０位が目安っぽい(?))
-const float tackleAnimBlendSpeed = 2.0f;
+const float tackleAnimBlendSpeed = 3.0f;
 //タックルのアニメーションのどのフレームであたり判定を出すか
-const float tackleAnimAttackTiming = 37.0f;
+const float tackleAnimAttackTiming = 193.0f;
 
 //待機モーションへのブレンド率
 const float waitAnimBlendSpeed = 2.0f;
@@ -622,9 +622,9 @@ void Player::Draw() const{
 
 		Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
 		Matrix4 animSubRotate = Matrix4::Identity;
-		animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
-		animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
-		animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+		animSubRotate.SetFront(localAnimDrawMatrixVec[0].GetFront().Normalized());
+		animSubRotate.SetUp(localAnimDrawMatrixVec[0].GetUp().Normalized());
+		animSubRotate.SetLeft(localAnimDrawMatrixVec[0].GetLeft().Normalized());
 
 		Vector3 front = -tp.tackleT.Normalized();
 		Vector3 up = Vector3(0, 1, 0).Normalized();
@@ -637,13 +637,17 @@ void Player::Draw() const{
 		rotateY.SetLeft(left);
 		localAnimDrawMatrixVec[0] =
 			Matrix4::Scale(scale) *
-			Matrix4::Translate(position);
-
-		localAnimDrawMatrixVec[1] =
-			Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale())*
 			animSubRotate *
 			rotateY *
-			Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
+			Matrix4::Translate(localAnimDrawMatrixVec[0].GetPosition() + position);
+		//animSubRotate = Matrix4::Identity;
+		//animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
+		//animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
+		//animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+		//localAnimDrawMatrixVec[1] =
+		//	Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale()) *
+		//	animSubRotate *
+		//	Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
 
 		// 再生時間をセットする
 		MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
@@ -653,13 +657,13 @@ void Player::Draw() const{
 				Matrix4::ToMATRIX(
 				Matrix4::Slerp(
 				localDrawMatrixVec[count]
-				, localAnimDrawMatrixVec[count], 1)
+				, localAnimDrawMatrixVec[count], animBlend)
 				));
 		}
 	}
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	for (auto i : tornadoPosStorage){
-		DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
+		/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
 	}
 	//if (damageFlag){
 	//	DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
@@ -764,6 +768,6 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::ENEMY_BULLET)
 	{
-		Effect::GetInstance().DamegeEffect(world, colpara.colPos);
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 }
