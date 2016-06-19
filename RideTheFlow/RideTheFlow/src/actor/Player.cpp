@@ -16,6 +16,7 @@
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
 #include "../UIactor/Effect.h"
+#include "../input/GamePad.h"
 
 //ボーンの数
 const int boneCount = 38;
@@ -200,37 +201,42 @@ void Player::Update(){
 				padInputFlag = true;
 		}
 
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+		Vector2 rStick = GamePad::GetInstance().RightStick();
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
 			rotateLeft += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
 			rotateLeft -= rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
 			rotateUp += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
 			rotateUp -= rotateSpeed * Time::DeltaTime;
 
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
+
+		Vector2 lStick = GamePad::GetInstance().Stick();
+		
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || lStick.x < 0.0f){
 			vec.x += speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D) || lStick.x > 0.0f){
 			vec.x -= speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f){
 			vec.z += speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.y > 0.0f){
 			vec.z -= speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
@@ -252,7 +258,7 @@ void Player::Update(){
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
+		if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6) ) && !tp.tackleFlag && leftStickMove){
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -271,14 +277,14 @@ void Player::Update(){
 		}
 
 		tp.dashFlag = false;
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT)){
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)){
 			windFlowPtr = std::make_shared<WindFlow>(world, *this);
 			world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
 		}
-		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT)){
+		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)){
 			tornadoFlag = false;
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && !tornadoFlag){
+		if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag){
 			if (dashHealFlag){
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
@@ -358,10 +364,10 @@ void Player::Update(){
 			if (moveFlag)
 			position += forntVec;
 
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || 
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f){
 				posStorage.push_back(position);
 				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
 			}

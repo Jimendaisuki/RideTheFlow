@@ -9,6 +9,7 @@
 #include "../math/Math.h"
 #include "Player.h"
 #include "../UIactor/Effect.h"
+#include "../input/GamePad.h"
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 const Vector3 cameraDistance = 150.0f;
@@ -79,13 +80,15 @@ void MonhanCameraActor::Update()
 	//デフォルトでのカメラ
 	if (!tp.tackleFlag&&!tp.dashFlag&&!posMove2)
 	{
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+		Vector2 rStick = GamePad::GetInstance().RightStick();
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
 			rotateLeft += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
 			rotateLeft -= rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
 			rotateUp += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
 			rotateUp -= rotateSpeed * Time::DeltaTime;
 		rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 		restPosition = DefaultCamera();
