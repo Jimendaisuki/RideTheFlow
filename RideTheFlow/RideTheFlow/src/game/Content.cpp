@@ -66,8 +66,8 @@ void Content::LoadModel(Model& model, bool async)
 	WorkFolder::SetWorkFolder("res/Model/");
 
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
-	//model.Load("dra_test.pmx", MODEL_ID::TEST_MODEL, async);
-	model.Load("dra_test.pmx", MODEL_ID::TEST_MODEL, async);
+	model.Load("dra_test.mv1", MODEL_ID::TEST_MODEL, async);
+	//model.Load("dragon.mv1", MODEL_ID::TEST_MODEL, async);
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
 	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
@@ -76,10 +76,10 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("sky_dome_11.X", MODEL_ID::SKY_MODEL, async);
 
 	model.Load("arrow.mv1", MODEL_ID::ARROW_MODEL, async);
-	model.Load("wind.x", MODEL_ID::WIND_MODEL, async);
-	model.Load("cloud.x", MODEL_ID::CLOUD_MODEL, async);
-	model.Load("sand.x", MODEL_ID::SAND_MODEL, async);
-	model.Load("tornadopoly.x", MODEL_ID::TORNADOPOLY_MODEL, async);
+	model.Load("wind.mv1", MODEL_ID::WIND_MODEL, async);
+	model.Load("cloud.mv1", MODEL_ID::CLOUD_MODEL, async);
+	model.Load("sand.mv1", MODEL_ID::SAND_MODEL, async);
+	model.Load("tornadopoly.mv1", MODEL_ID::TORNADOPOLY_MODEL, async);
 
 	model.Load("ballista.mv1", MODEL_ID::BALLISTA_MODEL, async);
 	model.Load("ballista_arrow.mv1", MODEL_ID::BALLISTA_ARROW_MODEL, async);
@@ -102,12 +102,16 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("Castle/castle_4.mv1", MODEL_ID::CASTLE_TOP_MODEL, async);
 	model.Load("Castle/castle_3.mv1", MODEL_ID::CASTLE_TOP2_MODEL, async);
 
-	model.Load("smoke1.x", MODEL_ID::CASTLE_ADD_1_MODEL, async);
-	model.Load("smoke2.x", MODEL_ID::CASTLE_ADD_2_MODEL, async);
-	model.Load("smoke3.x", MODEL_ID::CASTLE_ADD_3_MODEL, async);
-	model.Load("airball1.x", MODEL_ID::AIR_BALL_1_MODEL, async);
-	model.Load("airball2.x", MODEL_ID::AIR_BALL_2_MODEL, async);
-	model.Load("airball3.x", MODEL_ID::AIR_BALL_3_MODEL, async);
+	model.Load("smoke.mv1", MODEL_ID::CASTLE_ADD_MODEL, async);
+	model.Load("airball.mv1", MODEL_ID::AIR_BALL_MODEL, async);
+
+	model.Load("castle_break1.mv1",MODEL_ID::CASTLE_BREAK_1_MODEL,async);
+	model.Load("castle_break2.mv1",MODEL_ID::CASTLE_BREAK_2_MODEL,async);
+	model.Load("castle_break3.mv1",MODEL_ID::CASTLE_BREAK_3_MODEL,async);
+	model.Load("castle_break4.mv1",MODEL_ID::CASTLE_BREAK_4_MODEL,async);
+	model.Load("castle_break5.mv1",MODEL_ID::CASTLE_BREAK_5_MODEL,async);
+	model.Load("castle_break6.mv1",MODEL_ID::CASTLE_BREAK_6_MODEL,async);
+	model.Load("castle_break7.mv1",MODEL_ID::CASTLE_BREAK_7_MODEL,async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	

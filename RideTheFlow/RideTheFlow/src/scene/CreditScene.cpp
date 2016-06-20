@@ -48,7 +48,7 @@ void CreditScene::Initialize()
 	//モデルを一旦解放して読み込み直す
 	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
 	WorkFolder::SetWorkFolder("res/Model/");
-	Model::GetInstance().Load("dra_test.pmx", MODEL_ID::TEST_MODEL,false);
+	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
 
 	mIsEnd = false;
 
@@ -57,10 +57,10 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
-	for (int i = 0; i < 2; i++)
-	{
-		wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(300 * i, -50, 100 * i)));
-	}
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(300 * i, -50, 100 * i)));
+	//}
 
 	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
 	{
@@ -105,22 +105,22 @@ void CreditScene::Update()
 
 	wa.Update();
 
-	////入力状態を取得
-	//leftstick = GamePad::GetInstance().Stick();
-	//rightstick = GamePad::GetInstance().RightStick();
-	//buttons.clear();
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM1));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM2));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM3));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM4));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM6));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM9));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM10));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM11));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM12));
+	//入力状態を取得
+	leftstick = GamePad::GetInstance().Stick();
+	rightstick = GamePad::GetInstance().RightStick();
+	buttons.clear();
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM1));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM2));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM3));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM4));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM6));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM9));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM10));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM11));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM12));
 }
 
 //描画
@@ -140,19 +140,28 @@ void CreditScene::Draw() const
 	
 	Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, House1Pos , Vector3::Zero, Vector3(1.0f));
 
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_1_MODEL, Vector3(100,200, 100), Vector3::Zero, Vector3(30.0f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_2_MODEL, Vector3(200,200, 200), Vector3::Zero, Vector3(30.0f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_3_MODEL, Vector3(300,200, 300), Vector3::Zero, Vector3(30.0f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_4_MODEL, Vector3(400,200, 400), Vector3::Zero, Vector3(30.0f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_5_MODEL, Vector3(500,200, 500), Vector3::Zero, Vector3(30.0f));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_6_MODEL, Vector3(600,200, 600), Vector3::Zero, Vector3(30.0f));
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_7_MODEL, Vector3(700,200, 700), Vector3::Zero, Vector3(30.0f));
+
+
 	wa.Draw();
 	
-	////スティックの入力状態
-	//int drawx = 700;
-	//TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
-	//TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
-	//TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
-	////ボタンの入力状態
-	//TextDraw::Draw(Point(drawx, 260), Vector3::Green, "Buttons");
-	//for (int i = 0; i < 12; i++)
-	//{
-	//	TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
-	//}
+	//スティックの入力状態
+	int drawx = 700;
+	TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
+	TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
+	TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
+	//ボタンの入力状態
+	TextDraw::Draw(Point(drawx, 260), Vector3::Green, "Buttons");
+	for (int i = 0; i < 12; i++)
+	{
+		TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
+	}
 
 	////ステージの限界の大きさのワイヤー球
 	//DrawSphere3D(Vector3::Zero.ToVECTOR(), 1400, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);

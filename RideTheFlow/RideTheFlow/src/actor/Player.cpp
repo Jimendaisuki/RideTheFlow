@@ -16,6 +16,7 @@
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
 #include "../UIactor/Effect.h"
+#include "../input/GamePad.h"
 
 //ボーンの数
 const int boneCount = 38;
@@ -54,11 +55,11 @@ const float rotateSpeed = 150.0f;
 const float ryuuRotateAngle = 2.5f;
 
 //タックルのアニメーションのスピード
-const float tackleAnimSpeed = 60.0f;
+const float tackleAnimSpeed = 100.0f;
 //タックルの入り出の時のブレンドスピード(上記のスピード÷１０位が目安っぽい(?))
-const float tackleAnimBlendSpeed = 2.0f;
+const float tackleAnimBlendSpeed = 3.0f;
 //タックルのアニメーションのどのフレームであたり判定を出すか
-const float tackleAnimAttackTiming = 37.0f;
+const float tackleAnimAttackTiming = 193.0f;
 
 //待機モーションへのブレンド率
 const float waitAnimBlendSpeed = 2.0f;
@@ -201,37 +202,42 @@ void Player::Update(){
 				padInputFlag = true;
 		}
 
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP))
+		Vector2 rStick = GamePad::GetInstance().RightStick();
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
 			rotateLeft += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
 			rotateLeft -= rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
 			rotateUp += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
 			rotateUp -= rotateSpeed * Time::DeltaTime;
 
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)){
+
+		Vector2 lStick = GamePad::GetInstance().Stick();
+		
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || lStick.x < 0.0f){
 			vec.x += speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D) || lStick.x > 0.0f){
 			vec.x -= speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f){
 			vec.z += speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.y > 0.0f){
 			vec.z -= speed * Time::DeltaTime;
 			leftStickMove = true;
 			if (!tp.tackleFlag){
@@ -253,7 +259,7 @@ void Player::Update(){
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) && !tp.tackleFlag && leftStickMove){
+		if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6) ) && !tp.tackleFlag && leftStickMove){
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -272,14 +278,14 @@ void Player::Update(){
 		}
 
 		tp.dashFlag = false;
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT)){
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)){
 			windFlowPtr = std::make_shared<WindFlow>(world, *this);
 			world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
 		}
-		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT)){
+		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)){
 			tornadoFlag = false;
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) && !tornadoFlag){
+		if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag){
 			if (dashHealFlag){
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
@@ -359,10 +365,10 @@ void Player::Update(){
 			if (moveFlag)
 			position += forntVec;
 
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || 
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::S)){
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f){
 				posStorage.push_back(position);
 				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
 			}
@@ -623,9 +629,9 @@ void Player::Draw() const{
 
 		Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
 		Matrix4 animSubRotate = Matrix4::Identity;
-		animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
-		animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
-		animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+		animSubRotate.SetFront(localAnimDrawMatrixVec[0].GetFront().Normalized());
+		animSubRotate.SetUp(localAnimDrawMatrixVec[0].GetUp().Normalized());
+		animSubRotate.SetLeft(localAnimDrawMatrixVec[0].GetLeft().Normalized());
 
 		Vector3 front = -tp.tackleT.Normalized();
 		Vector3 up = Vector3(0, 1, 0).Normalized();
@@ -638,13 +644,17 @@ void Player::Draw() const{
 		rotateY.SetLeft(left);
 		localAnimDrawMatrixVec[0] =
 			Matrix4::Scale(scale) *
-			Matrix4::Translate(position);
-
-		localAnimDrawMatrixVec[1] =
-			Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale())*
 			animSubRotate *
 			rotateY *
-			Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
+			Matrix4::Translate(localAnimDrawMatrixVec[0].GetPosition() + position);
+		//animSubRotate = Matrix4::Identity;
+		//animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
+		//animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
+		//animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+		//localAnimDrawMatrixVec[1] =
+		//	Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale()) *
+		//	animSubRotate *
+		//	Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
 
 		// 再生時間をセットする
 		MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
@@ -654,12 +664,10 @@ void Player::Draw() const{
 				Matrix4::ToMATRIX(
 				Matrix4::Slerp(
 				localDrawMatrixVec[count]
-				, localAnimDrawMatrixVec[count], 1)
+				, localAnimDrawMatrixVec[count], animBlend)
 				));
 		}
 	}
-	for (int i = 0; i < MV1GetMeshNum(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL)); i++)
-	MV1SetMeshDrawBlendMode(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), i, DX_BLENDMODE_ADD);
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	for (auto i : tornadoPosStorage){
 		/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
