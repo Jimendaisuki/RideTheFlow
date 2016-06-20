@@ -47,7 +47,7 @@ void CastleTop::Update()
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
-
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::MASTERCASTLE_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
 	//èÈÇ…ìñÇΩÇ¡ÇΩÇÁóéÇøÇÈÇÃÇé~ÇﬂÇÈ
 	if (castleDown)
@@ -93,6 +93,10 @@ void CastleTop::Draw() const
 void CastleTop::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::CASTLE_CASTLE_COL&&colpara.colFlag&&!noCol)
+	{
+		castleDown = false;
+	}
+	if (colpara.colID == COL_ID::MASTERCASTLE_CASTLE_COL&&colpara.colFlag)
 	{
 		castleDown = false;
 	}

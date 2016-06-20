@@ -121,7 +121,6 @@ void CastleDoragonSpear::Update()
 
 void CastleDoragonSpear::Draw() const
 {
-	DrawFormatString(0, 192, 255, "attackTIme %f", spearAttackTimer);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
 	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*5.0f,

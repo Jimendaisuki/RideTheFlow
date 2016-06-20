@@ -23,6 +23,7 @@ public:
 private:
 	Vector3 DefaultCamera();
 	Vector3 DashCmaera();
+	float Spring(float rest, float pos);
 
 
 private:
@@ -42,15 +43,20 @@ private:
 	Vector3 playerPosSeve;
 	//タックル
 	float leapTimer;
+	float restLeapTimer;
+	float tackleLeapTimer;
 	bool posMove1;
 	bool posMove2;
+	bool posEnd;
 	bool posSeveFlag;
 	//ダッシュ
 	Vector3 cameraMovePos;
 	float dashCameraDistance;
 	bool cameraFovFlag;
 	bool cameraFovEndFlag;
-
+	float restRotate;
+	float rotateVelo;
+	float fovVelo;
 	bool noCamera;
 	float testTimer;
 };

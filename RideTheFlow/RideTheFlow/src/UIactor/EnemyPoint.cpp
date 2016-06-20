@@ -14,11 +14,14 @@ enemy(&enemy_)
 	
  	switch (enemy->GetParameter().id)
 	{
-	case ACTOR_ID::CASTLE_ACTOR:
-		scale = 0.8f;
+	case ACTOR_ID::MASTER_CASTLE_ACTOR:
+		scale = 0.5f;
 		break;
 	case ACTOR_ID::SHIP_ENEMY_ACTOR:
-		scale = 0.6f;
+		scale = 0.3f;
+		break;
+	case ACTOR_ID::ARMY_ENEMY_ACTOR:
+		scale = 0.2f;
 		break;
 	default:
 		scale = 0;
@@ -34,7 +37,8 @@ EnemyPoint::~EnemyPoint()
 
 void EnemyPoint::Update()
 {
-	if (enemy->IsDead())
+	
+	if (enemy==nullptr)
 	{
 		parameter.isDead = true;
 		return;

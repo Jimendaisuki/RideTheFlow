@@ -125,8 +125,6 @@ void CastleCannon::Update()
 }
 void CastleCannon::Draw() const
 {
-	DrawFormatString(0, 400, GetColor(0, 0, 0), "angle %f", angle);
-	DrawFormatString(0, 432, GetColor(0, 0, 0), "mrotateY %f", mRotateY);
 	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
 	DrawLine3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 255);
 }
