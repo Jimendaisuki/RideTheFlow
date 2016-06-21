@@ -11,11 +11,19 @@ enum CASTLE_SELECT
 	CHILD_CASTLE,
 };
 
+//壊れ方を選択
+enum BREAK_SELECT
+{
+	TORNADO,
+	WIND,
+	WIND_BALL,
+};
+
 class BreakCastle :public Actor, public ParticleSystem
 {
 public:
 	//=======Actor======//
-	BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& select);
+	BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_);
 	~BreakCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -26,5 +34,8 @@ public:
 	virtual void Emissive() override;
 
 private:
+	//城と壊れ方をコンストラクタで選択
+	CASTLE_SELECT castleSelect;
+	BREAK_SELECT breakSelect;
 	float rotX, rotY;
 };

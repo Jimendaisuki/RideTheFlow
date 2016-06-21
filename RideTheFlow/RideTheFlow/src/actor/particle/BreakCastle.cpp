@@ -6,8 +6,10 @@
 #include "WindSetting.h"
 #include "../../time/Time.h"
 
-BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& select) :
+BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_) :
 Actor(world),
+castleSelect(castle_),
+breakSelect(break_),
 rotX(0.0f),
 rotY(0.0f)
 {
