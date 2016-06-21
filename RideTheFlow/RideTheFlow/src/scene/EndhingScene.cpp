@@ -15,6 +15,8 @@
 #include "../actor/enemy/DoragonSpearEnemy.h"
 #include "../actor/enemy/ShipVaristorEnemy.h"
 #include "../actor/island/FloatingIsland.h"
+
+#include "../UIactor/MiniMap.h"
 //コンストラクタ
 EndhingScene::EndhingScene()
 {
@@ -63,6 +65,7 @@ void EndhingScene::Initialize()
 	//}
  // 	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 }
 
 void EndhingScene::Update()

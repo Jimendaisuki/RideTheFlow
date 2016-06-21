@@ -35,6 +35,7 @@ public:
 	virtual void End()override;
 
 private:
+	void TornadoCalculation();
 	void VertexMove(VERTEX2D vertexs_[], int count_, float time_);
 	bool IsStatusBegEnd() const;
 
