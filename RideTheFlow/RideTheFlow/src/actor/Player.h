@@ -33,6 +33,11 @@ public:
 		return dashPosStorage;
 	}
 
+	void Damage(float damage)
+	{
+		parameter.HP -= damage;
+	}
+
 	bool ReturnDead(){ return dead; }
 
 private:

@@ -69,6 +69,11 @@ targetY(0.0f)
 	restCameraTarget=cameraTarget;
 	posSeveStart = DefaultCamera();
 	restRotate = rotateLeft;
+	
+	startTarget = Vector3::Zero;
+	endTarget = Vector3::Zero;
+	
+
 }
 MonhanCameraActor::~MonhanCameraActor()
 {
@@ -104,15 +109,15 @@ void MonhanCameraActor::Update()
 		restPosition = DefaultCamera();
 	}
 
+
 	//タックル
 	if (tp.tackleFlag)
 	{
 		if (posEnd)
 		{
-			springTargetParameter.stiffness = 0.9f;
 			posEnd = false;
 			posSeveStart = position;
-			posSeveEnd = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*50.0f+parameter.mat.GetPosition();
+			posSeveEnd = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*50.0f + parameter.mat.GetPosition();
 		}
 
 		if ((int)tp.animTime < 170)
@@ -127,15 +132,14 @@ void MonhanCameraActor::Update()
 			{
 				tackleLeapTimer = 0.0f;
 				posMove1 = false;
-				rotateUp = Math::Atan2(playerMat.GetPosition().x - (-playerMat.GetFront().x+playerMat.GetPosition().x),
+				rotateUp = Math::Atan2(playerMat.GetPosition().x - (-playerMat.GetFront().x + playerMat.GetPosition().x),
 					playerMat.GetPosition().z - (-playerMat.GetFront().z + playerMat.GetPosition().z))
 					* 180 / 3.1415f + 180;
 
 				posSeveStart = position;
 
-				if (tp.tornadoTatchFlag||true)
+				if (tp.tornadoTatchFlag || true)
 				{
-					restCameraTarget = playerMat.GetPosition() + Vector3(0, 100, 0);
 					posSeveEnd = Vector3(0, 0, 1) * 200 * Matrix4::RotateX(-40) * Matrix4::RotateY(rotateUp) +
 						playerMat.GetPosition() + cameraUpMove;
 				}
@@ -145,7 +149,7 @@ void MonhanCameraActor::Update()
 						+ tp.tackleT*(-BackCamera) + up*UpCamera;
 				}
 			}
-			restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
+			restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, Math::Sin(tackleLeapTimer/2.0f));
 			tackleLeapTimer += 3.0f*Time::DeltaTime;
 			if (tackleLeapTimer >= 3.0f)
 			{
@@ -155,16 +159,14 @@ void MonhanCameraActor::Update()
 					playerMat.GetPosition().z - restPosition.z)
 					* 180 / 3.1415f + 180;
 				posSeveStart = position;
+
 				posSeveEnd = DefaultCamera();
 				tackleLeapTimer = 0.0f;
-				restCameraTarget = playerMat.GetPosition();
 			}
 		}
 	}
 	else
 	{
-		springTargetParameter.stiffness = 3.0f;
-		restCameraTarget = playerMat.GetPosition();
 		posEnd = true;
 	}
 	if (!posMove2)
@@ -178,9 +180,85 @@ void MonhanCameraActor::Update()
 			tackleLeapTimer = 0.0f;
 		}
 	}
-	SpringTarget();
-	cameraTarget += targetVelo;
 
+	cameraTarget = playerMat.GetPosition();
+
+
+	//タックル
+	//if (tp.tackleFlag)
+	//{
+	//	if (posEnd)
+	//	{
+	//		posEnd = false;
+	//		posSeveStart = position;
+	//		posSeveEnd = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*50.0f+parameter.mat.GetPosition();
+	//	}
+
+	//	if ((int)tp.animTime < 170)
+	//	{
+	//		if (tackleLeapTimer <= 1.0f)
+	//			tackleLeapTimer += 12.0f / 20.0f*Time::DeltaTime;
+	//		restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
+	//	}
+	//	if ((int)tp.animTime >= 170 && posMove2)
+	//	{
+	//		if (posMove1)
+	//		{
+	//			tackleLeapTimer = 0.0f;
+	//			posMove1 = false;
+	//			rotateUp = Math::Atan2(playerMat.GetPosition().x - (-playerMat.GetFront().x+playerMat.GetPosition().x),
+	//				playerMat.GetPosition().z - (-playerMat.GetFront().z + playerMat.GetPosition().z))
+	//				* 180 / 3.1415f + 180;
+
+	//			posSeveStart = position;
+
+	//			if (tp.tornadoTatchFlag||true)
+	//			{
+	//				posSeveEnd = Vector3(0, 0, 1) * 200 * Matrix4::RotateX(-40) * Matrix4::RotateY(rotateUp) +
+	//					playerMat.GetPosition() + cameraUpMove;
+	//				restCameraTarget = Vector3(playerMat.GetPosition().x, posSeveEnd.y, playerMat.GetPosition().z);
+	//			}
+	//			else
+	//			{
+	//				posSeveEnd = playerMat.GetPosition()
+	//					+ tp.tackleT*(-BackCamera) + up*UpCamera;
+	//			}
+	//		}
+	//		restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
+	//		tackleLeapTimer += 3.0f*Time::DeltaTime;
+	//		if (tackleLeapTimer >= 3.0f)
+	//		{
+	//			restCameraTarget = playerMat.GetPosition();
+	//			posMove2 = false;
+	//			rotateLeft = -25;
+	//			rotateUp = Math::Atan2(playerMat.GetPosition().x - restPosition.x,
+	//				playerMat.GetPosition().z - restPosition.z)
+	//				* 180 / 3.1415f + 180;
+	//			posSeveStart = position;
+	//			
+	//			posSeveEnd = DefaultCamera();
+	//			tackleLeapTimer = 0.0f;
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	restCameraTarget = playerMat.GetPosition();
+	//	posEnd = true;
+	//}
+	//if (!posMove2)
+	//{
+	//	tackleLeapTimer += 1.3f*Time::DeltaTime;
+	//	restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
+	//	if (tackleLeapTimer >= 1.0f)
+	//	{
+	//		posMove2 = true;
+	//		posMove1 = true;
+	//		tackleLeapTimer = 0.0f;
+	//	}
+	//}
+	//SpringTarget();
+	//cameraTarget += targetVelo;
 
 
 	//ダッシュ処理
@@ -215,8 +293,8 @@ void MonhanCameraActor::Update()
 }
 void MonhanCameraActor::Draw() const
 {
-	//DrawFormatString(0, 128, GetColor(0, 0, 0), "注視点距離   %f %f %f", cameraTarget.x,cameraTarget.y,cameraTarget.z);
-	//DrawFormatString(0, 400, GetColor(0, 0, 0), "視野角   %f", fov);
+	DrawFormatString(0, 128, GetColor(0, 0, 0), "注視点距離   %f %f %f", cameraTarget.x,cameraTarget.y,cameraTarget.z);
+	//DrawFormatString(0, 400, GetColor(0, 0, 0), "視野角   %f", Math::Sin(tackleLeapTimer));
 	//DrawLine3D(Vector3::ToVECTOR(playerMat.GetPosition()), Vector3::ToVECTOR(playerMat.GetUp().Normalized()*100.0f + playerMat.GetPosition()), 1);
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)

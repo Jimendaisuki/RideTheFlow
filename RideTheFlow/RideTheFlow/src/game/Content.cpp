@@ -113,6 +113,9 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("castle_break6.mv1",MODEL_ID::CASTLE_BREAK_6_MODEL,async);
 	model.Load("castle_break7.mv1",MODEL_ID::CASTLE_BREAK_7_MODEL,async);
 
+	model.Load("human_low_ballista.mv1", MODEL_ID::HUMAN_BALLISTA_MODEL, async);
+	model.Load("human_low_cannon.mv1", MODEL_ID::HUMAN_CANNON_MODEL, async);
+
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	
 	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));

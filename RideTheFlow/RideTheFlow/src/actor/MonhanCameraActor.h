@@ -36,6 +36,10 @@ private:
 	Vector3 velocity;
 	Vector3 cameraTarget;
 	Vector3 restCameraTarget;
+
+	Vector3 startTarget;
+	Vector3 endTarget;
+
 	SpringParameter springParameter;
 	SpringParameter springTargetParameter;
 	float fov;

@@ -222,9 +222,9 @@ CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
 	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
 
 	Capsule spear;
-	spear.startPos = parameter.mat.GetPosition() - parameter.mat.GetLeft().Normalized()*10.0f;
-	spear.endPos = parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f;
-	spear.radius = parameter.radius;
+	spear.startPos = other.parameter.mat.GetPosition() - other.parameter.mat.GetLeft().Normalized()*10.0f;
+	spear.endPos = other.parameter.mat.GetPosition() + other.parameter.mat.GetLeft().Normalized()*30.0f;
+	spear.radius = other.parameter.radius;
 
 	for (auto boon : boons)
 	{
@@ -598,7 +598,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	Capsule castle;
 	castle.startPos = other.parameter.mat.GetPosition();
 	castle.endPos = castle.startPos + other.parameter.height;
-	castle.radius = 50.0f;
+	castle.radius = 70.0f;
 	Sphere player;
 	player.position = parameter.mat.GetPosition();
 	player.radius = parameter.radius;
