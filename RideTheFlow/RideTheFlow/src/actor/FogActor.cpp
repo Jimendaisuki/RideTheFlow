@@ -33,6 +33,7 @@ void FogActor::Update()
 	Vector3 front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
 	//Œ´“_‚ÖŒü‚©‚¤•ûŒü
 	Vector3 toOrigin = Vector3::Normalize(-position);
+	if (Vector3::Dot(front, front) == Vector3::Dot(toOrigin, toOrigin)) return;
 	//‘O‚ÆŒ´“_•ûŒü‚Ì‚È‚·Šp
 	angle = Vector3::Inner(front, toOrigin);
 	
@@ -40,12 +41,12 @@ void FogActor::Update()
 
 	length = Math::Clamp(length, 1.0f, 2000.0f) * 1.0f;
 	float anglePower = angle - 90.0f;
-	anglePower = Math::Clamp(anglePower, 1.0f, 90.0f) * 8.0f;
+	anglePower = Math::Clamp(anglePower, 1.0f, 90.0f) * 6.0f;
 	float fogPower = length * anglePower;
 	float fogMaxPower = 2000.0f * 180.0f * 400.0f;
 
 	fogTotalPower = fogMaxPower / fogPower;
-	fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, 1500.0f);
+	fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, 2000.0f);
 
 	SetFogStartEnd(0.0f, fogTotalPower);
 }
