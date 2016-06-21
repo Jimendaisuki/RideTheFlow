@@ -1,5 +1,17 @@
 #pragma once
 
+/****攻撃力関係****/
+//矢の攻撃力
+const float ArrowPower = 1.0f;
+//大砲の攻撃力
+const float CannonPower = 2.0f;
+//バリスタの攻撃力
+const float VaristorPower = 1.0f;
+//龍激走の攻撃力
+const float DoragonSperarPower = 5.0f;
+
+
+
 /***共通***/
 //どのくらいカメラの前の場所に通常攻撃するか(ダッシュ中は無効)
 const float cameraFrontAttack = 10.0f;
@@ -153,9 +165,9 @@ const float ShipNotLookCannonShellNum = 1;
 /***撃龍槍***/
 
 //撃龍槍のクールタイム
-const float DoragonSpearAttackTime = 10.0f;
+const float DoragonSpearAttackTime = 5.0f;
 //プレイヤーが撃龍槍圏内に入った時から攻撃する時までの時間
-const float DoragonSpearWithinTime = 2.0f;
+const float DoragonSpearWithinTime = 0.5f;
 //撃龍槍が最大に伸びるまでの時間
 const float DoragonSpearMaxTime = 10.0f;
 //撃龍槍が完全に出てそこにとどまる時間

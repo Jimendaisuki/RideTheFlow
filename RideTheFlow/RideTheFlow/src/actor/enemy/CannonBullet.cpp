@@ -10,6 +10,7 @@
 #include "../Collision.h"
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
+#include "../Player.h"
 
 CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ) :
 Actor(world),
@@ -22,7 +23,7 @@ mRotateZ(attackAngleZ)
 {
 	mRotateY += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
 	mRotateZ += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
-	parameter.id = ACTOR_ID::ENEMY_BULLET;
+	parameter.id = ACTOR_ID::CANNON_BULLET_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
@@ -41,6 +42,7 @@ CannonBullet::~CannonBullet()
 void CannonBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), this->GetParameter().id, COL_ID::SPHERE_SPHERE_COL);
 	time += CannonSpeed*Time::DeltaTime;
 	//is•ûŒü‚ðŒvŽZ
 		vec = Vector3(
@@ -75,7 +77,13 @@ void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		windVec = colpara.colVelosity;
 		isWindCol = true;
 	}
-
-	//parameter.isDead = true;
-	//Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
+	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
+	{
+		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(CannonPower);
+		parameter.isDead = true;
+	}
+	else
+	{
+		parameter.isDead = true;
+	}
 }

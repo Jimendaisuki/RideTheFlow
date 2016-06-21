@@ -174,6 +174,7 @@ void Player::Update(){
 	}
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++){
 		//初期位置ボーンの位置を取得
@@ -771,14 +772,25 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
-		parameter.HP -= 1;
-	}
-	else if (other.GetParameter().id == ACTOR_ID::ENEMY_BULLET)
-	{
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 	else if (other.GetParameter().id == ACTOR_ID::MASTER_CASTLE_ACTOR)
 	{
 		position = colpara.colPos;
+	}
+	else if (other.GetParameter().id == ACTOR_ID::VARISTOR_BULLET_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
+	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
+	else if (other.GetParameter().id == ACTOR_ID::ARROW_BULLET_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
+	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 }

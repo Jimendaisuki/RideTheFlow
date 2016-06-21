@@ -7,7 +7,7 @@
 class CastleDoragonSpear :public Actor, public std::enable_shared_from_this<CastleDoragonSpear>
 {
 public:
-	CastleDoragonSpear(IWorld& world, Vector3 position, Castle &_castle,float rotateY);
+	CastleDoragonSpear(IWorld& world, Vector3 position, Castle &_castle,Actor& _parent,float rotateY);
 	~CastleDoragonSpear();
 	virtual void Update() override;
 	virtual void Draw() const override;

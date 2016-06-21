@@ -23,7 +23,6 @@ playerWithin(false),
 attackSpear(false),
 endAttack(false)
 {
-	parameter.id = ACTOR_ID::ENEMY_BULLET;
 	parameter.isDead = false;
 	parameter.radius = 6.0f;
 	parameter.mat =
@@ -51,7 +50,6 @@ DoragonSpearEnemy::~DoragonSpearEnemy()
 void DoragonSpearEnemy::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
 
 	//槍のスタート
 	startPos = mSe->GetShipEnemyPos().spearPos;
@@ -132,7 +130,7 @@ void DoragonSpearEnemy::Draw() const
 	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	parameter.radius, 20, 255, 255, FALSE);
-	////圏内
+	//////圏内
 	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f), 
 	//	parameter.radius, 20, 255, 255, FALSE);
