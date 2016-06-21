@@ -16,6 +16,11 @@ public:
 	{
 		return rankUp;
 	}
+	void castleLost()
+	{
+		testRnak--;
+		parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
+	}
 
 private:
 	Matrix4 playerMat;
@@ -36,6 +41,8 @@ private:
 	float rankUpRagTimer;
 	float castleTime;
 	int mRank;
+
+	int testRnak;
 	//oŒ»‚·‚é“GŠÖŒW
 	float spawanArmyTimer;
 	float spawnShipTimer;

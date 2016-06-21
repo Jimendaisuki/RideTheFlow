@@ -18,7 +18,7 @@ const float CastleDamegeWind = 0.5f;
 const float CastleInvincibleTime = 3.0f;
 
 //é‚Ìã‚ÉÏ‚İd‚È‚éé‚Ì’i”
-const int Rank = 1;
+const int Rank = 5;
 //é‚ªÏ‚İ‚ ‚ª‚éŠÔ(•b)
 const float RankUpSecond = 8.0f;
 
