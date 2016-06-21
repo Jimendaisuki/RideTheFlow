@@ -40,7 +40,7 @@ void CastleAddParticle::OnUpdate()
 
 void CastleAddParticle::Draw() const
 {
-	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
-	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
-	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
+	Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), drawParam.alpha, mat.GetRotateDegree(), mat.GetScale() - 0.03f);
+	Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), drawParam.alpha, mat.GetRotateDegree(), mat.GetScale() - 0.02f);
+	Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), drawParam.alpha, mat.GetRotateDegree(), mat.GetScale());
 }

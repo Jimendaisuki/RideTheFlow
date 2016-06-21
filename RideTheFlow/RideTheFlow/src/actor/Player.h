@@ -3,6 +3,7 @@
 #include "../math/Vector3.h"
 #include <memory>
 class WindFlow;
+class Tornado;
 
 struct TackleParameter{
 	bool tackleFlag, tackleEndFlag,dashFlag,tackleColFlag,tornadoTatchFlag,airGunFlag;
@@ -78,6 +79,8 @@ private:
 	std::vector<Vector3> dashPosStorage;
 	std::vector<int> tornadoPosStorage;
 	std::shared_ptr<WindFlow> windFlowPtr;
+	std::shared_ptr<Tornado> tornadoPtr;
+	float tackleForTornadoTime;
 
 	bool tornadoFlag;
 

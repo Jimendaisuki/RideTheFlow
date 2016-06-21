@@ -16,6 +16,7 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
+	void SetVelocity(Vector3 vec) { velocity = vec; }
 
 	//=======ParticleSystem======//
 	virtual void Emissive() override;

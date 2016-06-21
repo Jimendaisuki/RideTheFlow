@@ -29,6 +29,8 @@ const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
 const float tornadoCreateRadius = 128.0f;
 
+const float tackleForTornadoTimelimit = 1.0f;
+
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
 bool changeMotion = true;
@@ -82,7 +84,8 @@ Player::Player(IWorld& world) :
 Actor(world),
 position(Vector3(0, 0, 0)),
 windFlowPtr(NULL),
-tornadoFlag(false)
+tornadoFlag(false),
+tornadoPtr(NULL)
 {
 	//paramterの初期化
 	parameter.isDead = false;
@@ -173,8 +176,6 @@ void Player::Update(){
 		moveFlag = !moveFlag;
 	}
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++){
 		//初期位置ボーンの位置を取得
@@ -203,7 +204,7 @@ void Player::Update(){
 				padInputFlag = true;
 		}
 
-		Vector2 rStick = GamePad::GetInstance().RightStick();
+	Vector2 rStick = GamePad::GetInstance().RightStick();
 
 		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
 			rotateLeft += rotateSpeed * Time::DeltaTime;
@@ -260,13 +261,20 @@ void Player::Update(){
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6) ) && !tp.tackleFlag && leftStickMove){
-			tp.tackleFlag = true;
+	if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6) ) && !tp.tackleFlag && leftStickMove){
+				tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 			tp.tackleT = trueVec;
 			tp.animTime = 0.0f;
-			tp.tornadoTatchFlag = false;
+			if ((tornadoPtr != NULL || windFlowPtr != NULL) && tackleForTornadoTime < tackleForTornadoTimelimit) {
+				tp.tornadoTatchFlag = true;
+			}
+			else {
+				tp.tornadoTatchFlag = false;
+				tornadoPtr = NULL;
+				windFlowPtr = NULL;
+			}
 			tp.tackleColFlag = false;
 			tp.airGunFlag = false;
 		}
@@ -286,12 +294,19 @@ void Player::Update(){
 		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)){
 			tornadoFlag = false;
 		}
-		if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag){
-			if (dashHealFlag){
+	if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag){
+				if (dashHealFlag){
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
 				dashSpeed -= dashAccele * Time::DeltaTime;
 				dashTime -= dashHealSpeed * Time::DeltaTime;
+
+				if (tornadoPtr == NULL && windFlowPtr == NULL) {
+					tackleForTornadoTime = 0.0f;
+				}
+				else {
+					tackleForTornadoTime += Time::DeltaTime;
+				}
 			}
 			else{
 				dashPosStorage.push_back(position);
@@ -323,8 +338,10 @@ void Player::Update(){
 					}
 					torRad /= PI;
 					torRad /= 2.0f;
-					world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad));
+					tornadoPtr = std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad);
+					world.Add(ACTOR_ID::TORNADO_ACTOR, tornadoPtr);
 					windFlowPtr->SetIsDead(true);
+					windFlowPtr = NULL;
 					dashPosStorage.clear();
 					tornadoPosStorage.clear();
 					tornadoFlag = true;
@@ -335,6 +352,8 @@ void Player::Update(){
 				trueVec.y = 0;
 				trueVec.Normalized();
 				tp.dashFlag = true;
+
+				tackleForTornadoTime = 0.0f;
 			}
 		}
 		else{
@@ -342,6 +361,13 @@ void Player::Update(){
 			tornadoPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
 			dashTime -= dashHealSpeed * Time::DeltaTime;
+			
+			if (tornadoPtr == NULL && windFlowPtr == NULL) {
+				tackleForTornadoTime = 0.0f;
+			}
+			else {
+				tackleForTornadoTime += Time::DeltaTime;
+			}
 		}
 
 		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
@@ -366,11 +392,11 @@ void Player::Update(){
 			if (moveFlag)
 			position += forntVec;
 
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || 
+					if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || 
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f){
-				posStorage.push_back(position);
+			posStorage.push_back(position);
 				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
 			}
 		}
@@ -378,7 +404,7 @@ void Player::Update(){
 			// 再生時間を進める
 			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 			forntVec = tp.tackleT;
-			if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
+			if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 20.0f && !tp.tackleEndFlag){
 				tp.tackleEndFlag = true;
 				posStorage.clear();
 				nonPosStorageVec = -tp.tackleT;
@@ -397,19 +423,20 @@ void Player::Update(){
 				animBlend = 0.0f;
 				waitAnimSet = false;
 			}
-			if (tp.tackleColFlag){
-				if (!tp.tornadoTatchFlag && !tp.airGunFlag){
-					world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world, position, tp.tackleT));
-					tp.airGunFlag = true;
-				}
-			}
 			if (tp.animTime > tackleAnimAttackTiming){
-				if (!tp.tackleColFlag){
-					world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-					world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
+				if (windFlowPtr == NULL && tornadoPtr == NULL && !tp.tornadoTatchFlag) {
+					if (!tp.airGunFlag) {
+						world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world, position, tp.tackleT));
+						tp.airGunFlag = true;
+					}
 				}
-				parameter.height = tp.tackleT.Normalized() * 30.0f;
-				tp.tackleColFlag = true;
+				else {
+					if (tornadoPtr != NULL)tornadoPtr->SetVelocity(Vector3(tp.tackleT.x, 0.0f, tp.tackleT.z));
+					else if (windFlowPtr != NULL)windFlowPtr->SetVec(Vector3(tp.tackleT.x, 0.0f, tp.tackleT.z));
+
+					tornadoPtr = NULL;
+					windFlowPtr = NULL;
+				}
 			}
 		}
 
@@ -772,24 +799,9 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
+		parameter.HP -= 1;
 	}
-	else if (other.GetParameter().id == ACTOR_ID::MASTER_CASTLE_ACTOR)
-	{
-		position = colpara.colPos;
-	}
-	else if (other.GetParameter().id == ACTOR_ID::VARISTOR_BULLET_ACTOR)
-	{
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
-	}
-	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
-	{
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
-	}
-	else if (other.GetParameter().id == ACTOR_ID::ARROW_BULLET_ACTOR)
-	{
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
-	}
-	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
+	else if (other.GetParameter().id == ACTOR_ID::ENEMY_BULLET)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
