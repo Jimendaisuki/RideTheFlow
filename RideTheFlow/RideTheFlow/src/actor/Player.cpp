@@ -176,6 +176,9 @@ void Player::Update() {
 		moveFlag = !moveFlag;
 	}
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
+
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++) {
 		//初期位置ボーンの位置を取得
