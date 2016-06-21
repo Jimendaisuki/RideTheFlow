@@ -9,7 +9,7 @@
 #include "EnemyParameter.h"
 #include "../../math/Quaternion.h"
 #include "../../UIactor/Effect.h"
-
+#include "../Player.h"
 
 
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
@@ -28,7 +28,7 @@ isWindCol(false)
 	mRandomTarget = Vector3(GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
 		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
 		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy);
-	parameter.id = ACTOR_ID::ENEMY_BULLET;
+	parameter.id = ACTOR_ID::ARROW_BULLET_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
@@ -109,9 +109,13 @@ void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		windVec = colpara.colVelosity;
 		isWindCol = true;
 	}
-	//else
-	//{
-	//	parameter.isDead = true;
-	//	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
-	//}
+	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
+	{
+		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(ArrowPower);
+		parameter.isDead = true;
+	}
+	else
+	{
+		parameter.isDead = true;
+	}
 }

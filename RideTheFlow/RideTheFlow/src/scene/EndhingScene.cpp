@@ -15,8 +15,8 @@
 #include "../actor/enemy/DoragonSpearEnemy.h"
 #include "../actor/enemy/ShipVaristorEnemy.h"
 #include "../actor/island/FloatingIsland.h"
-
 #include "../UIactor/MiniMap.h"
+//火曜日　木曜日
 //コンストラクタ
 EndhingScene::EndhingScene()
 {
@@ -36,12 +36,19 @@ void EndhingScene::Initialize()
 	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa, Vector3(40, -50, 30)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -50, 0),false));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
-	wa.Add(ACTOR_ID::ISLAND_ACTOR , std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<CannonEnemy>(wa, Vector3(0, -20, 0)));
+
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0),true));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -20, 0), false));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -20, 300), false));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -20, -400), false));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -20, 700), false));
+	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3::Zero,1,1));
+	wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
 
 	//for (int i = 0; i < 5; i++)
 	//{
@@ -65,7 +72,6 @@ void EndhingScene::Initialize()
 	//}
  // 	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 }
 
 void EndhingScene::Update()

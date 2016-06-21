@@ -23,6 +23,8 @@ public:
 private:
 	Vector3 DefaultCamera();
 	Vector3 DashCmaera();
+	float SpringFov(float rest, float pos);
+	Vector3 SpringTarget();
 
 
 private:
@@ -32,27 +34,37 @@ private:
 	//バネカメラ関係
 	Vector3 restPosition;
 	Vector3 velocity;
+	Vector3 cameraTarget;
+	Vector3 restCameraTarget;
+
+	Vector3 startTarget;
+	Vector3 endTarget;
+
 	SpringParameter springParameter;
+	SpringParameter springTargetParameter;
 	float fov;
 	float rotateLeft;
 	float rotateUp;
-	//タックル座標保存
+
+	//タックル関係
 	Vector3 posSeveStart;
 	Vector3 posSeveEnd;
 	Vector3 playerPosSeve;
-	//タックル
+	Vector3 targetVelo;
+	float targetY;
 	float leapTimer;
+	float restLeapTimer;
+	float tackleLeapTimer;
 	bool posMove1;
 	bool posMove2;
-	bool posSeveFlag;
+	bool posEnd;
+
 	//ダッシュ
-	Vector3 cameraMovePos;
-	float dashCameraDistance;
 	bool cameraFovFlag;
 	bool cameraFovEndFlag;
-
-	bool noCamera;
-	float testTimer;
+	float restRotate;
+	float rotateVelo;
+	float fovVelo;
 };
 
 #endif

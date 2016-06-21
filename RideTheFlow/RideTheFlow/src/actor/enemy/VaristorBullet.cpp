@@ -11,6 +11,7 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
+#include "../Player.h"
 
 VaristorBullet::VaristorBullet(IWorld& world, Vector3 position,Actor& parent_, float rotateY, float attackAngleZ) :
 Actor(world),
@@ -25,7 +26,7 @@ isWindCol(false)
 {
 	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
 	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
-	parameter.id = ACTOR_ID::ENEMY_BULLET;
+	parameter.id = ACTOR_ID::VARISTOR_BULLET_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	parameter.mat =
@@ -85,7 +86,13 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		windVec = colpara.colVelosity;
 		isWindCol = true;
 	}
-
-	//parameter.isDead = true;
-	//Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition(), other);
+	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
+	{
+		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(VaristorPower);
+		parameter.isDead = true;
+	}
+	else
+	{
+		parameter.isDead = true;
+	}
 }

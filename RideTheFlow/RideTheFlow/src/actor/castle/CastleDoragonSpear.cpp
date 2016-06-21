@@ -11,7 +11,7 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
-CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position, Castle& _castle,float rotateY) :
+CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position, Castle& _castle, Actor& _parent, float rotateY) :
 Actor(world),
 coolTimer(0),
 preparationTimer(0),
@@ -36,7 +36,7 @@ endAttack(false)
 
 	mRotateY = rotateY;
 	castle = &_castle;
-
+	parent = &_parent;
 	startPos = mPosition;
 	endPos = parameter.mat.GetLeft().Normalized() * 60 + mPosition;
 }
@@ -48,7 +48,6 @@ CastleDoragonSpear::~CastleDoragonSpear()
 void CastleDoragonSpear::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
 
 	//é‚Ì‘¬“x‚ð‘«‚·
 	startPos += castle->GetVelocity()*Time::DeltaTime;
@@ -121,17 +120,15 @@ void CastleDoragonSpear::Update()
 
 void CastleDoragonSpear::Draw() const
 {
-	DrawFormatString(0, 192, 255, "attackTIme %f", spearAttackTimer);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
-	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*5.0f,
-	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*15.0f),
-	//	parameter.radius, 20, 255, 255, FALSE);
-
+	DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
+		Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
+		parameter.radius, 20, 255, 255, FALSE);
 	////Œ—“à
-	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*15.0f),
-	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*35.0f), 
-	//	parameter.radius, 20, 255, 255, FALSE);
+	DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
+		Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f), 
+		parameter.radius, 20, 255, 255, FALSE);
 }
 
 void CastleDoragonSpear::OnCollide(Actor& other, CollisionParameter colpara)

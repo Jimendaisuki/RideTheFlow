@@ -14,7 +14,7 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
-	
+	void SetVec(Vector3 vec_) { vec = vec_; }
 	//ダッシュ時の軌跡を取得
 	std::vector<Vector3>& GetDashPositions();
 	//タックルヒット後に移動した距離を取得

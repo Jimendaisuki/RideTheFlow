@@ -98,7 +98,8 @@
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\FogActor.cpp" />
-    <ClCompile Include="src\UIactor\CsvReader.cpp" />
+    <ClCompile Include="src\actor\particle\BreakCastleParticle.cpp" />
+    <ClCompile Include="src\actor\particle\BreakCastle.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
     <ClCompile Include="src\UIactor\FlowRoot.cpp" />
     <ClCompile Include="src\UIactor\MiniMap.cpp" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\actor\particle\BreakCastle.h" />
     <ClInclude Include="src\actor\castle\CastleCannon.h" />
     <ClInclude Include="src\actor\castle\CastleDoragonSpear.h" />
     <ClInclude Include="src\actor\castle\CastleTop.h" />
@@ -194,7 +196,7 @@
     <ClInclude Include="src\actor\enemy\VaristorEnemy.h" />
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\FogActor.h" />
-    <ClInclude Include="src\UIactor\CsvReader.h" />
+    <ClInclude Include="src\actor\particle\BreakCastleParticle.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />
     <ClInclude Include="src\UIactor\FlowRoot.h" />
     <ClInclude Include="src\UIactor\MiniMap.h" />
@@ -213,7 +215,6 @@
     <ClInclude Include="src\UIactor\fadePanel\FadePanel.h" />
     <ClInclude Include="src\UIactor\Failure.h" />
     <ClInclude Include="src\UIactor\menuPanel\MenuPanel.h" />
-    <ClInclude Include="src\UIactor\MiniMapParameter.h" />
     <ClInclude Include="src\UIactor\PlayerArrow.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />

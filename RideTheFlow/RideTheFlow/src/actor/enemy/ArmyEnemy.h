@@ -4,7 +4,7 @@
 
 #include "../Actor.h"
 #include <memory>
-
+#include "../Player.h"
 class ArmyEnemy : public Actor, public std::enable_shared_from_this<ArmyEnemy>
 {
 public:
@@ -15,6 +15,7 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
+	Player* player;
 	Matrix4 playerMat;
 	Matrix4 cameraMat;
 	Vector3 mPosition;

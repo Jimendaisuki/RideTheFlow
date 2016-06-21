@@ -29,6 +29,8 @@ const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
 const float tornadoCreateRadius = 128.0f;
 
+const float tackleForTornadoTimelimit = 1.0f;
+
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
 bool changeMotion = true;
@@ -79,10 +81,11 @@ const float normalSpeedAccele = 1.0f;
 /************************************************************************************************************************/
 
 Player::Player(IWorld& world) :
-Actor(world),
-position(Vector3(0, 0, 0)),
-windFlowPtr(NULL),
-tornadoFlag(false)
+	Actor(world),
+	position(Vector3(0, 0, 0)),
+	windFlowPtr(NULL),
+	tornadoFlag(false),
+	tornadoPtr(NULL)
 {
 	//paramterの初期化
 	parameter.isDead = false;
@@ -141,7 +144,7 @@ tornadoFlag(false)
 	vertexVec = new Vector3[boneCount];
 	//posStorageに何もないときのボーンの方向
 	nonPosStorageVec = Vector3(0, 0, 1);
-	for (int i = 0; i < boneCount; i++){
+	for (int i = 0; i < boneCount; i++) {
 		//ボーンの状態をリセット
 		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
 		//初期位置ボーンの位置を取得
@@ -162,28 +165,31 @@ tornadoFlag(false)
 	//ダッシュのスタミナゲージUIを追加
 	world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
 }
-Player::~Player(){
+Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
 	posStorage.clear();
 }
 
 
-void Player::Update(){
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)){
+void Player::Update() {
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 		moveFlag = !moveFlag;
 	}
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
+
 	bonePosStorage.clear();
-	for (int i = 0; i < boneCount; i++){
+	for (int i = 0; i < boneCount; i++) {
 		//初期位置ボーンの位置を取得
 		bonePosStorage.push_back(Matrix4::ToMatrix4(
 			MV1GetFrameLocalWorldMatrix(modelHandle, i + 1)).GetPosition());
 	}
 
 	if (parameter.HP <= 0)dead = true;
-	if (!dead){
+	if (!dead) {
 		if (parameter.HP < 50.0f)
-		parameter.HP += 0.5f * Time::DeltaTime;
+			parameter.HP += 0.5f * Time::DeltaTime;
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 
 		auto input = DINPUT_JOYSTATE();
@@ -195,7 +201,7 @@ void Player::Update(){
 
 		bool padInputFlag = false;
 		bool leftStickMove = false;
-		if (Vector3::Length(rightStick) > 0.01f){
+		if (Vector3::Length(rightStick) > 0.01f) {
 			leftStickMove = true;
 			if (Vector3::Length(rightStick) > 0.01f)
 				padInputFlag = true;
@@ -214,37 +220,37 @@ void Player::Update(){
 
 
 		Vector2 lStick = GamePad::GetInstance().Stick();
-		
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || lStick.x < 0.0f){
+
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || lStick.x < 0.0f) {
 			vec.x += speed * Time::DeltaTime;
 			leftStickMove = true;
-			if (!tp.tackleFlag){
+			if (!tp.tackleFlag) {
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D) || lStick.x > 0.0f){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D) || lStick.x > 0.0f) {
 			vec.x -= speed * Time::DeltaTime;
 			leftStickMove = true;
-			if (!tp.tackleFlag){
+			if (!tp.tackleFlag) {
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f) {
 			vec.z += speed * Time::DeltaTime;
 			leftStickMove = true;
-			if (!tp.tackleFlag){
+			if (!tp.tackleFlag) {
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.y > 0.0f){
+		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.y > 0.0f) {
 			vec.z -= speed * Time::DeltaTime;
 			leftStickMove = true;
-			if (!tp.tackleFlag){
+			if (!tp.tackleFlag) {
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
 
-		if (padInputFlag){
+		if (padInputFlag) {
 			rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
 			rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
 			vec.x += leftStick.x * speed * Time::DeltaTime;
@@ -258,45 +264,59 @@ void Player::Update(){
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6) ) && !tp.tackleFlag && leftStickMove){
+		if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 			tp.tackleT = trueVec;
 			tp.animTime = 0.0f;
-			tp.tornadoTatchFlag = false;
+			if ((tornadoPtr != NULL || windFlowPtr != NULL) && tackleForTornadoTime < tackleForTornadoTimelimit) {
+				tp.tornadoTatchFlag = true;
+			}
+			else {
+				tp.tornadoTatchFlag = false;
+				tornadoPtr = NULL;
+				windFlowPtr = NULL;
+			}
 			tp.tackleColFlag = false;
 			tp.airGunFlag = false;
 		}
 
-		if (dashTime >= dashMaxTime){
+		if (dashTime >= dashMaxTime) {
 			dashHealFlag = true;
 		}
-		if (dashTime <= 0.0f){
+		if (dashTime <= 0.0f) {
 			dashHealFlag = false;
 		}
 
 		tp.dashFlag = false;
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)){
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
 			windFlowPtr = std::make_shared<WindFlow>(world, *this);
 			world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
 		}
-		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)){
+		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
 			tornadoFlag = false;
 		}
-		if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag){
-			if (dashHealFlag){
+		if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
+			if (dashHealFlag) {
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
 				dashSpeed -= dashAccele * Time::DeltaTime;
 				dashTime -= dashHealSpeed * Time::DeltaTime;
+
+				if (tornadoPtr == NULL && windFlowPtr == NULL) {
+					tackleForTornadoTime = 0.0f;
+				}
+				else {
+					tackleForTornadoTime += Time::DeltaTime;
+				}
 			}
-			else{
+			else {
 				dashPosStorage.push_back(position);
 				float len = 0.0f;
-				if (tornadoPosStorage.size() > 0){
+				if (tornadoPosStorage.size() > 0) {
 					int s = tornadoPosStorage[tornadoPosStorage.size() - 1];
-					for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;){
+					for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;) {
 						len += Vector3::Length(i - i++);
 					}
 				}
@@ -304,25 +324,27 @@ void Player::Update(){
 					tornadoPosStorage.push_back(dashPosStorage.size() - 1);
 
 				bool createTornado = false;
-				if (tornadoPosStorage.size() > 4){
-					if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius){
+				if (tornadoPosStorage.size() > 4) {
+					if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius) {
 						createTornado = true;
 					}
 				}
-				if (createTornado){
+				if (createTornado) {
 					Vector3 torPos = Vector3(0);
-					for (auto i : tornadoPosStorage){
+					for (auto i : tornadoPosStorage) {
 						torPos += dashPosStorage[i];
 					}
 					torPos /= tornadoPosStorage.size();
 					float torRad = 0;
-					for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;){
+					for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;) {
 						torRad += Vector3::Length(i - i++);
 					}
 					torRad /= PI;
 					torRad /= 2.0f;
-					world.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad));
+					tornadoPtr = std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad);
+					world.Add(ACTOR_ID::TORNADO_ACTOR, tornadoPtr);
 					windFlowPtr->SetIsDead(true);
+					windFlowPtr = NULL;
 					dashPosStorage.clear();
 					tornadoPosStorage.clear();
 					tornadoFlag = true;
@@ -333,13 +355,22 @@ void Player::Update(){
 				trueVec.y = 0;
 				trueVec.Normalized();
 				tp.dashFlag = true;
+
+				tackleForTornadoTime = 0.0f;
 			}
 		}
-		else{
+		else {
 			dashPosStorage.clear();
 			tornadoPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
 			dashTime -= dashHealSpeed * Time::DeltaTime;
+
+			if (tornadoPtr == NULL && windFlowPtr == NULL) {
+				tackleForTornadoTime = 0.0f;
+			}
+			else {
+				tackleForTornadoTime += Time::DeltaTime;
+			}
 		}
 
 		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
@@ -347,7 +378,7 @@ void Player::Update(){
 
 
 		Vector3 forntVec = Vector3::Zero;
-		if (!tp.tackleFlag){
+		if (!tp.tackleFlag) {
 			tp.tackleT = trueVec;
 			if (!waitAnimSet)
 				animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
@@ -362,21 +393,21 @@ void Player::Update(){
 				beforeVec *
 				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
 			if (moveFlag)
-			position += forntVec;
+				position += forntVec;
 
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || 
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f){
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f) {
 				posStorage.push_back(position);
 				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
 			}
 		}
-		else{
+		else {
 			// 再生時間を進める
 			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 			forntVec = tp.tackleT;
-			if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 60.0f && !tp.tackleEndFlag){
+			if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 20.0f && !tp.tackleEndFlag) {
 				tp.tackleEndFlag = true;
 				posStorage.clear();
 				nonPosStorageVec = -tp.tackleT;
@@ -395,19 +426,20 @@ void Player::Update(){
 				animBlend = 0.0f;
 				waitAnimSet = false;
 			}
-			if (tp.tackleColFlag){
-				if (!tp.tornadoTatchFlag && !tp.airGunFlag){
-					world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world, position, tp.tackleT));
-					tp.airGunFlag = true;
+			if (tp.animTime > tackleAnimAttackTiming) {
+				if (windFlowPtr == NULL && tornadoPtr == NULL && !tp.tornadoTatchFlag) {
+					if (!tp.airGunFlag) {
+						world.Add(ACTOR_ID::AIR_GUN_ACTOR, std::make_shared<AirGun>(world, position, tp.tackleT));
+						tp.airGunFlag = true;
+					}
 				}
-			}
-			if (tp.animTime > tackleAnimAttackTiming){
-				if (!tp.tackleColFlag){
-					world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::PLAYER_TORNADO_COL);
-					world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::PLAYER_WIND_COL);
+				else {
+					if (tornadoPtr != NULL)tornadoPtr->SetVelocity(Vector3(tp.tackleT.x, 0.0f, tp.tackleT.z));
+					else if (windFlowPtr != NULL)windFlowPtr->SetVec(Vector3(tp.tackleT.x, 0.0f, tp.tackleT.z));
+
+					tornadoPtr = NULL;
+					windFlowPtr = NULL;
 				}
-				parameter.height = tp.tackleT.Normalized() * 30.0f;
-				tp.tackleColFlag = true;
 			}
 		}
 
@@ -440,11 +472,11 @@ void Player::Update(){
 			Matrix4::Translate(position);
 
 		//くねくねの角度のスピード
-		if (changeMotion){
+		if (changeMotion) {
 			upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::DeltaTime;
 			leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::DeltaTime;
 		}
-		else{
+		else {
 			upAngle -=
 				angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
 			leftAngle -=
@@ -464,7 +496,7 @@ void Player::Update(){
 
 		Vector3* copyVertexVec = new Vector3[boneCount];
 
-		for (int i = 0; i < boneCount; i++){
+		for (int i = 0; i < boneCount; i++) {
 			copyVertexVec[i] = vertexVec[i];
 		}
 
@@ -473,20 +505,20 @@ void Player::Update(){
 		vertexVec[0] = position;
 
 		int deletePosStorageCount = posStorage.size();
-		for (int i = posStorage.size() - 1; i >= 0; i--){
-			if (storageCount + 1 >= boneCount){
+		for (int i = posStorage.size() - 1; i >= 0; i--) {
+			if (storageCount + 1 >= boneCount) {
 				break;
 			}
-			else{
+			else {
 				deletePosStorageCount--;
 			}
-			if (Vector3::Length(startPos - posStorage[i]) >= Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1])){
+			if (Vector3::Length(startPos - posStorage[i]) >= Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1])) {
 				vertexVec[storageCount + 1] = startPos + (posStorage[i] - startPos).Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
 				startPos = vertexVec[storageCount + 1];
 				storageCount++;
 			}
 		}
-		while (!(storageCount + 1 >= boneCount)){
+		while (!(storageCount + 1 >= boneCount)) {
 			vertexVec[storageCount + 1] = startPos + nonPosStorageVec.Normalized() * Vector3::Length(copyVertexVec[storageCount] - copyVertexVec[storageCount + 1]);
 			startPos = vertexVec[storageCount + 1];
 			storageCount++;
@@ -498,21 +530,21 @@ void Player::Update(){
 			posStorage.erase(posStorage.begin());
 
 		SAFE_DELETE_ARRAY(copyVertexVec);
-		if (damageFlag){
+		if (damageFlag) {
 			damageCount += Time::DeltaTime;
-			if (damageCount > 0.3f){
+			if (damageCount > 0.3f) {
 				damageFlag = false;
 				damageCount = 0;
 			}
 		}
 	}
-	else{
-		for (int i = 0; i < boneCount; i++){
+	else {
+		for (int i = 0; i < boneCount; i++) {
 			vertexVec[i] -= Vector3(0, 1, 0) * speed * Time::DeltaTime;
 		}
 	}
 }
-void Player::Draw() const{
+void Player::Draw() const {
 	//骨の数だけ用意する
 	Vector3* drawVertexVec = new Vector3[boneCount];
 	Matrix4* drawMatrixVec = new Matrix4[boneCount];
@@ -520,7 +552,7 @@ void Player::Draw() const{
 	Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
 
 	//初期化
-	for (int i = 0; i < boneCount; i++){
+	for (int i = 0; i < boneCount; i++) {
 		drawVertexVec[i] = vertexVec[i];
 		drawMatrixVec[i] = parameter.mat;
 	}
@@ -554,7 +586,7 @@ void Player::Draw() const{
 		Matrix4::Translate(drawVertexVec[0]);
 
 	//先頭の高さを設定した状態で再計算
-	for (int count = 1; count < boneCount; count++){
+	for (int count = 1; count < boneCount; count++) {
 		Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
 		Vector3 boneUp = Vector3(0, 1, 0);
 		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
@@ -584,19 +616,19 @@ void Player::Draw() const{
 			Matrix4::Translate(drawVertexVec[count]);
 	}
 
-	if (!tp.tackleFlag){
+	if (!tp.tackleFlag) {
 		//相対座標に変換しセット
-		for (int count = 0; count < boneCount; count++){
+		for (int count = 0; count < boneCount; count++) {
 			localDrawMatrixVec[count] = drawMatrixVec[count];
 
 			Matrix4 beforeInvMat = Matrix4::Identity;
 			//親の逆行列をかけていく
-			for (int count2 = 0; count2 < count; count2++){
+			for (int count2 = 0; count2 < count; count2++) {
 				beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
 			}
 			localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
 		}
-		for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++){
+		for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++) {
 			Matrix4 ma = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
 			//Matrix4 animSubRotate = Matrix4::Identity;
 			//animSubRotate.SetFront(ma.GetFront().Normalized());
@@ -605,21 +637,21 @@ void Player::Draw() const{
 			//ma = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(ma.GetPosition());
 			localDrawMatrixVec[count] = ma;
 		}
-		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++){
+		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 				Matrix4::ToMATRIX(
-				localDrawMatrixVec[count]
-				));
+					localDrawMatrixVec[count]
+					));
 		}
 	}
-	else{
+	else {
 		//相対座標に変換しセット
-		for (int count = 0; count < boneCount; count++){
+		for (int count = 0; count < boneCount; count++) {
 			localDrawMatrixVec[count] = drawMatrixVec[count];
 
 			Matrix4 beforeInvMat = Matrix4::Identity;
 			//親の逆行列をかけていく
-			for (int count2 = 0; count2 < count; count2++){
+			for (int count2 = 0; count2 < count; count2++) {
 				beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
 			}
 			localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
@@ -658,17 +690,17 @@ void Player::Draw() const{
 		// 再生時間をセットする
 		MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
 
-		for (int count = 0; count < boneCount; count++){
+		for (int count = 0; count < boneCount; count++) {
 			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 				Matrix4::ToMATRIX(
-				Matrix4::Slerp(
-				localDrawMatrixVec[count]
-				, localAnimDrawMatrixVec[count], animBlend)
-				));
+					Matrix4::Slerp(
+						localDrawMatrixVec[count]
+						, localAnimDrawMatrixVec[count], animBlend)
+					));
 		}
 	}
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
-	for (auto i : tornadoPosStorage){
+	for (auto i : tornadoPosStorage) {
 		/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
 	}
 	//if (damageFlag){
@@ -687,10 +719,10 @@ void Player::Draw() const{
 	//}
 
 	if (dashPosStorage.size() > 1)
-	for (int count = 0; count < dashPosStorage.size() - 1; count++){
-		int Color = GetColor(0, 0, 255);
-		DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
-	}
+		for (int count = 0; count < dashPosStorage.size() - 1; count++) {
+			int Color = GetColor(0, 0, 255);
+			DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
+		}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
@@ -699,7 +731,7 @@ void Player::Draw() const{
 }
 
 
-void Player::ParameterDraw() const{
+void Player::ParameterDraw() const {
 
 	int ModelHandle = modelHandle;
 	// フレーム名の描画
@@ -770,9 +802,24 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
 		damageFlag = true;
-		parameter.HP -= 1;
 	}
-	else if (other.GetParameter().id == ACTOR_ID::ENEMY_BULLET)
+	else if (other.GetParameter().id == ACTOR_ID::MASTER_CASTLE_ACTOR)
+	{
+		position = colpara.colPos;
+	}
+	else if (other.GetParameter().id == ACTOR_ID::VARISTOR_BULLET_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
+	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
+	else if (other.GetParameter().id == ACTOR_ID::ARROW_BULLET_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
+	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
