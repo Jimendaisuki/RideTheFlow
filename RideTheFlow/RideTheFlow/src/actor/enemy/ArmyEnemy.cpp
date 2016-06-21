@@ -6,7 +6,8 @@
 #include "../../time/Time.h"
 #include "EnemyBullet.h"
 #include "../../math/Math.h"
-#include "../Player.h"
+#include "../../UIactor/EnemyPoint.h"
+
 
 ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
 Actor(world),
@@ -26,22 +27,20 @@ isLook(true)
 	parameter.isDead = false;
 	parameter.mat = Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
-	
+	player = static_cast<Player*>(world.GetPlayer().get());
+	world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
 }
 ArmyEnemy::~ArmyEnemy()
 {
-
+	
 }
 void ArmyEnemy::Update()
 {
 	TackleParameter tp;
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
-		tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
-	});
-	world.EachActor(ACTOR_ID::CAMERA_ACTOR, [&](const Actor& other){
-		cameraMat = other.GetParameter().mat;
-	});
+	tp = player->ReturnTackleParameter();
+	cameraMat = world.GetCamera()->GetParameter().mat;
+	playerMat = player->GetParameter().mat;
+	 
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
@@ -96,12 +95,12 @@ void ArmyEnemy::Update()
 	if (playerAngle <= ArmyNear)
 	{
 		//ˆÚ“®
-		mPosition += Vector3::Direction(mPosition, playerMat.GetPosition()).Normalized()*
+		mPosition += Vector3::Direction(mPosition, player->GetParameter().mat.GetPosition()).Normalized()*
 			Vector3(1, 0, 1)*ArmySpeed*Time::DeltaTime;
 	}
 	mPosition -= 1.0f*Time::DeltaTime;
 	parameter.mat = Matrix4::Translate(mPosition);
-	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition()).Normalized();
+	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), player->GetParameter().mat.GetPosition()).Normalized();
 	rotate.y = Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f;
 }
 void ArmyEnemy::Draw() const

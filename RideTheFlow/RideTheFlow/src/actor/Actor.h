@@ -46,6 +46,8 @@ private:
 	//—´‚ÆŒ‚—´‘„
 	CollisionParameter Player_vs_DoragonSpear(const Actor& other) const;
 	CollisionParameter Player_vs_DoragonSpearWithin(const Actor& other)const;
+
+	CollisionParameter Player_vs_Castle(const Actor& other)const;
 	/* •—ˆ³vs */
 	// •—ˆ³‚Æ’e
 	// •—ˆ³‚Æ—³Šª
@@ -80,7 +82,8 @@ private:
 
 	//ã‚Ìé‚Æ‰º‚Ìé‚Ì‚ ‚½‚è”»’è 
 	CollisionParameter Castle_vs_Castle(const Actor& other) const;
-
+	//masteré‚Æé‚Ì‚ ‚½‚è”»’è
+	CollisionParameter MasterCastle_vs_Castle(const Actor& other) const;
 	//‘D‚Æ•‚“‡‚Ì‚ ‚½‚è”»’è
 	CollisionParameter Ship_vs_Island(const Actor& other) const;
 	//•—‚Æ“G‚Ì‚ ‚½‚è”»’è

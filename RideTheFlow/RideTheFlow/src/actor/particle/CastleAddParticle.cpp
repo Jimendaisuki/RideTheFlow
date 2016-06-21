@@ -22,7 +22,7 @@ timer(0.0f)
 
 	moveParam.pos = position_;
 
-	drawParam.drawID = MODEL_ID::CASTLE_ADD_1_MODEL;
+	drawParam.drawID = MODEL_ID::CASTLE_ADD_MODEL;
 	drawParam.size = 0.03f + Random::GetInstance().Range(-0.03f, 0.01f);
 	drawParam.alpha = 1.2f;
 }
@@ -40,7 +40,7 @@ void CastleAddParticle::OnUpdate()
 
 void CastleAddParticle::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_1_MODEL, mat, drawParam.alpha);
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_2_MODEL, mat, drawParam.alpha);
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_3_MODEL, mat, drawParam.alpha);
+	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
+	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
+	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
 }

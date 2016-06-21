@@ -37,11 +37,11 @@ void FogActor::Update()
 	angle = Vector3::Inner(front, toOrigin);
 	
 	Vector3 cross = Vector3::Cross(front, toOrigin);
-	float dot = Vector3::Dot(Camera::GetInstance().Up.Get(), cross);
 
 	length = Math::Clamp(length, 1.0f, 2000.0f) * 1.0f;
-	angle = Math::Clamp(angle, 1.0f, 180.0f) * 4.0f;
-	float fogPower = length * angle;
+	float anglePower = angle - 90.0f;
+	anglePower = Math::Clamp(anglePower, 1.0f, 90.0f) * 8.0f;
+	float fogPower = length * anglePower;
 	float fogMaxPower = 2000.0f * 180.0f * 400.0f;
 
 	fogTotalPower = fogMaxPower / fogPower;

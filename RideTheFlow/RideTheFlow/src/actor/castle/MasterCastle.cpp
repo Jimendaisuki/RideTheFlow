@@ -13,6 +13,8 @@
 #include "CastleBlock.h"
 #include "../enemy/ArmyEnemy.h"
 #include "../enemy/ShipEnemy.h"
+#include "../../math/Math.h"
+#include "../../UIactor/EnemyPoint.h"
 MasterCastle::MasterCastle(IWorld& world, Vector3 position,bool spawnShip) :
 Actor(world),
 attackTime(0),
@@ -31,10 +33,10 @@ spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
 InvincibleTimer(0.0f)
 {
+	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
     parameter.radius = 35;
 	parameter.HP = MasterCastleHp;
 	parameter.isDead = false;
-	parameter.height = Vector3(0.0f, 70.0f, 0.0f);
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -42,6 +44,9 @@ InvincibleTimer(0.0f)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world,parameter.mat.GetPosition()+Vector3(0,100,0),*this));
+	testRnak = 1;
+	parameter.height = Vector3(0.0f, 70.0f+34*testRnak, 0.0f);
+	world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
 }
 
 MasterCastle::~MasterCastle()
@@ -75,9 +80,11 @@ void MasterCastle::Update()
 		rankUpRagTimer += Time::DeltaTime;
 		if (rankUpRagTimer >= 1.0f)
 		{
+			testRnak++;
 			world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
 				mPosition + Vector3(0.0f, parameter.radius * 2, 0.0f) + Vector3(0.0f, 20.0f*(Rank - mRank), 0.0f) + Vector3(0, 10 * (Rank - mRank), 0)
-				, *this));
+				, *this,testRnak));
+			parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
 			rankUpRagTimer = 0.0f;
 			rankUpRag = false;
 		}
@@ -85,7 +92,7 @@ void MasterCastle::Update()
 	//ÉXÉeÅ[ÉWÇ…ìñÇΩÇ¡ÇΩÇÁé~Ç‹ÇÈ
  	if (downCastle)
 	{
-		mPosition.y -= 50.0f*Time::DeltaTime;
+		//mPosition.y -= 50.0f*Time::DeltaTime;
 	}
 	downCastle = true;
 
@@ -140,6 +147,9 @@ void MasterCastle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, parameter.mat);
 	//DrawFormatString(0, 500, GetColor(0, 0, 0), "ìGÇÃêî   %d", world.GetActorCount(ACTOR_ID::ENEMY_ACTOR,ACTOR_ID::ARMY_ENEMY_ACTOR));
+	DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.height), 50, 5, 2, 2, FALSE);
+	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition() + Vector3(0.0f,parameter.radius*2,0.0f)), 70.0f, 5, 2, 2, FALSE);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 100, 10, 1, 1, FALSE);
 }
 
 void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
