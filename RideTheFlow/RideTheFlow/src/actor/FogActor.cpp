@@ -10,7 +10,8 @@ FogActor::FogActor(IWorld& world) :
 Actor(world),
 position(Vector3::Zero),
 fogTotalPower(0.0f),
-angle(0.0f)
+angle(0.0f),
+fogStartAngle(90.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::FOG_ACTOR;
@@ -40,7 +41,7 @@ void FogActor::Update()
 	Vector3 cross = Vector3::Cross(front, toOrigin);
 
 	length = Math::Clamp(length, 1.0f, 2000.0f) * 1.0f;
-	float anglePower = angle - 90.0f;
+	float anglePower = angle - fogStartAngle;
 	anglePower = Math::Clamp(anglePower, 1.0f, 90.0f) * 6.0f;
 	float fogPower = length * anglePower;
 	float fogMaxPower = 2000.0f * 180.0f * 400.0f;

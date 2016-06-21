@@ -17,5 +17,5 @@ private:
 	float angle;
 
 	//どの角度からフォグをかけるか
-	float
+	float fogStartAngle;
 };
