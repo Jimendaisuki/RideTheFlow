@@ -10,7 +10,7 @@ const float offset = 20.0f;
 // íÜêSç¿ïW
 const Vector2 Center = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 // ë»â~îºåa
-const Vector2 Radius = Vector2(WINDOW_WIDTH / 2 - offset, WINDOW_HEIGHT / 2 - offset);
+const Vector2 Radius = Vector2(WINDOW_WIDTH / 2 + offset, WINDOW_HEIGHT / 2 + offset * 2);
 
 Blood::Blood(IWorld& world_, const Vector3 position_) :
 UIActor(world_)

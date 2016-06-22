@@ -1,16 +1,12 @@
 #include "PlayerArrow.h"
 #include "FlowRoot.h"
+#include "MiniMapParameter.h"
 #include "../world/IWorld.h"
-
-const float Scale = 0.6f;
-const Vector2 MAP_POSITION = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) - Vector2(256) * Scale;
-const Vector2 StageSize = Vector2(3000, 3000);
-const float ReSIZE = 256.0f / StageSize.x * Scale;
 
 PlayerArrow::PlayerArrow(IWorld& world, Player* player_) :
 UIActor(world),
 player(player_),
-angle_(0),
+angle_(180),
 isDash(false),
 prevDash(false)
 {
@@ -43,9 +39,9 @@ void PlayerArrow::Update()
 	Vector3 playerPos = player->GetParameter().mat.GetPosition();
 	Vector2 pos = Vector2(playerPos.x, -playerPos.z);
 	if (pos.Length() != 0.0f)
-		drawPos_ = MAP_POSITION + pos.Normalized() * pos.Length() * ReSIZE;
+		drawPos_ = MAP_DRAW_POSITION + pos.Normalized() * pos.Length() * RE_SIZE_SCALE;
 	else
-		drawPos_ = MAP_POSITION;
+		drawPos_ = MAP_DRAW_POSITION;
 
 	/* ‹C—¬”­¶ */
 	isDash = player->ReturnTackleParameter().dashFlag;
@@ -56,7 +52,7 @@ void PlayerArrow::Update()
 
 void PlayerArrow::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::MAP_PLAYER_SPRITE, drawPos_, Vector2(32, 32), 1.0f, Scale / 2.0f, angle_, true, false);
-	Vector3 a = player->GetParameter().mat.GetPosition();
-	DrawFormatString(0, 600, GetColor(255, 255, 255), "FPS:		[%f][%f][%f]", a.x, a.y, a.z);
+	Sprite::GetInstance().Draw(SPRITE_ID::MAP_PLAYER_SPRITE, drawPos_, Vector2(32, 32), 1.0f, MINI_MAP_SCALE / 2, angle_, true, false);
+	Vector3 Pos = player->GetParameter().mat.GetPosition();
+	DrawFormatString(0, 300, GetColor(255, 255, 255), "PlayerPos:[%f][%f][%f]", Pos.x, Pos.y, Pos.z);
 }
