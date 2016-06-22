@@ -123,7 +123,7 @@ void CastleCannon::Update()
 		parameter.isDead = true;
 	}
 	//城の速度を足す
-	mPosition += castle->GetVelocity()*Time::DeltaTime;
+	mPosition += castle->GetVelocity();
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*

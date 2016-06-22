@@ -11,7 +11,7 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
-CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position, Castle& _castle, Actor& _parent, float rotateY) :
+CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position,Actor& _parent, float rotateY) :
 Actor(world),
 coolTimer(0),
 preparationTimer(0),
@@ -35,8 +35,8 @@ endAttack(false)
 	tubeMat = parameter.mat;
 
 	mRotateY = rotateY;
-	castle = &_castle;
 	parent = &_parent;
+	castle = static_cast<Castle*>(const_cast<Actor*>(&_parent));
 	startPos = mPosition;
 	endPos = parameter.mat.GetLeft().Normalized() * 60 + mPosition;
 }
@@ -49,9 +49,9 @@ void CastleDoragonSpear::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL);
 
-	//城の速度を足す
-	startPos += castle->GetVelocity()*Time::DeltaTime;
-	endPos += castle->GetVelocity()*Time::DeltaTime;
+	////城の速度を足す
+	startPos += castle->GetVelocity();
+	endPos += castle->GetVelocity();
 
 
 	coolTimer += Time::DeltaTime;
@@ -105,13 +105,13 @@ void CastleDoragonSpear::Update()
 	mPosition = Vector3::Lerp(startPos, endPos, spearAttackTimer);
 	playerWithin = false;
 
-	//マトリックス計算
+	////マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*
 		Quaternion::RotateAxis(Vector3::Up,mRotateY)*
 		Matrix4::Translate(mPosition);
 	//筒にも速度を足す
-	tubePos += castle->GetVelocity()*Time::DeltaTime;
+	tubePos += castle->GetVelocity();
 	tubeMat =
 		Matrix4::Scale(mScale)*
 		Quaternion::RotateAxis(Vector3::Up, mRotateY)*
@@ -122,13 +122,13 @@ void CastleDoragonSpear::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
-	DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
-		Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
-		parameter.radius, 20, 255, 255, FALSE);
-	////圏内
-	DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
-		Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f), 
-		parameter.radius, 20, 255, 255, FALSE);
+	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
+	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
+	//	parameter.radius, 20, 255, 255, FALSE);
+	//////圏内
+	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
+	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f), 
+	//	parameter.radius, 20, 255, 255, FALSE);
 }
 
 void CastleDoragonSpear::OnCollide(Actor& other, CollisionParameter colpara)

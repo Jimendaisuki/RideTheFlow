@@ -2,7 +2,7 @@
 #include "../Actor.h"
 #include "../../math/Vector3.h"
 #include <memory>
-
+#include "../../time/Time.h"
 struct CastleEnemyPos
 {
 	Vector3 cannon01;
@@ -35,7 +35,7 @@ public:
 public:
 	Vector3 GetVelocity()
 	{
-		return velocity;
+		return velocity*Time::DeltaTime;
 	}
 	bool isLookPlayer()
 	{

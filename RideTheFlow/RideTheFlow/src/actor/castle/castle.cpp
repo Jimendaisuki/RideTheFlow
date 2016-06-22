@@ -40,22 +40,22 @@ damage(true)
 	parent =&_parent;
 	//城に乗っている敵の位置をセット
 	CastleEnemyPosSet();
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this,*this, -90));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, *this, 0));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, *this, 90));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, *this, 180));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0));
+    world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0));
 
 	//城出現時のパーティクルを生成
 	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position));
@@ -74,24 +74,25 @@ void Castle::Update()
 		playerMat = other.GetParameter().mat;
 	});
 	//当たり判定
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::MASTERCASTLE_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::MASTERCASTLE_CASTLE_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
-	//城に当たったらストップ
-	if (castleDown)
-	{
-		velocity.y -= 400.0f*Time::DeltaTime;
-		if (velocity.y <= -400.0f)
-			velocity.y = -400.0f;
-	}
-	else
-	{
-		velocity = 0;
-	}
-	castleDown = true;
-	mPosition += velocity*Time::DeltaTime;
+
+		float masterHeight = parent->GetParameter().mat.GetPosition().y + parent->GetParameter().radius * 2;
+		float castleHeight = parameter.radius * 2;
+		float a = masterHeight + castleHeight*(mRank - 1);
+		float b = parameter.mat.GetPosition().y;
+		if (masterHeight+castleHeight*(mRank-1)>=parameter.mat.GetPosition().y)
+		{
+			velocity = 0.0f;
+		}
+		else
+		{
+			velocity.y -= 100.0f*Time::DeltaTime;
+		}
+		mPosition += velocity*Time::DeltaTime;
 
 	//マスターが壊れたら自分も壊れる
 	if (parent->GetParameter().isDead||Keyboard::GetInstance().KeyTriggerDown(KEYCODE::H))

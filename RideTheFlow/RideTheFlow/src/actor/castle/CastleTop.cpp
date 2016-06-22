@@ -27,7 +27,7 @@ noCol(false)
 	Vector2 side = Vector2(mScale.x, mScale.z) / 2;
 	parameter.isDead = false;
 	parameter.radius = 35;
- 	parameter.height = Vector3(0.0f, 30.0f, 0.0f);
+	parameter.height = Vector3(0.0f, 30.0f, 0.0f);
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -35,6 +35,7 @@ noCol(false)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	mMc = &mc;
+	mRank = 0.0f;
 }
 
 CastleTop::~CastleTop()
@@ -47,31 +48,42 @@ void CastleTop::Update()
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::MASTERCASTLE_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
-	//城に当たったら落ちるのを止める
-	if (castleDown)
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::MASTERCASTLE_CASTLE_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
+	mRank = mMc->getRank();
+	float masterHeight = mMc->GetParameter().mat.GetPosition().y + mMc->GetParameter().radius * 2;
+	float castleHeight = parameter.radius;
+
+	if (!noCol)
 	{
-		velocity.y -= 200.0f*Time::DeltaTime;
-		if (velocity.y <= -200.0f)
-			velocity.y = -200.0f;
-	}
-	else if (mMc->castleRankUp())
-	{
-		//城が出現する前にジャンプ
-		velocity.y += 170.0f;
-		noCol = true;
+		if (masterHeight + castleHeight*(mRank) >= parameter.mat.GetPosition().y)
+		{
+			velocity = 0.0f;
+		}
+		else
+		{
+			velocity.y -= 400.0f*Time::DeltaTime;
+		}
 	}
 	else
 	{
-		velocity = 0;
+		velocity.y -= 400.0f*Time::DeltaTime;
+	}
+	if (mMc->castleRankUp())
+	{
+		//城が出現する前にジャンプ
+		velocity.y = 400.0f;
+		noCol = true;
 	}
 	//ジャンプする瞬間はあたり判定無効
 	if (noCol)
 	{
 		noColTimer += Time::DeltaTime;
 		if (noColTimer >= 0.5f)
+		{
 			noCol = false;
+			noColTimer = 0.0f;
+		}
 	}
 	castleDown = true;
 	mPosition += velocity*Time::DeltaTime;
@@ -87,17 +99,11 @@ void CastleTop::Update()
 void CastleTop::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP2_MODEL, parameter.mat);
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, parameter.mat*Matrix4::Translate(Vector3(0,40,0)));
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, parameter.mat*Matrix4::Translate(Vector3(0, 40, 0)));
+	DrawFormatString(0, 432, GetColor(0, 0, 0), "Rank  %d", mRank);
 }
 
 void CastleTop::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::CASTLE_CASTLE_COL&&colpara.colFlag&&!noCol)
-	{
-		castleDown = false;
-	}
-	if (colpara.colID == COL_ID::MASTERCASTLE_CASTLE_COL&&colpara.colFlag)
-	{
-		castleDown = false;
-	}
+
 }

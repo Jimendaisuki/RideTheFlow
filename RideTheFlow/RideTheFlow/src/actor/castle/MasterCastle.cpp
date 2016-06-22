@@ -7,7 +7,6 @@
 #include "../enemy/EnemyBullet.h"
 #include "castle.h"
 #include "../../game/Random.h"
-#include "CastleParameter.h"
 #include "CastleTop.h"
 #include "../particle/CastleAdd.h"
 #include "CastleBlock.h"
@@ -35,7 +34,7 @@ InvincibleTimer(0.0f)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
     parameter.radius = 35;
-	parameter.HP = MasterCastleHp;
+	parameter.HP = 1;
 	parameter.isDead = false;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
@@ -59,7 +58,6 @@ void MasterCastle::Update()
 	//äeéûä‘
 	castleTime += Time::DeltaTime;
 	//Ç†ÇΩÇËîªíË
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
 	//êœÇ›èdÇ»ÇÈèÈ
@@ -83,7 +81,7 @@ void MasterCastle::Update()
 			testRnak++;
 			world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
 				mPosition + Vector3(0.0f, parameter.radius * 2, 0.0f) + Vector3(0.0f, 20.0f*(Rank - mRank), 0.0f) + Vector3(0, 10 * (Rank - mRank), 0)
-				, *this,testRnak));
+				, *this, Rank - mRank));
 			parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
 			rankUpRagTimer = 0.0f;
 			rankUpRag = false;
@@ -163,10 +161,5 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.HP -= CastleDamegeWind;
 		damage = false;
-	}
-
-	if (colpara.colID == COL_ID::ARMYENEMY_STAGE_COL)
-	{
-		downCastle = false;
 	}
 }
