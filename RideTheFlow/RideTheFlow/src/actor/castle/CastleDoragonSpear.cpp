@@ -11,7 +11,8 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
-CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position,Actor& _parent, float rotateY) :
+#include "../Player.h"
+CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position, Actor& _parent, float rotateY) :
 Actor(world),
 coolTimer(0),
 preparationTimer(0),
@@ -22,10 +23,12 @@ tubePos(position),
 mScale(2.8f),
 playerWithin(false),
 attackSpear(false),
-endAttack(false)
+endAttack(false),
+playerWithinTimer(0.0f)
 {
+	parameter.id = ACTOR_ID::DORAGONSPEAR_ACTOR;
 	parameter.isDead = false;
-	parameter.radius = 10.0f;
+	parameter.radius = 20.0f;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -47,11 +50,27 @@ CastleDoragonSpear::~CastleDoragonSpear()
 }
 void CastleDoragonSpear::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL);
+	Actor* player;
+	Matrix4 playerMat;
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		playerMat = other.GetParameter().mat;
+		player = const_cast<Actor*>(&other);
+	});
 
 	////城の速度を足す
 	startPos += castle->GetVelocity();
 	endPos += castle->GetVelocity();
+
+
+	if (Vector3::Distance(playerMat.GetPosition(), parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f) <=
+		parameter.radius + 8.0f)
+	{
+		playerWithin = true;
+	}
+	else
+	{
+		playerWithin = false;
+	}
 
 
 	coolTimer += Time::DeltaTime;
@@ -59,6 +78,7 @@ void CastleDoragonSpear::Update()
 		coolTimer >= DoragonSpearAttackTime)
 	{
 		preparationTimer += Time::DeltaTime;
+
 		if (preparationTimer >= DoragonSpearWithinTime)
 		{
 			preparationTimer = 0.0f;
@@ -73,10 +93,12 @@ void CastleDoragonSpear::Update()
 	//槍が出てくるとき
 	if (attackSpear)
 	{
+		static_cast<Player*>(const_cast<Actor*>(player))->ColSpear(parent);
 		spearAttackTimer += (50.0f / DoragonSpearMaxTime)*Time::DeltaTime;
 		if (spearAttackTimer >= 1.0f)
 		{
 			spearStopTimer += Time::DeltaTime;
+
 			if (spearStopTimer >= DoragonSpearStopTime)
 			{
 				attackSpear = false;
@@ -103,12 +125,15 @@ void CastleDoragonSpear::Update()
 	}
 
 	mPosition = Vector3::Lerp(startPos, endPos, spearAttackTimer);
+
+
+
 	playerWithin = false;
 
 	////マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*
-		Quaternion::RotateAxis(Vector3::Up,mRotateY)*
+		Quaternion::RotateAxis(Vector3::Up, mRotateY)*
 		Matrix4::Translate(mPosition);
 	//筒にも速度を足す
 	tubePos += castle->GetVelocity();
@@ -122,6 +147,7 @@ void CastleDoragonSpear::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f), parameter.radius, 20, 1, 1, FALSE);
 	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	parameter.radius, 20, 255, 255, FALSE);
@@ -133,8 +159,8 @@ void CastleDoragonSpear::Draw() const
 
 void CastleDoragonSpear::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL)
+	if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
-		playerWithin = true;
+
 	}
 }
