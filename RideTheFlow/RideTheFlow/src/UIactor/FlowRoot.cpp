@@ -2,12 +2,9 @@
 #include "../math/Math.h"
 #include "../world/IWorld.h"
 #include "../time/Time.h"
+#include "MiniMapParameter.h"
 
 const float WIDTH = 5 / 2;	// â°ïùÇÃîºï™
-const float Scale = 0.6f;
-const Vector2 MAP_POSITION = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) - Vector2(256) * Scale;
-const float ReSIZE = 256.0f / 3000.0f * Scale;
-
 
 FlowRoot::FlowRoot(IWorld& world_, Player* player_, Vector2* point_, int piece[]) :
 UIActor(world_),
