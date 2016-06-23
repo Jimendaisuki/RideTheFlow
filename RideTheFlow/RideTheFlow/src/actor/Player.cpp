@@ -276,7 +276,7 @@ void Player::Update() {
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-			tp.tackleT = trueVec;
+			tp.tackleT = Vector3(trueVec.x, 0.0f, trueVec.z);
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && tackleForTornadoTime < tackleForTornadoTimelimit) {
 				tp.tornadoTatchFlag = true;
@@ -298,7 +298,7 @@ void Player::Update() {
 		}
 
 		tp.dashFlag = false;
-		if (!title) {
+		if (!title && !tp.tackleFlag) {
 			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
 				windFlowPtr = std::make_shared<WindFlow>(world, *this);
 				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
@@ -368,18 +368,18 @@ void Player::Update() {
 					tackleForTornadoTime = 0.0f;
 				}
 			}
-			else {
-				dashPosStorage.clear();
-				tornadoPosStorage.clear();
-				dashSpeed -= dashAccele * Time::DeltaTime;
-				dashTime -= dashHealSpeed * Time::DeltaTime;
+		}
+		if (!((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag)){
+			dashPosStorage.clear();
+			tornadoPosStorage.clear();
+			dashSpeed -= dashAccele * Time::DeltaTime;
+			dashTime -= dashHealSpeed * Time::DeltaTime;
 
-				if (tornadoPtr == NULL && windFlowPtr == NULL) {
-					tackleForTornadoTime = 0.0f;
-				}
-				else {
-					tackleForTornadoTime += Time::DeltaTime;
-				}
+			if (tornadoPtr == NULL && windFlowPtr == NULL) {
+				tackleForTornadoTime = 0.0f;
+			}
+			else {
+				tackleForTornadoTime += Time::DeltaTime;
 			}
 		}
 		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
