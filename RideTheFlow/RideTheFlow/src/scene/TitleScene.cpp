@@ -78,6 +78,7 @@ TitleScene::~TitleScene()
 //開始
 void TitleScene::Initialize()
 {
+	wo2.Add(ACTOR_ID::PLAYER_ACTOR,std::make_shared<Player>(wo,true));
 	timer = 0.0f;
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
@@ -132,6 +133,7 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {	
+	wo2.Update();
 	switch (status)
 	{
 	case TITLE_BEGIN:
@@ -195,7 +197,6 @@ void TitleScene::Update()
 	/* 各種更新 */
 	MenuPanel::GetInstance().Update();
 	FadePanel::GetInstance().Update();
-	wo.Update();
 
 	/* 以下デバッグ用 */
 	// シーン終了
@@ -257,16 +258,16 @@ void TitleScene::Draw() const
 
 	int handle = MakeScreen(600, 300, TRUE);
 	SetDrawScreen(handle);
-	Camera::GetInstance().Position.Set(Vector3(0, 100, 100));
-	Camera::GetInstance().Target.Set(Vector3(0, 100, 0));
-	Camera::GetInstance().Update();
+	SetCameraPositionAndTarget_UpVecY(Vector3(200, 0, 100), Vector3(0, 0, 100));
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
 	DrawFormatString(0, 220, GetColor(255, 0, 0), "M		: メニュー");
 	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: ○");
 	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: ×");
 	DrawFormatString(0, 280, GetColor(255, 0, 0), "C		: フェードアウト");
 	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
-	DrawCapsule3D(Vector3(0, 100, 0).ToVECTOR(), Vector3(0, 100, 90), 10, 4, 1, 1, FALSE);
+	DrawSphere3D(Vector3(100, 100, 0).ToVECTOR(), 10, 4, 1, 1, FALSE);
+	wo2.Draw();
+
 	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraph((int)position.x, (int)position.y, handle, TRUE);
 	DeleteGraph(handle);
@@ -315,6 +316,7 @@ Scene TitleScene::Next() const
 void TitleScene::End()
 {
 	wo.Clear();
+	wo2.Clear();
 }
 
 void TitleScene::TornadoCalculation()
