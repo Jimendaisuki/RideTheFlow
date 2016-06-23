@@ -620,6 +620,9 @@
     <ClInclude Include="src\UIactor\CsvReader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\UIactor\MiniMapParameter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Model\boonStage.pmd" />

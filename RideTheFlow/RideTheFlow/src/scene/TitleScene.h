@@ -67,6 +67,6 @@ private:
 
 	/* •ÊƒXƒNƒŠ[ƒ“ */
 	int		screenHandle;
-	int		screenPos;
+	float	screenPos;
 	float	slideTime;
 };
