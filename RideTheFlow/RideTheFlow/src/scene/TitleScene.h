@@ -35,15 +35,17 @@ public:
 	virtual void End()override;
 
 private:
+	void TornadoCalculation();
 	void VertexMove(VERTEX2D vertexs_[], int count_, float time_);
 	bool IsStatusBegEnd() const;
 
 private:
 	float timer;
 	bool mIsEnd;
-	World wo;
+	World wo,wo2;
 
 	Vector3 position;
+
 
 	// タイトルステータス
 	TITLE_STATUS status;

@@ -44,7 +44,7 @@ isLandCol(false)
 
 	ShipEnemyPosition();
 
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<DoragonSpearEnemy>(world, shipEnemyPos.spearPos,*this,*this));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<DoragonSpearEnemy>(world, shipEnemyPos.spearPos,*this,*this));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosLeft,*this,true,-90));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosRight, *this, false, 90));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosLeft, *this, true, -90));

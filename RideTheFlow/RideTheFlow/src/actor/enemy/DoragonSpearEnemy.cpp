@@ -138,8 +138,8 @@ void DoragonSpearEnemy::Draw() const
 
 void DoragonSpearEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL)
-	{
-		playerWithin = true;
-	}
+	//if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL)
+	//{
+	//	playerWithin = true;
+	//}
 }

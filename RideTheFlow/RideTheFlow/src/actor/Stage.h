@@ -12,4 +12,6 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
+	int PixelShaderHandle;
+	int VertexShaderHandle;
 };

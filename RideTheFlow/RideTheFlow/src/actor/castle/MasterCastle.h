@@ -1,6 +1,7 @@
 #pragma once
 #include "../Actor.h"
 #include "../../math/Vector3.h"
+#include "CastleParameter.h"
 #include<memory>
 
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
@@ -20,6 +21,10 @@ public:
 	{
 		testRnak--;
 		parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
+	}
+	int getRank()
+	{
+		return Rank - mRank;
 	}
 
 private:

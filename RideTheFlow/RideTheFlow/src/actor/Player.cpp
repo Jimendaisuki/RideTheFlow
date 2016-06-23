@@ -80,12 +80,13 @@ const float normalSpeedAccele = 1.0f;
 
 /************************************************************************************************************************/
 
-Player::Player(IWorld& world) :
+Player::Player(IWorld& world,bool title_) :
 	Actor(world),
 	position(Vector3(0, 0, 0)),
 	windFlowPtr(NULL),
 	tornadoFlag(false),
-	tornadoPtr(NULL)
+	tornadoPtr(NULL),
+	title(title_)
 {
 	//paramterの初期化
 	parameter.isDead = false;
@@ -132,7 +133,11 @@ Player::Player(IWorld& world) :
 	beforeVec = Vector3(0.0f, 0.01f, -1.0f);
 
 	//モデルハンドルを取得する(アニメーションのために)
+	if(!title)
 	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	else
+
+		modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_TITLE_MODEL);
 	//アニメーションの再生タイム
 	tp.animTime = 0;
 	//アニメーションのブレンド
@@ -175,9 +180,12 @@ void Player::Update() {
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 		moveFlag = !moveFlag;
 	}
+	if(title)
+	moveFlag = !title;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
+
 
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++) {
@@ -264,7 +272,7 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if ((Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
+		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -290,15 +298,77 @@ void Player::Update() {
 		}
 
 		tp.dashFlag = false;
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
-			windFlowPtr = std::make_shared<WindFlow>(world, *this);
-			world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
-		}
-		if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
-			tornadoFlag = false;
-		}
-		if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
-			if (dashHealFlag) {
+		if (!title) {
+			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
+				windFlowPtr = std::make_shared<WindFlow>(world, *this);
+				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+			}
+			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
+				tornadoFlag = false;
+			}
+			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
+				if (dashHealFlag) {
+					dashPosStorage.clear();
+					tornadoPosStorage.clear();
+					dashSpeed -= dashAccele * Time::DeltaTime;
+					dashTime -= dashHealSpeed * Time::DeltaTime;
+
+					if (tornadoPtr == NULL && windFlowPtr == NULL) {
+						tackleForTornadoTime = 0.0f;
+					}
+					else {
+						tackleForTornadoTime += Time::DeltaTime;
+					}
+				}
+				else {
+					dashPosStorage.push_back(position);
+					float len = 0.0f;
+					if (tornadoPosStorage.size() > 0) {
+						int s = tornadoPosStorage[tornadoPosStorage.size() - 1];
+						for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;) {
+							len += Vector3::Length(i - i++);
+						}
+					}
+					if (dashPosStorage.size() == 1 || len > 100.0f)
+						tornadoPosStorage.push_back(dashPosStorage.size() - 1);
+
+					bool createTornado = false;
+					if (tornadoPosStorage.size() > 4) {
+						if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius) {
+							createTornado = true;
+						}
+					}
+					if (createTornado) {
+						Vector3 torPos = Vector3(0);
+						for (auto i : tornadoPosStorage) {
+							torPos += dashPosStorage[i];
+						}
+						torPos /= tornadoPosStorage.size();
+						float torRad = 0;
+						for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;) {
+							torRad += Vector3::Length(i - i++);
+						}
+						torRad /= PI;
+						torRad /= 2.0f;
+						tornadoPtr = std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad);
+						world.Add(ACTOR_ID::TORNADO_ACTOR, tornadoPtr);
+						windFlowPtr->SetIsDead(true);
+						windFlowPtr = NULL;
+						dashPosStorage.clear();
+						tornadoPosStorage.clear();
+						tornadoFlag = true;
+					}
+
+					dashTime += Time::DeltaTime;
+					dashSpeed += dashAccele * Time::DeltaTime;
+					trueVec.y = 0;
+					trueVec.Normalized();
+					tp.dashFlag = true;
+
+					tackleForTornadoTime = 0.0f;
+				}
+			}
+			else {
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
 				dashSpeed -= dashAccele * Time::DeltaTime;
@@ -311,68 +381,7 @@ void Player::Update() {
 					tackleForTornadoTime += Time::DeltaTime;
 				}
 			}
-			else {
-				dashPosStorage.push_back(position);
-				float len = 0.0f;
-				if (tornadoPosStorage.size() > 0) {
-					int s = tornadoPosStorage[tornadoPosStorage.size() - 1];
-					for (auto i = dashPosStorage.begin() += s; i != dashPosStorage.end()--;) {
-						len += Vector3::Length(i - i++);
-					}
-				}
-				if (dashPosStorage.size() == 1 || len > 100.0f)
-					tornadoPosStorage.push_back(dashPosStorage.size() - 1);
-
-				bool createTornado = false;
-				if (tornadoPosStorage.size() > 4) {
-					if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius) {
-						createTornado = true;
-					}
-				}
-				if (createTornado) {
-					Vector3 torPos = Vector3(0);
-					for (auto i : tornadoPosStorage) {
-						torPos += dashPosStorage[i];
-					}
-					torPos /= tornadoPosStorage.size();
-					float torRad = 0;
-					for (auto i = dashPosStorage.begin(); i != dashPosStorage.end()--;) {
-						torRad += Vector3::Length(i - i++);
-					}
-					torRad /= PI;
-					torRad /= 2.0f;
-					tornadoPtr = std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad);
-					world.Add(ACTOR_ID::TORNADO_ACTOR, tornadoPtr);
-					windFlowPtr->SetIsDead(true);
-					windFlowPtr = NULL;
-					dashPosStorage.clear();
-					tornadoPosStorage.clear();
-					tornadoFlag = true;
-				}
-
-				dashTime += Time::DeltaTime;
-				dashSpeed += dashAccele * Time::DeltaTime;
-				trueVec.y = 0;
-				trueVec.Normalized();
-				tp.dashFlag = true;
-
-				tackleForTornadoTime = 0.0f;
-			}
 		}
-		else {
-			dashPosStorage.clear();
-			tornadoPosStorage.clear();
-			dashSpeed -= dashAccele * Time::DeltaTime;
-			dashTime -= dashHealSpeed * Time::DeltaTime;
-
-			if (tornadoPtr == NULL && windFlowPtr == NULL) {
-				tackleForTornadoTime = 0.0f;
-			}
-			else {
-				tackleForTornadoTime += Time::DeltaTime;
-			}
-		}
-
 		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
 		dashTime = Math::Clamp(dashTime, 0.0f, dashMaxTime);
 
@@ -699,7 +708,11 @@ void Player::Draw() const {
 					));
 		}
 	}
+	if(!title)
 	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+	else
+
+		Model::GetInstance().Draw(MODEL_ID::TEST_TITLE_MODEL, Vector3::Zero, 1.0f);
 	for (auto i : tornadoPosStorage) {
 		/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
 	}
@@ -710,6 +723,7 @@ void Player::Draw() const {
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
+	if(!title)
 	ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
@@ -782,7 +796,7 @@ void Player::ParameterDraw() const {
 	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, boneSelect));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
+	DrawFormatString(0, 256 + 64 , GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	float gageColorNum = 255.0f * ((dashMaxTime - dashTime) / dashMaxTime);
 	DWORD gageColor = GetColor(255, gageColorNum, gageColorNum);
@@ -819,8 +833,18 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
+	else if (other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
+}
+//龍激走に当たっている間呼び出される
+void Player::ColSpear(Actor* parent)
+{
+	Damage(0.01f);
+	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition());
 }

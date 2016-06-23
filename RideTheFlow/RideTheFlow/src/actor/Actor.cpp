@@ -111,11 +111,12 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	Sphere bullet;
 	bullet.position = Matrix4::GetPosition(other.parameter.mat);
 	bullet.radius = other.parameter.radius;
-
-	for (auto i : static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage()){
+	std::vector<Vector3> playerBonePos = static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage();
+	for (int i = 0; i < playerBonePos.size();i+=6) {
+		if (i >= playerBonePos.size())i = playerBonePos.size() - 1;
 		/* PlayerData */
 		Sphere player;
-		player.position = i;
+		player.position = playerBonePos[i];
 		player.radius = parameter.radius;
 		/* ResultData */
 		colpara = Collisin::GetInstace().SphereSphere(player, bullet);
@@ -198,13 +199,14 @@ CollisionParameter Actor::Player_vs_ShipEnemy(const Actor& other) const
 	shipEnemy.position = parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*parameter.radius;
 	shipEnemy.radius = parameter.radius;
 
-	for (auto boon : boons)
+	for (int i = 0; i < boons.size();i += 5)
 	{
+		if (i >= boons.size())i = boons.size() - 1;
 		Sphere playerSphere;
-		playerSphere.position = boon;
+		playerSphere.position = boons[i];
 		playerSphere.radius = player->parameter.radius;
 		colpara=Collisin::GetInstace().SphereSphere(shipEnemy, playerSphere);
-		colpara.colPos = boon;
+		colpara.colPos = boons[i];
 		if (colpara.colFlag)
 			break;
 	}
@@ -226,15 +228,17 @@ CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
 	spear.endPos = other.parameter.mat.GetPosition() + other.parameter.mat.GetLeft().Normalized()*30.0f;
 	spear.radius = other.parameter.radius;
 
-	for (auto boon : boons)
+	for (int i = 0; i < boons.size(); i += 5)
 	{
+		if (i >= boons.size())i = boons.size() - 1;
 		Sphere playerSphere;
-		playerSphere.position = boon;
+		playerSphere.position = boons[i];
 		playerSphere.radius = player->parameter.radius;
 		colpara = Collisin::GetInstace().SphereCapsule(playerSphere, spear);
 		if (colpara.colFlag)
 			break;
 	}
+
 	colpara.colID = COL_ID::PLAYER_DORAGONSPEAR_COL;
 	return colpara;
 }
@@ -252,10 +256,10 @@ CollisionParameter Actor::Player_vs_DoragonSpearWithin(const Actor& other)const
 	spear.startPos = parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f;
 	spear.endPos = parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f;
 	spear.radius = parameter.radius;
-	for (auto boon : boons)
+	for (int i = 0; i < boons.size(); i += 5)
 	{
-		Sphere playerSphere;
-		playerSphere.position = boon;
+		if (i >= boons.size())i = boons.size() - 1;		Sphere playerSphere;
+		playerSphere.position = boons[i];
 		playerSphere.radius = player->parameter.radius;
 		colpara = Collisin::GetInstace().SphereCapsule(playerSphere, spear);
 		if (colpara.colFlag)

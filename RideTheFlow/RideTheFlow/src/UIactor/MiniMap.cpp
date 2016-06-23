@@ -1,15 +1,11 @@
 #include "MiniMap.h"
 #include "FlowRoot.h"
 #include "PlayerArrow.h"
+#include "MiniMapParameter.h"
 #include "../math/Math.h"
 #include "../world/IWorld.h"
 
 #include "../graphic/Model.h"
-
-const float Scale = 0.6f;
-const Vector2 MAP_POSITION = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) - Vector2(256) * Scale;
-const Vector2 StageSize = Vector2(3000, 3000);
-const float ReSIZE = 256.0f / StageSize.x * Scale;
 
 MiniMap::MiniMap(IWorld& world_) :
 UIActor(world_)
@@ -34,5 +30,8 @@ void MiniMap::Update()
 
 void MiniMap::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP_SPRITE, MAP_POSITION, Vector2(256, 256), 1.0f, Scale, 0, true, false);
+	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP_SPRITE, MAP_DRAW_POSITION, Vector2(256, 256), 1.0f, MINI_MAP_SCALE, 0, true, false);
+	//auto a = MV1GetMeshMaxPosition(Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE), 0);
+	//auto a = player->GetParameter().mat.GetPosition();
+	//DrawFormatString(0, 600, GetColor(255, 255, 255), "FPS:		[%f][%f][%f]", a.x, a.y, a.z);
 }

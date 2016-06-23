@@ -67,6 +67,8 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("dra_test.mv1", MODEL_ID::TEST_MODEL, async);
+	model.Load("dra_test_title.mv1", MODEL_ID::TEST_TITLE_MODEL, async);
+	
 	//model.Load("dragon.mv1", MODEL_ID::TEST_MODEL, async);
 	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
 	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);

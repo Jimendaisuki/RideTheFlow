@@ -16,9 +16,9 @@ const float CastleDamegeWind = 0.5f;
 const float CastleInvincibleTime = 3.0f;
 
 //城の上に積み重なる城の段数
-const int Rank = 3;
+const int Rank = 5;
 //城が積みあがる時間(秒)
-const float RankUpSecond = 8.0f;
+const float RankUpSecond =5.0f;
 
 //城が排出する軍隊の時間
 const float SpawnArmyEnemyTime = 500.0f;
@@ -27,7 +27,7 @@ const int SpawnMaxArmyEnemy = 20;
 
 /**浮島の城限定**/
 //城が排出する船の時間
-const float SpawnShipEnemyTime = 30.0f;
+const float SpawnShipEnemyTime = 3000.0f;
 //城が排出する船の最大船数
 const int SpawnMaxShipEnemey = 5;
 
