@@ -166,9 +166,10 @@ Player::Player(IWorld& world,bool title_) :
 	dashSpeed = 1.0f;
 	//加速できる時間
 	dashTime = 0.0f;
-
-	//ダッシュのスタミナゲージUIを追加
-	world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
+	if (!title){
+		//ダッシュのスタミナゲージUIを追加
+		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
+	}
 }
 Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
@@ -215,17 +216,18 @@ void Player::Update() {
 				padInputFlag = true;
 		}
 
+		if (!title){
 		Vector2 rStick = GamePad::GetInstance().RightStick();
 
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
-			rotateLeft += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
-			rotateLeft -= rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
-			rotateUp += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
-			rotateUp -= rotateSpeed * Time::DeltaTime;
-
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
+				rotateLeft += rotateSpeed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
+				rotateLeft -= rotateSpeed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
+				rotateUp += rotateSpeed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
+				rotateUp -= rotateSpeed * Time::DeltaTime;
+		}
 
 		Vector2 lStick = GamePad::GetInstance().Stick();
 
