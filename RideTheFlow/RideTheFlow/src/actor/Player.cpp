@@ -369,7 +369,7 @@ void Player::Update() {
 				}
 			}
 		}
-		if (!((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag)){
+		if (!((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) || tp.tackleFlag){
 			dashPosStorage.clear();
 			tornadoPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
