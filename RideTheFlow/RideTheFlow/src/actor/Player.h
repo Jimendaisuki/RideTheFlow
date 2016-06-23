@@ -16,7 +16,7 @@ struct TackleParameter{
 class Player :public Actor, public std::enable_shared_from_this<Player>
 {
 public:
-	Player(IWorld& world);
+	Player(IWorld& world,bool title_ = false);
 	~Player();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -41,6 +41,8 @@ public:
 	bool ReturnDead(){ return dead; }
 
 private:
+
+	bool title;
 	//デバック表示まとめ
 	void ParameterDraw()const;
 	//デバックコード(デバック表示されているもののボーンのナンバー)

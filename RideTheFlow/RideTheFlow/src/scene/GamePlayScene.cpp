@@ -21,6 +21,7 @@ GamePlayScene::GamePlayScene()
 	//mIsEnd = false;
 }
 
+
 //デストラクタ
 GamePlayScene::~GamePlayScene()
 {
