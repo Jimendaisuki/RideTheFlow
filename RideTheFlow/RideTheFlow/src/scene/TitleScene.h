@@ -42,9 +42,10 @@ private:
 private:
 	float timer;
 	bool mIsEnd;
-	World wo;
+	World wo,wo2;
 
 	Vector3 position;
+
 
 	// タイトルステータス
 	TITLE_STATUS status;
