@@ -31,7 +31,7 @@ maxRootCount(0)
 	random_shuffle(roots.begin(), roots.end());
 	maxRootCount = roots.size();
 
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	Camera::GetInstance().SetRange(0.1f, 20000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
@@ -110,11 +110,8 @@ void TitleCameraActor::Update()
 void TitleCameraActor::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, backAlpha, Vector2(WINDOW_WIDTH / 800.0f, WINDOW_HEIGHT / 600.0f), 0.0f, false, false);
-
-	DrawSphere3D(targetPos.ToVECTOR(), 1, 10, 1, 1, true);
-
-	DrawFormatString(0, 340, GetColor(0, 0, 255), "CameraPos  : [%f] [%f] [%f]", cameraPos.x, cameraPos.y, cameraPos.z);
-	DrawFormatString(0, 360, GetColor(0, 0, 255), "TargetPos  : [%f] [%f] [%f]", targetPos.x, targetPos.y, targetPos.z);
+	//DrawFormatString(0, 340, GetColor(0, 0, 255), "CameraPos  : [%f] [%f] [%f]", cameraPos.x, cameraPos.y, cameraPos.z);
+	//DrawFormatString(0, 360, GetColor(0, 0, 255), "TargetPos  : [%f] [%f] [%f]", targetPos.x, targetPos.y, targetPos.z);
 }
 
 void TitleCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
