@@ -4,14 +4,19 @@
 #include "../camera/Camera.h"
 #include "../graphic/Model.h"
 #include "../graphic/Sprite.h"
+#include "../math/Math.h"
 #include "../time/Time.h"
 #include "../world/IWorld.h"
 #include <list>
+#include <algorithm>
 
 TitleCameraActor::TitleCameraActor(IWorld& world) :
 Actor(world),
 time(0.0f),
-backAlpha(0.0f)
+backAlpha(0.0f),
+fade(false),
+rootCount(0),
+maxRootCount(0)
 {
 	parameter.id = ACTOR_ID::CAMERA_ACTOR;
 	parameter.isDead = false;
@@ -23,6 +28,8 @@ backAlpha(0.0f)
 	useRoots.clear();
 
 	RootLoad();
+	random_shuffle(roots.begin(), roots.end());
+	maxRootCount = roots.size();
 
 	Camera::GetInstance().SetRange(0.1f, 9999.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
@@ -37,46 +44,64 @@ TitleCameraActor::~TitleCameraActor()
 }
 void TitleCameraActor::Update()
 {
-	if (useRoots.size() == 0)
+	if (fade)
 	{
-		GetRoot(0);
-	}
+		backAlpha += Time::DeltaTime * 5.0f;
+		cameraPos += velocity;
+		targetPos += velocity;
 
- 	if (time <= useRoots.front().moveTime)
-	{
-		float nowTime = time / useRoots.front().moveTime;
-		float targetTime = nowTime + 0.1f;
-
-		switch (useRoots.front().moveNum)
-		{
-		case 2:
-			cameraPos = Lerp(nowTime, useRoots.front().points);
-			targetPos = Lerp(targetTime, useRoots.front().points);
-			velocity = cameraPos - prePos;
-			break;
-		case 3:
-			cameraPos = BeziersCurve3(nowTime, useRoots.front().points);
-			targetPos = BeziersCurve3(targetTime, useRoots.front().points);
-			velocity = cameraPos - prePos;
-			break;
-		case 4:
-			cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
-			targetPos = BeziersCurve4(targetTime, useRoots.front().points);
-			velocity = cameraPos - prePos;
-			break;
-		default:
-			useRoots.clear();
-			break;
-		}
+		if (backAlpha >= 1.0f)
+			fade = !fade;
 	}
 	else
 	{
-		time = 0.0f;
-		useRoots.pop_front();
+		// ÉãÅ[ÉgÇéÊìæ
+		if (useRoots.size() == 0)
+		{
+			rootCount++;
+			int rootNum = (rootCount % maxRootCount);
+			GetRoot(rootNum);
+		}
+
+		backAlpha -= Time::DeltaTime * 5.0f;
+
+		if (time + 0.1f <= useRoots.front().moveTime)
+		{
+			float nowTime = time / useRoots.front().moveTime;
+			float targetTime = nowTime + 0.5f;
+
+			switch (useRoots.front().moveNum)
+			{
+			case 2:
+				cameraPos = Lerp(nowTime, useRoots.front().points);
+				targetPos = Lerp(targetTime, useRoots.front().points);
+				break;
+			case 3:
+				cameraPos = BeziersCurve3(nowTime, useRoots.front().points);
+				targetPos = BeziersCurve3(targetTime, useRoots.front().points);
+				break;
+			case 4:
+				cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
+				targetPos = BeziersCurve4(targetTime, useRoots.front().points);
+				break;
+			default:
+				useRoots.clear();
+				break;
+			}
+		}
+		else
+		{
+			velocity = cameraPos - prePos;
+			fade = !fade;
+			time = 0.0f;
+			useRoots.pop_front();
+		}
+
+		time += Time::DeltaTime;
 	}
 
-	time += Time::DeltaTime;
 	prePos = cameraPos;
+	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
 
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
@@ -85,6 +110,8 @@ void TitleCameraActor::Update()
 void TitleCameraActor::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, backAlpha, Vector2(WINDOW_WIDTH / 800.0f, WINDOW_HEIGHT / 600.0f), 0.0f, false, false);
+
+	DrawSphere3D(targetPos.ToVECTOR(), 1, 10, 1, 1, true);
 
 	DrawFormatString(0, 340, GetColor(0, 0, 255), "CameraPos  : [%f] [%f] [%f]", cameraPos.x, cameraPos.y, cameraPos.z);
 	DrawFormatString(0, 360, GetColor(0, 0, 255), "TargetPos  : [%f] [%f] [%f]", targetPos.x, targetPos.y, targetPos.z);

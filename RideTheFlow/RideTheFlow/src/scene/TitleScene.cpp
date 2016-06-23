@@ -257,13 +257,16 @@ void TitleScene::Draw() const
 
 	int handle = MakeScreen(600, 300, TRUE);
 	SetDrawScreen(handle);
+	Camera::GetInstance().Position.Set(Vector3(0, 100, 100));
+	Camera::GetInstance().Target.Set(Vector3(0, 100, 0));
+	Camera::GetInstance().Update();
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
 	DrawFormatString(0, 220, GetColor(255, 0, 0), "M		: メニュー");
 	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: ○");
 	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: ×");
 	DrawFormatString(0, 280, GetColor(255, 0, 0), "C		: フェードアウト");
 	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
-	DrawSphere3D(Vector3(100, 100, 0).ToVECTOR(), 10, 4, 1, 1, FALSE);
+	DrawCapsule3D(Vector3(0, 100, 0).ToVECTOR(), Vector3(0, 100, 90), 10, 4, 1, 1, FALSE);
 	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraph((int)position.x, (int)position.y, handle, TRUE);
 	DeleteGraph(handle);

@@ -1,9 +1,5 @@
 #include "EnemyPoint.h"
-
-const float Scale = 0.6f;
-const Vector2 MAP_POSITION = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) - Vector2(256) * Scale;
-const Vector2 StageSize = Vector2(3000, 3000);
-const float ReSIZE = 256.0f / StageSize.x * Scale;
+#include "MiniMapParameter.h"
 
 EnemyPoint::EnemyPoint(IWorld& world_, Actor& enemy_) :
 UIActor(world_),
@@ -47,9 +43,9 @@ void EnemyPoint::Update()
 	Vector3 enemyPos = enemy->GetParameter().mat.GetPosition();
 	Vector2 pos = Vector2(enemyPos.x, -enemyPos.z);
 	if (pos.Length() != 0.0f)
-		drawPosition = MAP_POSITION + pos.Normalized() * pos.Length() * ReSIZE;
+		drawPosition = MAP_DRAW_POSITION + pos.Normalized() * pos.Length() * RE_SIZE_SCALE;
 	else
-		drawPosition = MAP_POSITION;
+		drawPosition = MAP_DRAW_POSITION;
 }
 
 void EnemyPoint::Draw() const
