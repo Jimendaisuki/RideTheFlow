@@ -115,6 +115,8 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load("human_low_ballista.mv1", MODEL_ID::HUMAN_BALLISTA_MODEL, async);
 	model.Load("human_low_cannon.mv1", MODEL_ID::HUMAN_CANNON_MODEL, async);
+	model.Load("human_archer2.mv1", MODEL_ID::HUMAN_ARCHER_MODEL, async);
+	
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	

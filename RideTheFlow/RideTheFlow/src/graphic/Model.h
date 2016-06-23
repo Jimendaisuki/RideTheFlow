@@ -90,6 +90,10 @@ public:
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor);
 	///<summary>
+	/// ３Ｄモデルを描画する（モデルID、座標、回転量、拡大率、ディフューズカラー、スペキュラーカラー）
+	///</summary>
+	void Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor);
+	///<summary>
 	/// ３Ｄモデルを描画する（モデルID、座標、描画フラグ）
 	///</summary>
 	void Draw(const MODEL_ID& id, const Vector3& position, bool trans);

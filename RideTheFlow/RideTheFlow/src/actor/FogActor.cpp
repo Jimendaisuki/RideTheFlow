@@ -16,7 +16,7 @@ fogStartAngle(90.0f)
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::FOG_ACTOR;
 	SetFogEnable(TRUE);
-	SetFogColor(240, 240, 255);
+	SetFogColor(220, 220, 230);
 }
 FogActor::~FogActor()
 {
