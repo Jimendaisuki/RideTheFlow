@@ -16,7 +16,6 @@
 #include "../actor/TitleCameraActor.h"
 
 #include "../UIactor/fadePanel/FadePanel.h"
-#include "../UIactor/menuPanel/MenuPanel.h"
 #include "../UIactor/Clear.h"
 #include "../UIactor/Failure.h"
 #include "../UIactor/MiniMap.h"
@@ -24,12 +23,6 @@
 
 float	fpsTimer = 0.0f;
 float	fps;
-
-int	modelHandle = 0;
-int frameCount = 0;
-int frameNum = 0;
-int frameParentCount = 0;
-int frameChildCount = 0;
 
 /* 竜巻ポリゴン用データ */
 const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
@@ -39,13 +32,11 @@ const float y[4] = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM
 const float u[4] = { 0, 0, 1, 1 };
 const float v[4] = { 0, 1, 1, 0 };
 const int	StormMaxAlpha		= 255 / 3;
-const float StormAlphaEndTime	= 2.5f;
+const float StormAlphaEndTime	= 6.0f;
 /* タイトルテキスト用データ */
-const float TitleAlphaEndTime	= 4.0f;
-
-Vector3 a = Vector3::Zero;
-float b = 0;
-
+const float TitleAlphaEndTime	= 2.0f;
+/* スクリーン用データ */
+const int endScreenPos = -(WINDOW_WIDTH / 2);
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -83,27 +74,9 @@ void TitleScene::Initialize()
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
-	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
-	
-	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
-	frameCount = MV1GetFrameNum(modelHandle);
-	frameParentCount = MV1GetFrameParent(modelHandle, frameNum);
-	frameChildCount = MV1GetFrameChildNum(modelHandle, frameNum);
-
-	position = Vector3::Zero;
-	
+		
 	//wo.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wo));
 	//wo.UIAdd(UI_ID::CLEAR_UI, std::make_shared<Clear>(wo));
-
-	/* マップテスト用 */
-	//wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo));
-	//wo.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wo));
-
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
-	Camera::GetInstance().Position.Set(Vector3(0, 500, -200));
-	//Camera::GetInstance().Target.Set(position);
-	Camera::GetInstance().Up.Set(Vector3::Up);
-
 
 	/* ポリゴンデータ */
 	amount_1 = 0;
@@ -111,6 +84,7 @@ void TitleScene::Initialize()
 	count_1 = 0;
 	count_2 = 0;
 	stormAlpha = 0;
+	stormAlphaTime = 0.0f;
 	for (int i = 0; i < 6; i++)
 	{
 		Vertex2D_1[i].dif.a = stormAlpha;
@@ -124,7 +98,11 @@ void TitleScene::Initialize()
 	pressTextBackAlpha = 0;
 	pressScale = 0;
 
-	MenuPanel::GetInstance().Initialize();
+	/* スクリーンデータ */
+	screenHandle = MakeScreen(WINDOW_WIDTH * 1.5f, WINDOW_HEIGHT, TRUE);
+
+	screenPos = WINDOW_WIDTH / 4;
+	slideTime = 0;
 
 	/* フェード */
 	FadePanel::GetInstance().Initialize();
@@ -133,7 +111,6 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {	
-	wo2.Update();
 	switch (status)
 	{
 	case TITLE_BEGIN:
@@ -143,11 +120,18 @@ void TitleScene::Update()
 		break;
 	case TITLE_DRAGON_IN:
 		// ドラゴンが動く
-		status = TITLE_STATUS::TITLE_TEXTURE_IN;
+		if (slideTime < 1)
+		{
+			screenPos = Math::Lerp(WINDOW_WIDTH / 4, endScreenPos, slideTime);
+			slideTime += Time::DeltaTime / 3.0f;
+		}
+		else
+			status = TITLE_STATUS::TITLE_TEXTURE_IN;
 		break;
 	case TITLE_TEXTURE_IN:
 		// 竜巻とテキスト描画開始
-		stormAlpha += (int)((255.0f * Time::DeltaTime) / StormAlphaEndTime);
+		stormAlphaTime += (Time::DeltaTime / StormAlphaEndTime);
+		stormAlpha = (int)(StormMaxAlpha * stormAlphaTime);
 		stormAlpha = Math::Clamp(stormAlpha, 0, StormMaxAlpha);
 		for (int i = 0; i < 6; i++)
 		{
@@ -155,7 +139,7 @@ void TitleScene::Update()
 			Vertex2D_2[i].dif.a = stormAlpha;
 		}
 		
-		if (stormAlpha >= 255 / 4)
+		if (stormAlpha >= StormMaxAlpha / 2)
 			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
 
 		if (titleAlpha >= 1.0f)
@@ -195,7 +179,9 @@ void TitleScene::Update()
 	TornadoCalculation();
 
 	/* 各種更新 */
-	MenuPanel::GetInstance().Update();
+	wo.Update();
+	wo2.Update();
+
 	FadePanel::GetInstance().Update();
 
 	/* 以下デバッグ用 */
@@ -212,43 +198,16 @@ void TitleScene::Update()
 		fpsTimer = 0.0f;
 	}
 
-	if (!FadePanel::GetInstance().IsAction())
-	{
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A)) position.x--;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D)) position.x++;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)) position.y++;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)) position.y--;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::E)) position.z--;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Q)) position.z++;
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::UP)) frameNum++;
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::DOWN)) frameNum--;
-		if (frameNum > frameCount - 1) frameNum = 0;
-		if (frameNum < 0) frameNum = frameCount - 1;
-		frameParentCount = MV1GetFrameParent(modelHandle, frameNum);
-		frameChildCount = MV1GetFrameChildNum(modelHandle, frameNum);
-
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)){
-			FadePanel::GetInstance().FadeOut(0.2f, 0.7f);
-		}
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
-			FadePanel::GetInstance().FadeOut(0.5f);
-		}
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::V)){
-			FadePanel::GetInstance().FadeIn(0.5f);
-		}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)){
+		FadePanel::GetInstance().FadeOut(0.2f, 0.7f);
 	}
-
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M))MenuPanel::GetInstance().Action(Scene::GamePlay);
-
-	a = Vector3::Lerp(Vector3(100, 100, 100), Vector3(1000, 100, 100), b);
-	b += Time::DeltaTime;
-	if (b > 1) b = 0;
-
-	//Camera::GetInstance().Position.Set(Vector3(0, 100, -100));
-	//Camera::GetInstance().Position.Set(-a);
-	//Camera::GetInstance().Target.Set(a);
-	//Camera::GetInstance().Update();
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
+		FadePanel::GetInstance().FadeOut(0.5f);
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::V)){
+		FadePanel::GetInstance().FadeIn(0.5f);
+	}
 }
 
 //描画
@@ -256,29 +215,25 @@ void TitleScene::Draw() const
 {
 	wo.Draw();
 
-	int handle = MakeScreen(600, 300, TRUE);
-	SetDrawScreen(handle);
-	SetCameraPositionAndTarget_UpVecY(Vector3(200, 0, 100), Vector3(0, 0, 100));
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
-	DrawFormatString(0, 220, GetColor(255, 0, 0), "M		: メニュー");
-	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: ○");
-	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: ×");
-	DrawFormatString(0, 280, GetColor(255, 0, 0), "C		: フェードアウト");
-	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
-	DrawSphere3D(Vector3(100, 100, 0).ToVECTOR(), 10, 4, 1, 1, FALSE);
-	wo2.Draw();
-
-	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph((int)position.x, (int)position.y, handle, TRUE);
-	DeleteGraph(handle);
-
-
-	if (!IsStatusBegEnd()) FadePanel::GetInstance().Draw();
-
 	/* 竜巻 */
 	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
 	DrawPolygon2D(Vertex2D_2, 2, texhandle, true);
 	DrawPolygon2D(Vertex2D_1, 2, Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), true);
+
+	/* 龍 */
+	SetDrawScreen(screenHandle);
+	ClearDrawScreen();
+	Camera::GetInstance().Position.Set(Vector3(200, 0, 0));
+	Camera::GetInstance().Target.Set(Vector3::Zero);
+	Camera::GetInstance().Update();
+
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
+	DrawFormatString(0, 280, GetColor(255, 0, 0), "C		: フェードアウト");
+	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
+	wo2.Draw();
+	SetDrawScreen(DX_SCREEN_BACK);
+	DrawGraph(screenPos, -100, screenHandle, TRUE);
+
 	
 	/* テキスト */
 	// タイトル
@@ -287,18 +242,11 @@ void TitleScene::Draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f + pressScale), true, false);
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextAlpha, Vector2(0.6f + pressScale), true, false);
 
-	MenuPanel::GetInstance().Draw();
-	if (IsStatusBegEnd()) FadePanel::GetInstance().Draw();
+	//if (IsStatusBegEnd()) 
+	FadePanel::GetInstance().Draw();
 
 
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%.1f", fps);
-
-	//DrawFormatString(0, 200, GetColor(0, 0, 0), "FrameNum  : %d", frameNum);
-	//DrawFormatString(0, 220, GetColor(0, 0, 0), "FrameName : %s", MV1GetFrameName(modelHandle, frameNum));
-	//DrawFormatString(0, 240, GetColor(0, 0, 0), "FramePare : %d", frameParentCount);
-	//DrawFormatString(0, 260, GetColor(0, 0, 0), "FrameChild: %d", frameChildCount);
-	//Vector3 position = Vector3::ToVECTOR(MV1GetFramePosition(modelHandle, frameNum));
-	//DrawFormatString(0, 280, GetColor(0, 0, 0), "FramePos  : [%f] [%f] [%f]", position.x, position.y, position.z);
 }
 
 //終了しているか？
@@ -317,8 +265,10 @@ void TitleScene::End()
 {
 	wo.Clear();
 	wo2.Clear();
+	DeleteGraph(screenHandle);
 }
 
+// 竜巻計算用
 void TitleScene::TornadoCalculation()
 {
 	amount_1 += Time::DeltaTime / 4.0f;
@@ -343,6 +293,7 @@ void TitleScene::TornadoCalculation()
 	Vertex2D_2[5] = Vertex2D_2[2];
 }
 
+// 頂点移動
 void TitleScene::VertexMove(VERTEX2D vertexs_[], int count_, float time_)
 {
 	for (int i = 0; i < 4; i++)

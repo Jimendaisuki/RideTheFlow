@@ -43,6 +43,9 @@ private:
 	Vector3 velocity;
 	float	time;
 	float	backAlpha;
+	bool	fade;
+	int		rootCount;
+	int		maxRootCount;
 
 	CsvReader			  csv_;
 	int					  currentRow_;
