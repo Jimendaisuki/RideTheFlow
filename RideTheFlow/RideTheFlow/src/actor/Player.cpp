@@ -782,7 +782,7 @@ void Player::ParameterDraw() const {
 	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, boneSelect));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 256, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
+	DrawFormatString(0, 256 + 64 , GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	float gageColorNum = 255.0f * ((dashMaxTime - dashTime) / dashMaxTime);
 	DWORD gageColor = GetColor(255, gageColorNum, gageColorNum);
