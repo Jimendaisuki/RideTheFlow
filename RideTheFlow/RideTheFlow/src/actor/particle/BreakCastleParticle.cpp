@@ -25,11 +25,12 @@ tornadeAddRadius(Random::GetInstance().Range(5.0f, 8.0f)),
 tornadeSpeed(160.0f),
 tornadeAddPosition(Vector3::Zero),
 
-flowRisingSpeed(5.0f),
+flowRisingSpeed(1.0f),
 flowRotXSpeed(Random::GetInstance().Range(-10.0f, 10.0f)),
 flowRotYSpeed(Random::GetInstance().Range(-10.0f, 10.0f)),
 flowRotXAdd(Random::GetInstance().Range(-5.0f, 5.0f)),
-flowRotYAdd(Random::GetInstance().Range(-5.0f, 5.0f))
+flowRotYAdd(Random::GetInstance().Range(-5.0f, 5.0f)),
+flowAddPosition(Vector3::Zero)
 {
 	lifeParam.lifeTime = 0.0f;
 	lifeParam.lifeTimeLimit = 20.0f;
@@ -61,9 +62,6 @@ void BreakCastleParticle::Draw() const
 
 void BreakCastleParticle::TornadoBreak()
 {
-	//—³Šª‚ÌˆÚ“®—Ê•ªˆÚ“®
-	moveParam.pos += moveParam.vec * Time::DeltaTime;
-
 	//‰ñ“]ŒvŽZ
 	if (rotXSpeed < 90.0f)
 		rotXSpeed += rotXAdd * Time::DeltaTime;
@@ -81,7 +79,7 @@ void BreakCastleParticle::TornadoBreak()
 		Math::Cos(tornadeDegree) * tornadeRadius,
 		0.0f,
 		Math::Sin(tornadeDegree) * tornadeRadius);
-	if (tornadeRadius < 100.0f)
+	if (tornadeRadius < 120.0f)
 		tornadeRadius += tornadeAddRadius * Time::DeltaTime;
 	tornadeDegree += tornadeSpeed * Time::DeltaTime;
 
@@ -91,7 +89,7 @@ void BreakCastleParticle::TornadoBreak()
 	mat =
 		Matrix4::Scale(drawParam.size) *
 		rotmat *
-		Matrix4::Translate(moveParam.pos + tornadeAddPosition);
+		Matrix4::Translate(*pParentPosition + moveParam.pos + tornadeAddPosition);
 }
 
 void BreakCastleParticle::WindFlowBreak()
@@ -113,7 +111,7 @@ void BreakCastleParticle::WindFlowBreak()
 	mat =
 		Matrix4::Scale(drawParam.size) *
 		rotmat *
-		Matrix4::Translate(moveParam.pos);
+		Matrix4::Translate(*pParentPosition + moveParam.pos);
 }
 
 void BreakCastleParticle::WindBallBreak()
@@ -121,5 +119,5 @@ void BreakCastleParticle::WindBallBreak()
 	mat =
 		Matrix4::Scale(drawParam.size) *
 		rotmat *
-		Matrix4::Translate(moveParam.pos);
+		Matrix4::Translate(*pParentPosition + moveParam.pos);
 }

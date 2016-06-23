@@ -37,7 +37,6 @@ static const Vector3 House1Pos = Vector3(-300, -80, 200);
 CreditScene::CreditScene():
 armyCreateTimer(0.0f)
 {
-	buttons.clear();
 
 	//mIsEnd = false;
 }
@@ -50,7 +49,6 @@ CreditScene::~CreditScene()
 //ŠJŽn
 void CreditScene::Initialize()
 {
-	////boonPositions.clear();
 	////mIsEnd = false;
 	////wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	////wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
@@ -73,29 +71,13 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 50, -100), Vector3(1,0,1) * 80.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_FLOW));
-	
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(300 * i, -50, 100 * i)));
-	//}
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	for (int j = 0; j < 5; j++)
-	//	{
-	//		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 300.0f, 100.0f * (j - 2))));
-	//	}
-	//}
+	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_FLOW));
 
-	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++){
-		if (i % 2 == 0){
-			Vector3 Position = Vector3::ToVECTOR(MV1GetFramePosition(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), i));
-			boonPositions.push_back(Position);
-		}
-	}
-	for (auto i : boonPositions){
-		wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i, true));
-	}
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0), true));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -20, 0), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -20, 300), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -20, -400), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -20, 700), false));
 
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 
@@ -186,7 +168,8 @@ void CreditScene::Draw() const
 
 	//Anime::GetInstance().AttachAnime(MODEL_ID::HUMAN_ARCHER_MODEL, 0);
 	//Anime::GetInstance().PlayAnime(MODEL_ID::HUMAN_ARCHER_MODEL, 0, t);
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100),1.0f, Vector3::Zero, Vector3(0.05f), diffuse, specu);
+
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100),1.0f, Vector3::Zero, Vector3(0.05f), diffuse, specu);
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100), Vector3::Zero, Vector3(0.1f));
 
 

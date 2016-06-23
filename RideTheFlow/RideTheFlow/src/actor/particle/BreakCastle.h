@@ -26,7 +26,7 @@ class BreakCastle :public Actor, public ParticleSystem, public std::enable_share
 {
 public:
 	//=======Actor======//
-	BreakCastle(IWorld& world, const Vector3& position_, const Vector3& vec_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_);
+	BreakCastle(IWorld& world, const Vector3& position_, const Vector3& velocity_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_);
 	~BreakCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -38,14 +38,19 @@ public:
 
 private:
 	//竜巻による壊れ方
-	void TornadoBreak();
+	void TornadoBreakUpdate();
+	void TornadoBreakEmissive();
 	//流れによる壊れ方
-	void WindFlowBreak();
+	void WindFlowBreakUpdate();
+	void WindFlowBreakEmissive();
 	//空気砲による壊れ方
-	void WindBallBreak();
+	void WindBallBreakUpdate();
+	void WindBallBreakEmissive();
+
+	Vector3 RandomVelocity();
 
 private:
-	Vector3 moveVec;
+	Vector3 velocity;
 	//城と壊れ方をコンストラクタで選択
 	CASTLE_SELECT castleSelect;
 	BREAK_SELECT breakSelect;

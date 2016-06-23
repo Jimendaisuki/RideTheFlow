@@ -7,7 +7,7 @@
 class BreakCastleParticle :public Particle
 {
 public:
-	//モデルID、壊れ方、座標、風の流れor竜巻で壊れたときの移動方向*移動量、初期回転X、初期回転Y
+	//モデルID、壊れ方、システムの座標、座標、移動方向*移動量、初期回転X、初期回転Y
 	BreakCastleParticle(const MODEL_ID& id_, const BREAK_SELECT& break_, Vector3* parentPosition_,const Vector3& position_, const Vector3& vec_, float rotX_, float rotY_);
 
 	void OnUpdate() override;
@@ -49,6 +49,7 @@ private:
 	float flowRisingSpeed;
 	float flowRotXSpeed, flowRotYSpeed;
 	float flowRotXAdd, flowRotYAdd;
+	Vector3 flowAddPosition;
 
 	//空気砲
 };

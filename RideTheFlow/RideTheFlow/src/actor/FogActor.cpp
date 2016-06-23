@@ -11,12 +11,12 @@ Actor(world),
 position(Vector3::Zero),
 fogTotalPower(0.0f),
 angle(0.0f),
-fogStartAngle(90.0f)
+fogStartAngle(70.0f)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::FOG_ACTOR;
 	SetFogEnable(TRUE);
-	SetFogColor(220, 220, 230);
+	SetFogColor(180, 180, 200);
 }
 FogActor::~FogActor()
 {
