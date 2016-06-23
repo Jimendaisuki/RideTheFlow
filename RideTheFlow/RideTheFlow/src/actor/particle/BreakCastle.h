@@ -1,7 +1,7 @@
 #pragma once
 #include "../Actor.h"
 #include <vector>
-#include "../Player.h"
+#include <memory>
 #include "ParticleSystem.h"
 
 //壊れる城を選択
@@ -11,11 +11,22 @@ enum CASTLE_SELECT
 	CHILD_CASTLE,
 };
 
-class BreakCastle :public Actor, public ParticleSystem
+//壊れ方を選択
+enum BREAK_SELECT
+{
+	//竜巻
+	TORNADO,
+	//流れ
+	WIND_FLOW,
+	//空気砲
+	WIND_BALL,
+};
+
+class BreakCastle :public Actor, public ParticleSystem, public std::enable_shared_from_this<BreakCastle>
 {
 public:
 	//=======Actor======//
-	BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& select);
+	BreakCastle(IWorld& world, const Vector3& position_, const Vector3& vec_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_);
 	~BreakCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -26,5 +37,17 @@ public:
 	virtual void Emissive() override;
 
 private:
+	//竜巻による壊れ方
+	void TornadoBreak();
+	//流れによる壊れ方
+	void WindFlowBreak();
+	//空気砲による壊れ方
+	void WindBallBreak();
+
+private:
+	Vector3 moveVec;
+	//城と壊れ方をコンストラクタで選択
+	CASTLE_SELECT castleSelect;
+	BREAK_SELECT breakSelect;
 	float rotX, rotY;
 };

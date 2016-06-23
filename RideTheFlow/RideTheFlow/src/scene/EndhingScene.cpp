@@ -42,10 +42,10 @@ void EndhingScene::Initialize()
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<CannonEnemy>(wa, Vector3(0, -20, 0)));
 
 	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0),true));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -20, 0), false));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -20, 300), false));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -20, -400), false));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -20, 700), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -20, 0), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -20, 300), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -20, -400), false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -20, 700), false));
 	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3::Zero,1,1));
 	wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
@@ -57,7 +57,7 @@ void EndhingScene::Initialize()
 	//		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 100.0f, 100.0f * (j - 2))));
 	//	}
 	//}
-	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(120,-100,200)));
+
 	//for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
 	//{
 	//	if (i % 2 == 0)

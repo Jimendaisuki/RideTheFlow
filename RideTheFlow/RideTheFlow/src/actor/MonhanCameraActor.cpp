@@ -142,6 +142,7 @@ void MonhanCameraActor::Update()
 				{
 					posSeveEnd = Vector3(0, 0, 1) * 200 * Matrix4::RotateX(-40) * Matrix4::RotateY(rotateUp) +
 						playerMat.GetPosition() + cameraUpMove;
+					//restCameraTarget = Vector3(playerMat.GetPosition().x,)
 				}
 				else
 				{
@@ -286,7 +287,7 @@ void MonhanCameraActor::Update()
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Target.Set(cameraTarget);
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	Camera::GetInstance().SetRange(0.1f, 20000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().SetViewAngle(fov);
 	Camera::GetInstance().Update();

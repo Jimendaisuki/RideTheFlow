@@ -238,6 +238,7 @@ CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
 		if (colpara.colFlag)
 			break;
 	}
+
 	colpara.colID = COL_ID::PLAYER_DORAGONSPEAR_COL;
 	return colpara;
 }

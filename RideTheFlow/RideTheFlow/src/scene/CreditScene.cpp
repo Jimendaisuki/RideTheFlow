@@ -27,6 +27,9 @@
 #include "../actor/FogActor.h"
 #include "../actor/particle/BreakCastle.h"
 #include "../actor/tornado/Tornado.h"
+#include "../UIactor/MiniMap.h"
+#include "../actor/particle/CastleAdd.h"
+#include "../graphic/Anime.h"
 
 static const Vector3 House1Pos = Vector3(-300, -80, 200);
 
@@ -47,52 +50,76 @@ CreditScene::~CreditScene()
 //開始
 void CreditScene::Initialize()
 {
-	//モデルを一旦解放して読み込み直す
-	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
-	WorkFolder::SetWorkFolder("res/Model/");
-	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
+	////boonPositions.clear();
+	////mIsEnd = false;
+	////wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	////wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
+	////wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
+
+	////wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0), true));
+
+	////wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
+	////wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+
+	//////モデルを一旦解放して読み込み直す
+	//Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
+	//WorkFolder::SetWorkFolder("res/Model/");
+	//Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
 
 	mIsEnd = false;
 
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	//wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(wa, Vector3(200, 50, 200)));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
+	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 50, -100), CASTLE_SELECT::MASTER_CASTLE));
+	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 50, -100), Vector3(1,0,1) * 80.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_FLOW));
+	
 	//for (int i = 0; i < 2; i++)
 	//{
 	//	wa.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<Sand>(wa, Vector3(300 * i, -50, 100 * i)));
 	//}
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	for (int j = 0; j < 5; j++)
+	//	{
+	//		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 300.0f, 100.0f * (j - 2))));
+	//	}
+	//}
 
-	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
-	{
-		if (i % 2 == 0)
-		{
+	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++){
+		if (i % 2 == 0){
 			Vector3 Position = Vector3::ToVECTOR(MV1GetFramePosition(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), i));
 			boonPositions.push_back(Position);
 		}
 	}
-	for (auto i : boonPositions)
-	{
-		wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i,true));
+	for (auto i : boonPositions){
+		wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i, true));
 	}
 
-	for (int i = 0; i < 2; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(100.0f * (i - 2), 100.0f, 100.0f * (j - 2))));
-		}
-	}
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+
 
 	armyCreateTimer = 0.0f;
 	armyCount = 0;
 }
 
+float t = 0.0f;
+
+Vector4 diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+Vector4 specu = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+
 void CreditScene::Update()
 {
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::U))
+		diffuse += Time::DeltaTime * 1.0f;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::I))
+		diffuse -= Time::DeltaTime * 1.0f;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::O))
+		specu += Time::DeltaTime * 1.0f;
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::P))
+		specu -= Time::DeltaTime * 1.0f;
+
 	if (armyCount < 10)
 		armyCreateTimer += Time::DeltaTime;
 	if (armyCreateTimer > 10.0f)
@@ -102,14 +129,13 @@ void CreditScene::Update()
 		armyCount++;
 	}
 	
-
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
 	}
 
 	wa.Update();
 
-	//入力状態を取得
+	////入力状態を取得
 	//leftstick = GamePad::GetInstance().Stick();
 	//rightstick = GamePad::GetInstance().RightStick();
 	//buttons.clear();
@@ -141,20 +167,34 @@ void CreditScene::Draw() const
 	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_MODEL, Vector3(400, 200, -500), Vector3::Zero, Vector3(1));
 	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, Vector3(100, 200, -500), Vector3::Zero, Vector3(1));
 	//Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, Vector3(300, 200, 500), Vector3::Zero, Vector3(0.4f));
-	
-	Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, House1Pos , Vector3::Zero, Vector3(1.0f));
 
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_1_MODEL, Vector3(100,200, 100), Vector3::Zero, Vector3(30.0f));
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_2_MODEL, Vector3(200,200, 200), Vector3::Zero, Vector3(30.0f));
-	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_3_MODEL, Vector3(300,200, 300), Vector3::Zero, Vector3(30.0f));
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_4_MODEL, Vector3(400,200, 400), Vector3::Zero, Vector3(30.0f));
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_5_MODEL, Vector3(500,200, 500), Vector3::Zero, Vector3(30.0f));
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_6_MODEL, Vector3(600,200, 600), Vector3::Zero, Vector3(30.0f));
-	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_7_MODEL, Vector3(700,200, 700), Vector3::Zero, Vector3(30.0f));
+
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_1_MODEL, Vector3(100,200, 100), Vector3::Zero, Vector3(30.0f));
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_2_MODEL, Vector3(200,200, 200), Vector3::Zero, Vector3(30.0f));
+	////Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_3_MODEL, Vector3(300,200, 300), Vector3::Zero, Vector3(30.0f));
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_4_MODEL, Vector3(400,200, 400), Vector3::Zero, Vector3(30.0f));
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_5_MODEL, Vector3(500,200, 500), Vector3::Zero, Vector3(30.0f));
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_6_MODEL, Vector3(600,200, 600), Vector3::Zero, Vector3(30.0f));
+	////Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_7_MODEL, Vector3(700,200, 700), Vector3::Zero, Vector3(30.0f));
+
+	//Matrix4 m;
+	//m = Matrix4::Scale(30.0f) * Matrix4::Translate(Vector3(100, 200, 100));
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, m);
+
+
+	Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, House1Pos, Vector3::Zero, Vector3(1.0f));
+
+	//Anime::GetInstance().AttachAnime(MODEL_ID::HUMAN_ARCHER_MODEL, 0);
+	//Anime::GetInstance().PlayAnime(MODEL_ID::HUMAN_ARCHER_MODEL, 0, t);
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100),1.0f, Vector3::Zero, Vector3(0.05f), diffuse, specu);
+	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100), Vector3::Zero, Vector3(0.1f));
 
 
 	wa.Draw();
-	
+
+	TextDraw::Draw(Point(900, 180), Vector3::Blue, Vector2(t));
+
+	//
 	////スティックの入力状態
 	//int drawx = 700;
 	//TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");

@@ -24,4 +24,5 @@ private:
 
 	bool noCol;
 	float noColTimer;
+	int mRank;
 };

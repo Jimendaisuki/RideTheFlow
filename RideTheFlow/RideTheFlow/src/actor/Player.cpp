@@ -184,7 +184,8 @@ void Player::Update() {
 	moveFlag = !title;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
+
 
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++) {
@@ -832,8 +833,18 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
+	else if (other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR)
+	{
+		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+	}
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
+}
+//龍激走に当たっている間呼び出される
+void Player::ColSpear(Actor* parent)
+{
+	Damage(0.01f);
+	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition());
 }

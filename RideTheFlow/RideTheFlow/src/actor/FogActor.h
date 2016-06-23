@@ -15,4 +15,7 @@ private:
 	Vector3 position;
 	float fogTotalPower;
 	float angle;
+
+	//どの角度からフォグをかけるか
+	float fogStartAngle;
 };
