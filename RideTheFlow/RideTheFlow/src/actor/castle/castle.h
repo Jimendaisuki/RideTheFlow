@@ -67,4 +67,6 @@ private:
 	bool damage;
 	float InvincibleTimer;
 	CastleEnemyPos castleEnemyPos;
+
+	Vector3 test;
 };

@@ -133,13 +133,13 @@ void CastleDoragonSpear::Update()
 	////マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*
-		Quaternion::RotateAxis(Vector3::Up, mRotateY)*
+		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
 	//筒にも速度を足す
 	tubePos += castle->GetVelocity();
 	tubeMat =
 		Matrix4::Scale(mScale)*
-		Quaternion::RotateAxis(Vector3::Up, mRotateY)*
+		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(tubePos);
 }
 
@@ -148,6 +148,7 @@ void CastleDoragonSpear::Draw() const
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
 	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f), parameter.radius, 20, 1, 1, FALSE);
+	DrawLine3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetUp() * 100), 255);
 	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	parameter.radius, 20, 255, 255, FALSE);

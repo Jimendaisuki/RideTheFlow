@@ -44,13 +44,16 @@ mTitle(title)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	if (!title)
-	world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() + Vector3(0, 100, 0), *this,rotateY));
+	{
+		world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
+		world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
+			parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
+			, parameter.radius * 2, *this));
+		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() + Vector3(0, 100, 0), *this, rotateY));
+
+	}
 	testRnak = 1;
 	parameter.height = Vector3(0.0f, 70.0f + 34 * testRnak, 0.0f);
-	world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
-	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
-		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
-		, parameter.radius * 2, *this));
 	mRotateY = rotateY;
 }
 
@@ -154,10 +157,6 @@ void MasterCastle::Draw() const
 	if (!mTitle)
 	{
 		Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, parameter.mat);
-		//DrawFormatString(0, 500, GetColor(0, 0, 0), "ìGÇÃêî   %d", world.GetActorCount(ACTOR_ID::ENEMY_ACTOR,ACTOR_ID::ARMY_ENEMY_ACTOR));
-		DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.height), 50, 5, 2, 2, FALSE);
-		//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition() + Vector3(0.0f,parameter.radius*2,0.0f)), 70.0f, 5, 2, 2, FALSE);
-		DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 100, 10, 1, 1, FALSE);
 	}
 	else
 	{
