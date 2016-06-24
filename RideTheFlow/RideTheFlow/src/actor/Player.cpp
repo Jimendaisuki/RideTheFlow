@@ -113,7 +113,7 @@ title(title_)
 	world.UIAdd(UI_ID::DAMAGE_UI, std::make_shared<Damege>(world, parameter.HP, parameter.HP));
 
 	//操作
-	vec = Vector3::Zero;
+	vec = Vector3(0,0,1);
 
 	//くねくねさせる為のangle２つ
 	upAngle = 0;
@@ -207,8 +207,8 @@ void Player::Update() {
 
 	if (parameter.HP <= 0)dead = true;
 	if (!dead) {
-		if (parameter.HP < 50.0f)
-			parameter.HP += 0.5f * Time::DeltaTime;
+		if (parameter.HP < 10.0f)
+			parameter.HP += 0.1f * Time::DeltaTime;
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 
 		auto input = DINPUT_JOYSTATE();
@@ -285,12 +285,12 @@ void Player::Update() {
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
 		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
-			tp.tackleFlag = true;
+				tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 			tp.tackleT = trueVec;
 			tp.animTime = 0.0f;
-			if ((tornadoPtr != NULL || windFlowPtr != NULL) && tackleForTornadoTime < tackleForTornadoTimelimit) {
+			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
 			}
 			else {
@@ -314,10 +314,18 @@ void Player::Update() {
 			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
 				windFlowPtr = std::make_shared<WindFlow>(world, *this);
 				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+				dashAfter = false;
 			}
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
 				tornadoFlag = false;
 			}
+
+
+			if ((Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5))) {
+				dashAfter = true;
+				dashAfterTime = 0.0f;
+			}
+
 			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
 				if (dashHealFlag) {
 					dashPosStorage.clear();
@@ -365,10 +373,11 @@ void Player::Update() {
 						tornadoPtr = std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad);
 						world.Add(ACTOR_ID::TORNADO_ACTOR, tornadoPtr);
 						windFlowPtr->SetIsDead(true);
-						windFlowPtr = NULL;
 						dashPosStorage.clear();
 						tornadoPosStorage.clear();
-						tornadoFlag = true;
+						tornadoFlag = true;				
+						dashAfter = true;
+						dashAfterTime = 0.0f;
 					}
 
 					dashTime += Time::DeltaTime;
@@ -380,21 +389,33 @@ void Player::Update() {
 					tackleForTornadoTime = 0.0f;
 				}
 			}
-			//		}
-			//		if (!((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) || tp.tackleFlag){
-			//			dashPosStorage.clear();
-			//			tornadoPosStorage.clear();
-			//			dashSpeed -= dashAccele * Time::DeltaTime;
-			//			dashTime -= dashHealSpeed * Time::DeltaTime;
-			//
-			//			if (tornadoPtr == NULL && windFlowPtr == NULL) {
-			//				tackleForTornadoTime = 0.0f;
-			//			}
-			else {
+			else if(!dashAfter){
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
 				dashSpeed -= dashAccele * Time::DeltaTime;
 				dashTime -= dashHealSpeed * Time::DeltaTime;
+
+				if (tornadoPtr == NULL && windFlowPtr == NULL) {
+					tackleForTornadoTime = 0.0f;
+				}
+				else {
+					tackleForTornadoTime += Time::DeltaTime;
+				}
+			}
+
+
+			if (dashAfter){
+				dashTime += Time::DeltaTime;
+				dashSpeed += dashAccele * Time::DeltaTime;
+				trueVec.y = 0;
+				trueVec.Normalized();
+				tp.dashFlag = true;
+
+				dashAfterTime += Time::DeltaTime;
+				if (dashAfterTime > 1.0f){
+					dashAfter = false;
+					dashAfterTime = 0.0f;
+				}
 
 				if (tornadoPtr == NULL && windFlowPtr == NULL) {
 					tackleForTornadoTime = 0.0f;
@@ -435,6 +456,11 @@ void Player::Update() {
 			}
 		}
 		else {
+			dashPosStorage.clear();
+			tornadoPosStorage.clear();
+			dashSpeed -= dashAccele * Time::DeltaTime;
+			dashTime -= dashHealSpeed * Time::DeltaTime;
+
 			// 再生時間を進める
 			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 			forntVec = tp.tackleT;
@@ -591,7 +617,9 @@ void Player::Update() {
 			animIndex = MV1AttachAnim(modelHandle, 2, -1, FALSE);
 		}
 		else {
+			position -= Vector3(0.0f, 100.0f, 0.0f) * Time::DeltaTime;
 			animBlend += 0.5f * Time::DeltaTime;
+			animBlend = Math::Min(animBlend, 1.0f);
 			if (tp.animTime <
 				MV1GetAttachAnimTotalTime(modelHandle, animIndex))
 				tp.animTime += 50.0f * Time::DeltaTime;
@@ -767,6 +795,7 @@ void Player::Draw() const {
 					, localAnimDrawMatrixVec[count], animBlend)
 					));
 			}
+
 		}
 		if (!title)
 			Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
@@ -843,19 +872,6 @@ void Player::Draw() const {
 		Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void Player::ParameterDraw() const {
 
