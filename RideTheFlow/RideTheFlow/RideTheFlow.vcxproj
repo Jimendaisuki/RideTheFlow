@@ -221,6 +221,7 @@
     <ClInclude Include="src\UIactor\fadePanel\FadePanel.h" />
     <ClInclude Include="src\UIactor\Failure.h" />
     <ClInclude Include="src\UIactor\menuPanel\MenuPanel.h" />
+    <ClInclude Include="src\UIactor\MiniMapParameter.h" />
     <ClInclude Include="src\UIactor\PlayerArrow.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />
     <ClInclude Include="src\actor\island\FloatingIsland.h" />

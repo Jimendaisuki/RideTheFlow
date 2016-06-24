@@ -25,7 +25,7 @@ rotmat(Matrix4::Identity)
 	drawParam.blendMode = BLEND_MODE::Alpha;
 	drawParam.billboardOrigin = Vector2(0, 0);
 
-	MV1SetMaterialDrawAlphaTestAll(Model::GetInstance().GetHandle(MODEL_ID::SAND_MODEL), true, DX_CMP_GREATEREQUAL, 80);
+	//MV1SetMaterialDrawAlphaTestAll(Model::GetInstance().GetHandle(MODEL_ID::SAND_MODEL), true, DX_CMP_GREATEREQUAL, 80);
 }
 
 void SandParticle::OnUpdate()

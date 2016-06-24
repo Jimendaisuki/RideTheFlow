@@ -166,9 +166,10 @@ Player::Player(IWorld& world,bool title_) :
 	dashSpeed = 1.0f;
 	//加速できる時間
 	dashTime = 0.0f;
-
-	//ダッシュのスタミナゲージUIを追加
-	world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
+	if (!title){
+		//ダッシュのスタミナゲージUIを追加
+		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
+	}
 }
 Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
@@ -215,17 +216,18 @@ void Player::Update() {
 				padInputFlag = true;
 		}
 
+		if (!title){
 		Vector2 rStick = GamePad::GetInstance().RightStick();
 
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
-			rotateLeft += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
-			rotateLeft -= rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
-			rotateUp += rotateSpeed * Time::DeltaTime;
-		if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
-			rotateUp -= rotateSpeed * Time::DeltaTime;
-
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
+				rotateLeft += rotateSpeed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
+				rotateLeft -= rotateSpeed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
+				rotateUp += rotateSpeed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
+				rotateUp -= rotateSpeed * Time::DeltaTime;
+		}
 
 		Vector2 lStick = GamePad::GetInstance().Stick();
 
@@ -276,7 +278,7 @@ void Player::Update() {
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-			tp.tackleT = trueVec;
+			tp.tackleT = Vector3(trueVec.x, 0.0f, trueVec.z);
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && tackleForTornadoTime < tackleForTornadoTimelimit) {
 				tp.tornadoTatchFlag = true;
@@ -298,7 +300,7 @@ void Player::Update() {
 		}
 
 		tp.dashFlag = false;
-		if (!title) {
+		if (!title && !tp.tackleFlag) {
 			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
 				windFlowPtr = std::make_shared<WindFlow>(world, *this);
 				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
@@ -368,18 +370,18 @@ void Player::Update() {
 					tackleForTornadoTime = 0.0f;
 				}
 			}
-			else {
-				dashPosStorage.clear();
-				tornadoPosStorage.clear();
-				dashSpeed -= dashAccele * Time::DeltaTime;
-				dashTime -= dashHealSpeed * Time::DeltaTime;
+		}
+		if (!((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) || tp.tackleFlag){
+			dashPosStorage.clear();
+			tornadoPosStorage.clear();
+			dashSpeed -= dashAccele * Time::DeltaTime;
+			dashTime -= dashHealSpeed * Time::DeltaTime;
 
-				if (tornadoPtr == NULL && windFlowPtr == NULL) {
-					tackleForTornadoTime = 0.0f;
-				}
-				else {
-					tackleForTornadoTime += Time::DeltaTime;
-				}
+			if (tornadoPtr == NULL && windFlowPtr == NULL) {
+				tackleForTornadoTime = 0.0f;
+			}
+			else {
+				tackleForTornadoTime += Time::DeltaTime;
 			}
 		}
 		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
@@ -495,13 +497,16 @@ void Player::Update() {
 		upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
 		leftAngle = Math::InfinityClamp(leftAngle, 0.0f, 360.0f);
 
-		Camera::GetInstance().SetRange(0.1f, 9999.0f);
-		Camera::GetInstance().Position.Set(
-			Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
-			parameter.mat.GetPosition() + cameraUpMove);
-		Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-		Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
-		Camera::GetInstance().Update();
+		if (!title)
+		{
+			Camera::GetInstance().SetRange(0.1f, 9999.0f);
+			Camera::GetInstance().Position.Set(
+				Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+				parameter.mat.GetPosition() + cameraUpMove);
+			Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+			Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
+			Camera::GetInstance().Update();
+		}
 
 		Vector3* copyVertexVec = new Vector3[boneCount];
 

@@ -239,6 +239,19 @@ void Model::Draw(const MODEL_ID& id, const Vector3& position, float alpha, Vecto
 	MV1DrawModel(handle);
 }
 
+void Model::Draw(const MODEL_ID& id, const Vector3& position, Vector3 rotate, const Vector3& scale, const Vector4& diffusecolor, const Vector4& specularcolor)
+{
+	rotate = rotate * PI / 180.0f;
+
+	auto handle = m_models.at(id)->GetHangle();
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetRotationXYZ(handle, VGet(rotate.x, rotate.y, rotate.z));
+	MV1SetScale(handle, VGet(scale.x, scale.y, scale.z));
+	MV1SetDifColorScale(handle, GetColorF(diffusecolor.x, diffusecolor.y, diffusecolor.z, diffusecolor.w));
+	MV1SetSpcColorScale(handle, GetColorF(specularcolor.x, specularcolor.y, specularcolor.z, specularcolor.w));
+	MV1DrawModel(handle);
+}
+
 void Model::Draw(const MODEL_ID& id, const Vector3& position, bool trans)
 {
 	auto handle = m_models.at(id)->GetHangle();

@@ -4,14 +4,18 @@
 #include "../camera/Camera.h"
 #include "../graphic/Model.h"
 #include "../graphic/Sprite.h"
+#include "../math/Math.h"
 #include "../time/Time.h"
 #include "../world/IWorld.h"
-#include <list>
+#include <algorithm>
 
 TitleCameraActor::TitleCameraActor(IWorld& world) :
 Actor(world),
 time(0.0f),
-backAlpha(0.0f)
+backAlpha(0.0f),
+fade(false),
+rootCount(0),
+maxRootCount(0)
 {
 	parameter.id = ACTOR_ID::CAMERA_ACTOR;
 	parameter.isDead = false;
@@ -23,8 +27,10 @@ backAlpha(0.0f)
 	useRoots.clear();
 
 	RootLoad();
+	random_shuffle(roots.begin(), roots.end());
+	maxRootCount = roots.size();
 
-	Camera::GetInstance().SetRange(0.1f, 9999.0f);
+	Camera::GetInstance().SetRange(0.1f, 20000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
@@ -33,50 +39,71 @@ backAlpha(0.0f)
 
 TitleCameraActor::~TitleCameraActor()
 {
-	Clear();
+	roots.clear();
+	useRoots.clear();
 }
+
 void TitleCameraActor::Update()
 {
-	if (useRoots.size() == 0)
+	if (fade)
 	{
-		GetRoot(0);
-	}
+		backAlpha += Time::DeltaTime * 5.0f;
+		cameraPos += velocity;
+		targetPos += velocity;
 
- 	if (time <= useRoots.front().moveTime)
-	{
-		float nowTime = time / useRoots.front().moveTime;
-		float targetTime = nowTime + 0.1f;
-
-		switch (useRoots.front().moveNum)
-		{
-		case 2:
-			cameraPos = Lerp(nowTime, useRoots.front().points);
-			targetPos = Lerp(targetTime, useRoots.front().points);
-			velocity = cameraPos - prePos;
-			break;
-		case 3:
-			cameraPos = BeziersCurve3(nowTime, useRoots.front().points);
-			targetPos = BeziersCurve3(targetTime, useRoots.front().points);
-			velocity = cameraPos - prePos;
-			break;
-		case 4:
-			cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
-			targetPos = BeziersCurve4(targetTime, useRoots.front().points);
-			velocity = cameraPos - prePos;
-			break;
-		default:
-			useRoots.clear();
-			break;
-		}
+		if (backAlpha >= 1.0f)
+			fade = !fade;
 	}
 	else
 	{
-		time = 0.0f;
-		useRoots.pop_front();
+		// ルートを取得
+		if (useRoots.size() == 0)
+		{
+			rootCount++;
+			rootCount %= maxRootCount;
+			GetRoot(rootCount);
+		}
+
+		backAlpha -= Time::DeltaTime * 5.0f;
+
+		if (time + 0.1f <= useRoots.front().moveTime)
+		{
+			float nowTime = time / useRoots.front().moveTime;
+			float targetTime = nowTime + 0.1f;
+
+			switch (useRoots.front().moveNum)
+			{
+			case 2:
+				cameraPos = Lerp(nowTime, useRoots.front().points);
+				targetPos = Lerp(targetTime, useRoots.front().points);
+				break;
+			case 3:
+				cameraPos = BeziersCurve3(nowTime, useRoots.front().points);
+				targetPos = BeziersCurve3(targetTime, useRoots.front().points);
+				break;
+			case 4:
+				cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
+				targetPos = BeziersCurve4(targetTime, useRoots.front().points);
+				break;
+			default:
+				useRoots.clear();
+				break;
+			}
+		}
+		else
+		{
+			velocity = cameraPos - prePos;
+			time = 0.0f;
+			useRoots.pop_front();
+			if (useRoots.size() == 0)
+				fade = !fade;
+		}
+
+		time += Time::DeltaTime;
 	}
 
-	time += Time::DeltaTime;
 	prePos = cameraPos;
+	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
 
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
@@ -85,37 +112,11 @@ void TitleCameraActor::Update()
 void TitleCameraActor::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, backAlpha, Vector2(WINDOW_WIDTH / 800.0f, WINDOW_HEIGHT / 600.0f), 0.0f, false, false);
-
-	DrawFormatString(0, 340, GetColor(0, 0, 255), "CameraPos  : [%f] [%f] [%f]", cameraPos.x, cameraPos.y, cameraPos.z);
-	DrawFormatString(0, 360, GetColor(0, 0, 255), "TargetPos  : [%f] [%f] [%f]", targetPos.x, targetPos.y, targetPos.z);
 }
 
 void TitleCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {
 
-}
-
-// ベジエ移動
-void TitleCameraActor::BeziersCurve(float sec)
-{
-	float b = time / sec;
-	float a = 1.0f - b;
-
-	/* 位置算出 */
-	//p.x = a*a*a*frames[0].x + 3 * a*a*b*frames[1].x + 3 * a*b*b*frames[2].x + b*b*b*frames[3].x;
-	//p.y = a*a*a*frames[0].y + 3 * a*a*b*frames[1].y + 3 * a*b*b*frames[2].y + b*b*b*frames[3].y;
-	//p.z = a*a*a*frames[0].z + 3 * a*a*b*frames[1].z + 3 * a*b*b*frames[2].z + b*b*b*frames[3].z;
-
-	Vector3 p = Vector3::Zero;
-
-	/* カメラ・ターゲット位置更新 */
-	targetPos = Vector3(p.x, p.y, p.z);
-	cameraPos = targetPos - (targetPos - prePos).Normalized() * 50.0f;
-
-	// 前フレーム保存
-	prePos = targetPos;
-
-	if (time >= sec) time = 0;
 }
 
 // 線形補間
@@ -157,12 +158,6 @@ Vector3 TitleCameraActor::BeziersCurve4(float sec, Vector3 points[4])
 	return result;
 }
 
-void TitleCameraActor::Clear()
-{
-	//roots.clear();
-	useRoots.clear();
-}
-
 void TitleCameraActor::RootLoad()
 {
 	while (currentRow_ < csv_.rows())
@@ -194,7 +189,7 @@ void TitleCameraActor::AddRootList()
 			csv_.getf(currentRow_, CSV_POSITOIN + 0),
 			csv_.getf(currentRow_, CSV_POSITOIN + 1),
 			csv_.getf(currentRow_, CSV_POSITOIN + 2));
-		root.points[i] = position;
+		root.points[i] = position * Vector3(2.3f, 1.5f, 2.3f) + Vector3(0.0f, 250.0f, 0.0f);
 		currentRow_++;
 	}
 	// 保存
@@ -206,7 +201,7 @@ void TitleCameraActor::GetRoot(int num)
 	useRoots.clear();
 
 	Vector3 p1, p2, centerPos, vecA, vecB;
-	float length, lenA, lenB;
+	float length = 0.0f, lenA = 0.0f, lenB = 0.0f;
 
 	// 保存されたルートデータ
 	RootData rootData = roots[num];
@@ -255,11 +250,16 @@ void TitleCameraActor::GetRoot(int num)
 		centerPos = p1 + (p2 - p1) / 2.0f;
 
 		// 距離を算出
-		vecA = centerPos - rootData.points[0];
-		vecB = rootData.points[5] - centerPos;
-		lenA = vecA.Length();
-		lenB = vecB.Length();
-		length = lenA + lenB;
+		for (int i = 1; i < 6; i++)
+		{
+			Vector3 v = rootData.points[i] - rootData.points[i - 1];
+			length += v.Length();
+		}
+		//vecA = centerPos - rootData.points[0];
+		//vecB = rootData.points[5] - centerPos;
+		//lenA = vecA.Length();
+		//lenB = vecB.Length();
+		//length = lenA + lenB;
 
 		/* ルートA */
 		// 座標の保存
@@ -269,6 +269,10 @@ void TitleCameraActor::GetRoot(int num)
 		}
 		root.points[3] = centerPos;
 		// 時間の算出
+		for (int i = 1; i < 4; i++)
+		{
+			lenA += (root.points[i] - root.points[i - 1]).Length();
+		}
 		root.moveTime = rootData.moveTime * (lenA / length);
 
 		// ルートA保存
@@ -282,6 +286,10 @@ void TitleCameraActor::GetRoot(int num)
 			root.points[i] = rootData.points[i + 2];
 		}
 		// 時間の算出
+		for (int i = 1; i < 4; i++)
+		{
+			lenB += (root.points[i] - root.points[i - 1]).Length();
+		}
 		root.moveTime = rootData.moveTime * (lenB / length);
 
 		// ルートB保存

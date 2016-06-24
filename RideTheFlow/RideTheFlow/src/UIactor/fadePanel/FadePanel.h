@@ -23,8 +23,8 @@ public:
 	void Initialize();
 	void Update();
 	void Draw() const;
-	void FadeIn(float sec);
-	void FadeOut(float sec, float maxAlpha = 1.0f);
+	void FadeIn(float sec = 1.0f);
+	void FadeOut(float sec = 1.0f, float maxAlpha = 1.0f);
 	// •ÏˆÙ’†‚©H
 	bool IsAction() const;
 	// ‰æ–Ê‚ª^‚ÁˆÃ‚©H

@@ -44,9 +44,6 @@ private:
 	bool mIsEnd;
 	World wo,wo2;
 
-	Vector3 position;
-
-
 	// タイトルステータス
 	TITLE_STATUS status;
 
@@ -55,6 +52,7 @@ private:
 	int			stormAlpha;
 	int			count_1;
 	int			count_2;
+	float		stormAlphaTime;
 	float		amount_1;
 	float		amount_2;
 	VERTEX2D	Vertex2D_1[6];
@@ -66,4 +64,9 @@ private:
 	float pressTextBackAlpha;
 	float pressAlphaTime;
 	float pressScale;
+
+	/* 別スクリーン */
+	int		screenHandle;
+	float	screenPos;
+	float	slideTime;
 };

@@ -49,7 +49,7 @@ void MenuScene::Update()
 	case STANBAY:
 		if (MenuPanel::GetInstance().IsEnd())
 		{
-			FadePanel::GetInstance().FadeOut(2.0f);
+			FadePanel::GetInstance().FadeOut(1.0f);
 			status = MENU_STATUS::END;
 		}
 		break;
@@ -62,7 +62,6 @@ void MenuScene::Update()
 	}
 
 	MenuPanel::GetInstance().Update();
-	FadePanel::GetInstance().Update();
 }
 
 //ï`âÊ
@@ -71,7 +70,6 @@ void MenuScene::Draw() const
 	wo.Draw();
 
 	MenuPanel::GetInstance().Draw();
-	FadePanel::GetInstance().Draw();
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "MenuScene");
 	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: Åõ");
 	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: Å~");
