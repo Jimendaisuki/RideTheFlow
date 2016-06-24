@@ -6,6 +6,11 @@
 #include "../time/Time.h"
 #include "../math/Math.h"
 
+static const float LengthMax = 12000.0f;
+static const float FogSettingValue = 0.1f;
+static const float RangeMax = 10.0f;
+static const float AngleSettingValue = 18.0f;
+
 FogActor::FogActor(IWorld& world) :
 Actor(world),
 position(Vector3::Zero),
@@ -23,8 +28,6 @@ FogActor::~FogActor()
 
 }
 
-
-
 void FogActor::Update()
 {
 	position = Camera::GetInstance().Position.Get();
@@ -40,14 +43,23 @@ void FogActor::Update()
 	
 	Vector3 cross = Vector3::Cross(front, toOrigin);
 
-	length = Math::Clamp(length, 1.0f, 2000.0f) * 1.0f;
+	//length = Math::Clamp(length, 1.0f, 2000.0f) * 1.0f;
+	//float anglePower = angle - fogStartAngle;
+	//anglePower = Math::Clamp(anglePower, 1.0f, 90.0f) * 6.0f;
+	//float fogPower = length * anglePower;
+	//float fogMaxPower = 2000.0f * 180.0f * 400.0f;
+
+	//fogTotalPower = fogMaxPower / fogPower;
+	//fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, 2000.0f);
+
+	length = Math::Clamp(length, 1.0f, LengthMax) * FogSettingValue;
 	float anglePower = angle - fogStartAngle;
-	anglePower = Math::Clamp(anglePower, 1.0f, 90.0f) * 6.0f;
+	anglePower = Math::Clamp(anglePower, 1.0f, fogStartAngle) *AngleSettingValue;
 	float fogPower = length * anglePower;
-	float fogMaxPower = 2000.0f * 180.0f * 400.0f;
+	float fogMaxPower = LengthMax * 180.0f * 400.0f;
 
 	fogTotalPower = fogMaxPower / fogPower;
-	fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, 2000.0f);
+	fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, LengthMax);
 
 	SetFogStartEnd(0.0f, fogTotalPower);
 }

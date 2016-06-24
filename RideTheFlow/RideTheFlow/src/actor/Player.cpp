@@ -50,11 +50,15 @@ const float upMoveRange = 10.0f;
 const float angleSpeed = 270.0f;
 
 //スピード
-const float speed = 100.0f;
+const float speed = 200.0f;
+////回転スピード
+//const float rotateSpeed = 150.0f;
+////回転時のAngle
+//const float ryuuRotateAngle = 2.5f;
 //回転スピード
-const float rotateSpeed = 150.0f;
+const float rotateSpeed = 300.0f;
 //回転時のAngle
-const float ryuuRotateAngle = 2.5f;
+const float ryuuRotateAngle = 5.0f;
 
 //タックルのアニメーションのスピード
 const float tackleAnimSpeed = 100.0f;
@@ -68,10 +72,15 @@ const float waitAnimBlendSpeed = 2.0f;
 
 //加速できる時間
 const float dashMaxTime = 20.0f;
+
+////加速する際の加速度
+//const float dashAccele = 1.0f;
+////加速時の最大スピード
+//const float dashMaxSpeed = 1.5f;
 //加速する際の加速度
-const float dashAccele = 1.0f;
+const float dashAccele = 1.5f;
 //加速時の最大スピード
-const float dashMaxSpeed = 1.5f;
+const float dashMaxSpeed = 2.0f;
 //加速ゲージの回復速度
 const float dashHealSpeed = 2.0f;
 

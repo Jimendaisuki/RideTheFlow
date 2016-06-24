@@ -3,10 +3,10 @@
 #include "../UIactor/CsvReader.h"
 #include <string>
 
-class StageGenerator : Actor
+class StageGenerator : public Actor
 {
 public:
-	StageGenerator(IWorld& world, std::string& fileName);
+	StageGenerator(IWorld& world, const std::string& fileName);
 	~StageGenerator();
 	virtual void Update() override;
 	virtual void Draw() const override;
