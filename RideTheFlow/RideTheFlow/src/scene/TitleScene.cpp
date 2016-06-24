@@ -17,6 +17,7 @@
 
 #include "../UIactor/fadePanel/FadePanel.h"
 #include "../actor/Player.h"
+#include "../actor/StageGenerator.h"
 
 
 float	fpsTimer = 0.0f;
@@ -73,6 +74,7 @@ void TitleScene::Initialize()
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
+	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "title_stage"));
 		
 	/* ポリゴンデータ */
 	amount_1 = 0;

@@ -1,7 +1,9 @@
 #include "StageGenerator.h"
 #include "Collision.h"
+#include "castle\MasterCastle.h"
+#include "../world/IWorld.h"
 
-StageGenerator::StageGenerator(IWorld& world, std::string& fileName) :
+StageGenerator::StageGenerator(IWorld& world, const std::string& fileName) :
 Actor(world)
 {
 	parameter.id = ACTOR_ID::STAGE_ACTOR;
@@ -10,7 +12,7 @@ Actor(world)
 	currentRow_ = 0;
 	csv_.load("res/" + fileName + ".csv");
 
-
+	DataLoad();
 
 	parameter.isDead = true;
 }
@@ -36,9 +38,9 @@ void StageGenerator::DataLoad()
 	}
 }
 
-const int CSV_ACTOR_ID = 1;
-const int CSV_POSITION = 2;
-const int CSV_ROTATION = 5;
+const int CSV_ACTOR_ID = 0;
+const int CSV_POSITION = 1;
+const int CSV_ROTATION = 4;
 void StageGenerator::AddActor()
 {
 	// アクター番号取得
@@ -49,10 +51,16 @@ void StageGenerator::AddActor()
 		csv_.getf(currentRow_, CSV_POSITION + 1),
 		csv_.getf(currentRow_, CSV_POSITION + 2))
 		* Vector3(2.3f, 1.5f, 2.3f) + Vector3(0.0f, 250.0f, 0.0f);
+	// 回転角度を取得
+	const Vector3 rotation = Vector3(
+		csv_.getf(currentRow_, CSV_ROTATION + 0),
+		csv_.getf(currentRow_, CSV_ROTATION + 1),
+		csv_.getf(currentRow_, CSV_ROTATION + 2));
 
 	switch (ActorNo)
 	{
 	case 1:	// 城
+		world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position - Vector3(0, 70, 0), false, true, rotation.y));
 
 		break;
 	case 2:	// 
