@@ -26,12 +26,9 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
-	void BeziersCurve(float sec);
 	Vector3 Lerp(float sec, Vector3[]);
 	Vector3 BeziersCurve3(float sec, Vector3 points[]);
 	Vector3 BeziersCurve4(float sec, Vector3 points[]);
-	//void BeziersCurve();
-	void Clear();
 	void RootLoad();
 	void AddRootList();
 	void GetRoot(int num);

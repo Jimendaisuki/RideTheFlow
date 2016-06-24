@@ -16,10 +16,9 @@
 #include "../actor/TitleCameraActor.h"
 
 #include "../UIactor/fadePanel/FadePanel.h"
-#include "../UIactor/Clear.h"
-#include "../UIactor/Failure.h"
 #include "../UIactor/MiniMap.h"
 #include "../actor/Player.h"
+
 
 float	fpsTimer = 0.0f;
 float	fps;
@@ -36,7 +35,7 @@ const float StormAlphaEndTime	= 6.0f;
 /* タイトルテキスト用データ */
 const float TitleAlphaEndTime	= 2.0f;
 /* スクリーン用データ */
-const int endScreenPos = -(WINDOW_WIDTH / 2);
+const float endScreenPos = -(WINDOW_WIDTH / 2.0f);
 
 //コンストラクタ
 TitleScene::TitleScene()
@@ -74,10 +73,8 @@ void TitleScene::Initialize()
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
+	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
 		
-	//wo.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wo));
-	//wo.UIAdd(UI_ID::CLEAR_UI, std::make_shared<Clear>(wo));
-
 	/* ポリゴンデータ */
 	amount_1 = 0;
 	amount_2 = 0;
@@ -104,9 +101,9 @@ void TitleScene::Initialize()
 	screenPos = WINDOW_WIDTH / 4;
 	slideTime = 0;
 
-	/* フェード */
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(2.0f);
+	///* フェード */
+	//FadePanel::GetInstance().Initialize();
+	//FadePanel::GetInstance().FadeIn(2.0f);
 }
 
 void TitleScene::Update()
@@ -122,7 +119,7 @@ void TitleScene::Update()
 		// ドラゴンが動く
 		if (slideTime < 1)
 		{
-			screenPos = Math::Lerp(WINDOW_WIDTH / 4, endScreenPos, slideTime);
+			screenPos = Math::Lerp(WINDOW_WIDTH / 4.0f, endScreenPos, slideTime);
 			slideTime += Time::DeltaTime / 3.0f;
 		}
 		else
@@ -157,7 +154,7 @@ void TitleScene::Update()
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
 			GamePad::GetInstance().AnyTriggerDown())
 		{
-			FadePanel::GetInstance().FadeOut(2.0f);
+			FadePanel::GetInstance().FadeOut(1.0f);
 			status = TITLE_STATUS::TITLE_END;
 		}
 		break;
@@ -181,8 +178,6 @@ void TitleScene::Update()
 	/* 各種更新 */
 	wo.Update();
 	wo2.Update();
-
-	FadePanel::GetInstance().Update();
 
 	/* 以下デバッグ用 */
 	// シーン終了
@@ -232,7 +227,7 @@ void TitleScene::Draw() const
 	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
 	wo2.Draw();
 	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(screenPos, -100, screenHandle, TRUE);
+	DrawGraphF(screenPos, -100.0f, screenHandle, TRUE);
 
 	
 	/* テキスト */
@@ -243,8 +238,6 @@ void TitleScene::Draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextAlpha, Vector2(0.6f + pressScale), true, false);
 
 	//if (IsStatusBegEnd()) 
-	FadePanel::GetInstance().Draw();
-
 
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%.1f", fps);
 }

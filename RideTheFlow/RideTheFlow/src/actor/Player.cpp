@@ -497,13 +497,16 @@ void Player::Update() {
 		upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
 		leftAngle = Math::InfinityClamp(leftAngle, 0.0f, 360.0f);
 
-		Camera::GetInstance().SetRange(0.1f, 9999.0f);
-		Camera::GetInstance().Position.Set(
-			Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
-			parameter.mat.GetPosition() + cameraUpMove);
-		Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-		Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
-		Camera::GetInstance().Update();
+		if (!title)
+		{
+			Camera::GetInstance().SetRange(0.1f, 9999.0f);
+			Camera::GetInstance().Position.Set(
+				Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+				parameter.mat.GetPosition() + cameraUpMove);
+			Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+			Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
+			Camera::GetInstance().Update();
+		}
 
 		Vector3* copyVertexVec = new Vector3[boneCount];
 
