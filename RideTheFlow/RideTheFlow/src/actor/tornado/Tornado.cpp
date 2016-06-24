@@ -60,6 +60,8 @@ void Tornado::Update()
 	velocity.y = -GRAVITY;
 	position += velocity * speed  * Time::DeltaTime;
 
+	parameter.velocity = velocity;
+
 	parameter.mat =
 		Matrix4::Scale(scale) *
 		Matrix4::RotateZ(0) *

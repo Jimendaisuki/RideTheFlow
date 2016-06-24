@@ -33,18 +33,31 @@ flowRotYAdd(Random::GetInstance().Range(-5.0f, 5.0f)),
 flowAddPosition(Vector3::Zero)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 20.0f;
+	lifeParam.lifeTimeLimit = 12.0f;
 	lifeParam.isDead = false;
 
 	moveParam.pos = position_;
 	moveParam.vec = vec_;
 
 	drawParam.drawID = id_;
+	drawParam.alpha = 0.2f;
 	drawParam.size = 30.0f;
+
+	if (breakSelect == BREAK_SELECT::WIND_BALL)
+	{
+		lifeParam.lifeTimeLimit = 3.0f;
+		moveParam.vec.y = Random::GetInstance().Range(-8.0f, -30.0f);
+		ballRotXSpeed = Random::GetInstance().Range(-90.0f, 90.0f);
+		ballRotYSpeed = Random::GetInstance().Range(-90.0f, 90.0f);
+	}
+	
 }
 
 void BreakCastleParticle::OnUpdate()
 {
+	//ƒAƒ‹ƒtƒ@’l‚ÌŒvŽZ‚Í‹¤’Ê
+	drawParam.alpha = (lifeParam.lifeTimeLimit - lifeParam.lifeTime) / 2.0f;
+
 	switch (breakSelect)
 	{
 	case TORNADO: TornadoBreak(); break;
@@ -57,7 +70,7 @@ void BreakCastleParticle::OnUpdate()
 
 void BreakCastleParticle::Draw() const
 {
-	Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), mat.GetRotateDegree(), mat.GetScale());
+	Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), drawParam.alpha,mat.GetRotateDegree(), mat.GetScale());
 }
 
 void BreakCastleParticle::TornadoBreak()
@@ -116,6 +129,17 @@ void BreakCastleParticle::WindFlowBreak()
 
 void BreakCastleParticle::WindBallBreak()
 {
+	//ˆÚ“®
+	moveParam.pos += moveParam.vec * Time::DeltaTime;
+
+	//‰ñ“]ŒvŽZ
+	rotX += ballRotXSpeed * Time::DeltaTime;
+	rotY += ballRotYSpeed * Time::DeltaTime;
+
+	rotmat =
+		Matrix4::RotateY(rotY) *
+		Matrix4::RotateX(rotX);
+
 	mat =
 		Matrix4::Scale(drawParam.size) *
 		rotmat *

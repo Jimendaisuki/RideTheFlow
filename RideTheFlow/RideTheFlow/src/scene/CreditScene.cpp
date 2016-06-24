@@ -71,7 +71,7 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 
-	wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_FLOW));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_BALL));
 
 	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0), true));
 	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -20, 0), false));

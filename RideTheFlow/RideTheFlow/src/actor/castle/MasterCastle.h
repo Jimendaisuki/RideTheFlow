@@ -3,6 +3,7 @@
 #include "../../math/Vector3.h"
 #include "CastleParameter.h"
 #include<memory>
+#include "../particle/BreakCastle.h"
 
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
@@ -57,4 +58,9 @@ private:
 	//–³“GŠÖŒW
 	bool damage;
 	float InvincibleTimer;
+
+	//€ˆö
+	BREAK_SELECT breakSelect;
+	//—³Šª‚Å€‚ñ‚¾ê‡‚Ì—³Šª‚ÌˆÚ“®—Ê
+	Vector3 tornadoVelocity;
 };

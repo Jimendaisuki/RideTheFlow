@@ -47,6 +47,7 @@ private:
 	void WindBallBreakUpdate();
 	void WindBallBreakEmissive();
 
+	void CastleEmissive(const Vector3& vec_);
 	Vector3 RandomVelocity();
 
 private:
@@ -54,5 +55,4 @@ private:
 	//城と壊れ方をコンストラクタで選択
 	CASTLE_SELECT castleSelect;
 	BREAK_SELECT breakSelect;
-	float rotX, rotY;
 };
