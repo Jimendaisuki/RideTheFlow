@@ -318,12 +318,12 @@ void Player::Update() {
 			}
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
 				tornadoFlag = false;
+				dashAfter = true;
+				dashAfterTime = 0.0f;
 			}
 
 
 			if ((Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5))) {
-				dashAfter = true;
-				dashAfterTime = 0.0f;
 			}
 
 			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
