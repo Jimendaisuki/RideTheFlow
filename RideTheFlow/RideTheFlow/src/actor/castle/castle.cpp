@@ -108,10 +108,6 @@ void Castle::Update()
 		velocity.y -= 100.0f*Time::DeltaTime;
 	}
 	mPosition += velocity*Time::DeltaTime;
-<<<<<<< HEAD
-
-=======
->>>>>>> ca613e90b545e9dc2a844c22abedb38c72c800a8
 
 	//マスターが壊れたら自分も壊れる
 	if (parent->GetParameter().isDead || Keyboard::GetInstance().KeyTriggerDown(KEYCODE::H))
