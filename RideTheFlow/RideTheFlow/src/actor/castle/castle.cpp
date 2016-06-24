@@ -86,30 +86,32 @@ void Castle::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
 
-		float masterHeight = parent->GetParameter().mat.GetPosition().y + parent->GetParameter().radius * 2;
-		float castleHeight = parameter.radius * 2;
-		float a = masterHeight + castleHeight*(mRank - 1);
-		float b = parameter.mat.GetPosition().y;
-		if (masterHeight+castleHeight*(mRank-1)>=parameter.mat.GetPosition().y)
-		{
-			velocity = 0.0f;
-		}
-		else
-		{
-			velocity.y -= 100.0f*Time::DeltaTime;
-		}
-		mPosition += velocity*Time::DeltaTime;
+	float masterHeight = parent->GetParameter().mat.GetPosition().y + parent->GetParameter().radius * 2;
+	float castleHeight = parameter.radius * 2;
+	float a = masterHeight + castleHeight*(mRank - 1);
+	float b = parameter.mat.GetPosition().y;
+	if (masterHeight + castleHeight*(mRank - 1) >= parameter.mat.GetPosition().y)
+	{
+		velocity = 0.0f;
+	}
+	else
+	{
+		velocity.y -= 100.0f*Time::DeltaTime;
+	}
+	mPosition += velocity*Time::DeltaTime;
+
 
 	//マスターが壊れたら自分も壊れる
 	if (parent->GetParameter().isDead||Keyboard::GetInstance().KeyTriggerDown(KEYCODE::H))
 	{
-		//static_cast<MasterCastle*>(const_cast<Actor*>(parent))->castleLost();
 		parameter.isDead = true;
 		//がれきを飛ばす
-		for (int i = 0; i < 8; i++){
-			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleBlock>(world, mPosition + Vector3(0.0f, Random::GetInstance().Range(-10.0f, 10.0f), 0.0f)));
-		}
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 	}
+	//マスターの状態取得
+	MasterCastle* mas = static_cast<MasterCastle*>(const_cast<Actor*>(parent));
+	breakSelect = mas->getBreakSelect();
+	tornadoVelocity = mas->getTornadoVelocity();
 
 	//無敵時間
 	if (!damage)
@@ -126,6 +128,7 @@ void Castle::Update()
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
+
 }
 
 void Castle::Draw() const

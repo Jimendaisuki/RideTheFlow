@@ -279,7 +279,7 @@ void MonhanCameraActor::Update()
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
 	Camera::GetInstance().Target.Set(playerMat.GetPosition());
-	Camera::GetInstance().SetRange(0.1f, 20000.0f);
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().SetViewAngle(fov);
 	Camera::GetInstance().Update();

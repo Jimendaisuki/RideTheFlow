@@ -8,7 +8,7 @@
 #include "../../time/Time.h"
 
 //—¬‚ê‚É—¬‚³‚ê‚Ä‚¢‚éŽž‚Ì‘¬“x
-static const float FlowSpeed = 60.0f;
+static const float FlowSpeed = 160.0f;
 
 BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const Vector3& velocity_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_) :
 Actor(world),
@@ -168,5 +168,5 @@ void BreakCastle::CastleEmissive(const Vector3& vec_)
 Vector3 BreakCastle::RandomVelocity()
 {
 	Random &r = Random::GetInstance();
-	return Vector3(r.Range(-1.0f, 1.0f), r.Range(-1.0f, 1.0f), r.Range(-1.0f, 1.0f)).Normalized() * r.Range(1.0f, 3.0f);
+	return Vector3(r.Range(-1.0f, 1.0f), r.Range(-1.0f, 1.0f), r.Range(-1.0f, 1.0f)).Normalized() * r.Range(3.0f, 9.0f);
 }
