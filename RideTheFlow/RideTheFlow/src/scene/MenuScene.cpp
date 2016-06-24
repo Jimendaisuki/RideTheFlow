@@ -3,6 +3,7 @@
 #include "../UIactor/menuPanel/MenuPanel.h"
 #include "../actor/Stage.h"
 #include "../input/Keyboard.h"
+#include "../camera/Camera.h"
 
 //コンストラクタ
 MenuScene::MenuScene()
@@ -62,6 +63,7 @@ void MenuScene::Update()
 	}
 
 	MenuPanel::GetInstance().Update();
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 }
 
 //描画
