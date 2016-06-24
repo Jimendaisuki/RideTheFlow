@@ -507,7 +507,7 @@ void Player::Update() {
 
 		if (!title)
 		{
-			Camera::GetInstance().SetRange(0.1f, 9999.0f);
+			Camera::GetInstance().SetRange(0.1f, 40000.0f);
 			Camera::GetInstance().Position.Set(
 				Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 				parameter.mat.GetPosition() + cameraUpMove);
