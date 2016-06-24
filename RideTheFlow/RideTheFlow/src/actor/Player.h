@@ -37,7 +37,6 @@ public:
 	{
 		parameter.HP -= damage;
 	}
-	void ColSpear(Actor* parent);
 	bool ReturnDead(){ return dead; }
 
 private:

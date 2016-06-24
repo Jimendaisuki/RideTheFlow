@@ -111,7 +111,7 @@ void MasterCastle::Update()
 			spawnShipTimer += Time::DeltaTime;
 			if (spawnShipTimer >= SpawnShipEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR) < SpawnMaxShipEnemey)
 			{
-				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, parameter.mat.GetFront()*-3 + parameter.mat.GetUp() * 5 + mPosition));
+				world.Add(ACTOR_ID::SHIP_ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, parameter.mat.GetFront()*-3 + parameter.mat.GetUp() * 5 + mPosition));
 				spawnShipTimer = 0.0f;
 			}
 		}
@@ -120,7 +120,7 @@ void MasterCastle::Update()
 			spawanArmyTimer += Time::DeltaTime;
 			if (spawanArmyTimer >= SpawnArmyEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::ARMY_ENEMY_ACTOR) < SpawnMaxArmyEnemy)
 			{
-				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, parameter.mat.GetFront()*-2 + Vector3(0, 2, 0) + mPosition));
+				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, parameter.mat.GetFront().Normalized()*-65.0f + Vector3(0, 15, 0) + mPosition));
 				spawanArmyTimer = 0.0f;
 			}
 		}

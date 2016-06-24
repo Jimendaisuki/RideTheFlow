@@ -22,6 +22,7 @@ private:
 	Vector3 toPoint;
 	Vector3 rotate;
 
+	float downTime;
 	float mSecondAttack;
 	float mArrowNumber;
 	
