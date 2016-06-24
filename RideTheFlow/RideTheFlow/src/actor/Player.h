@@ -40,6 +40,8 @@ public:
 	bool ReturnDead(){ return dead; }
 
 private:
+	Matrix4* deadBeforeLocalMatrix;
+	int deadMatrixSet = 0;
 
 	bool title;
 	//デバック表示まとめ

@@ -507,7 +507,7 @@ Matrix4& Matrix4::operator = (const Matrix4& m_)
 {
 	for (int i = 0; i < 4; i++){
 		for (int j = 0; j < 4; j++){
-			m[i][j] = m_.m[i][j];
+ 			m[i][j] = m_.m[i][j];
 		}
 	}
 	return *this;
