@@ -32,7 +32,7 @@ maxRootCount(0)
 	std::random_shuffle(roots.begin(), roots.end());
 	maxRootCount = roots.size();
 
-	Camera::GetInstance().SetRange(0.1f, 25000.0f);
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
