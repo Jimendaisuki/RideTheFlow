@@ -284,7 +284,7 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
+		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)) && !tp.tackleFlag && leftStickMove) {
 			tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
@@ -311,14 +311,14 @@ void Player::Update() {
 
 		tp.dashFlag = false;
 		if (!title && !tp.tackleFlag) {
-			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
+			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM7)) {
 				windFlowPtr = std::make_shared<WindFlow>(world, *this);
 				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
 			}
-			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
+			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM7)) {
 				tornadoFlag = false;
 			}
-			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
+			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7)) && !tornadoFlag) {
 				if (dashHealFlag) {
 					dashPosStorage.clear();
 					tornadoPosStorage.clear();

@@ -96,7 +96,7 @@ void MonhanCameraActor::Update()
 	{
 		playerPosition = playerMat.GetPosition();
 		//デフォルトでのカメラ
-		if (!tp.tackleFlag&&!tp.dashFlag&&posMove2)
+		if (!tp.tackleFlag&&posMove2)
 		{
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
