@@ -7,6 +7,7 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 #include "../world/IWorld.h"
+#include "../game/Random.h"
 #include <algorithm>
 
 TitleCameraActor::TitleCameraActor(IWorld& world) :
@@ -26,8 +27,9 @@ maxRootCount(0)
 	roots.clear();
 	useRoots.clear();
 
+
 	RootLoad();
-	random_shuffle(roots.begin(), roots.end());
+	std::random_shuffle(roots.begin(), roots.end());
 	maxRootCount = roots.size();
 
 	Camera::GetInstance().SetRange(0.1f, 20000.0f);
@@ -59,9 +61,9 @@ void TitleCameraActor::Update()
 		// ÉãÅ[ÉgÇéÊìæ
 		if (useRoots.size() == 0)
 		{
-			rootCount++;
 			rootCount %= maxRootCount;
 			GetRoot(rootCount);
+			rootCount++;
 		}
 
 		backAlpha -= Time::DeltaTime * 5.0f;
@@ -82,8 +84,17 @@ void TitleCameraActor::Update()
 				targetPos = BeziersCurve3(targetTime, useRoots.front().points);
 				break;
 			case 4:
-				cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
-				targetPos = BeziersCurve4(targetTime, useRoots.front().points);
+				if (useRoots.size() == 1)
+				{
+					cameraPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, nowTime), useRoots.front().points);
+					targetPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, targetTime), useRoots.front().points);
+				}
+				else
+				{
+					cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
+					targetPos = BeziersCurve4(targetTime, useRoots.front().points);
+				}
+
 				break;
 			default:
 				useRoots.clear();
@@ -168,8 +179,8 @@ void TitleCameraActor::RootLoad()
 
 const int CSV_POINT_NUM = 0;
 const int CSV_MOVE_TIME = 1;
-const int CSV_OFFSET    = 2;
-const int CSV_POSITOIN  = 5;
+const int CSV_POSITOIN  = 2;
+const int CSV_OFFSET	= 5;
 void TitleCameraActor::AddRootList()
 {
 	RootData root;
