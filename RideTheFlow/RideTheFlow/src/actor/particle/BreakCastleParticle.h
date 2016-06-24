@@ -52,4 +52,5 @@ private:
 	Vector3 flowAddPosition;
 
 	//‹ó‹C–C
+	float ballRotXSpeed, ballRotYSpeed;
 };

@@ -16,7 +16,6 @@
 #include "../actor/TitleCameraActor.h"
 
 #include "../UIactor/fadePanel/FadePanel.h"
-#include "../UIactor/MiniMap.h"
 #include "../actor/Player.h"
 
 
@@ -218,13 +217,9 @@ void TitleScene::Draw() const
 	/* 龍 */
 	SetDrawScreen(screenHandle);
 	ClearDrawScreen();
-	Camera::GetInstance().Position.Set(Vector3(200, 0, 0));
-	Camera::GetInstance().Target.Set(Vector3::Zero);
-	Camera::GetInstance().Update();
-
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "TitleScene");
-	DrawFormatString(0, 280, GetColor(255, 0, 0), "C		: フェードアウト");
-	DrawFormatString(0, 300, GetColor(255, 0, 0), "V		: フェードイン");
+	SetCameraPositionAndTarget_UpVecY(
+		VGet(200.0f, 0.0f, 0.0f),
+		VGet(0.0f, 0.0f, 0.0f));
 	wo2.Draw();
 	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraphF(screenPos, -100.0f, screenHandle, TRUE);
@@ -236,8 +231,6 @@ void TitleScene::Draw() const
 	// エニープッシュ
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f + pressScale), true, false);
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextAlpha, Vector2(0.6f + pressScale), true, false);
-
-	//if (IsStatusBegEnd()) 
 
 	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%.1f", fps);
 }

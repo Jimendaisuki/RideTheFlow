@@ -14,18 +14,19 @@ BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const Vector3&
 Actor(world),
 velocity(velocity_),
 castleSelect(castle_),
-breakSelect(break_),
-rotX(0.0f),
-rotY(0.0f)
+breakSelect(break_)
 {
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 50.0f;
 	ps_parameter.position = position_;
 	ps_parameter.intervalSec = 10000.0f;
-	ps_parameter.lifeTimeLimit = 20.0f;
+	ps_parameter.lifeTimeLimit = 12.1f;
 	ps_parameter.sameEmissiveNum = 1;
 	ps_parameter.trigger = true;
+
+	if (breakSelect == BREAK_SELECT::WIND_BALL)
+		ps_parameter.lifeTimeLimit = 3.1f;
 }
 BreakCastle::~BreakCastle()
 {
@@ -84,32 +85,7 @@ void BreakCastle::TornadoBreakUpdate()
 
 void BreakCastle::TornadoBreakEmissive()
 {
-	//モデルID、壊れ方、座標、移動方向*移動量、初期回転X、初期回転Y
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_1_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, Vector3::Zero, rotX, rotY));
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_2_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 36, 0), Vector3::Zero, rotX, rotY));
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_4_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 10, -26), Vector3::Zero, rotX, rotY));
-
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(-26, 16, 10), Vector3::Zero, rotX, rotY + 90));
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(-26, 16, -10), Vector3::Zero, rotX, rotY + 90));
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(26, 16, 10), Vector3::Zero, rotX, rotY - 90));
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(26, 16, -10), Vector3::Zero, rotX, rotY - 90));
-	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 16, 26), Vector3::Zero, rotX, rotY + 180));
-
-	for (int i = 0; i < 4; i++)
-	{
-		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position, Vector3(-42 + 28 * i, 4, 36), Vector3::Zero, rotX, rotY));
-		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position, Vector3(-42 + 28 * i, 4, -36), Vector3::Zero, rotX, rotY));
-	}
+	CastleEmissive(Vector3::Zero);
 }
 
 void BreakCastle::WindFlowBreakUpdate()
@@ -124,29 +100,29 @@ void BreakCastle::WindFlowBreakEmissive()
 {
 	//モデルID、壊れ方、座標、移動方向*移動量、初期回転X、初期回転Y
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_1_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, RandomVelocity(), rotX, rotY));
+		MODEL_ID::CASTLE_BREAK_1_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, RandomVelocity(), 0, 0));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_2_MODEL, breakSelect, &ps_parameter.position,  Vector3(0, 36, 0), RandomVelocity(), rotX, rotY));
+		MODEL_ID::CASTLE_BREAK_2_MODEL, breakSelect, &ps_parameter.position,  Vector3(0, 36, 0), RandomVelocity(), 0, 0));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_4_MODEL, breakSelect, &ps_parameter.position,  Vector3(0, 10, -26), RandomVelocity(), rotX, rotY));
+		MODEL_ID::CASTLE_BREAK_4_MODEL, breakSelect, &ps_parameter.position,  Vector3(0, 10, -26), RandomVelocity(), 0, 0));
 
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(-26, 16, 10), RandomVelocity(), rotX, rotY + 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(-26, 16, 10), RandomVelocity(), 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(-26, 16, -10), RandomVelocity(), rotX, rotY + 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(-26, 16, -10), RandomVelocity(), 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(26, 16, 10), RandomVelocity(), rotX, rotY - 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(26, 16, 10), RandomVelocity(), 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(26, 16, -10), RandomVelocity(), rotX, rotY - 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(26, 16, -10), RandomVelocity(), 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(0, 16, 26), RandomVelocity(), rotX, rotY + 180));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position,  Vector3(0, 16, 26), RandomVelocity(), 0, 180));
 
 	for (int i = 0; i < 4; i++)
 	{
 		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position,  Vector3(-42 + 28 * i, 4, 36), RandomVelocity(), rotX, rotY));
+			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position,  Vector3(-42 + 28 * i, 4, 36), RandomVelocity(), 0, 0));
 		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position,  Vector3(-42 + 28 * i, 4, -36), RandomVelocity(), rotX, rotY));
+			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position,  Vector3(-42 + 28 * i, 4, -36), RandomVelocity(), 0, 0));
 	}
 }
 
@@ -157,31 +133,35 @@ void BreakCastle::WindBallBreakUpdate()
 
 void BreakCastle::WindBallBreakEmissive()
 {
-	//モデルID、壊れ方、座標、移動方向*移動量、初期回転X、初期回転Y
+	CastleEmissive(Vector3::Zero);
+}
+
+void BreakCastle::CastleEmissive(const Vector3& vec_)
+{
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_1_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position, velocity, rotX, rotY));
+		MODEL_ID::CASTLE_BREAK_1_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, vec_, 0, 0));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_2_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(0, 36, 0), velocity, rotX, rotY));
+		MODEL_ID::CASTLE_BREAK_2_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 36, 0), vec_, 0, 0));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_4_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(0, 10, -26), velocity, rotX, rotY));
+		MODEL_ID::CASTLE_BREAK_4_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 10, -26), vec_, 0, 0));
 
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(-26, 16, 10), velocity, rotX, rotY + 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(-26, 16, 10), vec_, 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(-26, 16, -10), velocity, rotX, rotY + 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(-26, 16, -10), vec_, 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(26, 16, 10), velocity, rotX, rotY - 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(26, 16, 10), vec_, 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(26, 16, -10), velocity, rotX, rotY - 90));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(26, 16, -10), vec_, 0, 90));
 	AddParticle(std::make_shared<BreakCastleParticle>(
-		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(0, 16, 26), velocity, rotX, rotY + 180));
+		MODEL_ID::CASTLE_BREAK_5_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 16, 26), vec_, 0, 180));
 
 	for (int i = 0; i < 4; i++)
 	{
 		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(-42 + 28 * i, 4, 36), velocity, rotX, rotY));
+			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position, Vector3(-42 + 28 * i, 4, 36), Vector3::Zero, 0, 0));
 		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position, ps_parameter.position + Vector3(-42 + 28 * i, 4, -36), velocity, rotX, rotY));
+			MODEL_ID::CASTLE_BREAK_6_MODEL, breakSelect, &ps_parameter.position, Vector3(-42 + 28 * i, 4, -36), Vector3::Zero, 0, 0));
 	}
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "../UIactor/Beziers.h"
 #include "../UIactor/CsvReader.h"
 
 class TitleCameraActor : public Actor
@@ -44,6 +45,7 @@ private:
 	int		rootCount;
 	int		maxRootCount;
 
+	CBezier				  bez;
 	CsvReader			  csv_;
 	int					  currentRow_;
 	std::vector<RootData> roots;

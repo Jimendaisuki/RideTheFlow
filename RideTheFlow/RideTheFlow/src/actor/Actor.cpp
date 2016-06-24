@@ -309,6 +309,7 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	/* ResultData */
 	colpara = Collisin::GetInstace().CapsuleCapsule(tornado, castle);
 	colpara.colID = COL_ID::TORNADO_CASTLE_COL;
+	colpara.colVelosity = parameter.velocity;
 
 	return colpara;
 }

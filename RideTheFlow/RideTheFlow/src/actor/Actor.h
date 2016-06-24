@@ -17,6 +17,7 @@ struct ActorParameter
 	Vector3 height;
 	Matrix4 mat;
 	float   HP;
+	Vector3 velocity;
 };
 
 class Actor{
