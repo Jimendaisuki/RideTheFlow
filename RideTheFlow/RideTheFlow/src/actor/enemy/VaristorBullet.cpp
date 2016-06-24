@@ -22,7 +22,8 @@ mScale(2.0f),
 mRotateY(rotateY),
 mRotateZ(attackAngleZ),
 windVec(Vector3::Zero),
-isWindCol(false)
+isWindCol(false),
+seveVec(Vector3::Zero)
 {
 	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
 	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
@@ -40,12 +41,12 @@ isWindCol(false)
 }
 VaristorBullet::~VaristorBullet()
 {
-
 }
 void VaristorBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
 	time += VaristorSpeed*Time::DeltaTime;
+	prevPosition = mPosition;
 	//進行方向を計算
 	vec = Vector3(
 		VaristorInitialVelocity*Math::Cos(mRotateY),
@@ -60,11 +61,12 @@ void VaristorBullet::Update()
 
 	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
 
-	vec.Normalize();
+	seveVec = mPosition - prevPosition;
+	seveVec.Normalize();
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale) *
-		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), vec).Normalized(), Vector3::Inner(Vector3(0, 0, -1), vec)) *
+		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), seveVec).Normalized(), Vector3::Inner(Vector3(0, 0, -1), seveVec)) *
 		Matrix4::Translate(mPosition);
 
 	//流れの向きとフラグをリセット

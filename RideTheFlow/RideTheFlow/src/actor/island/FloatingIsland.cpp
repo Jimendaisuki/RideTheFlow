@@ -36,7 +36,7 @@ void FroatingIsland::Update()
 
 void FroatingIsland::Draw() const
 {
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 20, 1, 1, FALSE);
+	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, parameter.mat);
 }
 
 void FroatingIsland::OnCollide(Actor& other, CollisionParameter colpara)

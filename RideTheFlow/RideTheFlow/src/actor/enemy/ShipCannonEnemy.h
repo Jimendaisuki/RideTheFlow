@@ -21,6 +21,7 @@ private:
 	Vector3 mPosition;
 	Vector3 rotate;
 	Matrix4 playerMat;
+	Matrix4 enemyMat;
 	float playerDot;
 
 	float backDot;

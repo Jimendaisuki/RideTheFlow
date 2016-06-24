@@ -87,6 +87,7 @@
     <ClCompile Include="src\actor\castle\CastleCannon.cpp" />
     <ClCompile Include="src\actor\castle\CastleDoragonSpear.cpp" />
     <ClCompile Include="src\actor\castle\CastleTop.cpp" />
+    <ClCompile Include="src\actor\castle\CastleVaristor.cpp" />
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonBullet.cpp" />
@@ -98,8 +99,10 @@
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\FogActor.cpp" />
+    <ClCompile Include="src\actor\NoShipArea.cpp" />
     <ClCompile Include="src\actor\particle\BreakCastleParticle.cpp" />
     <ClCompile Include="src\actor\particle\BreakCastle.cpp" />
+    <ClCompile Include="src\actor\StageGenerator.cpp" />
     <ClCompile Include="src\UIactor\CsvReader.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
     <ClCompile Include="src\UIactor\FlowRoot.cpp" />
@@ -178,6 +181,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\actor\castle\CastleVaristor.h" />
+    <ClInclude Include="src\actor\NoShipArea.h" />
     <ClInclude Include="src\actor\particle\BreakCastle.h" />
     <ClInclude Include="src\actor\castle\CastleCannon.h" />
     <ClInclude Include="src\actor\castle\CastleDoragonSpear.h" />
@@ -198,6 +203,7 @@
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\FogActor.h" />
     <ClInclude Include="src\actor\particle\BreakCastleParticle.h" />
+    <ClInclude Include="src\actor\StageGenerator.h" />
     <ClInclude Include="src\UIactor\CsvReader.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />
     <ClInclude Include="src\UIactor\FlowRoot.h" />

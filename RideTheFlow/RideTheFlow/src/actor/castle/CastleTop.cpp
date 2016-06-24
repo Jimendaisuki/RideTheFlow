@@ -4,12 +4,11 @@
 #include "../../graphic/Sprite.h"
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
-#include "CastleCannon.h"
-#include"../enemy/EnemyBullet.h"
 #include "../../math/Math.h"
 #include"CastleParameter.h"
+#include "../NoShipArea.h"
 
-CastleTop::CastleTop(IWorld& world, Vector3 position, MasterCastle& mc) :
+CastleTop::CastleTop(IWorld& world, Vector3 position, MasterCastle& mc,float rotateY) :
 Actor(world),
 playerMat(Matrix4::Identity),
 mPosition(position),
@@ -36,6 +35,10 @@ noCol(false)
 		Matrix4::Translate(position);
 	mMc = &mc;
 	mRank = 0.0f;
+	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*4, 0.0f)
+		, parameter.radius, *this));
+	mRotateY = rotateY;
 }
 
 CastleTop::~CastleTop()
@@ -93,6 +96,7 @@ void CastleTop::Update()
 		parameter.isDead = true;
 	}
 	parameter.mat = Matrix4::Scale(mScale)*
+		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
 }
 

@@ -3,12 +3,11 @@
 #include "../../math/Vector3.h"
 #include "CastleParameter.h"
 #include<memory>
-#include "../particle/BreakCastle.h"
 
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
 public:
-	MasterCastle(IWorld& world, Vector3 position,bool spawnShip);
+	MasterCastle(IWorld& world, Vector3 position,bool spawnShip,bool title,float rotateY);
 	~MasterCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -33,6 +32,7 @@ private:
 	Vector3 mScale;
 	Vector3 mPosition;
 	Vector3 toPoint;
+	float mRotateY;
 
 	//UŒ‚ŠÖŒW
 	float mSecondAttack;
@@ -55,12 +55,11 @@ private:
 	bool mSpawnShip;
 	bool downCastle;
 
+
 	//–³“GŠÖŒW
 	bool damage;
 	float InvincibleTimer;
 
-	//€ˆö
-	BREAK_SELECT breakSelect;
-	//—³Šª‚Å€‚ñ‚¾ê‡‚Ì—³Šª‚ÌˆÚ“®—Ê
-	Vector3 tornadoVelocity;
+	//ƒ^ƒCƒgƒ‹
+	bool mTitle;
 };

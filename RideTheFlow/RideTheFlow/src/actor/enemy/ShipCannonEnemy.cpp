@@ -12,6 +12,7 @@
 ShipCannonEnemy::ShipCannonEnemy(IWorld& world, Vector3 position, ShipEnemy& se, bool left, float rotateY) :
 Actor(world),
 playerMat(Matrix4::Identity),
+enemyMat(Matrix4::Identity),
 attackRag(0),
 attackTime(0),
 arrowCount(0),
@@ -138,10 +139,15 @@ void ShipCannonEnemy::Update()
 		Quaternion::RotateAxis(Vector3::Up, rotate.y) *
 		Matrix4::Scale(1.0f)*
 		Matrix4::Translate(mPosition);
+	enemyMat =
+		Quaternion::RotateAxis(Vector3::Up, rotate.y) *
+		Matrix4::Scale(1.0f)*
+		Matrix4::Translate(mPosition + parameter.mat.GetLeft().Normalized()*-3.0f);
 }
 void ShipCannonEnemy::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
+	Model::GetInstance().Draw(MODEL_ID::HUMAN_CANNON_MODEL, enemyMat);
 }
 void ShipCannonEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

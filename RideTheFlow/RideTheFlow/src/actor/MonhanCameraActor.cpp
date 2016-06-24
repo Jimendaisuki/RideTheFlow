@@ -31,7 +31,6 @@ const float BackDashCamera = 300.0f;
 MonhanCameraActor::MonhanCameraActor(IWorld& world) :Actor(world),
 playerPosSeve(Vector3::Zero),
 velocity(Vector3::Zero),
-targetVelo(Vector3::Zero),
 posMove1(true),
 posMove2(true),
 cameraFovFlag(true),
@@ -43,8 +42,7 @@ rotateVelo(0.0f),
 leapTimer(0.0f),
 restLeapTimer(0.0f),
 tackleLeapTimer(0.0f),
-fovVelo(0.0f),
-targetY(0.0f)
+fovVelo(0.0f)
 {
 	//パラメーター設定
 	parameter.isDead = false;
@@ -65,13 +63,12 @@ targetY(0.0f)
 	position = DefaultCamera();
 	restPosition = position;
 	fov = 60.0f;
-	cameraTarget = playerMat.GetPosition();
-	restCameraTarget=cameraTarget;
 	posSeveStart = DefaultCamera();
 	restRotate = rotateLeft;
 	
 	startTarget = Vector3::Zero;
 	endTarget = Vector3::Zero;
+
 	
 
 }
@@ -135,32 +132,30 @@ void MonhanCameraActor::Update()
 				rotateUp = Math::Atan2(playerMat.GetPosition().x - (-playerMat.GetFront().x + playerMat.GetPosition().x),
 					playerMat.GetPosition().z - (-playerMat.GetFront().z + playerMat.GetPosition().z))
 					* 180 / 3.1415f + 180;
-
 				posSeveStart = position;
-
-				if (tp.tornadoTatchFlag || true)
+				
+				if (tp.tornadoTatchFlag)
 				{
-					posSeveEnd = Vector3(0, 0, 1) * 200 * Matrix4::RotateX(-40) * Matrix4::RotateY(rotateUp) +
+					rotateLeft = 0.0f;
+					posSeveEnd = Vector3(0, 0, 1) * 300 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 						playerMat.GetPosition() + cameraUpMove;
-					//restCameraTarget = Vector3(playerMat.GetPosition().x,)
 				}
 				else
 				{
+					rotateLeft = -25;
 					posSeveEnd = playerMat.GetPosition()
 						+ tp.tackleT*(-BackCamera) + up*UpCamera;
 				}
 			}
-			restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, Math::Sin(tackleLeapTimer/2.0f));
+			restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
 			tackleLeapTimer += 3.0f*Time::DeltaTime;
 			if (tackleLeapTimer >= 3.0f)
 			{
 				posMove2 = false;
-				rotateLeft = -25;
 				rotateUp = Math::Atan2(playerMat.GetPosition().x - restPosition.x,
 					playerMat.GetPosition().z - restPosition.z)
 					* 180 / 3.1415f + 180;
 				posSeveStart = position;
-
 				posSeveEnd = DefaultCamera();
 				tackleLeapTimer = 0.0f;
 			}
@@ -181,9 +176,6 @@ void MonhanCameraActor::Update()
 			tackleLeapTimer = 0.0f;
 		}
 	}
-
-	cameraTarget = playerMat.GetPosition();
-
 
 	//タックル
 	//if (tp.tackleFlag)
@@ -286,7 +278,7 @@ void MonhanCameraActor::Update()
 
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
-	Camera::GetInstance().Target.Set(cameraTarget);
+	Camera::GetInstance().Target.Set(playerMat.GetPosition());
 	Camera::GetInstance().SetRange(0.1f, 20000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().SetViewAngle(fov);
@@ -294,8 +286,6 @@ void MonhanCameraActor::Update()
 }
 void MonhanCameraActor::Draw() const
 {
-	DrawFormatString(0, 128, GetColor(0, 0, 0), "注視点距離   %f %f %f", cameraTarget.x,cameraTarget.y,cameraTarget.z);
-	//DrawFormatString(0, 400, GetColor(0, 0, 0), "視野角   %f", Math::Sin(tackleLeapTimer));
 	//DrawLine3D(Vector3::ToVECTOR(playerMat.GetPosition()), Vector3::ToVECTOR(playerMat.GetUp().Normalized()*100.0f + playerMat.GetPosition()), 1);
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
@@ -338,12 +328,4 @@ float MonhanCameraActor::SpringFov(float rest, float pos)
 	float accelerationFov = forceFov / 2.0f;
 	fovVelo = 0.1f* (fovVelo + accelerationFov);
 	return fovVelo;
-}
-Vector3 MonhanCameraActor::SpringTarget()
-{
-	Vector3 stretchTarget = (cameraTarget - restCameraTarget);
-	Vector3 forceTarget = -springTargetParameter.stiffness * stretchTarget;
-	Vector3 accelerationTarget = forceTarget / springTargetParameter.mass;
-	targetVelo = springTargetParameter.friction * (targetVelo + accelerationTarget);
-	return targetVelo;
 }
