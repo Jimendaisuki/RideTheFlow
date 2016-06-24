@@ -45,9 +45,20 @@ const int CastleCannonNotLookAttack = 1;
 //城の大砲からプレイヤーが見えてないときの攻撃クールタイム(秒)
 const float CastleCannonNotLookSecondAttack = 10.0f;
 
+/***城のバリスター***/
+//城のバリスターが攻撃してくる範囲
+const float CastleVaristorAttackRange = 400.0f;
+//城のバリスターの攻撃クールタイム(秒)
+const float CastleVaristorSecondAttack = 5.0f;
+//城が一回に出すバリスターの矢の数
+const int CastleVaristorNumber = 1;
+//城のバリスターの旋回速度
+const float CastleVaristorSwingSpeed = 25.0f;
+//城のバリスターからプレイヤーが見えてないときの一回に出すバリスターの矢の数
+const int CastleVaristorNotLookAttack = 1;
+//城のバリスターからプレイヤーが見えてないときの攻撃クールタイム(秒)
+const float CastleVaristorNotLookSecondAttack = 10.0f;
 
-//城の大砲の精度(数値が小さいほど高精度)
-const float CastleCannonArrowAccuracy = 50.0f;
 
 /***城の兵士***/
 //城の兵士が攻撃してくる範囲

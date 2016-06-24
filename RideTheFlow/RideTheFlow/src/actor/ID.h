@@ -20,6 +20,7 @@ enum ACTOR_ID{
 	CAMERA_ACTOR,
 	CASTLE_ACTOR,
 	MASTER_CASTLE_ACTOR,
+	NO_SHIP_AREA_ACTOR,
 
 	//======“§–¾“x‚ðˆµ‚¤======//
 	PARTICLE_ACTOR,

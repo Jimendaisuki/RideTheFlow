@@ -76,7 +76,7 @@ void CreditScene::Initialize()
 	}
 	for (auto i : boonPositions)
 	{
-		wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i,true));
+		//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i,true));
 	}
 
 	for (int i = 0; i < 2; i++)

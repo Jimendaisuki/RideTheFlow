@@ -29,7 +29,7 @@ const Vector3 cameraUpMove = Vector3(0, 30, 0);
 
 const float tornadoCreateRadius = 128.0f;
 
-const float tackleForTornadoTimelimit = 1.0f;
+const float tackleForTornadoTimelimit = 100.0f;
 
 /*************************************************リンク君が変えるところ*************************************************/
 //testコード、動きの切り替えtrueの時強弱なし
