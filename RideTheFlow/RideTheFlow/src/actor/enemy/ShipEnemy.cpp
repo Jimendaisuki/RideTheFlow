@@ -68,7 +68,7 @@ void ShipEnemy::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_SHIPENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR, COL_ID::SHIP_ISLAND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::SHIP_ISLAND_COL);
 	ShipEnemyPosition();
 
 	//プレイヤーの前

@@ -24,7 +24,7 @@ private:
 	Vector3 DefaultCamera();
 	Vector3 DashCmaera();
 	float SpringFov(float rest, float pos);
-	Vector3 SpringTarget();
+	float SpringTargetY();
 
 
 private:
@@ -34,8 +34,6 @@ private:
 	//ƒoƒlƒJƒƒ‰ŠÖŒW
 	Vector3 restPosition;
 	Vector3 velocity;
-	Vector3 cameraTarget;
-	Vector3 restCameraTarget;
 
 	Vector3 startTarget;
 	Vector3 endTarget;
@@ -50,8 +48,7 @@ private:
 	Vector3 posSeveStart;
 	Vector3 posSeveEnd;
 	Vector3 playerPosSeve;
-	Vector3 targetVelo;
-	float targetY;
+
 	float leapTimer;
 	float restLeapTimer;
 	float tackleLeapTimer;

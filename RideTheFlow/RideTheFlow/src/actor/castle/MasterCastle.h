@@ -7,7 +7,7 @@
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
 public:
-	MasterCastle(IWorld& world, Vector3 position,bool spawnShip);
+	MasterCastle(IWorld& world, Vector3 position,bool spawnShip,bool title,float rotateY);
 	~MasterCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -32,6 +32,7 @@ private:
 	Vector3 mScale;
 	Vector3 mPosition;
 	Vector3 toPoint;
+	float mRotateY;
 
 	//çUåÇä÷åW
 	float mSecondAttack;
@@ -54,7 +55,11 @@ private:
 	bool mSpawnShip;
 	bool downCastle;
 
+
 	//ñ≥ìGä÷åW
 	bool damage;
 	float InvincibleTimer;
+
+	//É^ÉCÉgÉã
+	bool mTitle;
 };

@@ -19,6 +19,7 @@ private:
 	Vector3 mRandomTarget;
 	Vector3 coppyPosition;
 	Vector3 mToPoint;
+	Vector3 seveVec;
 	Vector3 vec;
 	float mRotateY;
 	float mRotateZ;
