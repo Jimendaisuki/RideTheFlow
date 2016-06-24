@@ -23,7 +23,9 @@ coppyPosition(position),
 mToPoint(toPoint),
 rotate(Vector3::Zero),
 windVec(Vector3::Zero),
-isWindCol(false)
+isWindCol(false),
+noDeadTimer(0.0f),
+noDead(false)
 {
 	mRandomTarget = Vector3(GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
 		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
@@ -48,6 +50,7 @@ EnemyBullet::~EnemyBullet()
 void EnemyBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 
 	prevPosition = mPosition;
 
@@ -95,6 +98,14 @@ void EnemyBullet::Update()
 
 	//流れのフラグをリセット
 	isWindCol = false;
+
+	noDeadTimer += Time::DeltaTime;
+
+	if (noDeadTimer>=1.0f)
+	{
+		noDead = true;
+		noDeadTimer = 10.0f;
+	}
 }
 
 void EnemyBullet::Draw() const
@@ -112,6 +123,10 @@ void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
 		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(ArrowPower);
+		parameter.isDead = true;
+	}
+	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
+	{
 		parameter.isDead = true;
 	}
 	else

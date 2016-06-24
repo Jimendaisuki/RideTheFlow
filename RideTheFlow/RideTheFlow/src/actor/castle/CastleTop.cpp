@@ -17,12 +17,7 @@ castleDown(true),
 noColTimer(0),
 noCol(false)
 {
-	//MV1_REF_POLYGONLIST castleModel= MV1GetReferenceMesh(Model::GetInstance().GetHandle(MODEL_ID::CASTLE_MODEL), -1, FALSE);
-
-	//float castleMin = sqrtf(castleModel.MinPosition.x * castleModel.MinPosition.x + castleModel.MinPosition.z * castleModel.MinPosition.z);;
-	//float castleMax = sqrtf(castleModel.MaxPosition.x * castleModel.MaxPosition.x + castleModel.MaxPosition.z * castleModel.MaxPosition.z);;
-	//parameter.radius=Math::Max(castleMin, castleMax);
-	//parameter.height = castleModel.MaxPosition.y-castleModel.MinPosition.y;
+	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	Vector2 side = Vector2(mScale.x, mScale.z) / 2;
 	parameter.isDead = false;
 	parameter.radius = 35;

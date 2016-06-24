@@ -13,7 +13,7 @@
 #include "../../math/Quaternion.h"
 #include "../Player.h"
 
-VaristorBullet::VaristorBullet(IWorld& world, Vector3 position,Actor& parent_, float rotateY, float attackAngleZ) :
+VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ) :
 Actor(world),
 time(0),
 speed(VaristorSpeed),
@@ -23,7 +23,9 @@ mRotateY(rotateY),
 mRotateZ(attackAngleZ),
 windVec(Vector3::Zero),
 isWindCol(false),
-seveVec(Vector3::Zero)
+seveVec(Vector3::Zero),
+noDead(false),
+noDeadTimer(0.0f)
 {
 	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
 	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
@@ -45,6 +47,7 @@ VaristorBullet::~VaristorBullet()
 void VaristorBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 	time += VaristorSpeed*Time::DeltaTime;
 	prevPosition = mPosition;
 	//is•ûŒü‚ðŒvŽZ
@@ -73,7 +76,14 @@ void VaristorBullet::Update()
 	windVec = Vector3::Zero;
 	isWindCol = false;
 
-	
+
+	noDeadTimer += Time::DeltaTime;
+
+	if (noDeadTimer >= 1.0f)
+	{
+		noDead = true;
+		noDeadTimer = 10.0f;
+	}
 }
 
 void VaristorBullet::Draw() const
@@ -91,6 +101,10 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
 		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(VaristorPower);
+		parameter.isDead = true;
+	}
+	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
+	{
 		parameter.isDead = true;
 	}
 	else

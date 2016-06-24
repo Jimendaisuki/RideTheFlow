@@ -4,7 +4,7 @@
 #include "../../graphic/Sprite.h"
 #include "../../graphic/Model.h"
 #include "../../time/Time.h"
-
+#include "../NoShipArea.h"
 
 FroatingIsland::FroatingIsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
 Actor(world)
@@ -12,7 +12,7 @@ Actor(world)
 	HP = 50;
 
 	parameter.isDead = false;
-	parameter.radius = 200;
+	parameter.radius = 120;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -20,6 +20,10 @@ Actor(world)
 		Matrix4::RotateX(rotate.x) *
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
+	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
+	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world, 
+		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
+		parameter.radius, *this));
 }
 
 FroatingIsland::~FroatingIsland()

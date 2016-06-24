@@ -45,10 +45,10 @@ isLandCol(false)
 	ShipEnemyPosition();
 
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<DoragonSpearEnemy>(world, shipEnemyPos.spearPos,*this,*this));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosLeft,*this,true,-90));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosRight, *this, false, 90));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosLeft, *this, true, -90));
-	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosRight, *this, false, 90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosLeft,*this,true,-90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosRight, *this, false, 90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosLeft, *this, true, -90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosRight, *this, false, 90));
 }
 ShipEnemy::~ShipEnemy()
 {
@@ -89,22 +89,22 @@ void ShipEnemy::Update()
 	Vector3 vec = (playerMat.GetPosition() - parameter.mat.GetPosition()).Normalized();
 	playerDot = Vector2::Dot(Vector2(parameter.mat.GetFront().x, parameter.mat.GetFront().z), Vector2(vec.x, vec.z));
 	//ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ÉŒü‚­
-	//if (!isLandCol)
-	//{
-	//	if (Math::Abs(playerDot) >= 0.1f)
-	//	{
-	//		if (playerDot >= 0)
-	//		{
-	//			shipAngle -= ShipSwingSpeed*Time::DeltaTime;
-	//		}
-	//		else
-	//		{
-	//			shipAngle += ShipSwingSpeed*Time::DeltaTime;
-	//		}
-	//	}
-	//}
-	//
-	//mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::DeltaTime;
+	if (!isLandCol)
+	{
+		if (Math::Abs(playerDot) >= 0.1f)
+		{
+			if (playerDot >= 0)
+			{
+				shipAngle -= ShipSwingSpeed*Time::DeltaTime;
+			}
+			else
+			{
+				shipAngle += ShipSwingSpeed*Time::DeltaTime;
+			}
+		}
+	}
+	
+	mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::DeltaTime;
 	if (!isLandCol)
 		mPosition += Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*
 		Vector3(0.0f, ShipUpDownSpeed, 0.0f)*Time::DeltaTime;

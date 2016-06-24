@@ -9,7 +9,7 @@ Actor(world)
 
 	parameter.mat = Matrix4::Translate(position);
 
-	mPosition = position+Vector3(0.0f,parameter.radius,0.0f);
+	mPosition = position;
 	mRadius = radius;
 	parent = &_parent;
 }
@@ -22,6 +22,7 @@ NoShipArea::~NoShipArea()
 
 void NoShipArea::Update()
 {
+	if (parent->GetParameter().id==ACTOR_ID::CASTLE_ACTOR)
 	mPosition = parent->GetParameter().mat.GetPosition() + Vector3(0.0f, parent->GetParameter().radius,0.0f);
 
 	if (parent->GetParameter().isDead)
@@ -32,6 +33,7 @@ void NoShipArea::Update()
 
 void NoShipArea::Draw() const
 {
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 10, 1, 1, FALSE);
 }
 
 void NoShipArea::OnCollide(Actor& other, CollisionParameter colpara)

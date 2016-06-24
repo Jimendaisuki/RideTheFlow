@@ -29,7 +29,7 @@ isLook(false),
 InvincibleTimer(0.0f),
 damage(true)
 {
-
+	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	parameter.HP = BaseCastleHp;
 	parameter.isDead = false;
 	parameter.radius = 17;

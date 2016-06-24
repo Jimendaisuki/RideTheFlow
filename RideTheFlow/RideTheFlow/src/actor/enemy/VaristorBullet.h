@@ -23,6 +23,8 @@ private:
 	Vector3 vec;
 	float mRotateY;
 	float mRotateZ;
+	float noDeadTimer;
+	float noDead;
 
 	//１フレーム前の座標
 	Vector3 prevPosition;

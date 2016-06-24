@@ -94,6 +94,8 @@ private:
 
 	//船と船のあたり判定
 	CollisionParameter Ship_vs_Ship(const Actor& other)const;
+	//敵の攻撃と当たると攻撃が消えるエリア
+	CollisionParameter Bullet_vs_NoBulletArea(const Actor& other)const;
 	/* 後で削除
 	// 線と箱の当たり判定
 	CollisionParameter SegmentBoxAABB(const Actor& other)const;
