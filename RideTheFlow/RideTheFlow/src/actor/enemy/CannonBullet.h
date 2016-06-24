@@ -22,6 +22,8 @@ private:
 	float speed;
 	float mRotateY;
 	float mRotateZ;
+	float noDeadTimer;
+	bool noDead;
 
 	//１フレーム前の座標
 	Vector3 prevPosition;

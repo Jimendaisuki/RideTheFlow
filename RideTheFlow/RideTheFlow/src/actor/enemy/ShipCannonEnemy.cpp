@@ -140,7 +140,7 @@ void ShipCannonEnemy::Update()
 		Matrix4::Scale(1.0f)*
 		Matrix4::Translate(mPosition);
 	enemyMat =
-		Quaternion::RotateAxis(Vector3::Up, rotate.y) *
+		Quaternion::RotateAxis(Vector3::Up, rotate.y - 90) *
 		Matrix4::Scale(1.0f)*
 		Matrix4::Translate(mPosition + parameter.mat.GetLeft().Normalized()*-3.0f);
 }

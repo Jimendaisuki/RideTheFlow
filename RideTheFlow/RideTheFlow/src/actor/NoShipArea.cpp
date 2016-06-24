@@ -9,7 +9,7 @@ Actor(world)
 
 	parameter.mat = Matrix4::Translate(position);
 
-	mPosition = position+Vector3(0.0f,parameter.radius,0.0f);
+	mPosition = position;
 	mRadius = radius;
 	parent = &_parent;
 }
@@ -22,6 +22,7 @@ NoShipArea::~NoShipArea()
 
 void NoShipArea::Update()
 {
+	if (parent->GetParameter().id==ACTOR_ID::CASTLE_ACTOR)
 	mPosition = parent->GetParameter().mat.GetPosition() + Vector3(0.0f, parent->GetParameter().radius,0.0f);
 
 	if (parent->GetParameter().isDead)

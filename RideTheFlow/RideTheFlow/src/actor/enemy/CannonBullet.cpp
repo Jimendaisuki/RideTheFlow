@@ -19,7 +19,9 @@ speed(CannonSpeed),
 mPosition(position),
 mScale(1.0f),
 mRotateY(rotateY),
-mRotateZ(attackAngleZ)
+mRotateZ(attackAngleZ),
+noDead(false),
+noDeadTimer(0.0f)
 {
 	mRotateY += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
 	mRotateZ += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
@@ -43,6 +45,7 @@ void CannonBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
 	world.SetCollideSelect(shared_from_this(), this->GetParameter().id, COL_ID::SPHERE_SPHERE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 	time += CannonSpeed*Time::DeltaTime;
 	//進行方向を計算
 		vec = Vector3(
@@ -58,7 +61,13 @@ void CannonBullet::Update()
 
 	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
 
+	noDeadTimer += Time::DeltaTime;
 
+	if (noDeadTimer >= 1.0f)
+	{
+		noDead = true;
+		noDeadTimer = 10.0f;
+	}
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(Vector3(4)) *
@@ -80,6 +89,10 @@ void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
 		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(CannonPower);
+		parameter.isDead = true;
+	}
+	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
+	{
 		parameter.isDead = true;
 	}
 	else

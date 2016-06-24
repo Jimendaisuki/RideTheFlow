@@ -40,6 +40,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::PLAYER_CASTLE_COL] = std::bind(&Actor::Player_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::MASTERCASTLE_CASTLE_COL] = std::bind(&Actor::MasterCastle_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::SHIP_SHIP_COL] = std::bind(&Actor::Ship_vs_Ship, this, std::placeholders::_1);
+	colFunc[COL_ID::BULLET_NOBULLETAREA_COL] = std::bind(&Actor::Bullet_vs_NoBulletArea, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -654,6 +655,20 @@ CollisionParameter Actor::Ship_vs_Ship(const Actor& other)const
 	{
 		colpara.colFlag = false;
 	}
+	return colpara;
+}
+CollisionParameter Actor::Bullet_vs_NoBulletArea(const Actor& other)const
+{
+	CollisionParameter colpara;
+	Sphere bullet;
+	bullet.radius = parameter.radius;
+	bullet.position = parameter.mat.GetPosition();
+	Sphere noBullet;
+	noBullet.radius = other.parameter.radius;
+	noBullet.position = other.parameter.mat.GetPosition();
+
+	colpara = Collisin::GetInstace().SphereSphere(bullet, noBullet);
+	colpara.colID = COL_ID::BULLET_NOBULLETAREA_COL;
 	return colpara;
 }
 

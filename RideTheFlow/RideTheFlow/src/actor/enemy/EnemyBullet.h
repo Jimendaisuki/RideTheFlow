@@ -20,6 +20,9 @@ private:
 	Vector3 coppyPosition;
 	Vector3 mToPoint;
 
+	float noDeadTimer;
+	float noDead;
+
 	//xz進行方向
 	Vector3 vec;
 	//モデル回転値
@@ -34,5 +37,6 @@ private:
 	Vector3 windVec;
 	//流れとヒットしているか？
 	bool isWindCol;
+
 };
 #endif

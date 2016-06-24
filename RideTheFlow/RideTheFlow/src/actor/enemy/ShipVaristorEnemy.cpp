@@ -12,6 +12,7 @@
 ShipVaristorEnemy::ShipVaristorEnemy(IWorld& world, Vector3 position, ShipEnemy& se, bool left, float rotateY) :
 Actor(world),
 playerMat(Matrix4::Identity),
+enemyMat(Matrix4::Identity),
 attackRag(0),
 attackTime(0),
 arrowCount(0),
@@ -137,11 +138,16 @@ void ShipVaristorEnemy::Update()
 		Quaternion::RotateAxis(Vector3::Up, rotate.y) *
 		Matrix4::Scale(0.7f)*
 		Matrix4::Translate(mPosition);
+
+	enemyMat =
+		Quaternion::RotateAxis(Vector3::Up, rotate.y-90) *
+		Matrix4::Scale(1.0f)*
+		Matrix4::Translate(mPosition + parameter.mat.GetLeft().Normalized()*-5.5f);
 }
 void ShipVaristorEnemy::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, parameter.mat);
-	DrawFormatString(0, 256, GetColor(0, 0, 0), "rotateup   %f", rotate.y);
+	Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, enemyMat);
 }
 void ShipVaristorEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

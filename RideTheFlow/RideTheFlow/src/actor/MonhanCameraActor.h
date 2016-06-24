@@ -30,7 +30,7 @@ private:
 private:
 	Matrix4 playerMat;
 	Vector3 position;
-
+	Vector3 playerPosition;
 	//バネカメラ関係
 	Vector3 restPosition;
 	Vector3 velocity;
@@ -55,6 +55,7 @@ private:
 	bool posMove1;
 	bool posMove2;
 	bool posEnd;
+	bool playerDead;
 
 	//ダッシュ
 	bool cameraFovFlag;

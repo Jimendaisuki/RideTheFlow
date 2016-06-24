@@ -35,7 +35,8 @@ mSpawnShip(spawnShip),
 InvincibleTimer(0.0f),
 breakSelect(BREAK_SELECT::TORNADO),
 tornadoVelocity(Vector3::Zero),
-mTitle(title)
+mTitle(title),
+rankUpHeght(17.0f)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
 	parameter.radius = 35;
@@ -53,7 +54,7 @@ mTitle(title)
 		world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 			parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 			, parameter.radius * 2, *this));
-		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() + Vector3(0, 100, 0), *this, rotateY));
+		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() +Vector3(0.0f,parameter.radius*2.0f,0.0f), *this, rotateY));
 
 	}
 	testRnak = 1;
@@ -78,30 +79,22 @@ void MasterCastle::Update()
 		//積み重なる城
 		if (castleTime >= RankUpSecond&&mRank > 0)
 		{
+			testRnak++;
 			mRank--;
+			if (mRank < Rank)
+				rankUpHeght = 34.0f;
 			rankUp = true;
 			castleTime = 0.0f;
-			rankUpRag = true;
+			world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
+				mPosition + Vector3(0.0f, parameter.radius * 2, 0.0f) + Vector3(0.0f, rankUpHeght*(Rank - mRank-1), 0.0f) 
+				, *this, Rank - mRank, mRotateY));
+			parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
 		}
 		else
 		{
 			rankUp = false;
 		}
-		//城が1秒後に出る
-		if (rankUpRag)
-		{
-			rankUpRagTimer += Time::DeltaTime;
-			if (rankUpRagTimer >= 1.0f)
-			{
-				testRnak++;
-				world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
-					mPosition + Vector3(0.0f, parameter.radius * 2, 0.0f) + Vector3(0.0f, 20.0f*(Rank - mRank), 0.0f) + Vector3(0, 10 * (Rank - mRank), 0)
-					, *this, Rank - mRank,mRotateY));
-				parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
-				rankUpRagTimer = 0.0f;
-				rankUpRag = false;
-			}
-		}
+
 		//ステージに当たったら止まる
 		if (downCastle)
 		{
