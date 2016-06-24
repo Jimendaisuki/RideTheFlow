@@ -75,6 +75,8 @@ damage(true)
 	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position));
 	mRank = rank;
 	mRotateY = rotateY;
+
+	sevePos = mPosition;
 }
 
 
@@ -85,6 +87,8 @@ Castle::~Castle()
 
 void Castle::Update()
 {
+	//マスターの状態取得
+	MasterCastle* mas = static_cast<MasterCastle*>(const_cast<Actor*>(parent));
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
@@ -95,29 +99,21 @@ void Castle::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
 
-	float masterHeight = parent->GetParameter().mat.GetPosition().y + parent->GetParameter().radius * 2;
-	float castleHeight = parameter.radius * 2;
-	float a = masterHeight + castleHeight*(mRank - 1);
-	float b = parameter.mat.GetPosition().y;
-	if (masterHeight + castleHeight*(mRank - 1) >= parameter.mat.GetPosition().y)
-	{
-		velocity = 0.0f;
-	}
-	else
-	{
-		velocity.y -= 100.0f*Time::DeltaTime;
-	}
-	mPosition += velocity*Time::DeltaTime;
 
 	//マスターが壊れたら自分も壊れる
-	if (parent->GetParameter().isDead || Keyboard::GetInstance().KeyTriggerDown(KEYCODE::H))
+	if (parent->GetParameter().isDead)
 	{
 		parameter.isDead = true;
 		//がれきを飛ばす
 		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 	}
-	//マスターの状態取得
-	MasterCastle* mas = static_cast<MasterCastle*>(const_cast<Actor*>(parent));
+
+	if (mas->castleRankUp())
+	{
+
+	}
+
+
 	breakSelect = mas->getBreakSelect();
 	tornadoVelocity = mas->getTornadoVelocity();
 
@@ -143,7 +139,7 @@ void Castle::Draw() const
 {
 
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
-	//DrawSphere3D(Vector3::ToVECTOR(test), 20, 10, 1, 1, TRUE);
+	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f)), parameter.radius, 10, 1, 1, TRUE);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);

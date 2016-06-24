@@ -34,6 +34,7 @@ noCol(false)
 		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*4, 0.0f)
 		, parameter.radius, *this));
 	mRotateY = rotateY;
+	sevePos = mPosition;
 }
 
 CastleTop::~CastleTop()
@@ -49,41 +50,9 @@ void CastleTop::Update()
 
 	mRank = mMc->getRank();
 	float masterHeight = mMc->GetParameter().mat.GetPosition().y + mMc->GetParameter().radius * 2;
-	float castleHeight = parameter.radius;
-
-	if (!noCol)
-	{
-		if (masterHeight + castleHeight*(mRank) >= parameter.mat.GetPosition().y)
-		{
-			velocity = 0.0f;
-		}
-		else
-		{
-			velocity.y -= 400.0f*Time::DeltaTime;
-		}
-	}
-	else
-	{
-		velocity.y -= 400.0f*Time::DeltaTime;
-	}
-	if (mMc->castleRankUp())
-	{
-		//城が出現する前にジャンプ
-		velocity.y = 400.0f;
-		noCol = true;
-	}
-	//ジャンプする瞬間はあたり判定無効
-	if (noCol)
-	{
-		noColTimer += Time::DeltaTime;
-		if (noColTimer >= 0.5f)
-		{
-			noCol = false;
-			noColTimer = 0.0f;
-		}
-	}
-	castleDown = true;
-	mPosition += velocity*Time::DeltaTime;
+	float castleHeight = 34.0f;
+	mPosition = Vector3(sevePos.x, sevePos.y + castleHeight*mRank, sevePos.z);
+	
 	//マスターが壊れたら自分も壊れる
 	if (mMc->GetParameter().isDead)
 	{

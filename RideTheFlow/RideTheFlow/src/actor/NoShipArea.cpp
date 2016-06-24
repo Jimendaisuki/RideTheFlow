@@ -33,7 +33,6 @@ void NoShipArea::Update()
 
 void NoShipArea::Draw() const
 {
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 10, 1, 1, FALSE);
 }
 
 void NoShipArea::OnCollide(Actor& other, CollisionParameter colpara)

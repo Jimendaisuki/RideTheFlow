@@ -20,6 +20,7 @@ private:
 	Vector3 mScale;
 	Vector3 velocity;
 	MasterCastle* mMc;
+	Vector3 sevePos;
 	bool castleDown;
 
 	bool noCol;

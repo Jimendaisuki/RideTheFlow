@@ -64,6 +64,7 @@ private:
 	bool mSpawnShip;
 	bool downCastle;
 
+	float rankUpHeght;
 
 	//–³“GŠÖŒW
 	bool damage;

@@ -55,6 +55,7 @@ private:
 	Vector3 mScale;
 	Actor* parent;
 	Vector3 velocity;
+	Vector3 sevePos;
 
 	bool isLook;
 	bool castleDown;
