@@ -18,7 +18,7 @@ rotate(Vector3::Zero)
 	moveParam.pos = dashPositions.at(0);
 
 	drawParam.drawID = MODEL_ID::WIND_MODEL;
-	drawParam.size = 10.0f;
+	drawParam.size = 15.0f;
 	drawParam.alpha = 0.0f;
 	drawParam.blendMode = BLEND_MODE::Alpha;
 	drawParam.billboardOrigin = Vector2(0, 0);
