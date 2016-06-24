@@ -17,7 +17,7 @@
 #include "../UIactor/Stamina.h"
 #include "../UIactor/Effect.h"
 #include "../input/GamePad.h"
-
+#include "enemy\DoragonSpearEnemy.h"
 //ボーンの数
 const int boneCount = 38;
 //波の周波
@@ -50,11 +50,15 @@ const float upMoveRange = 10.0f;
 const float angleSpeed = 270.0f;
 
 //スピード
-const float speed = 100.0f;
+const float speed = 200.0f;
+////回転スピード
+//const float rotateSpeed = 150.0f;
+////回転時のAngle
+//const float ryuuRotateAngle = 2.5f;
 //回転スピード
-const float rotateSpeed = 150.0f;
+const float rotateSpeed = 300.0f;
 //回転時のAngle
-const float ryuuRotateAngle = 2.5f;
+const float ryuuRotateAngle = 5.0f;
 
 //タックルのアニメーションのスピード
 const float tackleAnimSpeed = 100.0f;
@@ -68,10 +72,15 @@ const float waitAnimBlendSpeed = 2.0f;
 
 //加速できる時間
 const float dashMaxTime = 20.0f;
+
+////加速する際の加速度
+//const float dashAccele = 1.0f;
+////加速時の最大スピード
+//const float dashMaxSpeed = 1.5f;
 //加速する際の加速度
-const float dashAccele = 1.0f;
+const float dashAccele = 1.5f;
 //加速時の最大スピード
-const float dashMaxSpeed = 1.5f;
+const float dashMaxSpeed = 2.0f;
 //加速ゲージの回復速度
 const float dashHealSpeed = 2.0f;
 
@@ -80,13 +89,13 @@ const float normalSpeedAccele = 1.0f;
 
 /************************************************************************************************************************/
 
-Player::Player(IWorld& world,bool title_) :
-	Actor(world),
-	position(Vector3(0, 0, 0)),
-	windFlowPtr(NULL),
-	tornadoFlag(false),
-	tornadoPtr(NULL),
-	title(title_)
+Player::Player(IWorld& world, bool title_) :
+Actor(world),
+position(Vector3(0, 0, 0)),
+windFlowPtr(NULL),
+tornadoFlag(false),
+tornadoPtr(NULL),
+title(title_)
 {
 	//paramterの初期化
 	parameter.isDead = false;
@@ -133,8 +142,8 @@ Player::Player(IWorld& world,bool title_) :
 	beforeVec = Vector3(0.0f, 0.01f, -1.0f);
 
 	//モデルハンドルを取得する(アニメーションのために)
-	if(!title)
-	modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+	if (!title)
+		modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
 	else
 
 		modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_TITLE_MODEL);
@@ -181,12 +190,11 @@ void Player::Update() {
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 		moveFlag = !moveFlag;
 	}
-	if(title)
-	moveFlag = !title;
+	if (title)
+		moveFlag = !title;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
-	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
-
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
 
 	bonePosStorage.clear();
 	for (int i = 0; i < boneCount; i++) {
@@ -217,7 +225,7 @@ void Player::Update() {
 		}
 
 		if (!title){
-		Vector2 rStick = GamePad::GetInstance().RightStick();
+			Vector2 rStick = GamePad::GetInstance().RightStick();
 
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
 				rotateLeft += rotateSpeed * Time::DeltaTime;
@@ -654,8 +662,8 @@ void Player::Draw() const {
 		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 				Matrix4::ToMATRIX(
-					localDrawMatrixVec[count]
-					));
+				localDrawMatrixVec[count]
+				));
 		}
 	}
 	else {
@@ -707,14 +715,14 @@ void Player::Draw() const {
 		for (int count = 0; count < boneCount; count++) {
 			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 				Matrix4::ToMATRIX(
-					Matrix4::Slerp(
-						localDrawMatrixVec[count]
-						, localAnimDrawMatrixVec[count], animBlend)
-					));
+				Matrix4::Slerp(
+				localDrawMatrixVec[count]
+				, localAnimDrawMatrixVec[count], animBlend)
+				));
 		}
 	}
-	if(!title)
-	Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+	if (!title)
+		Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 	else
 
 		Model::GetInstance().Draw(MODEL_ID::TEST_TITLE_MODEL, Vector3::Zero, 1.0f);
@@ -728,8 +736,8 @@ void Player::Draw() const {
 	//if (tackleFlag)
 	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
-	if(!title)
-	ParameterDraw();
+	if (!title)
+		ParameterDraw();
 
 	//if (bonePosStorage.size() > 1)
 	//for (int count = 2; count < bonePosStorage.size() ; count++){
@@ -738,10 +746,10 @@ void Player::Draw() const {
 	//}
 
 	if (dashPosStorage.size() > 1)
-		for (int count = 0; count < dashPosStorage.size() - 1; count++) {
-			int Color = GetColor(0, 0, 255);
-			DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
-		}
+	for (int count = 0; count < dashPosStorage.size() - 1; count++) {
+		int Color = GetColor(0, 0, 255);
+		DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
+	}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
@@ -801,7 +809,7 @@ void Player::ParameterDraw() const {
 	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, boneSelect));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 256 + 64 , GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
+	DrawFormatString(0, 256 + 64, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
 
 	float gageColorNum = 255.0f * ((dashMaxTime - dashTime) / dashMaxTime);
 	DWORD gageColor = GetColor(255, gageColorNum, gageColorNum);
@@ -838,18 +846,18 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
-	else if (other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR)
+	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&
+		other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR&&
+		colpara.colFlag)
+	{
+		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear())
+		{
+			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+
+		}
+	}
+	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&colpara.colFlag)
 	{
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
-	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
-	{
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
-	}
-}
-//龍激走に当たっている間呼び出される
-void Player::ColSpear(Actor* parent)
-{
-	Damage(0.01f);
-	Effect::GetInstance().DamegeEffect(world, parent->GetParameter().mat.GetPosition());
 }

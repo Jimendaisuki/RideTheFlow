@@ -23,6 +23,7 @@ playerWithin(false),
 attackSpear(false),
 endAttack(false)
 {
+	parameter.id = ACTOR_ID::DORAGONSPEAR_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 6.0f;
 	parameter.mat =
@@ -49,12 +50,22 @@ DoragonSpearEnemy::~DoragonSpearEnemy()
 }
 void DoragonSpearEnemy::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_WITHIN_COL);
+	Matrix4 playerMat;
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		playerMat = other.GetParameter().mat;
+	});
 
 	//槍のスタート
 	startPos = mSe->GetShipEnemyPos().spearPos;
 	//槍の終わり
 	endPos = parameter.mat.GetLeft().Normalized() * 35 + mSe->GetShipEnemyPos().spearPos;
+
+	if (Vector3::Distance(playerMat.GetPosition(), parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f) <=
+		parameter.radius + 8.0f)
+	{
+		playerWithin = true;
+	}
+
 
 
 	coolTimer += Time::DeltaTime;
@@ -62,6 +73,7 @@ void DoragonSpearEnemy::Update()
 		coolTimer >= DoragonSpearAttackTime)
 	{
 		preparationTimer += Time::DeltaTime;
+
 		if (preparationTimer >= DoragonSpearWithinTime)
 		{
 			preparationTimer = 0.0f;
@@ -76,10 +88,12 @@ void DoragonSpearEnemy::Update()
 	//槍が出てくるとき
 	if (attackSpear)
 	{
-		spearAttackTimer += (50.0f/DoragonSpearMaxTime)*Time::DeltaTime;
+		playerWithin = false;
+		spearAttackTimer += (50.0f / DoragonSpearMaxTime)*Time::DeltaTime;
 		if (spearAttackTimer >= 1.0f)
 		{
 			spearStopTimer += Time::DeltaTime;
+
 			if (spearStopTimer >= DoragonSpearStopTime)
 			{
 				attackSpear = false;
@@ -95,13 +109,11 @@ void DoragonSpearEnemy::Update()
 		spearAttackTimer -= (1.0f)*Time::DeltaTime;
 		if (spearAttackTimer <= 0.0f)
 		{
-			spearAttackTimer = 0.0f;
 			endAttack = false;
 		}
 	}
 
 	mPosition = Vector3::Lerp(startPos,endPos,spearAttackTimer);
-	playerWithin = false;
 
 	//マトリックス計算
 	parameter.mat =

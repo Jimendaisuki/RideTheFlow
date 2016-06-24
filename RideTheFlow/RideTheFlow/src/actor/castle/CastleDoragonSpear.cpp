@@ -26,7 +26,6 @@ attackSpear(false),
 endAttack(false),
 playerWithinTimer(0.0f)
 {
-	parameter.id = ACTOR_ID::DORAGONSPEAR_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 20.0f;
 	parameter.mat =
@@ -61,16 +60,12 @@ void CastleDoragonSpear::Update()
 	startPos += castle->GetVelocity();
 	endPos += castle->GetVelocity();
 
-
 	if (Vector3::Distance(playerMat.GetPosition(), parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f) <=
 		parameter.radius + 8.0f)
 	{
 		playerWithin = true;
 	}
-	else
-	{
-		playerWithin = false;
-	}
+
 
 
 	coolTimer += Time::DeltaTime;
@@ -93,7 +88,7 @@ void CastleDoragonSpear::Update()
 	//槍が出てくるとき
 	if (attackSpear)
 	{
-		static_cast<Player*>(const_cast<Actor*>(player))->ColSpear(parent);
+		playerWithin = false;
 		spearAttackTimer += (50.0f / DoragonSpearMaxTime)*Time::DeltaTime;
 		if (spearAttackTimer >= 1.0f)
 		{
@@ -125,11 +120,6 @@ void CastleDoragonSpear::Update()
 	}
 
 	mPosition = Vector3::Lerp(startPos, endPos, spearAttackTimer);
-
-
-
-	playerWithin = false;
-
 	////マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*
@@ -147,7 +137,7 @@ void CastleDoragonSpear::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f), parameter.radius, 20, 1, 1, FALSE);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f), parameter.radius, 20, 1, 1, FALSE);
 	DrawLine3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetUp() * 100), 255);
 	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
@@ -160,8 +150,5 @@ void CastleDoragonSpear::Draw() const
 
 void CastleDoragonSpear::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
-	{
 
-	}
 }

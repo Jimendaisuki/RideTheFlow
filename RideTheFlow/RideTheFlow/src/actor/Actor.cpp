@@ -39,6 +39,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::CASTLE_WIND_COL ] = std::bind(&Actor::Castle_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_CASTLE_COL] = std::bind(&Actor::Player_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::MASTERCASTLE_CASTLE_COL] = std::bind(&Actor::MasterCastle_vs_Castle, this, std::placeholders::_1);
+	colFunc[COL_ID::SHIP_SHIP_COL] = std::bind(&Actor::Ship_vs_Ship, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -228,7 +229,7 @@ CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
 	spear.endPos = other.parameter.mat.GetPosition() + other.parameter.mat.GetLeft().Normalized()*30.0f;
 	spear.radius = other.parameter.radius;
 
-	for (int i = 0; i < boons.size(); i += 5)
+	for (int i = 0; i < boons.size(); i += 8)
 	{
 		if (i >= boons.size())i = boons.size() - 1;
 		Sphere playerSphere;
@@ -309,7 +310,8 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	/* ResultData */
 	colpara = Collisin::GetInstace().CapsuleCapsule(tornado, castle);
 	colpara.colID = COL_ID::TORNADO_CASTLE_COL;
-	colpara.colVelosity = parameter.velocity;
+
+	colpara.colVelosity = other.parameter.velocity;
 
 	return colpara;
 }
@@ -482,9 +484,8 @@ CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
 	armyEnemy.endPos = parameter.mat.GetPosition() - Vector3::Down*parameter.radius;
 
 	ModelData stage;
-	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
 	stage.MFrameIndex = -1;
-
 	colpara = Collisin::GetInstace().ModelLine(stage, armyEnemy);
 	colpara.colID = COL_ID::ARMYENEMY_STAGE_COL;
 	return colpara;
@@ -603,7 +604,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	Capsule castle;
 	castle.startPos = other.parameter.mat.GetPosition();
 	castle.endPos = castle.startPos + other.parameter.height;
-	castle.radius = 70.0f;
+	castle.radius = 80.0f;
 	Sphere player;
 	player.position = parameter.mat.GetPosition();
 	player.radius = parameter.radius;
@@ -632,6 +633,27 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	}
 	colpara = Collisin::GetInstace().PushedBack_SphereCapsule(player, masterCastle);
 	colpara.colID = COL_ID::MASTERCASTLE_CASTLE_COL;
+	return colpara;
+}
+
+CollisionParameter Actor::Ship_vs_Ship(const Actor& other)const
+{
+	CollisionParameter colpara;
+	Sphere ship1;
+	ship1.radius = parameter.radius*3.0f;
+	ship1.position = parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f);
+	Sphere ship2;
+	ship2.radius = other.parameter.radius*3.0f;
+	ship2.position = other.parameter.mat.GetPosition() + Vector3(0.0f, other.parameter.radius, 0.0f);
+
+	colpara = Collisin::GetInstace().SphereSphere(ship1, ship2);
+	colpara.colID = COL_ID::SHIP_SHIP_COL;
+	colpara.colPos = other.GetParameter().mat.GetPosition();
+
+	if (&other == this)
+	{
+		colpara.colFlag = false;
+	}
 	return colpara;
 }
 

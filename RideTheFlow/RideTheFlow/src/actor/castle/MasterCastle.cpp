@@ -14,6 +14,8 @@
 #include "../../math/Math.h"
 #include "../../UIactor/EnemyPoint.h"
 #include "../NoShipArea.h"
+#include "../particle/BreakCastle.h"
+
 MasterCastle::MasterCastle(IWorld& world, Vector3 position, bool spawnShip, bool title,float rotateY) :
 Actor(world),
 attackTime(0),
@@ -31,6 +33,8 @@ spawanArmyTimer(0.0f),
 spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
 InvincibleTimer(0.0f),
+breakSelect(BREAK_SELECT::TORNADO),
+tornadoVelocity(Vector3::Zero),
 mTitle(title)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
@@ -111,7 +115,7 @@ void MasterCastle::Update()
 			spawnShipTimer += Time::DeltaTime;
 			if (spawnShipTimer >= SpawnShipEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR) < SpawnMaxShipEnemey)
 			{
-				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, parameter.mat.GetFront()*-3 + parameter.mat.GetUp() * 5 + mPosition));
+				world.Add(ACTOR_ID::SHIP_ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, parameter.mat.GetFront()*-3 + parameter.mat.GetUp() * 5 + mPosition));
 				spawnShipTimer = 0.0f;
 			}
 		}
@@ -120,7 +124,7 @@ void MasterCastle::Update()
 			spawanArmyTimer += Time::DeltaTime;
 			if (spawanArmyTimer >= SpawnArmyEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::ARMY_ENEMY_ACTOR) < SpawnMaxArmyEnemy)
 			{
-				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, parameter.mat.GetFront()*-2 + Vector3(0, 2, 0) + mPosition));
+				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, parameter.mat.GetFront().Normalized()*-65.0f + Vector3(0, 15, 0) + mPosition));
 				spawanArmyTimer = 0.0f;
 			}
 		}
@@ -139,9 +143,7 @@ void MasterCastle::Update()
 		if (parameter.HP <= 0)
 		{
 			//‚ª‚ê‚«‚ð”ò‚Î‚·
-			for (int i = 0; i < 8; i++){
-				world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleBlock>(world, mPosition + Vector3(0.0f, Random::GetInstance().Range(-10.0f, 10.0f), 0.0f)));
-			}
+			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 			parameter.isDead = true;
 		}
 	}
@@ -183,10 +185,19 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.HP -= CastleDamegeTornado;
 		damage = false;
+		if (parameter.HP <= 0)
+		{
+			tornadoVelocity = colpara.colVelosity;
+			breakSelect = BREAK_SELECT::TORNADO;
+		}
 	}
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
 	{
 		parameter.HP -= CastleDamegeWind;
 		damage = false;
+		if (parameter.HP <= 0)
+		{
+			breakSelect = BREAK_SELECT::WIND_FLOW;
+		}
 	}
 }

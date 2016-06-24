@@ -3,6 +3,8 @@
 #include "../../math/Vector3.h"
 #include <memory>
 #include "../../time/Time.h"
+#include "../particle/BreakCastle.h"
+
 struct CastleEnemyPos
 {
 	Vector3 cannon01;
@@ -68,5 +70,11 @@ private:
 	float InvincibleTimer;
 	CastleEnemyPos castleEnemyPos;
 
+	//€ˆö
+	BREAK_SELECT breakSelect;
+	//—³Šª‚Å€‚ñ‚¾ê‡‚Ì—³Šª‚ÌˆÚ“®—Ê
+	Vector3 tornadoVelocity;
+
 	Vector3 test;
+
 };
