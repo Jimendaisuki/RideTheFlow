@@ -45,10 +45,10 @@ isLandCol(false)
 	ShipEnemyPosition();
 
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<DoragonSpearEnemy>(world, shipEnemyPos.spearPos,*this,*this));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosLeft,*this,true,-90));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosRight, *this, false, 90));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosLeft, *this, true, -90));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosRight, *this, false, 90));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosLeft,*this,true,-90));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosRight, *this, false, 90));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosLeft, *this, true, -90));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosRight, *this, false, 90));
 }
 ShipEnemy::~ShipEnemy()
 {
@@ -68,6 +68,7 @@ void ShipEnemy::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_SHIPENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::SHIP_ENEMY_ACTOR, COL_ID::SHIP_SHIP_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::SHIP_ISLAND_COL);
 	ShipEnemyPosition();
 
@@ -88,22 +89,22 @@ void ShipEnemy::Update()
 	Vector3 vec = (playerMat.GetPosition() - parameter.mat.GetPosition()).Normalized();
 	playerDot = Vector2::Dot(Vector2(parameter.mat.GetFront().x, parameter.mat.GetFront().z), Vector2(vec.x, vec.z));
 	//ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ÉŒü‚­
-	if (!isLandCol)
-	{
-		if (Math::Abs(playerDot) >= 0.1f)
-		{
-			if (playerDot >= 0)
-			{
-				shipAngle -= ShipSwingSpeed*Time::DeltaTime;
-			}
-			else
-			{
-				shipAngle += ShipSwingSpeed*Time::DeltaTime;
-			}
-		}
-	}
-	
-	mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::DeltaTime;
+	//if (!isLandCol)
+	//{
+	//	if (Math::Abs(playerDot) >= 0.1f)
+	//	{
+	//		if (playerDot >= 0)
+	//		{
+	//			shipAngle -= ShipSwingSpeed*Time::DeltaTime;
+	//		}
+	//		else
+	//		{
+	//			shipAngle += ShipSwingSpeed*Time::DeltaTime;
+	//		}
+	//	}
+	//}
+	//
+	//mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::DeltaTime;
 	if (!isLandCol)
 		mPosition += Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*
 		Vector3(0.0f, ShipUpDownSpeed, 0.0f)*Time::DeltaTime;
@@ -188,6 +189,10 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 			parameter.HP -= ShipDamegeWind;
 			damege = false;
 		}
+	}
+	if (colpara.colID == COL_ID::SHIP_SHIP_COL&&colpara.colFlag)
+	{
+		mPosition += Vector3::Direction(colpara.colPos,parameter.mat.GetPosition()).Normalized();
 	}
 }
 

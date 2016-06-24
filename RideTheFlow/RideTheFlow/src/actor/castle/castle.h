@@ -70,8 +70,12 @@ private:
 	float InvincibleTimer;
 	CastleEnemyPos castleEnemyPos;
 
+<<<<<<< HEAD
 	//Ž€ˆö
 	BREAK_SELECT breakSelect;
 	//—³Šª‚ÅŽ€‚ñ‚¾ê‡‚Ì—³Šª‚ÌˆÚ“®—Ê
 	Vector3 tornadoVelocity;
+=======
+	Vector3 test;
+>>>>>>> ca613e90b545e9dc2a844c22abedb38c72c800a8
 };

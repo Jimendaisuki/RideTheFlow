@@ -51,8 +51,7 @@ void CastleTop::Update()
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		playerMat = other.GetParameter().mat;
 	});
-	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::MASTERCASTLE_CASTLE_COL);
-	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::CASTLE_CASTLE_COL);
+
 	mRank = mMc->getRank();
 	float masterHeight = mMc->GetParameter().mat.GetPosition().y + mMc->GetParameter().radius * 2;
 	float castleHeight = parameter.radius;

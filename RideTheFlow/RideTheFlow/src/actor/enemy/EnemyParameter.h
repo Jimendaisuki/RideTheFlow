@@ -19,7 +19,7 @@ const float cameraFrontAttack = 10.0f;
 /****敵軍隊****/
 
 //軍隊のスピード
-const float ArmySpeed = 5.0f;
+const float ArmySpeed = 10.0f;
 //軍隊の攻撃クールタイム
 const float ArmyAttackTime = 0.5f;
 //軍隊の攻撃範囲
@@ -167,9 +167,8 @@ const float ShipNotLookCannonShellNum = 1;
 //撃龍槍のクールタイム
 const float DoragonSpearAttackTime = 5.0f;
 //プレイヤーが撃龍槍圏内に入った時から攻撃する時までの時間
-const float DoragonSpearWithinTime = 0.5f;
+const float DoragonSpearWithinTime = 2.0f;
 //撃龍槍が最大に伸びるまでの時間
 const float DoragonSpearMaxTime = 10.0f;
 //撃龍槍が完全に出てそこにとどまる時間
 const float DoragonSpearStopTime = 2.0f;
-

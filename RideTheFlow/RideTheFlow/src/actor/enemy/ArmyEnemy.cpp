@@ -20,7 +20,8 @@ playerAngle(0),
 mPosition(position),
 toPoint(Vector3::Zero),
 rotate(Vector3::Zero),
-isLook(true)
+isLook(true),
+downTime(0.0f)
 {
 	parameter.id = ACTOR_ID::ARMY_ENEMY_ACTOR;
 	parameter.HP = 1.0f;
@@ -98,7 +99,12 @@ void ArmyEnemy::Update()
 		mPosition += Vector3::Direction(mPosition, player->GetParameter().mat.GetPosition()).Normalized()*
 			Vector3(1, 0, 1)*ArmySpeed*Time::DeltaTime;
 	}
-	mPosition -= 1.0f*Time::DeltaTime;
+	downTime += Time::DeltaTime;
+	if (downTime >= 2.0f)
+	{
+		mPosition.y -= 5.0f*Time::DeltaTime;
+		downTime = 3.0f;
+	}
 	parameter.mat = Matrix4::Translate(mPosition);
 	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), player->GetParameter().mat.GetPosition()).Normalized();
 	rotate.y = Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f;
@@ -109,10 +115,9 @@ void ArmyEnemy::Draw() const
 	for (int j = 0; j < 3; j++)
 	{
 		Matrix4 m;
-		m = Matrix4::RotateX(90) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
-		Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, m);
+		m = Matrix4::RotateX(0) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
+		Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, m);
 	}
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 5, 20, 0, 0, FALSE);
 }
 void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
@@ -132,6 +137,5 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		//仕様確認
 		parameter.isDead = true;
-		//mPosition += colpara.colVelosity*5.0f +Vector3(0, 10, 0)*Time::DeltaTime;
 	}
 }

@@ -15,8 +15,8 @@
 #include "../../input/Keyboard.h"
 #include "../NoShipArea.h"
 #include "CastleVaristor.h"
-
-Castle::Castle(IWorld& world, Vector3 position, Actor& _parent,int rank,float rotateY) :
+#include "../../math/Quaternion.h"
+Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY) :
 Actor(world),
 arrowCount(0),
 attackRag(0.0f),
@@ -29,39 +29,48 @@ isLook(false),
 InvincibleTimer(0.0f),
 damage(true)
 {
+
 	parameter.HP = BaseCastleHp;
 	parameter.isDead = false;
 	parameter.radius = 17;
-	parameter.height = Vector3(0.0f,34.0f,0.0f);
+	parameter.height = Vector3(0.0f, 34.0f, 0.0f);
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
-		Matrix4::RotateY(0) *
+		Matrix4::RotateY(rotateY) *
 		Matrix4::Translate(position);
-	parent =&_parent;
+	test = parameter.mat.GetFront().Normalized() * 100 + parameter.mat.GetPosition();
+	parent = &_parent;
 	//城に乗っている敵の位置をセット
 	CastleEnemyPosSet();
-    world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180 + rotateY));
+
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor01, *this, -90));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0));
-	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world, 
-		parameter.mat.GetPosition() + Vector3(0.0f,parameter.radius,0.0f)
-		,parameter.radius*2, *this));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor02, *this, 0));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor03, *this, 90));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor04, *this, 180));
+
+
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY));
+
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
+		, parameter.radius * 2, *this));
 	//城出現時のパーティクルを生成
 	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position));
 	mRank = rank;
@@ -99,10 +108,13 @@ void Castle::Update()
 		velocity.y -= 100.0f*Time::DeltaTime;
 	}
 	mPosition += velocity*Time::DeltaTime;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ca613e90b545e9dc2a844c22abedb38c72c800a8
 
 	//マスターが壊れたら自分も壊れる
-	if (parent->GetParameter().isDead||Keyboard::GetInstance().KeyTriggerDown(KEYCODE::H))
+	if (parent->GetParameter().isDead || Keyboard::GetInstance().KeyTriggerDown(KEYCODE::H))
 	{
 		parameter.isDead = true;
 		//がれきを飛ばす
@@ -135,6 +147,10 @@ void Castle::Draw() const
 {
 
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
+	//DrawSphere3D(Vector3::ToVECTOR(test), 20, 10, 1, 1, TRUE);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 }
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)
@@ -167,7 +183,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 }
 void Castle::CastleEnemyPosSet()
 {
-	castleEnemyPos.cannon01 = 
+	castleEnemyPos.cannon01 =
 		parameter.mat.GetFront().Normalized()*-25.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
 		parameter.mat.GetUp().Normalized()*5.0f +
@@ -191,27 +207,27 @@ void Castle::CastleEnemyPosSet()
 		parameter.mat.GetUp().Normalized()*5.0f +
 		parameter.mat.GetPosition();
 
-	castleEnemyPos.varistor01=
-		parameter.mat.GetFront().Normalized()*-15.0f +
+	castleEnemyPos.varistor01 =
+		parameter.mat.GetFront().Normalized()*15.0f +
 		parameter.mat.GetLeft().Normalized()*-30.0f +
 		parameter.mat.GetUp().Normalized()*6.0f +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor02 =
-		parameter.mat.GetFront().Normalized()*30.0f +
-		parameter.mat.GetLeft().Normalized()*-32.0f +
+		parameter.mat.GetFront().Normalized()*28.0f +
+		parameter.mat.GetLeft().Normalized()*15.0f +
 		parameter.mat.GetUp().Normalized()*5.0f +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor03 =
-		parameter.mat.GetFront().Normalized()*25.0f +
-		parameter.mat.GetLeft().Normalized()*32.0f +
+		parameter.mat.GetFront().Normalized()*-15.0f +
+		parameter.mat.GetLeft().Normalized()*30.0f +
 		parameter.mat.GetUp().Normalized()*5.0f +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor04 =
-		parameter.mat.GetFront().Normalized()*-25.0f +
-		parameter.mat.GetLeft().Normalized()*32.0f +
+		parameter.mat.GetFront().Normalized()*-28.0f +
+		parameter.mat.GetLeft().Normalized()*-15.0f +
 		parameter.mat.GetUp().Normalized()*5.0f +
 		parameter.mat.GetPosition();
 

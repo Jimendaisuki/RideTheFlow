@@ -12,6 +12,10 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
+	bool AttackSpear()
+	{
+		return attackSpear;
+	}
 private:
 	ShipEnemy* mSe;
 	Matrix4 tubeMat;

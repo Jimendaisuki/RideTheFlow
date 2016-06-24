@@ -26,6 +26,7 @@ private:
 	float spearStopTimer;
 	float spearAttackTimer;
 	float playerWithinTimer;
+	float attackTimer;
 
 	float mRotateY;
 	bool playerWithin;
