@@ -295,9 +295,14 @@ void Player::Update() {
 				tp.tornadoTatchFlag = true;
 			}
 			else {
-				tp.tornadoTatchFlag = false;
-				tornadoPtr = NULL;
-				windFlowPtr = NULL;
+				if (!tp.dashFlag){
+					tp.tornadoTatchFlag = false;
+					tornadoPtr = NULL;
+					windFlowPtr = NULL;
+				}
+				else{
+					tp.tornadoTatchFlag = true;
+				}
 			}
 			tp.tackleColFlag = false;
 			tp.airGunFlag = false;
@@ -312,11 +317,6 @@ void Player::Update() {
 
 		tp.dashFlag = false;
 		if (!title && !tp.tackleFlag) {
-			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
-				windFlowPtr = std::make_shared<WindFlow>(world, *this);
-				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
-				dashAfter = false;
-			}
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
 				tornadoFlag = false;
 				dashAfter = true;
@@ -338,6 +338,11 @@ void Player::Update() {
 					}
 				}
 				else {
+					if (dashPosStorage.size() == 0){
+						windFlowPtr = std::make_shared<WindFlow>(world, *this);
+						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+						dashAfter = false;
+					}
 					dashPosStorage.push_back(position);
 					float len = 0.0f;
 					if (tornadoPosStorage.size() > 0) {
