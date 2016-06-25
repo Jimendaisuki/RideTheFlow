@@ -180,6 +180,7 @@ title(title_)
 		//ダッシュのスタミナゲージUIを追加
 		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
 	}
+	dashPosStorage.clear();
 }
 Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
@@ -286,10 +287,10 @@ void Player::Update() {
 
 		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag) {
 				tp.tackleFlag = true;
+				tornadoFlag = false;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 			cameraFront.Normalized();
-			tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
@@ -299,9 +300,11 @@ void Player::Update() {
 					tp.tornadoTatchFlag = false;
 					tornadoPtr = NULL;
 					windFlowPtr = NULL;
+					tp.tackleT = cameraFront;
 				}
 				else{
 					tp.tornadoTatchFlag = true;
+					tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
 				}
 			}
 			tp.tackleColFlag = false;
