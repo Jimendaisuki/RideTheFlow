@@ -12,12 +12,15 @@
 #include "tornado\Tornado.h"
 #include "../game/Random.h"
 #include "particle\WindFlow.h"
+#include "particle\DashBlueLine.h"
 #include "AirGun.h"
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
 #include "../UIactor/Effect.h"
 #include "../input/GamePad.h"
 #include "enemy\DoragonSpearEnemy.h"
+
+
 //ボーンの数
 const int boneCount = 38;
 //波の周波
@@ -345,6 +348,7 @@ void Player::Update() {
 					if (dashPosStorage.size() == 0){
 						windFlowPtr = std::make_shared<WindFlow>(world, *this);
 						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+						world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<DashBlueLine>(world, *this));
 						dashAfter = false;
 					}
 					dashPosStorage.push_back(position);

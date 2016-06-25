@@ -42,6 +42,9 @@ void DashBlueLineParticle::OnUpdate()
 	//Yの値は渡されてきたもので固定
 	moveParam.pos.y = positionHeight;
 
+	//アルファ値計算
+	drawParam.alpha = 1.0f * Math::Cos((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 90.0f);
+
 	//最初のうちは向きの計算をしない
 	if (num < 1)
 		return;
