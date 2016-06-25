@@ -41,7 +41,7 @@ public:
 public:
 	Vector3 GetVelocity()
 	{
-		return velocity*Time::DeltaTime;
+		return velocity;
 	}
 	bool isLookPlayer()
 	{
@@ -53,9 +53,12 @@ private:
 	Matrix4 playerMat;
 	Vector3 mPosition;
 	Vector3 mScale;
+	Vector3 startPos;
+	Vector3 endPos;
 	Actor* parent;
 	Vector3 velocity;
 	Vector3 sevePos;
+	Vector3 prevPos;
 
 	bool isLook;
 	bool castleDown;
@@ -66,6 +69,7 @@ private:
 	float mArrowNumber;
 	int mRank;
 	float mRotateY;
+	float castleUpTimer;
 
 	bool damage;
 	float InvincibleTimer;

@@ -3,15 +3,16 @@
 #include "../../math/Vector3.h"
 #include <memory>
 
-class FroatingIsland : public Actor, public std::enable_shared_from_this<FroatingIsland>
+class Froatinglsland : public Actor, public std::enable_shared_from_this<Froatinglsland>
 {
 public:
-	FroatingIsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
-	~FroatingIsland();
+	Froatinglsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
+	~Froatinglsland();
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 
 private:
-	float HP;
+	float timer;
+	bool isCol;
 };

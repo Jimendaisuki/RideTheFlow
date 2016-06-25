@@ -16,7 +16,7 @@
 #include "../NoShipArea.h"
 #include "../particle/BreakCastle.h"
 
-MasterCastle::MasterCastle(IWorld& world, Vector3 position, bool spawnShip, bool title,float rotateY) :
+MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY, bool spawnShip, bool title) :
 Actor(world),
 attackTime(0),
 castleTime(0),
@@ -60,7 +60,56 @@ rankUpHeght(17.0f)
 	testRnak = 1;
 	parameter.height = Vector3(0.0f, 70.0f + 34 * testRnak, 0.0f);
 	mRotateY = rotateY;
+	parent = this;
 }
+
+MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY,bool spawnShip, bool title, Actor* _parent) :
+Actor(world),
+attackTime(0),
+castleTime(0),
+attackRag(0),
+arrowCount(0),
+mRank(Rank),
+mPosition(position),
+playerMat(Matrix4::Identity),
+rankUp(false),
+rankUpRag(false),
+rankUpRagTimer(0),
+mScale(45, 45, 45),
+spawanArmyTimer(0.0f),
+spawnShipTimer(0.0f),
+mSpawnShip(spawnShip),
+InvincibleTimer(0.0f),
+breakSelect(BREAK_SELECT::TORNADO),
+tornadoVelocity(Vector3::Zero),
+mTitle(title),
+rankUpHeght(17.0f)
+{
+	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
+	parameter.radius = 35;
+	parameter.HP = 1;
+	parameter.isDead = false;
+	parameter.mat =
+		Matrix4::Scale(mScale) *
+		Matrix4::RotateZ(0) *
+		Matrix4::RotateX(0) *
+		Matrix4::RotateY(0) *
+		Matrix4::Translate(position);
+	if (!title)
+	{
+		world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
+		world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
+			parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
+			, parameter.radius * 2, *this));
+		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2.0f, 0.0f), *this, rotateY));
+
+	}
+	testRnak = 1;
+	parameter.height = Vector3(0.0f, 70.0f + 34 * testRnak, 0.0f);
+	mRotateY = rotateY;
+	parent = _parent;
+}
+
 
 MasterCastle::~MasterCastle()
 {
@@ -81,12 +130,10 @@ void MasterCastle::Update()
 		{
 			testRnak++;
 			mRank--;
-			if (mRank < Rank)
-				rankUpHeght = 34.0f;
 			rankUp = true;
 			castleTime = 0.0f;
 			world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
-				mPosition + Vector3(0.0f, parameter.radius * 2, 0.0f) + Vector3(0.0f, rankUpHeght*(Rank - mRank-1), 0.0f) 
+				mPosition + Vector3(0.0f, parameter.radius, 0.0f)
 				, *this, Rank - mRank, mRotateY));
 			parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
 		}
@@ -140,6 +187,13 @@ void MasterCastle::Update()
 			parameter.isDead = true;
 		}
 	}
+
+	if (parent->GetParameter().isDead)
+	{
+		//浮島が壊れたら
+		parameter.isDead = true;
+	}
+
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*

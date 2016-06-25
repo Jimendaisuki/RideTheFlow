@@ -21,13 +21,17 @@ Actor(world),
 arrowCount(0),
 attackRag(0.0f),
 playerMat(Matrix4::Identity),
+velocity(Vector3::Zero),
 mPosition(position),
 mScale(30, 30, 30),
 mAttackTime(0.0f),
 castleDown(true),
 isLook(false),
 InvincibleTimer(0.0f),
-damage(true)
+damage(true),
+startPos(Vector3::Zero),
+endPos(Vector3::Zero),
+castleUpTimer(0.0f)
 {
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	parameter.HP = BaseCastleHp;
@@ -77,6 +81,7 @@ damage(true)
 	mRotateY = rotateY;
 
 	sevePos = mPosition;
+	prevPos = mPosition;
 }
 
 
@@ -98,7 +103,7 @@ void Castle::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
-
+	prevPos = mPosition;
 
 	//マスターが壊れたら自分も壊れる
 	if (parent->GetParameter().isDead)
@@ -108,12 +113,16 @@ void Castle::Update()
 		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 	}
 
+	castleUpTimer +=20.0f* Time::DeltaTime;
 	if (mas->castleRankUp())
 	{
-
+		startPos = mPosition;
+		endPos = mPosition + Vector3(0.0f, parameter.radius * 2.0f, 0.0f);
+		castleUpTimer = 0.0f;
 	}
 
-
+	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
+	velocity =mPosition-prevPos;
 	breakSelect = mas->getBreakSelect();
 	tornadoVelocity = mas->getTornadoVelocity();
 

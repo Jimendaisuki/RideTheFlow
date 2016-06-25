@@ -71,8 +71,6 @@ fovVelo(0.0f)
 	startTarget = Vector3::Zero;
 	endTarget = Vector3::Zero;
 
-
-
 }
 MonhanCameraActor::~MonhanCameraActor()
 {
@@ -204,6 +202,7 @@ void MonhanCameraActor::Update()
 	{
 		if (playerDead)
 		{
+			
 			posSeveStart = position;
 			posSeveEnd = Vector3(0, 0, 1) * 300 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 				playerPosition + cameraUpMove;
