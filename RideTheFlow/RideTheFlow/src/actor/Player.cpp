@@ -106,13 +106,14 @@ title(title_)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	parameter.HP = 50;
+	parameter.HP = 10;
 
+	deadBeforeLocalMatrix = new Matrix4[109];
 	//ダメージ演出用のUIを追加
 	world.UIAdd(UI_ID::DAMAGE_UI, std::make_shared<Damege>(world, parameter.HP, parameter.HP));
 
 	//操作
-	vec = Vector3::Zero;
+	vec = Vector3(0,0,1);
 
 	//くねくねさせる為のangle２つ
 	upAngle = 0;
@@ -179,9 +180,11 @@ title(title_)
 		//ダッシュのスタミナゲージUIを追加
 		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
 	}
+	dashPosStorage.clear();
 }
 Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
+	SAFE_DELETE_ARRAY(deadBeforeLocalMatrix);
 	posStorage.clear();
 }
 
@@ -205,8 +208,8 @@ void Player::Update() {
 
 	if (parameter.HP <= 0)dead = true;
 	if (!dead) {
-		if (parameter.HP < 50.0f)
-			parameter.HP += 0.5f * Time::DeltaTime;
+		if (parameter.HP < 10.0f)
+			parameter.HP += 0.1f * Time::DeltaTime;
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 
 		auto input = DINPUT_JOYSTATE();
@@ -282,19 +285,27 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
-			tp.tackleFlag = true;
+		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag) {
+				tp.tackleFlag = true;
+				tornadoFlag = false;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-			tp.tackleT = Vector3(trueVec.x, 0.0f, trueVec.z);
+			cameraFront.Normalized();
 			tp.animTime = 0.0f;
-			if ((tornadoPtr != NULL || windFlowPtr != NULL) && tackleForTornadoTime < tackleForTornadoTimelimit) {
+			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
 			}
 			else {
-				tp.tornadoTatchFlag = false;
-				tornadoPtr = NULL;
-				windFlowPtr = NULL;
+				if (!tp.dashFlag){
+					tp.tornadoTatchFlag = false;
+					tornadoPtr = NULL;
+					windFlowPtr = NULL;
+					tp.tackleT = cameraFront;
+				}
+				else{
+					tp.tornadoTatchFlag = true;
+					tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
+				}
 			}
 			tp.tackleColFlag = false;
 			tp.airGunFlag = false;
@@ -309,13 +320,12 @@ void Player::Update() {
 
 		tp.dashFlag = false;
 		if (!title && !tp.tackleFlag) {
-			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
-				windFlowPtr = std::make_shared<WindFlow>(world, *this);
-				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
-			}
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
 				tornadoFlag = false;
+				dashAfter = true;
+				dashAfterTime = 0.0f;
 			}
+
 			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
 				if (dashHealFlag) {
 					dashPosStorage.clear();
@@ -331,6 +341,11 @@ void Player::Update() {
 					}
 				}
 				else {
+					if (dashPosStorage.size() == 0){
+						windFlowPtr = std::make_shared<WindFlow>(world, *this);
+						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+						dashAfter = false;
+					}
 					dashPosStorage.push_back(position);
 					float len = 0.0f;
 					if (tornadoPosStorage.size() > 0) {
@@ -339,7 +354,7 @@ void Player::Update() {
 							len += Vector3::Length(i - i++);
 						}
 					}
-					if (dashPosStorage.size() == 1 || len > 100.0f)
+					if (dashPosStorage.size() == 1 || len > 50.0f)
 						tornadoPosStorage.push_back(dashPosStorage.size() - 1);
 
 					bool createTornado = false;
@@ -363,10 +378,11 @@ void Player::Update() {
 						tornadoPtr = std::make_shared<Tornado>(world, torPos, Vector2(1, 1), Vector3::Zero, torRad);
 						world.Add(ACTOR_ID::TORNADO_ACTOR, tornadoPtr);
 						windFlowPtr->SetIsDead(true);
-						windFlowPtr = NULL;
 						dashPosStorage.clear();
 						tornadoPosStorage.clear();
-						tornadoFlag = true;
+						tornadoFlag = true;				
+						dashAfter = true;
+						dashAfterTime = 0.0f;
 					}
 
 					dashTime += Time::DeltaTime;
@@ -378,18 +394,40 @@ void Player::Update() {
 					tackleForTornadoTime = 0.0f;
 				}
 			}
-		}
-		if (!((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) || tp.tackleFlag){
-			dashPosStorage.clear();
-			tornadoPosStorage.clear();
-			dashSpeed -= dashAccele * Time::DeltaTime;
-			dashTime -= dashHealSpeed * Time::DeltaTime;
+			else if(!dashAfter){
+				dashPosStorage.clear();
+				tornadoPosStorage.clear();
+				dashSpeed -= dashAccele * Time::DeltaTime;
+				dashTime -= dashHealSpeed * Time::DeltaTime;
 
-			if (tornadoPtr == NULL && windFlowPtr == NULL) {
-				tackleForTornadoTime = 0.0f;
+				if (tornadoPtr == NULL && windFlowPtr == NULL) {
+					tackleForTornadoTime = 0.0f;
+				}
+				else {
+					tackleForTornadoTime += Time::DeltaTime;
+				}
 			}
-			else {
-				tackleForTornadoTime += Time::DeltaTime;
+
+
+			if (dashAfter){
+				dashTime += Time::DeltaTime;
+				dashSpeed += dashAccele * Time::DeltaTime;
+				trueVec.y = 0;
+				trueVec.Normalized();
+				tp.dashFlag = true;
+
+				dashAfterTime += Time::DeltaTime;
+				if (dashAfterTime > 1.0f){
+					dashAfter = false;
+					dashAfterTime = 0.0f;
+				}
+
+				if (tornadoPtr == NULL && windFlowPtr == NULL) {
+					tackleForTornadoTime = 0.0f;
+				}
+				else {
+					tackleForTornadoTime += Time::DeltaTime;
+				}
 			}
 		}
 		dashSpeed = Math::Clamp(dashSpeed, 1.0f, dashMaxSpeed);
@@ -423,6 +461,11 @@ void Player::Update() {
 			}
 		}
 		else {
+			dashPosStorage.clear();
+			tornadoPosStorage.clear();
+			dashSpeed -= dashAccele * Time::DeltaTime;
+			dashTime -= dashHealSpeed * Time::DeltaTime;
+
 			// 再生時間を進める
 			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
 			forntVec = tp.tackleT;
@@ -565,126 +608,232 @@ void Player::Update() {
 			vertexVec[i] -= Vector3(0, 1, 0) * speed * Time::DeltaTime;
 		}
 	}
+
+	if (dead) {
+		deadMatrixSet++;
+	}
+	for (int i = 0; i < 109; i++) {
+		deadBeforeLocalMatrix[i] = Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(modelHandle, i + 1));
+	}
+	if (dead) {
+		if (deadMatrixSet < 2) {
+			animBlend = 0;
+			tp.animTime = 0;
+			animIndex = MV1AttachAnim(modelHandle, 2, -1, FALSE);
+		}
+		else {
+			position -= Vector3(0.0f, 100.0f, 0.0f) * Time::DeltaTime;
+			animBlend += 0.5f * Time::DeltaTime;
+			animBlend = Math::Min(animBlend, 1.0f);
+			if (tp.animTime <
+				MV1GetAttachAnimTotalTime(modelHandle, animIndex))
+				tp.animTime += 50.0f * Time::DeltaTime;
+		}
+	}
+
 }
 void Player::Draw() const {
-	//骨の数だけ用意する
-	Vector3* drawVertexVec = new Vector3[boneCount];
-	Matrix4* drawMatrixVec = new Matrix4[boneCount];
-	Matrix4* localDrawMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
-	Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
+	if (!dead) {
+		//骨の数だけ用意する
+		Vector3* drawVertexVec = new Vector3[boneCount];
+		Matrix4* drawMatrixVec = new Matrix4[boneCount];
+		Matrix4* localDrawMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
+		Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
 
-	//初期化
-	for (int i = 0; i < boneCount; i++) {
-		drawVertexVec[i] = vertexVec[i];
-		drawMatrixVec[i] = parameter.mat;
-	}
+		//初期化
+		for (int i = 0; i < boneCount; i++) {
+			drawVertexVec[i] = vertexVec[i];
+			drawMatrixVec[i] = parameter.mat;
+		}
 
-	//先頭を原点に移動
-	drawVertexVec[0] = vertexVec[0];
+		//先頭を原点に移動
+		drawVertexVec[0] = vertexVec[0];
+		////先頭の高さを求める為最頂点の位置までの計算を行う
+		//for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
+		//	Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
+		//	Vector3 boneUp = Vector3(0, 1, 0);
+		//	Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
+		//	boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
+		//
+		//	Matrix4 drawMat = 
+		//		//ボーンの長さ求めて動かす
+		//		Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
+		//		//Left軸、Front軸基準に回転
+		//		Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
+		//		Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
+		//		Matrix4::Translate(drawVertexVec[count - 1]);
+		//	drawVertexVec[count] = drawMat.GetPosition();
+		//}
+		//
+		//先頭の高さを代入
+		//drawVertexVec[0] = -drawVertexVec[boneCount / (int)(2.0f / waveCount)];
 
-	////先頭の高さを求める為最頂点の位置までの計算を行う
-	//for (int count = 1; count <= (boneCount / (int)(2.0f / waveCount)); count++){
-	//	Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
-	//	Vector3 boneUp = Vector3(0, 1, 0);
-	//	Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
-	//	boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
-	//
-	//	Matrix4 drawMat = 
-	//		//ボーンの長さ求めて動かす
-	//		Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-	//		//Left軸、Front軸基準に回転
-	//		Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
-	//		Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
-	//		Matrix4::Translate(drawVertexVec[count - 1]);
-	//	drawVertexVec[count] = drawMat.GetPosition();
-	//}
-	//
-	//先頭の高さを代入
-	//drawVertexVec[0] = -drawVertexVec[boneCount / (int)(2.0f / waveCount)];
-
-	//マトリックスも再計算
-	drawMatrixVec[0] =
-		Matrix4::Scale(scale) *
-		Matrix4::Translate(drawVertexVec[0]);
-
-	//先頭の高さを設定した状態で再計算
-	for (int count = 1; count < boneCount; count++) {
-		Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
-		Vector3 boneUp = Vector3(0, 1, 0);
-		Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
-		boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
-
-		Matrix4 drawMat =
-			Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
-			Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
-			Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
-			Matrix4::Translate(drawVertexVec[count - 1]);
-
-		Matrix4 rotateMat;
-		drawVertexVec[count] = drawMat.GetPosition();
-		rotateMat = Matrix4::Identity;
-		Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
-		Vector3 up = Vector3(0, 1, 0).Normalized();
-		Vector3 left = Vector3::Cross(up, front).Normalized();
-		up = Vector3::Cross(front, left).Normalized();
-		front = Vector3::Cross(left, up).Normalized();
-		rotateMat.SetFront(front);
-		rotateMat.SetUp(up);
-		rotateMat.SetLeft(left);
-
-		drawMatrixVec[count] =
+		//マトリックスも再計算
+		drawMatrixVec[0] =
 			Matrix4::Scale(scale) *
-			rotateMat *
-			Matrix4::Translate(drawVertexVec[count]);
-	}
+			Matrix4::Translate(drawVertexVec[0]);
 
-	if (!tp.tackleFlag) {
-		//相対座標に変換しセット
-		for (int count = 0; count < boneCount; count++) {
-			localDrawMatrixVec[count] = drawMatrixVec[count];
+		//先頭の高さを設定した状態で再計算
+		for (int count = 1; count < boneCount; count++) {
+			Vector3 boneFront = (vertexVec[count] - vertexVec[count - 1]).Normalized();
+			Vector3 boneUp = Vector3(0, 1, 0);
+			Vector3 boneLeft = Vector3::Cross(boneFront, boneUp).Normalized();
+			boneUp = Vector3::Cross(boneLeft, boneFront).Normalized();
 
-			Matrix4 beforeInvMat = Matrix4::Identity;
-			//親の逆行列をかけていく
-			for (int count2 = 0; count2 < count; count2++) {
-				beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
+			Matrix4 drawMat =
+				Matrix4::Translate(vertexVec[count] - vertexVec[count - 1]) *
+				Quaternion::RotateAxis(boneLeft, Math::Sin(upAngle + (count * 360.0f / (float)(boneCount * waveCount))) * leftMoveRange) *
+				Quaternion::RotateAxis(boneUp, Math::Sin(leftAngle + (count * 360.0f / (float)(boneCount * waveCount))) * upMoveRange) *
+				Matrix4::Translate(drawVertexVec[count - 1]);
+
+			Matrix4 rotateMat;
+			drawVertexVec[count] = drawMat.GetPosition();
+			rotateMat = Matrix4::Identity;
+			Vector3 front = (drawVertexVec[count] - drawVertexVec[count - 1]).Normalized();
+			Vector3 up = Vector3(0, 1, 0).Normalized();
+			Vector3 left = Vector3::Cross(up, front).Normalized();
+			up = Vector3::Cross(front, left).Normalized();
+			front = Vector3::Cross(left, up).Normalized();
+			rotateMat.SetFront(front);
+			rotateMat.SetUp(up);
+			rotateMat.SetLeft(left);
+
+			drawMatrixVec[count] =
+				Matrix4::Scale(scale) *
+				rotateMat *
+				Matrix4::Translate(drawVertexVec[count]);
+		}
+
+		if (!tp.tackleFlag) {
+			//相対座標に変換しセット
+			for (int count = 0; count < boneCount; count++) {
+				localDrawMatrixVec[count] = drawMatrixVec[count];
+
+				Matrix4 beforeInvMat = Matrix4::Identity;
+				//親の逆行列をかけていく
+				for (int count2 = 0; count2 < count; count2++) {
+					beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
+				}
+				localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
 			}
-			localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+			for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++) {
+				Matrix4 ma = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+				//Matrix4 animSubRotate = Matrix4::Identity;
+				//animSubRotate.SetFront(ma.GetFront().Normalized());
+				//animSubRotate.SetUp(ma.GetUp().Normalized());
+				//animSubRotate.SetLeft(ma.GetLeft().Normalized());
+				//ma = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(ma.GetPosition());
+				localDrawMatrixVec[count] = ma;
+			}
+			for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
+				MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
+					Matrix4::ToMATRIX(
+					localDrawMatrixVec[count]
+					));
+			}
 		}
-		for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++) {
-			Matrix4 ma = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
-			//Matrix4 animSubRotate = Matrix4::Identity;
-			//animSubRotate.SetFront(ma.GetFront().Normalized());
-			//animSubRotate.SetUp(ma.GetUp().Normalized());
-			//animSubRotate.SetLeft(ma.GetLeft().Normalized());
-			//ma = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(ma.GetPosition());
-			localDrawMatrixVec[count] = ma;
+		else {
+			//相対座標に変換しセット
+			for (int count = 0; count < boneCount; count++) {
+				localDrawMatrixVec[count] = drawMatrixVec[count];
+
+				Matrix4 beforeInvMat = Matrix4::Identity;
+				//親の逆行列をかけていく
+				for (int count2 = 0; count2 < count; count2++) {
+					beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
+				}
+				localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+				localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+			}
+
+			Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
+			Matrix4 animSubRotate = Matrix4::Identity;
+			animSubRotate.SetFront(localAnimDrawMatrixVec[0].GetFront().Normalized());
+			animSubRotate.SetUp(localAnimDrawMatrixVec[0].GetUp().Normalized());
+			animSubRotate.SetLeft(localAnimDrawMatrixVec[0].GetLeft().Normalized());
+
+			Vector3 front = -tp.tackleT.Normalized();
+			Vector3 up = Vector3(0, 1, 0).Normalized();
+			Vector3 left = Vector3::Cross(up, front).Normalized();
+			up = Vector3::Cross(front, left).Normalized();
+			front = Vector3::Cross(left, up).Normalized();
+			Matrix4 rotateY = Matrix4::Identity;
+			rotateY.SetFront(front);
+			rotateY.SetUp(up);
+			rotateY.SetLeft(left);
+			localAnimDrawMatrixVec[0] =
+				Matrix4::Scale(scale) *
+				animSubRotate *
+				rotateY *
+				Matrix4::Translate(localAnimDrawMatrixVec[0].GetPosition() + position);
+			//animSubRotate = Matrix4::Identity;
+			//animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
+			//animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
+			//animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
+			//localAnimDrawMatrixVec[1] =
+			//	Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale()) *
+			//	animSubRotate *
+			//	Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
+
+			// 再生時間をセットする
+			MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
+
+			for (int count = 0; count < boneCount; count++) {
+				MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
+					Matrix4::ToMATRIX(
+					Matrix4::Slerp(
+					localDrawMatrixVec[count]
+					, localAnimDrawMatrixVec[count], animBlend)
+					));
+			}
+
 		}
-		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
-			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
-				Matrix4::ToMATRIX(
-				localDrawMatrixVec[count]
-				));
+		if (!title)
+			Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+		else
+			Model::GetInstance().Draw(MODEL_ID::TEST_TITLE_MODEL, Vector3::Zero, 1.0f);
+		for (auto i : tornadoPosStorage) {
+			/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
 		}
+		//if (damageFlag){
+		//	DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
+		//}
+
+		//if (tackleFlag)
+		//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
+
+		if (!title)
+			ParameterDraw();
+
+		//if (bonePosStorage.size() > 1)
+		//for (int count = 2; count < bonePosStorage.size() ; count++){
+		//	int Color = GetColor(0, 0, 255);
+		//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
+		//}
+
+		if (dashPosStorage.size() > 1)
+		for (int count = 0; count < dashPosStorage.size() - 1; count++) {
+			int Color = GetColor(0, 0, 255);
+			DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
+		}
+
+		SAFE_DELETE_ARRAY(drawVertexVec);
+		SAFE_DELETE_ARRAY(drawMatrixVec);
+		SAFE_DELETE_ARRAY(localDrawMatrixVec);
+		SAFE_DELETE_ARRAY(localAnimDrawMatrixVec);
 	}
 	else {
-		//相対座標に変換しセット
-		for (int count = 0; count < boneCount; count++) {
-			localDrawMatrixVec[count] = drawMatrixVec[count];
-
-			Matrix4 beforeInvMat = Matrix4::Identity;
-			//親の逆行列をかけていく
-			for (int count2 = 0; count2 < count; count2++) {
-				beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
-			}
-			localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
-			localAnimDrawMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+		Matrix4* localAnimMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
+		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
+			localAnimMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
 		}
 
-		Vector3 animSubVec = position - localAnimDrawMatrixVec[0].GetPosition();
+		MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
+
 		Matrix4 animSubRotate = Matrix4::Identity;
-		animSubRotate.SetFront(localAnimDrawMatrixVec[0].GetFront().Normalized());
-		animSubRotate.SetUp(localAnimDrawMatrixVec[0].GetUp().Normalized());
-		animSubRotate.SetLeft(localAnimDrawMatrixVec[0].GetLeft().Normalized());
+		animSubRotate.SetFront(localAnimMatrixVec[0].GetFront().Normalized());
+		animSubRotate.SetUp(localAnimMatrixVec[0].GetUp().Normalized());
+		animSubRotate.SetLeft(localAnimMatrixVec[0].GetLeft().Normalized());
 
 		Vector3 front = -tp.tackleT.Normalized();
 		Vector3 up = Vector3(0, 1, 0).Normalized();
@@ -695,68 +844,25 @@ void Player::Draw() const {
 		rotateY.SetFront(front);
 		rotateY.SetUp(up);
 		rotateY.SetLeft(left);
-		localAnimDrawMatrixVec[0] =
+		localAnimMatrixVec[0] =
 			Matrix4::Scale(scale) *
 			animSubRotate *
 			rotateY *
-			Matrix4::Translate(localAnimDrawMatrixVec[0].GetPosition() + position);
-		//animSubRotate = Matrix4::Identity;
-		//animSubRotate.SetFront(localAnimDrawMatrixVec[1].GetFront().Normalized());
-		//animSubRotate.SetUp(localAnimDrawMatrixVec[1].GetUp().Normalized());
-		//animSubRotate.SetLeft(localAnimDrawMatrixVec[1].GetLeft().Normalized());
-		//localAnimDrawMatrixVec[1] =
-		//	Matrix4::Scale(localAnimDrawMatrixVec[1].GetScale()) *
-		//	animSubRotate *
-		//	Matrix4::Translate(localAnimDrawMatrixVec[1].GetPosition());
+			Matrix4::Translate(localAnimMatrixVec[0].GetPosition() + position);
 
-		// 再生時間をセットする
-		MV1SetAttachAnimTime(modelHandle, animIndex, tp.animTime);
-
-		for (int count = 0; count < boneCount; count++) {
+		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 				Matrix4::ToMATRIX(
 				Matrix4::Slerp(
-				localDrawMatrixVec[count]
-				, localAnimDrawMatrixVec[count], animBlend)
+				deadBeforeLocalMatrix[count]
+				, localAnimMatrixVec[count], animBlend)
 				));
 		}
-	}
-	if (!title)
+		SAFE_DELETE_ARRAY(localAnimMatrixVec);
+
 		Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
-	else
-
-		Model::GetInstance().Draw(MODEL_ID::TEST_TITLE_MODEL, Vector3::Zero, 1.0f);
-	for (auto i : tornadoPosStorage) {
-		/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
 	}
-	//if (damageFlag){
-	//	DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
-	//}
-
-	//if (tackleFlag)
-	//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
-
-	if (!title)
-		ParameterDraw();
-
-	//if (bonePosStorage.size() > 1)
-	//for (int count = 2; count < bonePosStorage.size() ; count++){
-	//	int Color = GetColor(0, 0, 255);
-	//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
-	//}
-
-	if (dashPosStorage.size() > 1)
-	for (int count = 0; count < dashPosStorage.size() - 1; count++) {
-		int Color = GetColor(0, 0, 255);
-		DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
-	}
-
-	SAFE_DELETE_ARRAY(drawVertexVec);
-	SAFE_DELETE_ARRAY(drawMatrixVec);
-	SAFE_DELETE_ARRAY(localDrawMatrixVec);
-	SAFE_DELETE_ARRAY(localAnimDrawMatrixVec);
 }
-
 
 void Player::ParameterDraw() const {
 

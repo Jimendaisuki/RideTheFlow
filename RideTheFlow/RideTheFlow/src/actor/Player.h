@@ -40,7 +40,11 @@ public:
 	bool ReturnDead(){ return dead; }
 
 private:
+	Matrix4* deadBeforeLocalMatrix;
+	int deadMatrixSet = 0;
 
+	bool dashAfter = false;
+	float dashAfterTime = 0.0f;
 	bool title;
 	//デバック表示まとめ
 	void ParameterDraw()const;
