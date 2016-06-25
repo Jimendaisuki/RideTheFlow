@@ -284,11 +284,12 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
+		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag) {
 				tp.tackleFlag = true;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-			tp.tackleT = trueVec;
+			cameraFront.Normalized();
+			tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
@@ -320,10 +321,6 @@ void Player::Update() {
 				tornadoFlag = false;
 				dashAfter = true;
 				dashAfterTime = 0.0f;
-			}
-
-
-			if ((Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5))) {
 			}
 
 			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
@@ -640,20 +637,6 @@ void Player::Draw() const {
 			drawVertexVec[i] = vertexVec[i];
 			drawMatrixVec[i] = parameter.mat;
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		//先頭を原点に移動
 		drawVertexVec[0] = vertexVec[0];
