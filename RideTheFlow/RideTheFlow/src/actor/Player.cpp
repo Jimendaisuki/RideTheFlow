@@ -63,7 +63,7 @@ const float ryuuRotateAngle = 5.0f;
 //タックルのアニメーションのスピード
 const float tackleAnimSpeed = 100.0f;
 //タックルの入り出の時のブレンドスピード(上記のスピード÷１０位が目安っぽい(?))
-const float tackleAnimBlendSpeed = 3.0f;
+const float tackleAnimBlendSpeed = 5.0f;
 //タックルのアニメーションのどのフレームであたり判定を出すか
 const float tackleAnimAttackTiming = 193.0f;
 
@@ -294,6 +294,7 @@ void Player::Update() {
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
+				tp.tackleT = Vector3(cameraFront.x, 0.0f, cameraFront.z);
 			}
 			else {
 				if (!tp.dashFlag){
