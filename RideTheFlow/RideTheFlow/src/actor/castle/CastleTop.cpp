@@ -11,11 +11,15 @@
 CastleTop::CastleTop(IWorld& world, Vector3 position, MasterCastle& mc,float rotateY) :
 Actor(world),
 playerMat(Matrix4::Identity),
+startPos(position),
+endPos(position),
 mPosition(position),
 mScale(30, 30, 30),
 castleDown(true),
 noColTimer(0),
-noCol(false)
+noCol(false),
+castleUpTimer(0.0f)
+
 {
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	Vector2 side = Vector2(mScale.x, mScale.z) / 2;
@@ -48,11 +52,15 @@ void CastleTop::Update()
 		playerMat = other.GetParameter().mat;
 	});
 
-	mRank = mMc->getRank();
-	float masterHeight = mMc->GetParameter().mat.GetPosition().y + mMc->GetParameter().radius * 2;
-	float castleHeight = 34.0f;
-	mPosition = Vector3(sevePos.x, sevePos.y + castleHeight*mRank, sevePos.z);
-	
+	castleUpTimer += 20.0f*Time::DeltaTime;
+	if (mMc->castleRankUp())
+	{
+		startPos = mPosition;
+		endPos = mPosition + Vector3(0.0f, 34.0f, 0.0f);
+		castleUpTimer = 0.0f;
+	}
+
+	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
 	//マスターが壊れたら自分も壊れる
 	if (mMc->GetParameter().isDead)
 	{

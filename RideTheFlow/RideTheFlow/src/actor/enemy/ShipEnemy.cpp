@@ -13,7 +13,6 @@
 #include "ShipVaristorEnemy.h"
 #include "ShipCannonEnemy.h"
 #include "../castle/CastleCannon.h"
-#include "../island/FloatingIsland.h"
 ShipEnemy::ShipEnemy(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),

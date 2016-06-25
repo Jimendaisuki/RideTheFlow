@@ -438,7 +438,7 @@ CollisionParameter Actor::BoundarySphere_Capsule(const Actor& other) const{
 	island.radius = parameter.radius;
 
 	colpara = Collisin::GetInstace().PushedBack_SphereCapsule(island, tornado);
-
+	colpara.colID = COL_ID::TORNADO_ISLAND_COL;
 	return colpara;
 }
 

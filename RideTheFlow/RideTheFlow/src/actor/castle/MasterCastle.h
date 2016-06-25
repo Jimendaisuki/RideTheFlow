@@ -8,7 +8,8 @@
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
 public:
-	MasterCastle(IWorld& world, Vector3 position,bool spawnShip,bool title,float rotateY);
+	MasterCastle(IWorld& world, Vector3 position, float rotateY, bool spawnShip, bool title);
+	MasterCastle(IWorld& world, Vector3 position, float rotateY, bool spawnShip, bool title, Actor* _parent);
 	~MasterCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;

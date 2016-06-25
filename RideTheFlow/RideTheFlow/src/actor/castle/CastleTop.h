@@ -19,6 +19,9 @@ private:
 	Vector3 mPosition;
 	Vector3 mScale;
 	Vector3 velocity;
+	Vector3 startPos;
+	Vector3 endPos;
+
 	MasterCastle* mMc;
 	Vector3 sevePos;
 	bool castleDown;
@@ -26,6 +29,6 @@ private:
 	bool noCol;
 	float noColTimer;
 	int mRank;
-
+	float castleUpTimer;
 	float mRotateY;
 };

@@ -11,7 +11,7 @@
 
 #include "../actor/tornado/Tornado.h"
 #include "../actor/castle/Castle.h"
-#include "../actor/island/FloatingIsland.h"
+#include "../actor/island/Froatinglsland.h"
 #include "../actor/Stage.h"
 #include "../graphic/TextDraw.h"
 #include "../actor/castle/MasterCastle.h"
@@ -74,11 +74,11 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_BALL));
 
 	float bai = 2.0;
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -50, 0)		 * bai, true, false, 50.0f));
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -50, 0)		 * bai, true, false, 50.0f));
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -50, 300)	 * bai, true, false, 50.0f));
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -50, -400)	 * bai, true, false, 50.0f));
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -50, 700)	 * bai, true, false, 50.0f));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -50, 0)		 * bai, true, false, 50.0f));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -50, 0)		 * bai, true, false, 50.0f));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -50, 300)	 * bai, true, false, 50.0f));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -50, -400)	 * bai, true, false, 50.0f));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -50, 700)	 * bai, true, false, 50.0f));
 
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 
