@@ -3,6 +3,7 @@
 #include "Particle.h"
 #include <vector>
 #include "WindFlow.h"
+#include "DashBlueLine.h"
 
 class DashBlueLineParticle :public Particle
 {

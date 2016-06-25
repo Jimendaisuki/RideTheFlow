@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include <vector>
 
 class AirGun :public Actor
 {
@@ -13,4 +14,6 @@ private:
 	Vector3 position;
 	Vector3 velocity;
 	float range;
+	std::vector<Matrix4> rotates;
+	std::vector<Matrix4> mats;
 };

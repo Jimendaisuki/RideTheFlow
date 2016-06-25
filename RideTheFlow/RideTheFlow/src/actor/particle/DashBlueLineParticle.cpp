@@ -3,7 +3,7 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 
-DashBlueLineParticle::DashBlueLineParticle(const std::vector<Vector3>& dashPositions_, float positionHeight_)
+DashBlueLineParticle::DashBlueLineParticle( const std::vector<Vector3>& dashPositions_, float positionHeight_)
 :
 dashPositions(dashPositions_),
 randomPosition(Random::GetInstance().Range(-10.0f, 10.0f), 0.0f, Random::GetInstance().Range(-10.0f, 10.0f)),
@@ -52,6 +52,7 @@ void DashBlueLineParticle::OnUpdate()
 	Vector3 v = Vector3::Normalize(dashPositions.at(num) - dashPositions.at(num - 1));
 	//‰ñ“]ŒvŽZ
 	rotate.y = Math::Degree(Math::Atan2(v.x, v.z));
+
 }
 
 void DashBlueLineParticle::Draw() const

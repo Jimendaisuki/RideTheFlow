@@ -5,6 +5,8 @@
 #include "../../game/Random.h"
 #include "WindSetting.h"
 #include "../../time/Time.h"
+#include "../../input/Keyboard.h"
+#include "../../input/GamePad.h"
 
 //タックルされた後の移動速度
 static const float MoveSpeed = 400.0f;
@@ -14,13 +16,14 @@ Actor(world),
 player(player_),
 isSetting(false),
 vec(Vector3::Zero),
-speed(MoveSpeed)
+speed(MoveSpeed),
+dashButtonState(true)
 {
 	parameter.id = ACTOR_ID::WIND_ACTOR;
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f, HeightMax, 0.0f);
 	parameter.radius = 10.0f;
-	ps_parameter.intervalSec = 0.003f;
+	ps_parameter.intervalSec = 0.05f;
 	ps_parameter.lifeTimeLimit = 100.0f;
 	ps_parameter.sameEmissiveNum = 1;
 	dashPositions = player.ReturnDashPosStorage();

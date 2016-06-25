@@ -36,4 +36,6 @@ private:
 	float speed;
 	//初期位置からの移動量
 	Vector3 move;
+	//ダッシュボタンが入力されているか？
+	bool dashButtonState;
 };

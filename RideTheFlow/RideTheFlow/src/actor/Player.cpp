@@ -816,11 +816,11 @@ void Player::Draw() const {
 		//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
 		//}
 
-		if (dashPosStorage.size() > 1)
-		for (int count = 0; count < dashPosStorage.size() - 1; count++) {
-			int Color = GetColor(0, 0, 255);
-			DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
-		}
+		//if (dashPosStorage.size() > 1)
+		//for (int count = 0; count < dashPosStorage.size() - 1; count++) {
+		//	int Color = GetColor(0, 0, 255);
+		//	DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
+		//}
 
 		SAFE_DELETE_ARRAY(drawVertexVec);
 		SAFE_DELETE_ARRAY(drawMatrixVec);
