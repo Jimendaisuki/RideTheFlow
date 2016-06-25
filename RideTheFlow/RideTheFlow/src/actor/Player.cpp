@@ -12,7 +12,6 @@
 #include "tornado\Tornado.h"
 #include "../game/Random.h"
 #include "particle\WindFlow.h"
-#include "particle\DashBlueLine.h"
 #include "AirGun.h"
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
@@ -64,7 +63,7 @@ const float ryuuRotateAngle = 5.0f;
 //タックルのアニメーションのスピード
 const float tackleAnimSpeed = 100.0f;
 //タックルの入り出の時のブレンドスピード(上記のスピード÷１０位が目安っぽい(?))
-const float tackleAnimBlendSpeed = 3.0f;
+const float tackleAnimBlendSpeed = 5.0f;
 //タックルのアニメーションのどのフレームであたり判定を出すか
 const float tackleAnimAttackTiming = 193.0f;
 
@@ -181,6 +180,7 @@ title(title_)
 		//ダッシュのスタミナゲージUIを追加
 		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
 	}
+	dashPosStorage.clear();
 }
 Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
@@ -270,7 +270,7 @@ void Player::Update() {
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-		
+
 		if (padInputFlag) {
 			rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
 			rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
@@ -285,19 +285,28 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag && leftStickMove) {
+		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag) {
 				tp.tackleFlag = true;
+				tornadoFlag = false;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
-			tp.tackleT = trueVec;
+			cameraFront.Normalized();
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
+				tp.tackleT = Vector3(cameraFront.x, 0.0f, cameraFront.z);
 			}
 			else {
-				tp.tornadoTatchFlag = false;
-				tornadoPtr = NULL;
-				windFlowPtr = NULL;
+				if (!tp.dashFlag){
+					tp.tornadoTatchFlag = false;
+					tornadoPtr = NULL;
+					windFlowPtr = NULL;
+					tp.tackleT = cameraFront;
+				}
+				else{
+					tp.tornadoTatchFlag = true;
+					tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
+				}
 			}
 			tp.tackleColFlag = false;
 			tp.airGunFlag = false;
@@ -312,20 +321,10 @@ void Player::Update() {
 
 		tp.dashFlag = false;
 		if (!title && !tp.tackleFlag) {
-			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
-				windFlowPtr = std::make_shared<WindFlow>(world, *this);
-				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
-				world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<DashBlueLine>(world, *this));
-				dashAfter = false;
-			}
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
 				tornadoFlag = false;
 				dashAfter = true;
 				dashAfterTime = 0.0f;
-			}
-
-
-			if ((Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5))) {
 			}
 
 			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
@@ -343,6 +342,11 @@ void Player::Update() {
 					}
 				}
 				else {
+					if (dashPosStorage.size() == 0){
+						windFlowPtr = std::make_shared<WindFlow>(world, *this);
+						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+						dashAfter = false;
+					}
 					dashPosStorage.push_back(position);
 					float len = 0.0f;
 					if (tornadoPosStorage.size() > 0) {
@@ -642,20 +646,6 @@ void Player::Draw() const {
 			drawVertexVec[i] = vertexVec[i];
 			drawMatrixVec[i] = parameter.mat;
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		//先頭を原点に移動
 		drawVertexVec[0] = vertexVec[0];

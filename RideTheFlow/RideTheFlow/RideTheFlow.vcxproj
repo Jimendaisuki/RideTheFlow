@@ -99,6 +99,8 @@
     <ClCompile Include="src\actor\enemy\VaristorBullet.cpp" />
     <ClCompile Include="src\actor\enemy\VaristorEnemy.cpp" />
     <ClCompile Include="src\actor\FogActor.cpp" />
+    <ClCompile Include="src\actor\island\Froatinglsland3.cpp" />
+    <ClCompile Include="src\actor\island\Froatinglsland2.cpp" />
     <ClCompile Include="src\actor\NoShipArea.cpp" />
     <ClCompile Include="src\actor\particle\BreakCastleParticle.cpp" />
     <ClCompile Include="src\actor\particle\BreakCastle.cpp" />
@@ -127,7 +129,7 @@
     <ClCompile Include="src\UIactor\menuPanel\MenuPanel.cpp" />
     <ClCompile Include="src\UIactor\PlayerArrow.cpp" />
     <ClCompile Include="src\UIactor\SpeedLine.cpp" />
-    <ClCompile Include="src\actor\island\FloatingIsland.cpp" />
+    <ClCompile Include="src\actor\island\Froatinglsland.cpp" />
     <ClCompile Include="src\actor\castle\CastleBlock.cpp" />
     <ClCompile Include="src\actor\enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\actor\particle\Particle.cpp" />
@@ -184,6 +186,9 @@
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
     <ClInclude Include="src\actor\castle\CastleVaristor.h" />
+    <ClInclude Include="src\actor\island\Froatinglsland2.h" />
+    <ClInclude Include="src\actor\island\Froatinglsland3.h" />
+    <ClInclude Include="src\actor\island\FroatinglslandParameter.h" />
     <ClInclude Include="src\actor\NoShipArea.h" />
     <ClInclude Include="src\actor\particle\BreakCastle.h" />
     <ClInclude Include="src\actor\castle\CastleCannon.h" />
@@ -230,7 +235,7 @@
     <ClInclude Include="src\UIactor\MiniMapParameter.h" />
     <ClInclude Include="src\UIactor\PlayerArrow.h" />
     <ClInclude Include="src\UIactor\SpeedLine.h" />
-    <ClInclude Include="src\actor\island\FloatingIsland.h" />
+    <ClInclude Include="src\actor\island\Froatinglsland.h" />
     <ClInclude Include="src\actor\particle\Particle.h" />
     <ClInclude Include="src\actor\particle\ParticlePtr.h" />
     <ClInclude Include="src\actor\particle\ParticleSystem.h" />

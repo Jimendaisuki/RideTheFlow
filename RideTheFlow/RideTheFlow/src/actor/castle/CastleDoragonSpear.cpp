@@ -57,6 +57,7 @@ void CastleDoragonSpear::Update()
 	});
 
 	////é‚Ì‘¬“x‚ð‘«‚·
+	Vector3 v = castle->GetVelocity();
 	startPos += castle->GetVelocity();
 	endPos += castle->GetVelocity();
 
