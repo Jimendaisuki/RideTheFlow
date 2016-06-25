@@ -102,6 +102,8 @@
     <ClCompile Include="src\actor\NoShipArea.cpp" />
     <ClCompile Include="src\actor\particle\BreakCastleParticle.cpp" />
     <ClCompile Include="src\actor\particle\BreakCastle.cpp" />
+    <ClCompile Include="src\actor\particle\DashBlueLine.cpp" />
+    <ClCompile Include="src\actor\particle\DashBlueLineParticle.cpp" />
     <ClCompile Include="src\actor\StageGenerator.cpp" />
     <ClCompile Include="src\UIactor\CsvReader.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
@@ -203,6 +205,8 @@
     <ClInclude Include="src\actor\enemy\VaristorBullet.h" />
     <ClInclude Include="src\actor\FogActor.h" />
     <ClInclude Include="src\actor\particle\BreakCastleParticle.h" />
+    <ClInclude Include="src\actor\particle\DashBlueLine.h" />
+    <ClInclude Include="src\actor\particle\DashBlueLineParticle.h" />
     <ClInclude Include="src\actor\StageGenerator.h" />
     <ClInclude Include="src\UIactor\CsvReader.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />

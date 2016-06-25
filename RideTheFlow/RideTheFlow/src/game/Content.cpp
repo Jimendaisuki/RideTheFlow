@@ -79,6 +79,7 @@ void Content::LoadModel(Model& model, bool async)
 
 	model.Load("arrow.mv1", MODEL_ID::ARROW_MODEL, async);
 	model.Load("wind.mv1", MODEL_ID::WIND_MODEL, async);
+	model.Load("wind_blue.mv1", MODEL_ID::WIND_BLUE_MODEL, async);
 	model.Load("cloud.mv1", MODEL_ID::CLOUD_MODEL, async);
 	model.Load("sand.mv1", MODEL_ID::SAND_MODEL, async);
 	model.Load("tornadopoly.mv1", MODEL_ID::TORNADOPOLY_MODEL, async);

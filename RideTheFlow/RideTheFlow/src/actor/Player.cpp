@@ -12,6 +12,7 @@
 #include "tornado\Tornado.h"
 #include "../game/Random.h"
 #include "particle\WindFlow.h"
+#include "particle\DashBlueLine.h"
 #include "AirGun.h"
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
@@ -269,7 +270,7 @@ void Player::Update() {
 				animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 			}
 		}
-
+		
 		if (padInputFlag) {
 			rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
 			rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
@@ -314,6 +315,7 @@ void Player::Update() {
 			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM5)) {
 				windFlowPtr = std::make_shared<WindFlow>(world, *this);
 				world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+				world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<DashBlueLine>(world, *this));
 				dashAfter = false;
 			}
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {

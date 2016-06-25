@@ -118,22 +118,22 @@ void CreditScene::Update()
 
 	wa.Update();
 
-	//入力状態を取得
-	leftstick = GamePad::GetInstance().Stick();
-	rightstick = GamePad::GetInstance().RightStick();
-	buttons.clear();
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM1));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM2));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM3));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM4));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM6));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM9));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM10));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM11));
-	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM12));
+	////入力状態を取得
+	//leftstick = GamePad::GetInstance().Stick();
+	//rightstick = GamePad::GetInstance().RightStick();
+	//buttons.clear();
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM1));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM2));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM3));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM4));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM6));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM9));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM10));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM11));
+	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM12));
 }
 
 //描画
@@ -176,19 +176,19 @@ void CreditScene::Draw() const
 
 	wa.Draw();
 
-	TextDraw::Draw(Point(900, 180), Vector3::Blue, Vector2(t));
+	//TextDraw::Draw(Point(900, 180), Vector3::Blue, Vector2(t));
 
-	//スティックの入力状態
-	int drawx = 700;
-	TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
-	TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
-	TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
-	//ボタンの入力状態
-	TextDraw::Draw(Point(drawx, 260), Vector3::Green, "Buttons");
-	for (int i = 0; i < 12; i++)
-	{
-		TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
-	}
+	////スティックの入力状態
+	//int drawx = 700;
+	//TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
+	//TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
+	//TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
+	////ボタンの入力状態
+	//TextDraw::Draw(Point(drawx, 260), Vector3::Green, "Buttons");
+	//for (int i = 0; i < 12; i++)
+	//{
+	//	TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
+	//}
 
 	////ステージの限界の大きさのワイヤー球
 	//DrawSphere3D(Vector3::Zero.ToVECTOR(), 1400, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
