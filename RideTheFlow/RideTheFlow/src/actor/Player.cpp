@@ -12,12 +12,15 @@
 #include "tornado\Tornado.h"
 #include "../game/Random.h"
 #include "particle\WindFlow.h"
+#include "particle\DashBlueLine.h"
 #include "AirGun.h"
 #include "../UIactor/Damege.h"
 #include "../UIactor/Stamina.h"
 #include "../UIactor/Effect.h"
 #include "../input/GamePad.h"
 #include "enemy\DoragonSpearEnemy.h"
+
+
 //ボーンの数
 const int boneCount = 38;
 //波の周波
@@ -63,7 +66,7 @@ const float ryuuRotateAngle = 5.0f;
 //タックルのアニメーションのスピード
 const float tackleAnimSpeed = 100.0f;
 //タックルの入り出の時のブレンドスピード(上記のスピード÷１０位が目安っぽい(?))
-const float tackleAnimBlendSpeed = 3.0f;
+const float tackleAnimBlendSpeed = 5.0f;
 //タックルのアニメーションのどのフレームであたり判定を出すか
 const float tackleAnimAttackTiming = 193.0f;
 
@@ -294,6 +297,7 @@ void Player::Update() {
 			tp.animTime = 0.0f;
 			if ((tornadoPtr != NULL || windFlowPtr != NULL) && dashAfterTime < tackleForTornadoTimelimit && dashAfter) {
 				tp.tornadoTatchFlag = true;
+				tp.tackleT = Vector3(cameraFront.x, 0.0f, cameraFront.z);
 			}
 			else {
 				if (!tp.dashFlag){
@@ -344,6 +348,7 @@ void Player::Update() {
 					if (dashPosStorage.size() == 0){
 						windFlowPtr = std::make_shared<WindFlow>(world, *this);
 						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
+						world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<DashBlueLine>(world, *this));
 						dashAfter = false;
 					}
 					dashPosStorage.push_back(position);
@@ -811,11 +816,11 @@ void Player::Draw() const {
 		//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
 		//}
 
-		if (dashPosStorage.size() > 1)
-		for (int count = 0; count < dashPosStorage.size() - 1; count++) {
-			int Color = GetColor(0, 0, 255);
-			DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
-		}
+		//if (dashPosStorage.size() > 1)
+		//for (int count = 0; count < dashPosStorage.size() - 1; count++) {
+		//	int Color = GetColor(0, 0, 255);
+		//	DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
+		//}
 
 		SAFE_DELETE_ARRAY(drawVertexVec);
 		SAFE_DELETE_ARRAY(drawMatrixVec);
