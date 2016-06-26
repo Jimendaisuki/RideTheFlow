@@ -63,7 +63,7 @@ void CreditScene::Initialize()
 	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
 	WorkFolder::SetWorkFolder("res/Model/");
 	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
-
+	
 	mIsEnd = false;
 
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
@@ -73,12 +73,13 @@ void CreditScene::Initialize()
 
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_BALL));
 
-	float bai = 2.0;
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -50, 0)		 * bai, true, false, 50.0f));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300, -50, 0)		 * bai, true, false, 50.0f));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -50, 300)	 * bai, true, false, 50.0f));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -50, -400)	 * bai, true, false, 50.0f));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -50, 700)	 * bai, true, false, 50.0f));
+	float bai = 8.0;
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -50, 0)	 * bai, 0.0f, true, false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(100, -50, 0)	 * bai, 0.0f, true, false));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -50, 300)	 * bai, 0.0f, true, false));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -50, -400)	 * bai, 0.0f, true, false));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -50, 700)	 * bai, 0.0f, true, false));
+
 
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 
@@ -87,21 +88,21 @@ void CreditScene::Initialize()
 	armyCount = 0;
 }
 
-float t = 0.0f;
-
-Vector4 diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-Vector4 specu = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+//float t = 0.0f;
+//
+//Vector4 diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+//Vector4 specu = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 void CreditScene::Update()
 {
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::U))
-		diffuse += Time::DeltaTime * 1.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::I))
-		diffuse -= Time::DeltaTime * 1.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::O))
-		specu += Time::DeltaTime * 1.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::P))
-		specu -= Time::DeltaTime * 1.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::U))
+	//	diffuse += Time::DeltaTime * 1.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::I))
+	//	diffuse -= Time::DeltaTime * 1.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::O))
+	//	specu += Time::DeltaTime * 1.0f;
+	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::P))
+	//	specu -= Time::DeltaTime * 1.0f;
 
 	if (armyCount < 10)
 		armyCreateTimer += Time::DeltaTime;

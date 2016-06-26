@@ -7,18 +7,19 @@
 #include "WindSetting.h"
 #include "../../time/Time.h"
 
+
 //流れに流されている時の速度
 static const float FlowSpeed = 160.0f;
 
-BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const Vector3& velocity_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_) :
+BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_) :
 Actor(world),
-velocity(velocity_),
+velocity(Vector3::Zero),
 castleSelect(castle_),
 breakSelect(break_)
 {
-	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
+	parameter.id = ACTOR_ID::CASTLE_BREAK_ACTOR;
 	parameter.isDead = false;
-	parameter.radius = 50.0f;
+	parameter.radius = 200.0f;
 	ps_parameter.position = position_;
 	ps_parameter.intervalSec = 10000.0f;
 	ps_parameter.lifeTimeLimit = 12.1f;
@@ -63,6 +64,10 @@ void BreakCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		velocity = colpara.colVelosity * FlowSpeed;
 	}
+	else if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
+	{
+		ps_parameter.position = Vector3(colpara.colPos.x, ps_parameter.position.y, colpara.colPos.z);
+	}
 }
 
 void BreakCastle::Emissive()
@@ -79,7 +84,8 @@ void BreakCastle::Emissive()
 
 void BreakCastle::TornadoBreakUpdate()
 {
-	ps_parameter.position += velocity * Time::DeltaTime;
+	//当たり判定セット
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	parameter.mat.SetPosition(ps_parameter.position);
 }
 

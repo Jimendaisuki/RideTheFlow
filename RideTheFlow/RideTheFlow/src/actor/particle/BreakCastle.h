@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include "ParticleSystem.h"
+#include "../tornado/Tornado.h"
 
 //âÛÇÍÇÈèÈÇëIë
 enum CASTLE_SELECT
@@ -26,7 +27,7 @@ class BreakCastle :public Actor, public ParticleSystem, public std::enable_share
 {
 public:
 	//=======Actor======//
-	BreakCastle(IWorld& world, const Vector3& position_, const Vector3& velocity_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_);
+	BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_SELECT& castle_, const BREAK_SELECT& break_);
 	~BreakCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;

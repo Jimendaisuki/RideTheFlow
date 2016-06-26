@@ -283,7 +283,7 @@ CollisionParameter Actor::Tornado_vs_Stage(const Actor& other) const{
 
 	/* ModelData */
 	ModelData stage;
-	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL);
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
 	stage.MFrameIndex = -1;
 
 	/* ResultData */
@@ -311,8 +311,8 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	/* ResultData */
 	colpara = Collisin::GetInstace().CapsuleCapsule(tornado, castle);
 	colpara.colID = COL_ID::TORNADO_CASTLE_COL;
-
 	colpara.colVelosity = other.parameter.velocity;
+	colpara.colPos = tornado.startPos;
 
 	return colpara;
 }
@@ -357,6 +357,7 @@ CollisionParameter Actor::Tornado_vs_Enemy(const Actor& other) const{
 	colpara = Collisin::GetInstace().SphereCapsule(enemy, tornado);
 
 	colpara.colID = COL_ID::TORNADO_ENEMY_COL;
+	colpara.colVelosity = other.parameter.velocity;
 	return colpara;
 }
 

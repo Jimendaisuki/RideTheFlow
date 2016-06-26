@@ -110,7 +110,7 @@ void Castle::Update()
 	{
 		parameter.isDead = true;
 		//‚ª‚ê‚«‚ð”ò‚Î‚·
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 	}
 
 	castleUpTimer +=20.0f* Time::DeltaTime;
@@ -124,7 +124,6 @@ void Castle::Update()
 	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
 	velocity =mPosition-prevPos;
 	breakSelect = mas->getBreakSelect();
-	tornadoVelocity = mas->getTornadoVelocity();
 
 	//–³“GŽžŠÔ
 	if (!damage)

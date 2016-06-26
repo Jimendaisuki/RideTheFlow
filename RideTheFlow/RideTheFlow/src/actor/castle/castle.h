@@ -77,8 +77,6 @@ private:
 
 	//€ˆö
 	BREAK_SELECT breakSelect;
-	//—³Šª‚Å€‚ñ‚¾ê‡‚Ì—³Šª‚ÌˆÚ“®—Ê
-	Vector3 tornadoVelocity;
 
 	Vector3 test;
 

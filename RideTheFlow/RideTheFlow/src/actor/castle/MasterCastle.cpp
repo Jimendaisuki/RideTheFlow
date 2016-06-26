@@ -34,7 +34,6 @@ spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
 InvincibleTimer(0.0f),
 breakSelect(BREAK_SELECT::TORNADO),
-tornadoVelocity(Vector3::Zero),
 mTitle(title),
 rankUpHeght(17.0f)
 {
@@ -80,8 +79,7 @@ spawanArmyTimer(0.0f),
 spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
 InvincibleTimer(0.0f),
-breakSelect(BREAK_SELECT::TORNADO),
-tornadoVelocity(Vector3::Zero),
+breakSelect(BREAK_SELECT::WIND_BALL),
 mTitle(title),
 rankUpHeght(17.0f)
 {
@@ -183,7 +181,7 @@ void MasterCastle::Update()
 		if (parameter.HP <= 0)
 		{
 			//‚ª‚ê‚«‚ð”ò‚Î‚·
-			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
+			world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 			parameter.isDead = true;
 		}
 	}
@@ -233,10 +231,7 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= CastleDamegeTornado;
 		damage = false;
 		if (parameter.HP <= 0)
-		{
-			tornadoVelocity = colpara.colVelosity;
 			breakSelect = BREAK_SELECT::TORNADO;
-		}
 	}
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
 	{

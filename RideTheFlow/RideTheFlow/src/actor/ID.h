@@ -24,6 +24,7 @@ enum ACTOR_ID{
 
 	//======“§–¾“x‚ðˆµ‚¤======//
 	PARTICLE_ACTOR,
+	CASTLE_BREAK_ACTOR,
 	TORNADO_ACTOR,
 	SAND_ACTOR,
 	CLOUD_ACTOR,

@@ -3,6 +3,7 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 #include "../../camera/Camera.h"
+#include "WindSetting.h"
 
 TornadoParticle::TornadoParticle(std::weak_ptr<Tornado> tornade_, float radius)
 :
@@ -10,10 +11,10 @@ tornade(tornade_),
 tornadePos(tornade._Get()->GetParameter().mat.GetPosition()),
 tornadeMove(Vector3::Zero),
 tornadeRadius(Random::GetInstance().Range(radius, radius + 10.0f)),
-tornadeAddRadius(Random::GetInstance().Range(10.0f, 20.0f)),
+tornadeAddRadius(Random::GetInstance().Range(80.0f, 100.0f)),
 tornadeSpeed(700.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
-risingSpeed(Random::GetInstance().Range(80.0f, 90.0f)),
+risingSpeed(Random::GetInstance().Range(300.0f,400.0f)),
 risingAddSpeed(Random::GetInstance().Range(0, 2)),
 tornadeAddPosition(Vector3::Zero),
 position(tornade_._Get()->GetParameter().mat.GetPosition()),
@@ -31,12 +32,19 @@ frame(Random::GetInstance().Range(1, 2))
 
 	drawParam.drawID = MODEL_ID::TORNADOPOLY_MODEL;
 	//drawParam.drawID = MODEL_ID::TORNADOPOLY_MODEL;
-	drawParam.size = 30.0f;
+	drawParam.size = 50.0f;
 	drawParam.alpha = 0.8f;
 }
 
 void TornadoParticle::OnUpdate()
 {
+	//‚‚³‚ÌãŒÀ‚Ü‚Å—ˆ‚½‚çŽ€–S
+	if (position.y > HeightMax)
+	{
+		lifeParam.isDead = true;
+		return;
+	}
+
 	//—³Šª‚Ì“®‚«‚ÆÀ•W‚ðŽæ“¾
 	Vector3 pos = tornade._Get()->GetParameter().mat.GetPosition();
 	tornadeMove = pos - tornadePos;
