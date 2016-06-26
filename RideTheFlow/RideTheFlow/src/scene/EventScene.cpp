@@ -67,12 +67,11 @@ EventScene::~EventScene()
 void EventScene::Initialize()
 {
 	wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, false));
+	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
+
 	timer = 0.0f;
 	mIsEnd = false;
 	status = EVENT_STATUS::EVENT_BEGIN;
-	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
-	//wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
-	//wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "title_stage"));
 
 	/* ポリゴンデータ */
 	amount_1 = 0;
@@ -100,10 +99,10 @@ void EventScene::Initialize()
 	SetFogColor(180, 180, 200);
 	SetFogStartEnd(0, 0);
 
-	Camera::GetInstance().SetRange(0.1f, 40000.0f);
+	isTitle = false;
 
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(5.0f);
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
+	FadePanel::GetInstance().SetInTime(3.0f);
 }
 
 void EventScene::Update()
@@ -137,11 +136,20 @@ void EventScene::Update()
 		}
 		break;
 	case EVENT_DRAGON_OUT:
-		length = (playerPos - cameraPos).Length();
-		length = Math::Clamp(length, maxFogFar, 1000.0f);
-		currentFogFar = length + 150 * Math::Sin(fogTime);
+		currentFogFar = maxFogFar + 300 * Math::Abs(Math::Sin(fogTime / 4.0f));
+		if ((playerPos - cameraPos).Length() >= 500 && !isTitle)
+		{
+			FadePanel::GetInstance().FadeOut();
+			status = EVENT_STATUS::EVENT_DRAGON_END;
+		}
 		break;
-	case EventScene::TITLE_TEXTURE_IN:
+	case EVENT_DRAGON_END:
+		if (!FadePanel::GetInstance().IsAction())
+		{
+			currentFogFar = 100000;
+			FadePanel::GetInstance().FadeIn();
+			status = EVENT_STATUS::TITLE_STANDBY;
+		}
 		break;
 	case EventScene::TITLE_STANDBY:
 		break;
@@ -149,6 +157,37 @@ void EventScene::Update()
 		break;
 	default:
 		break;
+	}
+
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
+		isTitle = !isTitle;
+
+	if (isTitle)
+	{
+		// 竜巻とテキスト描画開始
+		stormAlphaTime += (Time::DeltaTime / StormAlphaEndTime);
+		stormAlpha = (int)(StormMaxAlpha * stormAlphaTime);
+		stormAlpha = Math::Clamp(stormAlpha, 0, StormMaxAlpha);
+		for (int i = 0; i < 6; i++)
+		{
+			Vertex2D_1[i].dif.a = stormAlpha;
+			Vertex2D_2[i].dif.a = stormAlpha;
+		}
+
+		if (stormAlpha >= StormMaxAlpha / 2)
+			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
+	}
+	else
+	{
+		titleAlpha = 0;
+		stormAlphaTime = 0;
+		stormAlpha = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			Vertex2D_1[i].dif.a = stormAlpha;
+			Vertex2D_2[i].dif.a = stormAlpha;
+		}
 	}
 
 

@@ -27,8 +27,7 @@ void MenuScene::Initialize()
 	MenuPanel::GetInstance().Initialize();
 
 	/* フェード */
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(1.0f);
+	FadePanel::GetInstance().SetInTime(1.0f);
 }
 
 void MenuScene::Update()

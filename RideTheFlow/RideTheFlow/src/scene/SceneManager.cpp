@@ -48,11 +48,10 @@ void SceneManager::Add(Scene name, const IScenePtr& scene){
 }
 
 void SceneManager::SetScene(Scene name){
+	FadePanel::GetInstance().Initialize();
 	mCurrentScene = mScenes[name];
 	mCurrentScene->Initialize();
-
-	//FadePanel::GetInstance().Initialize();
-	//FadePanel::GetInstance().FadeIn(2.0f);
+	FadePanel::GetInstance().FadeIn();
 }
 
 //シーンの変更
@@ -67,11 +66,12 @@ void SceneManager::Change(Scene name){
 		return;
 	
 	End();
+	FadePanel::GetInstance().Initialize();
+
 	mCurrentScene = mScenes[name];
 	mCurrentScene->Initialize();
 
-	//FadePanel::GetInstance().Initialize();
-	//FadePanel::GetInstance().FadeIn(1.0f);
+	FadePanel::GetInstance().FadeIn();
 }
 
 // 初期化を指定する

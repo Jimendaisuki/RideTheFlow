@@ -34,6 +34,10 @@ private:
 	void AddRootList();
 	void GetRoot(int num);
 
+	void RootUpdate(std::list<SetRoot> root);
+	void GetRoot(std::list<SetRoot> root, int num);
+
+
 private:
 	Vector3 cameraPos;
 	Vector3 targetPos;
@@ -49,5 +53,6 @@ private:
 	CsvReader			  csv_;
 	int					  currentRow_;
 	std::vector<RootData> roots;
-	std::list<SetRoot>	  useRoots;
+	std::list<SetRoot>	  useRoots_C;
+	std::list<SetRoot>	  useRoots_T;
 };

@@ -1,7 +1,13 @@
 #include "StageGenerator.h"
 #include "Collision.h"
-#include "castle\MasterCastle.h"
+#include "../math/Math.h"
 #include "../world/IWorld.h"
+#include "castle/MasterCastle.h"
+#include "castle\HomeActor.h"
+#include "island/Froatinglsland.h"
+#include "island/Froatinglsland2.h"
+#include "island/Froatinglsland3.h"
+
 
 StageGenerator::StageGenerator(IWorld& world, const std::string& fileName) :
 Actor(world)
@@ -49,27 +55,30 @@ void StageGenerator::AddActor()
 	const Vector3 position = Vector3(
 		csv_.getf(currentRow_, CSV_POSITION + 0),
 		csv_.getf(currentRow_, CSV_POSITION + 1),
-		csv_.getf(currentRow_, CSV_POSITION + 2))
-		* Vector3(2.3f, 1.5f, 2.3f) + Vector3(0.0f, 250.0f, 0.0f);
+		csv_.getf(currentRow_, CSV_POSITION + 2));
 	// âÒì]äpìxÇéÊìæ
 	const Vector3 rotation = Vector3(
 		csv_.getf(currentRow_, CSV_ROTATION + 0),
-		csv_.getf(currentRow_, CSV_ROTATION + 1),
+		csv_.getf(currentRow_, CSV_ROTATION + 1) + 180.0f,
 		csv_.getf(currentRow_, CSV_ROTATION + 2));
 
 	switch (ActorNo)
 	{
 	case 1:	// èÈ
-		world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position - Vector3(0, 70, 0), false, true, rotation.y));
+		world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position - Vector3(0, 00, 0), false, true, rotation.y));
 
 		break;
-	case 2:	// 
+	case 2:	// â∆
+		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
 		break;
-	case 3:
+	case 3: // ìáÇP
+		//world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(world, position, rotation, 1));
 		break;
-	case 4:
+	case 4: // ìáÇQ
+		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f));
 		break;
-	case 5:
+	case 5: // ìáÇR
+		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
 		break;
 	case 6:
 		break;

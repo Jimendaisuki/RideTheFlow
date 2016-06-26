@@ -10,6 +10,7 @@ class  EventScene :public IScene
 	{
 		EVENT_BEGIN,
 		EVENT_DRAGON_OUT,
+		EVENT_DRAGON_END,
 		TITLE_TEXTURE_IN,
 		TITLE_STANDBY,
 		TITLE_END
@@ -68,5 +69,6 @@ private:
 	float fogPeriod;
 
 	Vector3 cameraPos;
-	float length;
+
+	bool	isTitle;
 };

@@ -74,7 +74,7 @@ void TitleScene::Initialize()
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
-	//wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "title_stage"));
+	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage"));
 		
 	/* ポリゴンデータ */
 	amount_1 = 0;
@@ -103,8 +103,7 @@ void TitleScene::Initialize()
 	slideTime = 0;
 
 	///* フェード */
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(2.0f);
+	FadePanel::GetInstance().SetInTime(2.0f);
 }
 
 void TitleScene::Update()
@@ -194,17 +193,6 @@ void TitleScene::Update()
 	{
 		fps = 1.0f / Time::DeltaTime;
 		fpsTimer = 0.0f;
-	}
-
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)){
-		FadePanel::GetInstance().FadeOut(0.2f, 0.7f);
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
-		FadePanel::GetInstance().FadeOut(0.5f);
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::V)){
-		FadePanel::GetInstance().FadeIn(0.5f);
 	}
 }
 

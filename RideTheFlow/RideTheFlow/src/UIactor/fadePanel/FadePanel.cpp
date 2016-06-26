@@ -13,6 +13,8 @@ void FadePanel::Initialize()
 	alpha		= 1.0f;
 	maxAlpha	= 1.0f;
 	actionTime	= 0;
+	inTime = 1.0f;
+	outTime = 1.0f;
 	status = FADE_STATUS::STANDBY;
 }
 
@@ -46,19 +48,19 @@ void FadePanel::Draw()const
 	Sprite::GetInstance().Draw(SPRITE_ID::BLACK_SCREEN, Vector2::Zero, Vector2::Zero, alpha, scale, 0.0f, false, false);
 }
 
-void FadePanel::FadeIn(float sec_)
+void FadePanel::FadeIn()
 {
 	status = FADE_STATUS::FadeIn;
+	actionTime = GetInTime();
 	isAction = true;
-	actionTime = sec_;
 }
 
-void FadePanel::FadeOut(float sec_, float maxAlpha_)
+void FadePanel::FadeOut(float maxAlpha_)
 {
 	status = FADE_STATUS::FadeOut;
 	maxAlpha = maxAlpha_;
+	actionTime = GetOutTime();
 	isAction = true;
-	actionTime = sec_;
 }
 
 bool FadePanel::IsAction() const
