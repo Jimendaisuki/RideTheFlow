@@ -7,6 +7,7 @@ enum class Scene{
 	Logo,
 	Title,
 	Menu,
+	Event,
 	GamePlay,
 	Ending,
 	Credit,

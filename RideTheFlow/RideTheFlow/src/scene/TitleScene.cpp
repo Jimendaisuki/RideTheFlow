@@ -103,8 +103,8 @@ void TitleScene::Initialize()
 	slideTime = 0;
 
 	///* フェード */
-	//FadePanel::GetInstance().Initialize();
-	//FadePanel::GetInstance().FadeIn(2.0f);
+	FadePanel::GetInstance().Initialize();
+	FadePanel::GetInstance().FadeIn(2.0f);
 }
 
 void TitleScene::Update()
@@ -248,7 +248,7 @@ bool TitleScene::IsEnd() const
 //次のシーンを返す
 Scene TitleScene::Next() const
 {
-	return Scene::Menu;
+	return Scene::Event;
 }
 
 void TitleScene::End()

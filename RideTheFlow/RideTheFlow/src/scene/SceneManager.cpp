@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "../UIactor/fadePanel/FadePanel.h"
 
-const int SceneManager::MaxStageCount = 6;
+const int SceneManager::MaxStageCount = 7;
 
 //コンストラクタ
 SceneManager::SceneManager() :
@@ -51,8 +51,8 @@ void SceneManager::SetScene(Scene name){
 	mCurrentScene = mScenes[name];
 	mCurrentScene->Initialize();
 
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(2.0f);
+	//FadePanel::GetInstance().Initialize();
+	//FadePanel::GetInstance().FadeIn(2.0f);
 }
 
 //シーンの変更
@@ -70,8 +70,8 @@ void SceneManager::Change(Scene name){
 	mCurrentScene = mScenes[name];
 	mCurrentScene->Initialize();
 
-	FadePanel::GetInstance().Initialize();
-	FadePanel::GetInstance().FadeIn(1.0f);
+	//FadePanel::GetInstance().Initialize();
+	//FadePanel::GetInstance().FadeIn(1.0f);
 }
 
 // 初期化を指定する
