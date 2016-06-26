@@ -39,7 +39,7 @@ rankUpHeght(17.0f)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
 	parameter.radius = 35;
-	parameter.HP = 1;
+	parameter.HP = MasterCastleHp;
 	parameter.isDead = false;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
@@ -123,6 +123,8 @@ void MasterCastle::Update()
 		//‚ ‚½‚è”»’è
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::CASTLE_AIRGUN_COL);
+
 		//Ï‚Ýd‚È‚éé
 		if (castleTime >= RankUpSecond&&mRank > 0)
 		{
@@ -228,7 +230,7 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL&&damage)
 	{
-		parameter.HP -= CastleDamegeTornado;
+		parameter.HP -= CastleDamegeWind;
 		damage = false;
 		if (parameter.HP <= 0)
 			breakSelect = BREAK_SELECT::TORNADO;
@@ -238,8 +240,13 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= CastleDamegeWind;
 		damage = false;
 		if (parameter.HP <= 0)
-		{
 			breakSelect = BREAK_SELECT::WIND_FLOW;
-		}
+	}
+	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
+	{
+		parameter.HP -= CastleDamageWindBall;
+		damage = false;
+		if (parameter.HP <= 0)
+			breakSelect = BREAK_SELECT::WIND_BALL;
 	}
 }

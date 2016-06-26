@@ -16,6 +16,8 @@
 #include "../NoShipArea.h"
 #include "CastleVaristor.h"
 #include "../../math/Quaternion.h"
+#include "../../sound/Sound.h"
+
 Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY) :
 Actor(world),
 arrowCount(0),
@@ -103,6 +105,7 @@ void Castle::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::CASTLE_AIRGUN_COL);
 	prevPos = mPosition;
 
 	//マスターが壊れたら自分も壊れる
@@ -169,6 +172,11 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
 	{
 		parameter.HP -= CastleDamegeWind;
+		damage = false;
+	}
+	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
+	{
+		parameter.HP -= CastleDamageWindBall;
 		damage = false;
 	}
 

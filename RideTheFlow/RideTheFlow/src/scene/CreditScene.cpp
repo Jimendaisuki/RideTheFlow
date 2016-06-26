@@ -30,8 +30,10 @@
 #include "../UIactor/MiniMap.h"
 #include "../actor/particle/CastleAdd.h"
 #include "../graphic/Anime.h"
+#include "../sound/Sound.h"
+#include "../actor/castle/HomeActor.h"
 
-static const Vector3 House1Pos = Vector3(-300, -80, 200);
+static const Vector3 House1Pos = Vector3(0, -680, 0);
 
 //コンストラクタ
 CreditScene::CreditScene():
@@ -71,39 +73,27 @@ void CreditScene::Initialize()
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(wa, 1.0f, Vector3::Zero, Vector3(0, 170, 0)));
+
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_BALL));
 
 	float bai = 8.0;
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -50, 0)	 * bai, 0.0f, true, false));
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(100, -50, 0)	 * bai, 0.0f, true, false));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -50, 300)	 * bai, 0.0f, true, false));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20, -50, -400)	 * bai, 0.0f, true, false));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -50, 700)	 * bai, 0.0f, true, false));
-
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -80, 0)	 * bai, 0.0f, true, false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(100, -80, 0)	 * bai, 0.0f, true, false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -80, 300)	 * bai, 0.0f, true, false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20,  -80, -400)	 * bai, 0.0f, true, false));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -80, 700)	 * bai, 0.0f, true, false));
 
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 
-
 	armyCreateTimer = 0.0f;
 	armyCount = 0;
-}
 
-//float t = 0.0f;
-//
-//Vector4 diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-//Vector4 specu = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	//Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
+}
 
 void CreditScene::Update()
 {
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::U))
-	//	diffuse += Time::DeltaTime * 1.0f;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::I))
-	//	diffuse -= Time::DeltaTime * 1.0f;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::O))
-	//	specu += Time::DeltaTime * 1.0f;
-	//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::P))
-	//	specu -= Time::DeltaTime * 1.0f;
-
 	if (armyCount < 10)
 		armyCreateTimer += Time::DeltaTime;
 	if (armyCreateTimer > 10.0f)
@@ -140,19 +130,6 @@ void CreditScene::Update()
 //描画
 void CreditScene::Draw() const
 {
-	//for (int i = 0; i < 10; i++){
-	//	for (int j = 0; j < 10; j++){
-	//		Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, Vector3(100 + i * 20, -80, 100 + j * 20), Vector3::Zero, Vector3(0.9f));
-	//		Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, Vector3(-200 + i * 30, -80, 200 + j * 30), Vector3::Zero, Vector3(0.9f));
-	//		Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, Vector3(-500 + i * 100, -80, -500 + j * 100), Vector3::Zero, Vector3(0.9f));
-	//	}
-	//}
-	//Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, Vector3(700, 200, -500), Vector3::Zero, Vector3(1));
-	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_MODEL, Vector3(400, 200, -500), Vector3::Zero, Vector3(1));
-	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, Vector3(100, 200, -500), Vector3::Zero, Vector3(1));
-	//Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, Vector3(300, 200, 500), Vector3::Zero, Vector3(0.4f));
-
-
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_1_MODEL, Vector3(100,200, 100), Vector3::Zero, Vector3(30.0f));
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_2_MODEL, Vector3(200,200, 200), Vector3::Zero, Vector3(30.0f));
 	////Model::GetInstance().Draw(MODEL_ID::CASTLE_BREAK_3_MODEL, Vector3(300,200, 300), Vector3::Zero, Vector3(30.0f));

@@ -120,6 +120,15 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("human_low_cannon.mv1", MODEL_ID::HUMAN_CANNON_MODEL, async);
 	model.Load("human_archer2.mv1", MODEL_ID::HUMAN_ARCHER_MODEL, async);
 	
+	model.Load("s_parts1.mv1", SHIP_BREAK_1_MODEL, async);
+	model.Load("s_parts2.mv1", SHIP_BREAK_2_MODEL, async);
+	model.Load("s_parts3.mv1", SHIP_BREAK_3_MODEL, async);
+	model.Load("s_parts4.mv1", SHIP_BREAK_4_MODEL, async);
+	model.Load("s_parts5.mv1", SHIP_BREAK_5_MODEL, async);
+	model.Load("s_parts6.mv1", SHIP_BREAK_6_MODEL, async);
+	model.Load("s_parts7.mv1", SHIP_BREAK_7_MODEL, async);
+	model.Load("s_parts9.mv1", SHIP_BREAK_9_MODEL, async);
+	model.Load("s_parts11.mv1", SHIP_BREAK_11_MODEL, async);
 
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	
@@ -131,12 +140,42 @@ void Content::LoadModel(Model& model, bool async)
 // âπäyÇì«Ç›çûÇﬁ
 void Content::LoadSound(Sound& sound)
 {
-	WorkFolder::SetWorkFolder("res/Sound/");
+	WorkFolder::SetWorkFolder("res/Sound/BGM/");
+	sound.LoadBGM("clear_bgm.mp3", BGM_ID::CLEAR_BGM);
+	sound.LoadBGM("failed_bgm.mp3", BGM_ID::FAILED_BGM);
+	sound.LoadBGM("ingame_bgm.mp3", BGM_ID::INGAME_BGM);
+	sound.LoadBGM("Ingame_Master.wav", BGM_ID::INGAME_MASTER_BGM);
+	sound.LoadBGM("menu_bgm.mp3", BGM_ID::MENU_BGM);
+	sound.LoadBGM("title_bgm.mp3", BGM_ID::TITLE_BGM);
 
-	sound.LoadSE("button.mp3", SE_ID::BUTTON_SE, 0.9f);
 
-	//sound.LoadBGM("title.mp3");
-	//sound.LoadSE("se.wav", 0.9f);
+	WorkFolder::SetWorkFolder("res/Sound/SE/");
+	sound.LoadSE("arrowwind_se.wav", ARROW_WIND_SE);
+	sound.LoadSE("back_se.wav", BACK_SE);
+	sound.LoadSE("ballistawind_se.wav", BALLISTA_WIND_SE);
+	sound.LoadSE("canonwind_se.wav", CANON_WIND_SE);
+	sound.LoadSE("dragonspear_se.wav", DRAGONSPEAR_SE);
+	sound.LoadSE("enter_se.wav", ENTER_SE);
+	sound.LoadSE("middlewind_se.wav", MIDDLE_WIND_SE);
+	sound.LoadSE("normalwind_se.wav", NORMAL_WIND_SE);
+	sound.LoadSE("sandstorm_se.wav", SAND_STORM_SE);
+	sound.LoadSE("stormaked_se.wav", STORMAKED_SE);
+	sound.LoadSE("strongwind_se.wav", STRONGWIND_SE);
+	sound.LoadSE("switch_se.wav", SWITCH_SE);
+	WorkFolder::SetWorkFolder("res/Sound/SE/scream/");
+	sound.LoadSE("scream1_se.wav", SCREAM_1_SE);
+	sound.LoadSE("scream2_se.wav", SCREAM_2_SE);
+	sound.LoadSE("scream3_se.wav", SCREAM_3_SE);
+	sound.LoadSE("scream4_se.wav", SCREAM_4_SE);
+	sound.LoadSE("scream5_se.wav", SCREAM_5_SE);
+	sound.LoadSE("scream6_se.wav", SCREAM_6_SE);
+	sound.LoadSE("scream7_se.wav", SCREAM_7_SE);
+	sound.LoadSE("scream8_se.wav", SCREAM_8_SE);
+	sound.LoadSE("scream9_se.wav", SCREAM_9_SE);
+	sound.LoadSE("scream10_se.wav", SCREAM_10_SE);
+	sound.LoadSE("scream11_se.wav", SCREAM_11_SE);
+	sound.LoadSE("scream12_se.wav", SCREAM_12_SE);
+	sound.LoadSE("scream13_se.wav", SCREAM_13_SE);
 
 	sound.SetAllBGMVolume(BGMVOLUME);
 	sound.SetAllSEVolume(SEVOLUME);

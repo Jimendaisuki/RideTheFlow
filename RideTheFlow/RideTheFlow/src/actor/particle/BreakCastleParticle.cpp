@@ -11,25 +11,24 @@ breakSelect(break_),
 pParentPosition(parentPosition_),
 rotX(rotX_),
 rotY(rotY_),
-rotationSpeed(Random::GetInstance().Range(-180.0f, 180.0f)),
 rotmat(Matrix4::Identity),
 mat(Matrix4::Identity),
 rotXSpeed(0.0f),
 rotYSpeed(0.0f),
-rotXAdd(Random::GetInstance().Range(14.0f, 20.0f)),
-rotYAdd(Random::GetInstance().Range(18.0f, 24.0f)),
-risingSpeed(Random::GetInstance().Range(30.0f, 40.0f)),
+rotXAdd(0.0f),
+rotYAdd(0.0f),
+risingSpeed(0.0f),
 tornadeRadius(0.0f),
-tornadeDegree(Random::GetInstance().Range(0.0f, 360.0f)),
-tornadeAddRadius(Random::GetInstance().Range(10.0f, 16.0f)),
+tornadeDegree(0.0f),
+tornadeAddRadius(0.0f),
 tornadeSpeed(160.0f),
 tornadeAddPosition(Vector3::Zero),
 
-flowRisingSpeed(Random::GetInstance().Range(3.0f, 8.0f)),
-flowRotXSpeed(Random::GetInstance().Range(-10.0f, 10.0f)),
-flowRotYSpeed(Random::GetInstance().Range(-10.0f, 10.0f)),
-flowRotXAdd(Random::GetInstance().Range(-5.0f, 5.0f)),
-flowRotYAdd(Random::GetInstance().Range(-5.0f, 5.0f)),
+flowRisingSpeed	(0.0f),
+flowRotXSpeed	(0.0f),
+flowRotYSpeed	(0.0f),
+flowRotXAdd		(0.0f),
+flowRotYAdd		(0.0f),
 flowAddPosition(Vector3::Zero)
 {
 	lifeParam.lifeTime = 0.0f;
@@ -42,13 +41,28 @@ flowAddPosition(Vector3::Zero)
 	drawParam.drawID = id_;
 	drawParam.alpha = 0.2f;
 	drawParam.size = 30.0f;
-
-	if (breakSelect == BREAK_SELECT::WIND_BALL)
+	if (breakSelect == BREAK_SELECT::TORNADO)
+	{
+		rotXAdd			 = Random::GetInstance().Range(14.0f, 20.0f);
+		rotYAdd			 = Random::GetInstance().Range(18.0f, 24.0f);
+		risingSpeed		 = Random::GetInstance().Range(30.0f, 40.0f);
+		tornadeDegree	 = Random::GetInstance().Range(0.0f, 360.0f);
+		tornadeAddRadius = Random::GetInstance().Range(10.0f, 16.0f);
+	}
+	else if(breakSelect == BREAK_SELECT::WIND_FLOW)
+	{
+		flowRisingSpeed	= Random::GetInstance().Range(3.0f, 8.0f)	;
+		flowRotXSpeed	= Random::GetInstance().Range(-10.0f, 10.0f);
+		flowRotYSpeed	= Random::GetInstance().Range(-10.0f, 10.0f);
+		flowRotXAdd		= Random::GetInstance().Range(-5.0f, 5.0f)	;
+		flowRotYAdd		= Random::GetInstance().Range(-5.0f, 5.0f)	;
+	}
+	else if(breakSelect == BREAK_SELECT::WIND_BALL)
 	{
 		lifeParam.lifeTimeLimit = 3.0f;
-		moveParam.vec.y = Random::GetInstance().Range(-8.0f, -30.0f);
 		ballRotXSpeed = Random::GetInstance().Range(-90.0f, 90.0f);
 		ballRotYSpeed = Random::GetInstance().Range(-90.0f, 90.0f);
+		moveParam.vec.y = Random::GetInstance().Range(-30.0f, -8.0f);
 	}
 	
 }

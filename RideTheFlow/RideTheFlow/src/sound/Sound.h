@@ -37,7 +37,7 @@ public:
 	///<summary>
 	/// BGM‚ð–Â‚ç‚·
 	///</summary>
-	void PlayBGM(const BGM_ID& id, int playtype);
+	void PlayBGM(const BGM_ID& id, int playtype = DX_PLAYTYPE_BACK);
 	///<summary>
 	/// SE‚ð–Â‚ç‚·
 	///</summary>

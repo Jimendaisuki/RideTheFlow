@@ -5,6 +5,7 @@
 #include "../../game/Random.h"
 #include "WindSetting.h"
 #include "../../time/Time.h"
+#include "../../sound/Sound.h"
 
 //タックルされた後の移動速度
 static const float MoveSpeed = 400.0f;
@@ -24,6 +25,8 @@ speed(MoveSpeed)
 	ps_parameter.lifeTimeLimit = 20.0f;
 	ps_parameter.sameEmissiveNum = 1;
 	dashPositions = player.ReturnDashPosStorage();
+
+	Sound::GetInstance().PlaySE(SE_ID::MIDDLE_WIND_SE);
 }
 WindFlow::~WindFlow()
 {

@@ -4,23 +4,31 @@
 #include <memory>
 #include "ParticleSystem.h"
 #include "../tornado/Tornado.h"
+#include <functional>
 
 //壊れる城を選択
 enum CASTLE_SELECT
 {
+	//城
 	MASTER_CASTLE,
 	CHILD_CASTLE,
+	//飛行船
+	SHIP,
+	//浮島
+	ISLE,
 };
 
 //壊れ方を選択
 enum BREAK_SELECT
 {
+	BREAK_BEGIN,
 	//竜巻
 	TORNADO,
 	//流れ
 	WIND_FLOW,
 	//空気砲
 	WIND_BALL,
+	BREAK_END,
 };
 
 class BreakCastle :public Actor, public ParticleSystem, public std::enable_shared_from_this<BreakCastle>
@@ -48,7 +56,11 @@ private:
 	void WindBallBreakUpdate();
 	void WindBallBreakEmissive();
 
-	void CastleEmissive(const Vector3& vec_);
+	void CastleWindFlowBreakEmissive();
+	void MasterCastleEmissive(const Vector3& vec_);
+
+	void ShipEmissive(std::function<Vector3()> vecFunc);
+
 	Vector3 RandomVelocity();
 
 private:

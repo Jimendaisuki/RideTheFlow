@@ -8,6 +8,7 @@
 
 #include "../../input/Keyboard.h"
 #include "../particle/TornadoParticle.h"
+#include "../../sound/Sound.h"
 
 
 const float TornadoDefaltSpeed = 1000.0f;
@@ -36,6 +37,9 @@ radius(radius_ * 4.0f)
 	ps_parameter.intervalSec = 0.05f;
 	ps_parameter.lifeTimeLimit = 9999.0f;
 	ps_parameter.sameEmissiveNum = 2;
+
+	Sound::GetInstance().PlaySE(SE_ID::STORMAKED_SE);
+	Sound::GetInstance().PlaySE(SE_ID::STRONGWIND_SE, DX_PLAYTYPE_LOOP);
 }
 
 Tornado::~Tornado()
@@ -54,6 +58,7 @@ void Tornado::Update()
 	if (ACTIVITYTIME <= 0)
 	{
 		parameter.isDead = true;
+		Sound::GetInstance().StopSE(SE_ID::STRONGWIND_SE);
 		return;
 	}
 	isHit = false;
