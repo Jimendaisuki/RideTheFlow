@@ -49,7 +49,7 @@ void TitleCameraActor::Update()
 {
 	if (fade)
 	{
-		backAlpha += Time::DeltaTime * 5.0f;
+		backAlpha += Time::DeltaTime * 3.0f;
 		cameraPos += velocity;
 		targetPos += velocity;
 
@@ -66,7 +66,7 @@ void TitleCameraActor::Update()
 			rootCount++;
 		}
 
-		backAlpha -= Time::DeltaTime * 5.0f;
+		backAlpha -= Time::DeltaTime * 3.0f;
 
 		if (time + 0.1f <= useRoots_C.front().moveTime)
 		{

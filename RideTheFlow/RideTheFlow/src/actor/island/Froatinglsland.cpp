@@ -8,8 +8,9 @@
 #include "FroatinglslandParameter.h"
 #include "../castle/MasterCastle.h"
 
-Froatinglsland::Froatinglsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
-Actor(world)
+Froatinglsland::Froatinglsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, bool isGameScene_) :
+Actor(world),
+isGameScene(isGameScene_)
 {
 	parameter.HP = lslandHP;
 
@@ -22,6 +23,10 @@ Actor(world)
 		Matrix4::RotateX(rotate.x) *
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
+
+	if (!isGameScene)
+		return;
+
 	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world, 
 		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
@@ -37,6 +42,9 @@ Froatinglsland::~Froatinglsland()
 
 void Froatinglsland::Update()
 {
+	if (!isGameScene)
+		return;
+
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ISLAND_COL);
 	//ñ≥ìGéûä‘
 	if (!isCol)

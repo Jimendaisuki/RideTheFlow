@@ -7,6 +7,7 @@
 #include "island/Froatinglsland.h"
 #include "island/Froatinglsland2.h"
 #include "island/Froatinglsland3.h"
+#include "enemy/ShipEnemy.h"
 
 
 StageGenerator::StageGenerator(IWorld& world, const std::string& fileName) :
@@ -66,13 +67,12 @@ void StageGenerator::AddActor()
 	{
 	case 1:	// èÈ
 		world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position - Vector3(0, 00, 0), false, true, rotation.y));
-
 		break;
 	case 2:	// â∆
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
 		break;
 	case 3: // ìáÇP
-		//world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(world, position, rotation, 1));
+		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(world, position, rotation, 8, false));
 		break;
 	case 4: // ìáÇQ
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f));
@@ -80,11 +80,8 @@ void StageGenerator::AddActor()
 	case 5: // ìáÇR
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
 		break;
-	case 6:
-		break;
-	case 7:
-		break;
-	case 8:
+	case 6: // ëD
+		world.Add(ACTOR_ID::SHIP_ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, 2.4f, position, rotation));
 		break;
 	default:
 		break;

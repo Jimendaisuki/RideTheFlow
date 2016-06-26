@@ -25,6 +25,7 @@ void MenuScene::Initialize()
 	status = MENU_STATUS::BEGIN;
 
 	MenuPanel::GetInstance().Initialize();
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 
 	/* フェード */
 	FadePanel::GetInstance().SetInTime(1.0f);
@@ -62,18 +63,13 @@ void MenuScene::Update()
 	}
 
 	MenuPanel::GetInstance().Update();
-	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 }
 
 //描画
 void MenuScene::Draw() const
 {
 	wo.Draw();
-
 	MenuPanel::GetInstance().Draw();
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "MenuScene");
-	DrawFormatString(0, 240, GetColor(255, 0, 0), "N		: ○");
-	DrawFormatString(0, 260, GetColor(255, 0, 0), "B		: ×");
 }
 
 //終了しているか？
@@ -86,7 +82,7 @@ bool MenuScene::IsEnd() const
 Scene MenuScene::Next() const
 {
 	if (MenuPanel::GetInstance().IsBackSelect()) return Scene::Title;
-	else return Scene::GamePlay;
+	else return Scene::Event;
 }
 
 void MenuScene::End()

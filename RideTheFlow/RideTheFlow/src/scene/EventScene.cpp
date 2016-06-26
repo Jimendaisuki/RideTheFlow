@@ -236,7 +236,7 @@ bool EventScene::IsEnd() const
 //Ÿ‚ÌƒV[ƒ“‚ğ•Ô‚·
 Scene EventScene::Next() const
 {
-	return Scene::Menu;
+	return Scene::GamePlay;
 }
 
 void EventScene::End()

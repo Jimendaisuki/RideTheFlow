@@ -34,7 +34,7 @@ public:
 
 	float GetInTime(){ return inTime; }
 	void  SetInTime(float sec){ inTime = sec; }
-	float GetOutTime(){ return inTime; }
+	float GetOutTime(){ return outTime; }
 	void  SetOutTime(float sec){ outTime = sec; }
 
 private:

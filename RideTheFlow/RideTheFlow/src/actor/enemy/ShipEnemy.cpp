@@ -27,7 +27,8 @@ shipLow(1.0f),
 mPosition(position),
 invincibleTimer(0.0f),
 isLook(true),
-isLandCol(false)
+isLandCol(false),
+isTitle(false)
 {
 	parameter.id = ACTOR_ID::SHIP_ENEMY_ACTOR;
 	parameter.HP = ShipHp;
@@ -49,12 +50,31 @@ isLandCol(false)
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosLeft, *this, true, -90));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipCannonEnemy>(world, shipEnemyPos.cannonPosRight, *this, false, 90));
 }
+
+ShipEnemy::ShipEnemy(IWorld& world, float scale, const Vector3& position_, const Vector3& rotate_) :
+Actor(world),
+isTitle(true)
+{
+	parameter.id = ACTOR_ID::SHIP_ENEMY_ACTOR;
+	parameter.isDead = false;
+	parameter.mat =
+		Matrix4::Scale(scale) *
+		Matrix4::RotateZ(rotate_.z) *
+		Matrix4::RotateX(rotate_.x) *
+		Matrix4::RotateY(rotate_.y) *
+		Matrix4::Translate(position_);
+
+}
+
 ShipEnemy::~ShipEnemy()
 {
 
 }
 void ShipEnemy::Update()
 {
+	if (isTitle)
+		return;
+
 	TackleParameter tp;
 	Matrix4 fiMat;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
@@ -154,7 +174,8 @@ void ShipEnemy::Draw() const
 {
 	//ƒ‚ƒfƒ‹‚Ì•ûŒü‚ªˆá‚¤
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
-	DrawFormatString(0, 432, GetColor(0, 0, 0), "ShipHp   %f", parameter.HP);
+	if (!isTitle)
+		DrawFormatString(0, 432, GetColor(0, 0, 0), "ShipHp   %f", parameter.HP);
 
 
 }
