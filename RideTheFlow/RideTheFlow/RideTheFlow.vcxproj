@@ -93,6 +93,7 @@
     <ClCompile Include="src\actor\enemy\CannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\CannonBullet.cpp" />
     <ClCompile Include="src\actor\enemy\DoragonSpearEnemy.cpp" />
+    <ClCompile Include="src\actor\castle\HomeActor.cpp" />
     <ClCompile Include="src\actor\enemy\ShipCannonEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\ShipEnemy.cpp" />
     <ClCompile Include="src\actor\enemy\ShipVaristorEnemy.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="src\actor\particle\DashBlueLine.cpp" />
     <ClCompile Include="src\actor\particle\DashBlueLineParticle.cpp" />
     <ClCompile Include="src\actor\StageGenerator.cpp" />
+    <ClCompile Include="src\scene\EventScene.cpp" />
     <ClCompile Include="src\UIactor\CsvReader.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
     <ClCompile Include="src\UIactor\FlowRoot.cpp" />
@@ -188,6 +190,7 @@
     <ClInclude Include="src\actor\AirGun.h" />
     <ClInclude Include="src\actor\castle\CastleManager.h" />
     <ClInclude Include="src\actor\castle\CastleVaristor.h" />
+    <ClInclude Include="src\actor\castle\HomeActor.h" />
     <ClInclude Include="src\actor\island\Froatinglsland2.h" />
     <ClInclude Include="src\actor\island\Froatinglsland3.h" />
     <ClInclude Include="src\actor\island\FroatinglslandParameter.h" />
@@ -215,6 +218,7 @@
     <ClInclude Include="src\actor\particle\DashBlueLine.h" />
     <ClInclude Include="src\actor\particle\DashBlueLineParticle.h" />
     <ClInclude Include="src\actor\StageGenerator.h" />
+    <ClInclude Include="src\scene\EventScene.h" />
     <ClInclude Include="src\UIactor\CsvReader.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />
     <ClInclude Include="src\UIactor\FlowRoot.h" />

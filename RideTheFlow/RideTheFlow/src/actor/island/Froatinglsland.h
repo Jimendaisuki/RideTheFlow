@@ -6,7 +6,7 @@
 class Froatinglsland : public Actor, public std::enable_shared_from_this<Froatinglsland>
 {
 public:
-	Froatinglsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale);
+	Froatinglsland(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale, bool isGameScene = true);
 	~Froatinglsland();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -15,4 +15,6 @@ public:
 private:
 	float timer;
 	bool isCol;
+
+	bool isGameScene;
 };

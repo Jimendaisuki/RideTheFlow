@@ -28,13 +28,12 @@ spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
 InvincibleTimer(0.0f),
 breakSelect(BREAK_SELECT::TORNADO),
-tornadoVelocity(Vector3::Zero),
 mTitle(title),
 rankUpHeght(17.0f)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
 	parameter.radius = 35;
-	parameter.HP = 1;
+	parameter.HP = MasterCastleHp;
 	parameter.isDead = false;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
@@ -68,8 +67,7 @@ spawanArmyTimer(0.0f),
 spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
 InvincibleTimer(0.0f),
-breakSelect(BREAK_SELECT::TORNADO),
-tornadoVelocity(Vector3::Zero),
+breakSelect(BREAK_SELECT::WIND_BALL),
 mTitle(title),
 rankUpHeght(17.0f)
 {
@@ -111,6 +109,8 @@ void MasterCastle::Update()
 		//‚ ‚½‚è”»’è
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::CASTLE_AIRGUN_COL);
+
 		//Ï‚Ýd‚È‚éé
 		if (rankUp&&Rank>=testRnak)
 		{
@@ -156,7 +156,7 @@ void MasterCastle::Update()
 		if (parameter.HP <= 0)
 		{
 			//‚ª‚ê‚«‚ð”ò‚Î‚·
-			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<BreakCastle>(world, mPosition, tornadoVelocity, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
+			world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 			parameter.isDead = true;
 		}
 	}
@@ -203,21 +203,23 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL&&damage)
 	{
-		parameter.HP -= CastleDamegeTornado;
+		parameter.HP -= CastleDamegeWind;
 		damage = false;
 		if (parameter.HP <= 0)
-		{
-			tornadoVelocity = colpara.colVelosity;
 			breakSelect = BREAK_SELECT::TORNADO;
-		}
 	}
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
 	{
 		parameter.HP -= CastleDamegeWind;
 		damage = false;
 		if (parameter.HP <= 0)
-		{
 			breakSelect = BREAK_SELECT::WIND_FLOW;
-		}
+	}
+	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
+	{
+		parameter.HP -= CastleDamageWindBall;
+		damage = false;
+		if (parameter.HP <= 0)
+			breakSelect = BREAK_SELECT::WIND_BALL;
 	}
 }

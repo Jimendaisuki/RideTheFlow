@@ -8,9 +8,11 @@ const float MasterCastleHp = 10.0f;
 const float BaseCastleHp = 10.0f;
 
 //城がトルネードで受けるダメージ
-const float CastleDamegeTornado = 2.5f;
+const float CastleDamegeTornado = 10.0f;
 //城が流れで受けるダメージ
-const float CastleDamegeWind = 0.5f;
+const float CastleDamegeWind = 2.5f;
+//城が空気砲で受けるダメージ
+const float CastleDamageWindBall = 4.0f;
 
 //城の無敵時間
 const float CastleInvincibleTime = 3.0f;
@@ -33,7 +35,7 @@ const int SpawnMaxShipEnemey = 5;
 
 /***城の大砲***/
 //城の大砲が攻撃してくる範囲
-const float CastleCannonAttackRange = 400.0f;
+const float CastleCannonAttackRange = 3200.0f;
 //城の大砲の攻撃クールタイム(秒)
 const float CastleCannonSecondAttack = 15.0f;
 //城が一回に出す大砲の弾の数
@@ -47,7 +49,7 @@ const float CastleCannonNotLookSecondAttack = 10.0f;
 
 /***城のバリスター***/
 //城のバリスターが攻撃してくる範囲
-const float CastleVaristorAttackRange = 400.0f;
+const float CastleVaristorAttackRange = 3200.0f;
 //城のバリスターの攻撃クールタイム(秒)
 const float CastleVaristorSecondAttack = 15.0f;
 //城が一回に出すバリスターの矢の数
@@ -62,9 +64,9 @@ const float CastleVaristorNotLookSecondAttack = 10.0f;
 
 /***城の兵士***/
 //城の兵士が攻撃してくる範囲
-const float CastleSoldierAttackRange = 400.0f;
+const float CastleSoldierAttackRange = 3200.0f;
 //城の兵士の攻撃クールタイム(秒)
-const float CastleSoldierSecondAttack = 15.0f;
+const float CastleSoldierSecondAttack = 10.0f;
 //城が一回に出す兵士の矢の数
 const int CastleSoldierNumber = 1;
 

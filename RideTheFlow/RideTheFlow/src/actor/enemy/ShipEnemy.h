@@ -17,6 +17,7 @@ class ShipEnemy :public Actor, public std::enable_shared_from_this<ShipEnemy>
 {
 public:
 	ShipEnemy(IWorld& world, Vector3 position);
+	ShipEnemy(IWorld& world, float scale, const Vector3& position_, const Vector3& rotate_);
 	~ShipEnemy();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -60,5 +61,6 @@ private:
 	float invincibleTimer;
 	bool damege;
 
+	bool isTitle;
 };
 #endif

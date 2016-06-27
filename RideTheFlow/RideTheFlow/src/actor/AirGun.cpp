@@ -3,6 +3,7 @@
 #include "../time/Time.h"
 #include "../graphic/Model.h"
 #include "../math/Quaternion.h"
+#include "../sound/Sound.h"
 
 AirGun::AirGun(IWorld& world, Vector3 position_, Vector3 velocity_) :
 Actor(world),
@@ -19,6 +20,9 @@ range(0.0f){
 	rotates.at(2) *= Quaternion::RotateAxis(Vector3(1, 0, 0), 90.0f);
 
 	parameter.isDead = false;
+	parameter.radius = 200.0f;
+
+	Sound::GetInstance().PlaySE(SE_ID::NORMAL_WIND_SE);
 }
 AirGun::~AirGun(){
 
@@ -41,6 +45,8 @@ void AirGun::Update(){
 			rotates.at(i) * 
 			Matrix4::Translate(position);
 	}
+
+	parameter.mat = mats.at(0);
 }
 void AirGun::Draw() const{
 	for (int i = 0; i < 3; i++)
@@ -53,5 +59,8 @@ void AirGun::Draw() const{
 	//Model::GetInstance().Draw(MODEL_ID::AIR_BALL_MODEL, position, Vector3::Zero, Vector3(0.010f));
 }
 void AirGun::OnCollide(Actor& other, CollisionParameter colpara){
-
+	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL)
+	{
+		parameter.isDead = true;
+	}
 }

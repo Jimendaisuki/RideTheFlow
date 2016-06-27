@@ -4,6 +4,7 @@
 #include "../scene/TeamLogoScene.h"
 #include "../scene/TitleScene.h"
 #include "../scene/MenuScene.h"
+#include "../scene/EventScene.h"
 #include "../scene/GamePlayScene.h"
 #include "../scene/CreditScene.h"
 #include "../scene/EndhingScene.h"
@@ -37,6 +38,7 @@ void Game1::Initialize()
 	mSceneManager.Add(Scene::Demo, std::make_shared<TeamLogoScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());
 	mSceneManager.Add(Scene::Menu, std::make_shared<MenuScene>());
+	mSceneManager.Add(Scene::Event, std::make_shared<EventScene>());
 	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
 	mSceneManager.Add(Scene::Ending, std::make_shared<EndhingScene>());
 	mSceneManager.Add(Scene::Credit, std::make_shared<CreditScene>());

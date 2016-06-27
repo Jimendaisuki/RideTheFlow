@@ -37,11 +37,9 @@ public:
 private:
 	void TornadoCalculation();
 	void VertexMove(VERTEX2D vertexs_[], int count_, float time_);
-	bool IsStatusBegEnd() const;
 
 private:
-	float timer;
-	bool mIsEnd;
+	bool  mIsEnd;
 	World wo,wo2;
 
 	// タイトルステータス

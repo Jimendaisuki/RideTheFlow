@@ -19,10 +19,6 @@
 #include "../actor/Player.h"
 #include "../actor/StageGenerator.h"
 
-
-float	fpsTimer = 0.0f;
-float	fps;
-
 /* 竜巻ポリゴン用データ */
 const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
 const Vector2 SIZE_HALF = Vector2(150, 150);
@@ -62,20 +58,19 @@ TitleScene::TitleScene()
 //デストラクタ
 TitleScene::~TitleScene()
 {
-
+	DeleteGraph(texhandle);
 }
 
 //開始
 void TitleScene::Initialize()
 {
-	wo2.Add(ACTOR_ID::PLAYER_ACTOR,std::make_shared<Player>(wo,true));
-	timer = 0.0f;
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
-	//wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "title_stage"));
-		
+	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage"));
+	wo2.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, true));
+
 	/* ポリゴンデータ */
 	amount_1 = 0;
 	amount_2 = 0;
@@ -103,8 +98,8 @@ void TitleScene::Initialize()
 	slideTime = 0;
 
 	///* フェード */
-	//FadePanel::GetInstance().Initialize();
-	//FadePanel::GetInstance().FadeIn(2.0f);
+	FadePanel::GetInstance().SetInTime(4.0f);
+	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 
 void TitleScene::Update()
@@ -155,7 +150,7 @@ void TitleScene::Update()
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
 			GamePad::GetInstance().AnyTriggerDown())
 		{
-			FadePanel::GetInstance().FadeOut(1.0f);
+			FadePanel::GetInstance().FadeOut();
 			status = TITLE_STATUS::TITLE_END;
 		}
 		break;
@@ -188,24 +183,6 @@ void TitleScene::Update()
 	{
 		mIsEnd = true;
 	}
-
-	fpsTimer += Time::DeltaTime;
-	if (fpsTimer > 1.0f)
-	{
-		fps = 1.0f / Time::DeltaTime;
-		fpsTimer = 0.0f;
-	}
-
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)){
-		FadePanel::GetInstance().FadeOut(0.2f, 0.7f);
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)){
-		FadePanel::GetInstance().FadeOut(0.5f);
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::V)){
-		FadePanel::GetInstance().FadeIn(0.5f);
-	}
 }
 
 //描画
@@ -227,7 +204,6 @@ void TitleScene::Draw() const
 	wo2.Draw();
 	SetDrawScreen(DX_SCREEN_BACK);
 	DrawGraphF(screenPos, -100.0f, screenHandle, TRUE);
-
 	
 	/* テキスト */
 	// タイトル
@@ -235,8 +211,6 @@ void TitleScene::Draw() const
 	// エニープッシュ
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_BACK_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextBackAlpha, Vector2(0.6f + pressScale), true, false);
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_PRESS_SPRITE, Vector2(STORM_POS.x, STORM_POS.y + WINDOW_HEIGHT / 3), Vector2(500, 50), pressTextAlpha, Vector2(0.6f + pressScale), true, false);
-
-	DrawFormatString(0, 20, GetColor(255, 255, 255), "FPS:		%.1f", fps);
 }
 
 //終了しているか？
@@ -300,9 +274,4 @@ void TitleScene::VertexMove(VERTEX2D vertexs_[], int count_, float time_)
 		nowPosition.y = a*a*y[start] + 2 * a*time_*dirPos.y + time_*time_*y[end];
 		vertexs_[i].pos = nowPosition;
 	}
-}
-
-bool TitleScene::IsStatusBegEnd() const
-{
-	return (status == TITLE_STATUS::TITLE_BEGIN) || (status == TITLE_STATUS::TITLE_END);
 }

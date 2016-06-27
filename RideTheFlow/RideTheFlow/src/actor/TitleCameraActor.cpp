@@ -25,7 +25,7 @@ maxRootCount(0)
 	csv_.load("res/root.csv");
 
 	roots.clear();
-	useRoots.clear();
+	useRoots_C.clear();
 
 
 	RootLoad();
@@ -42,14 +42,14 @@ maxRootCount(0)
 TitleCameraActor::~TitleCameraActor()
 {
 	roots.clear();
-	useRoots.clear();
+	useRoots_C.clear();
 }
 
 void TitleCameraActor::Update()
 {
 	if (fade)
 	{
-		backAlpha += Time::DeltaTime * 5.0f;
+		backAlpha += Time::DeltaTime * 3.0f;
 		cameraPos += velocity;
 		targetPos += velocity;
 
@@ -59,45 +59,45 @@ void TitleCameraActor::Update()
 	else
 	{
 		// ルートを取得
-		if (useRoots.size() == 0)
+		if (useRoots_C.size() == 0)
 		{
 			rootCount %= maxRootCount;
 			GetRoot(rootCount);
 			rootCount++;
 		}
 
-		backAlpha -= Time::DeltaTime * 5.0f;
+		backAlpha -= Time::DeltaTime * 3.0f;
 
-		if (time + 0.1f <= useRoots.front().moveTime)
+		if (time + 0.1f <= useRoots_C.front().moveTime)
 		{
-			float nowTime = time / useRoots.front().moveTime;
+			float nowTime = time / useRoots_C.front().moveTime;
 			float targetTime = nowTime + 0.1f;
 
-			switch (useRoots.front().moveNum)
+			switch (useRoots_C.front().moveNum)
 			{
 			case 2:
-				cameraPos = Lerp(nowTime, useRoots.front().points);
-				targetPos = Lerp(targetTime, useRoots.front().points);
+				cameraPos = Lerp(nowTime, useRoots_C.front().points);
+				targetPos = Lerp(targetTime, useRoots_C.front().points);
 				break;
 			case 3:
-				cameraPos = BeziersCurve3(nowTime, useRoots.front().points);
-				targetPos = BeziersCurve3(targetTime, useRoots.front().points);
+				cameraPos = BeziersCurve3(nowTime, useRoots_C.front().points);
+				targetPos = BeziersCurve3(targetTime, useRoots_C.front().points);
 				break;
 			case 4:
-				if (useRoots.size() == 1)
+				if (useRoots_C.size() == 1)
 				{
-					cameraPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, nowTime), useRoots.front().points);
-					targetPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, targetTime), useRoots.front().points);
+					cameraPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, nowTime), useRoots_C.front().points);
+					targetPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, targetTime), useRoots_C.front().points);
 				}
 				else
 				{
-					cameraPos = BeziersCurve4(nowTime, useRoots.front().points);
-					targetPos = BeziersCurve4(targetTime, useRoots.front().points);
+					cameraPos = BeziersCurve4(nowTime, useRoots_C.front().points);
+					targetPos = BeziersCurve4(targetTime, useRoots_C.front().points);
 				}
 
 				break;
 			default:
-				useRoots.clear();
+				useRoots_C.clear();
 				break;
 			}
 		}
@@ -105,8 +105,8 @@ void TitleCameraActor::Update()
 		{
 			velocity = cameraPos - prePos;
 			time = 0.0f;
-			useRoots.pop_front();
-			if (useRoots.size() == 0)
+			useRoots_C.pop_front();
+			if (useRoots_C.size() == 0)
 				fade = !fade;
 		}
 
@@ -178,9 +178,9 @@ void TitleCameraActor::RootLoad()
 }
 
 const int CSV_POINT_NUM = 0;
-const int CSV_MOVE_TIME = 1;
-const int CSV_POSITOIN  = 2;
-const int CSV_OFFSET	= 5;
+const int CSV_POSITOIN  = 1;
+const int CSV_OFFSET	= 4;
+const int CSV_MOVE_TIME = 7;
 void TitleCameraActor::AddRootList()
 {
 	RootData root;
@@ -200,7 +200,7 @@ void TitleCameraActor::AddRootList()
 			csv_.getf(currentRow_, CSV_POSITOIN + 0),
 			csv_.getf(currentRow_, CSV_POSITOIN + 1),
 			csv_.getf(currentRow_, CSV_POSITOIN + 2));
-		root.points[i] = position * Vector3(2.3f, 1.5f, 2.3f) + Vector3(0.0f, 250.0f, 0.0f);
+		root.points[i] = position;// *Vector3(2.3f, 1.5f, 2.3f) + Vector3(0.0f, 250.0f, 0.0f);
 		currentRow_++;
 	}
 	// 保存
@@ -209,7 +209,7 @@ void TitleCameraActor::AddRootList()
 
 void TitleCameraActor::GetRoot(int num)
 {
-	useRoots.clear();
+	useRoots_C.clear();
 
 	Vector3 p1, p2, centerPos, vecA, vecB;
 	float length = 0.0f, lenA = 0.0f, lenB = 0.0f;
@@ -229,7 +229,7 @@ void TitleCameraActor::GetRoot(int num)
 		root.moveNum  = rootData.pointNum;
 		root.moveTime = rootData.moveTime;
 		// 保存
-		useRoots.push_back(root);
+		useRoots_C.push_back(root);
 		break;
 	case 3:
 		for (int i = 0; i < 3; i++)
@@ -239,7 +239,7 @@ void TitleCameraActor::GetRoot(int num)
 		root.moveNum  = rootData.pointNum;
 		root.moveTime = rootData.moveTime;
 		// 保存
-		useRoots.push_back(root);
+		useRoots_C.push_back(root);
 		break;
 	case 4:
 		for (int i = 0; i < 4; i++)
@@ -249,7 +249,7 @@ void TitleCameraActor::GetRoot(int num)
 		root.moveNum  = rootData.pointNum;
 		root.moveTime = rootData.moveTime;
 		// 保存
-		useRoots.push_back(root);
+		useRoots_C.push_back(root);
 		break;
 	case 6:
 		// 頂点数
@@ -287,7 +287,7 @@ void TitleCameraActor::GetRoot(int num)
 		root.moveTime = rootData.moveTime * (lenA / length);
 
 		// ルートA保存
-		useRoots.push_back(root);
+		useRoots_C.push_back(root);
 
 		/* ルートB */
 		// 座標の保存
@@ -304,10 +304,168 @@ void TitleCameraActor::GetRoot(int num)
 		root.moveTime = rootData.moveTime * (lenB / length);
 
 		// ルートB保存
-		useRoots.push_back(root);
+		useRoots_C.push_back(root);
 		break;
 	default:
-		useRoots.clear();
+		useRoots_C.clear();
+		break;
+	}
+
+}
+
+void TitleCameraActor::RootUpdate(std::list<SetRoot> root_)
+{
+	// ルートを取得
+	if (root_.size() == 0)
+	{
+		rootCount %= maxRootCount;
+		GetRoot(rootCount);
+		rootCount++;
+	}
+
+	backAlpha -= Time::DeltaTime * 5.0f;
+
+	if (time + 0.1f <= root_.front().moveTime)
+	{
+		float nowTime = time / root_.front().moveTime;
+		float targetTime = nowTime + 0.1f;
+
+		switch (root_.front().moveNum)
+		{
+		case 2:
+			cameraPos = Lerp(nowTime, root_.front().points);
+			targetPos = Lerp(targetTime, root_.front().points);
+			break;
+		case 3:
+			cameraPos = BeziersCurve3(nowTime, root_.front().points);
+			targetPos = BeziersCurve3(targetTime, root_.front().points);
+			break;
+		case 4:
+			if (root_.size() == 1)
+			{
+				cameraPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, nowTime), root_.front().points);
+				targetPos = BeziersCurve4(bez.Get(CBezier::eNoAccel, CBezier::eNoAccel, targetTime), root_.front().points);
+			}
+			else
+			{
+				cameraPos = BeziersCurve4(nowTime, root_.front().points);
+				targetPos = BeziersCurve4(targetTime, root_.front().points);
+			}
+
+			break;
+		default:
+			root_.clear();
+			break;
+		}
+	}
+	else
+	{
+		velocity = cameraPos - prePos;
+		time = 0.0f;
+		root_.pop_front();
+		if (root_.size() == 0)
+			fade = !fade;
+	}
+
+	time += Time::DeltaTime;
+}
+
+void TitleCameraActor::GetRoot(std::list<SetRoot> root_, int num)
+{
+	root_.clear();
+
+	Vector3 p1, p2, centerPos, vecA, vecB;
+	float length = 0.0f, lenA = 0.0f, lenB = 0.0f;
+
+	// 保存されたルートデータ
+	RootData rootData = roots[num];
+	// これから使うルートデータ
+	SetRoot  root;
+
+	switch (rootData.pointNum)
+	{
+	case 2:
+		for (int i = 0; i < 2; i++)
+		{
+			root.points[i] = rootData.points[i];
+		}
+		root.moveNum  = rootData.pointNum;
+		root.moveTime = rootData.moveTime;
+		// 保存
+		root_.push_back(root);
+		break;
+	case 3:
+		for (int i = 0; i < 3; i++)
+		{
+			root.points[i] = rootData.points[i];
+		}
+		root.moveNum = rootData.pointNum;
+		root.moveTime = rootData.moveTime;
+		// 保存
+		root_.push_back(root);
+		break;
+	case 4:
+		for (int i = 0; i < 4; i++)
+		{
+			root.points[i] = rootData.points[i];
+		}
+		root.moveNum = rootData.pointNum;
+		root.moveTime = rootData.moveTime;
+		// 保存
+		root_.push_back(root);
+		break;
+	case 6:
+		// 頂点数
+		root.moveNum = 4;
+
+		// 中間点
+		p1 = rootData.points[2];
+		p2 = rootData.points[3];
+		centerPos = p1 + (p2 - p1) / 2.0f;
+
+		// 距離を算出
+		for (int i = 1; i < 6; i++)
+		{
+			Vector3 v = rootData.points[i] - rootData.points[i - 1];
+			length += v.Length();
+		}
+
+		/* ルートA */
+		// 座標の保存
+		for (int i = 0; i < 3; i++)
+		{
+			root.points[i] = rootData.points[i];
+		}
+		root.points[3] = centerPos;
+		// 時間の算出
+		for (int i = 1; i < 4; i++)
+		{
+			lenA += (root.points[i] - root.points[i - 1]).Length();
+		}
+		root.moveTime = rootData.moveTime * (lenA / length);
+
+		// ルートA保存
+		useRoots_C.push_back(root);
+
+		/* ルートB */
+		// 座標の保存
+		root.points[0] = centerPos;
+		for (int i = 1; i < 4; i++)
+		{
+			root.points[i] = rootData.points[i + 2];
+		}
+		// 時間の算出
+		for (int i = 1; i < 4; i++)
+		{
+			lenB += (root.points[i] - root.points[i - 1]).Length();
+		}
+		root.moveTime = rootData.moveTime * (lenB / length);
+
+		// ルートB保存
+		root_.push_back(root);
+		break;
+	default:
+		root_.clear();
 		break;
 	}
 }

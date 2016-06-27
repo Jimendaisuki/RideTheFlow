@@ -28,8 +28,6 @@ private:
 	Vector3* pParentPosition;
 	//軸周りの回転量
 	float rotX, rotY;
-	//回転速度
-	float rotationSpeed;
 	//回転
 	Matrix4 rotmat;
 	//最終的なマトリックス

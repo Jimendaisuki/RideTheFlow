@@ -96,6 +96,10 @@ private:
 	CollisionParameter Ship_vs_Ship(const Actor& other)const;
 	//“G‚ÌUŒ‚‚Æ“–‚½‚é‚ÆUŒ‚‚ªÁ‚¦‚éƒGƒŠƒA
 	CollisionParameter Bullet_vs_NoBulletArea(const Actor& other)const;
+
+	//é‚Æ‹ó‹C–C
+	CollisionParameter Castle_vs_AirGun(const Actor& other) const;
+
 	/* Œã‚Åíœ
 	// ü‚Æ” ‚Ì“–‚½‚è”»’è
 	CollisionParameter SegmentBoxAABB(const Actor& other)const;

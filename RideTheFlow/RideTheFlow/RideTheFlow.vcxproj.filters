@@ -306,7 +306,16 @@
     <ClCompile Include="src\actor\island\Froatinglsland3.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\actor\castle\CastleManager.cpp">
+    <ClCompile Include="src\actor\particle\DashBlueLine.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor\particle\DashBlueLineParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\EventScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actor\castle\HomeActor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -659,7 +668,16 @@
     <ClInclude Include="src\actor\island\Froatinglsland3.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\castle\CastleManager.h">
+    <ClInclude Include="src\actor\particle\DashBlueLine.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actor\particle\DashBlueLineParticle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\EventScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actor\castle\HomeActor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

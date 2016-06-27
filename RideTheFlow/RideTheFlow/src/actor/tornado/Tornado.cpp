@@ -8,22 +8,23 @@
 
 #include "../../input/Keyboard.h"
 #include "../particle/TornadoParticle.h"
+#include "../../sound/Sound.h"
 
 
-const float TornadoDefaltSpeed = 300.0f;
+const float TornadoDefaltSpeed = 1000.0f;
 Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_,float radius_) :
 Actor(world),
-position(position_.x, 0.0f, position_.z),
+position(position_.x, -800.0f, position_.z),
 velocity(velocity_),
 timer(0.0f),
-radius(radius_)
+radius(radius_ * 4.0f)
 {
 	ACTIVITYTIME = 20.0f;
 	GRAVITY = 3.0f;
-	speed = 300.0f;
+	speed = TornadoDefaltSpeed;
 
 	parameter.isDead = false;
-	parameter.height = Vector3(0.0f,200.0f,0.0f);
+	parameter.height = Vector3(0.0f,3000.0f,0.0f);
 	parameter.radius = radius;
 	parameter.mat =
 		Matrix4::RotateZ(0) *
@@ -33,9 +34,12 @@ radius(radius_)
 
 	parameter.id = ACTOR_ID::TORNADO_ACTOR;
 
-	ps_parameter.intervalSec = 0.1f;
+	ps_parameter.intervalSec = 0.05f;
 	ps_parameter.lifeTimeLimit = 9999.0f;
 	ps_parameter.sameEmissiveNum = 2;
+
+	Sound::GetInstance().PlaySE(SE_ID::STORMAKED_SE);
+	Sound::GetInstance().PlaySE(SE_ID::STRONGWIND_SE, DX_PLAYTYPE_LOOP);
 }
 
 Tornado::~Tornado()
@@ -47,12 +51,14 @@ void Tornado::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::TORNADO_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR , COL_ID::TORNADO_CASTLE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_BREAK_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR , COL_ID::TORNADO_ISLAND_COL);
 
 	ACTIVITYTIME -= Time::DeltaTime;
 	if (ACTIVITYTIME <= 0)
 	{
 		parameter.isDead = true;
+		Sound::GetInstance().StopSE(SE_ID::STRONGWIND_SE);
 		return;
 	}
 	isHit = false;
@@ -79,6 +85,8 @@ void Tornado::Draw() const
 	//Vector3 TopPos, BottomPos;
 	//BottomPos = Matrix4::GetPosition(parameter.mat);
 	//TopPos = BottomPos + velocity * 1000.0f;
+
+	DrawCapsule3D((position + parameter.height).ToVECTOR(), position, parameter.radius, 20, Vector3::Red.ToColor(), Vector3::Red.ToColor(), false);
 
 	//DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
 	//DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);

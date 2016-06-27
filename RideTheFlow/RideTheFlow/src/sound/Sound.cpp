@@ -72,7 +72,7 @@ std::string Sound::Split(const std::string& filename)
 }
 
 // BGM‚ð–Â‚ç‚·
-void Sound::PlayBGM(const BGM_ID& id, int playtype = DX_PLAYTYPE_BACK)
+void Sound::PlayBGM(const BGM_ID& id, int playtype)
 {
 	PlaySoundMem(m_BGMs[id], playtype);
 }
