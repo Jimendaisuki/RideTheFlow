@@ -255,9 +255,10 @@ Vector3 MonhanCameraActor::DashCmaera()
 	//rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
 	//	playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
 	rotateSpeed = 175.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+	Vector2 rStick = GamePad::GetInstance().RightStick();
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
 		rotateUp += rotateSpeed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
 		rotateUp -= rotateSpeed * Time::DeltaTime;
 
 
