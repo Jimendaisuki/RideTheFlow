@@ -1,6 +1,7 @@
 #pragma once
 #include "../Actor.h"
 #include "../../math/Vector3.h"
+#include <vector>
 #include<memory>
 
 class CastleManager : public Actor
@@ -19,5 +20,6 @@ public:
 private:
 	float rankUpTimer;
 	int rankUpNum;
+	//std::vector<ActorPtr>mMasterCastle;
 
 };

@@ -9,8 +9,8 @@
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
 public:
-	MasterCastle(IWorld& world, Vector3 position, float rotateY, bool spawnShip, bool title);
-	MasterCastle(IWorld& world, Vector3 position, float rotateY, bool spawnShip, bool title, Actor* _parent);
+	MasterCastle(IWorld& world, Vector3 position,float scale, float rotateY, bool spawnShip, bool title,int titleRank);
+	MasterCastle(IWorld& world, Vector3 position,float scale, float rotateY, bool spawnShip, bool title, int titleRank,Actor* _parent);
 	~MasterCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -33,6 +33,10 @@ public:
 	{
 		rankUp = true;
 	}
+	bool NoRankUp()
+	{
+		return noRankUp;
+	}
 	BREAK_SELECT getBreakSelect()
 	{
 		return breakSelect;
@@ -44,10 +48,10 @@ private:
 	Vector3 mPosition;
 	Vector3 toPoint;
 	float mRotateY;
-
-
+	float mScaleFloat;
 	//積み重なる城関係
 	bool rankUp;
+	bool noRankUp;
 	int mRank;
 
 	int testRnak;
@@ -67,4 +71,5 @@ private:
 
 	//タイトル
 	bool mTitle;
+	int mTitleRank;
 };

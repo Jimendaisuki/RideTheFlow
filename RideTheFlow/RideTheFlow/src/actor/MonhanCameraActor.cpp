@@ -88,13 +88,13 @@ void MonhanCameraActor::Update()
 	//プレイヤーの向き取得
 	Vector3 left = Vector3::Cross(tp.tackleT, Vector3(0, 1, 0).Normalized()).Normalized();
 	Vector3 up = Vector3::Cross(left, tp.tackleT).Normalized();
-
+	Vector3 playerFront = playerMat.GetPosition() + playerMat.GetFront().Normalized()*5.0f;
 	int hp = player->GetParameter().HP;
 	if (player->GetParameter().HP > 0)
 	{
 		playerPosition = playerMat.GetPosition();
 		//デフォルトでのカメラ
-		if (!tp.tackleFlag&&posMove2)
+		if (!tp.tackleFlag&&posMove2&&!tp.dashFlag)
 		{
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
@@ -148,7 +148,11 @@ void MonhanCameraActor::Update()
 					}
 					else
 					{
-						rotateLeft = -25;
+						rotateLeft = -atan2(playerMat.GetPosition().y - playerFront.y,
+							Math::Sqrt(Math::Pow(playerMat.GetPosition().z - playerFront.z, 2) +
+							Math::Pow(playerMat.GetPosition().x - playerFront.x, 2))) *
+							180 / 3.1415f;
+
 						posSeveEnd = playerMat.GetPosition()
 							+ tp.tackleT*(-BackCamera) + up*UpCamera;
 					}
@@ -250,10 +254,11 @@ Vector3 MonhanCameraActor::DashCmaera()
 	restRotate = -45.0f;
 	//rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
 	//	playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
-	rotateSpeed = 100.0f;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
+	rotateSpeed = 175.0f;
+	Vector2 rStick = GamePad::GetInstance().RightStick();
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
 		rotateUp += rotateSpeed * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
 		rotateUp -= rotateSpeed * Time::DeltaTime;
 
 
