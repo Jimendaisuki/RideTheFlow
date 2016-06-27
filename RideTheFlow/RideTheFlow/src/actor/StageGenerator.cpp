@@ -66,10 +66,10 @@ void StageGenerator::AddActor()
 	switch (ActorNo)
 	{
 	case 1:	// èÈ
-		//world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position - Vector3(0, 00, 0), false, true, rotation.y));
+		world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position - Vector3(0, 0, 0), rotation.y, true, false));
 		break;
 	case 2:	// â∆
-		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
+		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
 		break;
 	case 3: // ìáÇP
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(world, position, rotation, 8, false));

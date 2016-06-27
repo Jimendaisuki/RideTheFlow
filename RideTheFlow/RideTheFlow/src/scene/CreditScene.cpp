@@ -32,6 +32,7 @@
 #include "../graphic/Anime.h"
 #include "../sound/Sound.h"
 #include "../actor/castle/HomeActor.h"
+#include "../actor/StageGenerator.h"
 
 static const Vector3 House1Pos = Vector3(0, -680, 0);
 
@@ -67,24 +68,31 @@ void CreditScene::Initialize()
 	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
 	
 	mIsEnd = false;
-
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
+	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(wa, 1.0f, Vector3::Zero, Vector3(0, 170, 0)));
+	//wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
+	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
+	//wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
+
+	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(wa, 1.0f, Vector3::Zero, Vector3(0, 170, 0)));
 
 	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_BALL));
 
-	float bai = 8.0;
+	//float bai = 8.0;
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -80, 0)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(100, -80, 0)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -80, 300)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20,  -80, -400)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -80, 700)	 * bai, 0.0f, true, false));
 
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+
 
 	armyCreateTimer = 0.0f;
 	armyCount = 0;
@@ -141,7 +149,6 @@ void CreditScene::Draw() const
 	//Matrix4 m;
 	//m = Matrix4::Scale(30.0f) * Matrix4::Translate(Vector3(100, 200, 100));
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, m);
-
 
 	Model::GetInstance().Draw(MODEL_ID::HOME_MODEL, House1Pos, Vector3::Zero, Vector3(1.0f));
 
