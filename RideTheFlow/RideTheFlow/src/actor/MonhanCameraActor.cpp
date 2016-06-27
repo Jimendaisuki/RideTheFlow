@@ -13,7 +13,6 @@
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 const Vector3 cameraDistance = 150.0f;
-const float rotateSpeed = 250.0f;
 /**タックル中カメラ関係**/
 //カメラの高さ
 const float UpCamera = 75.0f;
@@ -70,6 +69,7 @@ fovVelo(0.0f)
 
 	startTarget = Vector3::Zero;
 	endTarget = Vector3::Zero;
+	rotateSpeed = 200.0f;
 
 }
 MonhanCameraActor::~MonhanCameraActor()
@@ -106,7 +106,7 @@ void MonhanCameraActor::Update()
 				rotateUp += rotateSpeed * Time::DeltaTime;
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
 				rotateUp -= rotateSpeed * Time::DeltaTime;
-
+			rotateSpeed = 200.0f;
 			rotateUp = (int)rotateUp % 360;
 			rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 			restPosition = DefaultCamera();
@@ -248,9 +248,9 @@ Vector3 MonhanCameraActor::DefaultCamera()
 Vector3 MonhanCameraActor::DashCmaera()
 {
 	restRotate = -45.0f;
-	rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
-		playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
-
+	//rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
+	//	playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
+	rotateSpeed = 100.0f;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
 		rotateUp += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))

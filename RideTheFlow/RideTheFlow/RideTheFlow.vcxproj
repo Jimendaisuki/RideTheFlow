@@ -86,6 +86,7 @@
     <ClCompile Include="src\actor\AirGun.cpp" />
     <ClCompile Include="src\actor\castle\CastleCannon.cpp" />
     <ClCompile Include="src\actor\castle\CastleDoragonSpear.cpp" />
+    <ClCompile Include="src\actor\castle\CastleManager.cpp" />
     <ClCompile Include="src\actor\castle\CastleTop.cpp" />
     <ClCompile Include="src\actor\castle\CastleVaristor.cpp" />
     <ClCompile Include="src\actor\enemy\ArmyEnemy.cpp" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\actor\castle\CastleManager.h" />
     <ClInclude Include="src\actor\castle\CastleVaristor.h" />
     <ClInclude Include="src\actor\castle\HomeActor.h" />
     <ClInclude Include="src\actor\island\Froatinglsland2.h" />

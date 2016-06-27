@@ -18,16 +18,10 @@
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY, bool spawnShip, bool title) :
 Actor(world),
-attackTime(0),
-castleTime(0),
-attackRag(0),
-arrowCount(0),
 mRank(Rank),
 mPosition(position),
 playerMat(Matrix4::Identity),
 rankUp(false),
-rankUpRag(false),
-rankUpRagTimer(0),
 mScale(45, 45, 45),
 spawanArmyTimer(0.0f),
 spawnShipTimer(0.0f),
@@ -64,16 +58,10 @@ rankUpHeght(17.0f)
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY,bool spawnShip, bool title, Actor* _parent) :
 Actor(world),
-attackTime(0),
-castleTime(0),
-attackRag(0),
-arrowCount(0),
 mRank(Rank),
 mPosition(position),
 playerMat(Matrix4::Identity),
 rankUp(false),
-rankUpRag(false),
-rankUpRagTimer(0),
 mScale(45, 45, 45),
 spawanArmyTimer(0.0f),
 spawnShipTimer(0.0f),
@@ -118,37 +106,22 @@ void MasterCastle::Update()
 {
 	if (!mTitle)
 	{
-		//各時間
-		castleTime += Time::DeltaTime;
 		//あたり判定
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::CASTLE_AIRGUN_COL);
 
 		//積み重なる城
-		if (castleTime >= RankUpSecond&&mRank > 0)
+		if (rankUp&&Rank>=testRnak)
 		{
 			testRnak++;
 			mRank--;
-			rankUp = true;
-			castleTime = 0.0f;
 			world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
 				mPosition + Vector3(0.0f, parameter.radius, 0.0f)
 				, *this, Rank - mRank, mRotateY));
 			parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
-		}
-		else
-		{
 			rankUp = false;
 		}
-
-		//ステージに当たったら止まる
-		if (downCastle)
-		{
-			//mPosition.y -= 50.0f*Time::DeltaTime;
-		}
-		downCastle = true;
-
 
 		if (mSpawnShip)
 		{

@@ -84,6 +84,8 @@ castleUpTimer(0.0f)
 
 	sevePos = mPosition;
 	prevPos = mPosition;
+	startPos = mPosition;
+	endPos = endPos = mPosition + Vector3(0.0f, parameter.radius * 2.0f, 0.0f);
 }
 
 
