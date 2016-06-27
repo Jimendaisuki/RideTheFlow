@@ -32,7 +32,7 @@ isGameScene(isGameScene_)
 		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
 		parameter.radius, *this));
 	world .Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f)
-		, 0.0f, true, false, this));
+		, 0.0f,0.0f, true, false,1.0f, this));
 }
 
 Froatinglsland::~Froatinglsland()

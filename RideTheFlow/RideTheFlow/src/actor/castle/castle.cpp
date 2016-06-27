@@ -25,7 +25,7 @@ attackRag(0.0f),
 playerMat(Matrix4::Identity),
 velocity(Vector3::Zero),
 mPosition(position),
-mScale(30, 30, 30),
+mScale(30.0f),
 mAttackTime(0.0f),
 castleDown(true),
 isLook(false),
@@ -118,7 +118,7 @@ void Castle::Update()
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
 	}
 
-	castleUpTimer +=20.0f* Time::DeltaTime;
+	castleUpTimer += 20.0f* Time::DeltaTime;
 	if (mas->castleRankUp())
 	{
 		startPos = mPosition;
@@ -127,7 +127,7 @@ void Castle::Update()
 	}
 
 	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
-	velocity =mPosition-prevPos;
+	velocity = mPosition - prevPos;
 	breakSelect = mas->getBreakSelect();
 
 	//–³“GŽžŠÔ
@@ -145,7 +145,6 @@ void Castle::Update()
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
-
 }
 
 void Castle::Draw() const

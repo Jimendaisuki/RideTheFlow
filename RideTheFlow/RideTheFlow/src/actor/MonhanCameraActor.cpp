@@ -94,7 +94,7 @@ void MonhanCameraActor::Update()
 	{
 		playerPosition = playerMat.GetPosition();
 		//デフォルトでのカメラ
-		if (!tp.tackleFlag&&posMove2)
+		if (!tp.tackleFlag&&posMove2&&!tp.dashFlag)
 		{
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
@@ -250,7 +250,7 @@ Vector3 MonhanCameraActor::DashCmaera()
 	restRotate = -45.0f;
 	//rotateUp = atan2(playerMat.GetPosition().x - restPosition.x,
 	//	playerMat.GetPosition().z - restPosition.z) * 180 / 3.1415f + 180;
-	rotateSpeed = 100.0f;
+	rotateSpeed = 175.0f;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT))
 		rotateUp += rotateSpeed * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT))

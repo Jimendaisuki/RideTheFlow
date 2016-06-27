@@ -23,7 +23,7 @@ speed(MoveSpeed)
 	parameter.radius = 10.0f;
 	ps_parameter.intervalSec = 0.003f;
 	ps_parameter.lifeTimeLimit = 20.0f;
-	ps_parameter.sameEmissiveNum = 1;
+	ps_parameter.sameEmissiveNum = 3;
 	dashPositions = player.ReturnDashPosStorage();
 
 	Sound::GetInstance().PlaySE(SE_ID::MIDDLE_WIND_SE);

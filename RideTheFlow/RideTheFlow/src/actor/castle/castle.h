@@ -59,7 +59,7 @@ private:
 	Vector3 velocity;
 	Vector3 sevePos;
 	Vector3 prevPos;
-
+	
 	bool isLook;
 	bool castleDown;
 	int arrowCount;
@@ -74,7 +74,6 @@ private:
 	bool damage;
 	float InvincibleTimer;
 	CastleEnemyPos castleEnemyPos;
-
 	//Ž€ˆö
 	BREAK_SELECT breakSelect;
 

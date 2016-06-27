@@ -140,42 +140,45 @@ void Content::LoadModel(Model& model, bool async)
 // âπäyÇì«Ç›çûÇﬁ
 void Content::LoadSound(Sound& sound)
 {
-	WorkFolder::SetWorkFolder("res/Sound/BGM/");
+	WorkFolder::SetWorkFolder("res/Sound/GAME_BGM/");
 	sound.LoadBGM("clear_bgm.mp3", BGM_ID::CLEAR_BGM);
 	sound.LoadBGM("failed_bgm.mp3", BGM_ID::FAILED_BGM);
 	sound.LoadBGM("ingame_bgm.mp3", BGM_ID::INGAME_BGM);
-	sound.LoadBGM("Ingame_Master.wav", BGM_ID::INGAME_MASTER_BGM);
+	sound.LoadBGM("intro_bgm.mp3", BGM_ID::INTRO_BGM);
 	sound.LoadBGM("menu_bgm.mp3", BGM_ID::MENU_BGM);
 	sound.LoadBGM("title_bgm.mp3", BGM_ID::TITLE_BGM);
 
-
 	WorkFolder::SetWorkFolder("res/Sound/SE/");
-	sound.LoadSE("arrowwind_se.wav", ARROW_WIND_SE);
-	sound.LoadSE("back_se.wav", BACK_SE);
-	sound.LoadSE("ballistawind_se.wav", BALLISTA_WIND_SE);
-	sound.LoadSE("canonwind_se.wav", CANON_WIND_SE);
-	sound.LoadSE("dragonspear_se.wav", DRAGONSPEAR_SE);
-	sound.LoadSE("enter_se.wav", ENTER_SE);
-	sound.LoadSE("middlewind_se.wav", MIDDLE_WIND_SE);
-	sound.LoadSE("normalwind_se.wav", NORMAL_WIND_SE);
-	sound.LoadSE("sandstorm_se.wav", SAND_STORM_SE);
-	sound.LoadSE("stormaked_se.wav", STORMAKED_SE);
-	sound.LoadSE("strongwind_se.wav", STRONGWIND_SE);
-	sound.LoadSE("switch_se.wav", SWITCH_SE);
-	WorkFolder::SetWorkFolder("res/Sound/SE/scream/");
-	sound.LoadSE("scream1_se.wav", SCREAM_1_SE);
-	sound.LoadSE("scream2_se.wav", SCREAM_2_SE);
-	sound.LoadSE("scream3_se.wav", SCREAM_3_SE);
-	sound.LoadSE("scream4_se.wav", SCREAM_4_SE);
-	sound.LoadSE("scream5_se.wav", SCREAM_5_SE);
-	sound.LoadSE("scream6_se.wav", SCREAM_6_SE);
-	sound.LoadSE("scream7_se.wav", SCREAM_7_SE);
-	sound.LoadSE("scream8_se.wav", SCREAM_8_SE);
-	sound.LoadSE("scream9_se.wav", SCREAM_9_SE);
-	sound.LoadSE("scream10_se.wav", SCREAM_10_SE);
-	sound.LoadSE("scream11_se.wav", SCREAM_11_SE);
-	sound.LoadSE("scream12_se.wav", SCREAM_12_SE);
-	sound.LoadSE("scream13_se.wav", SCREAM_13_SE);
+	sound.LoadSE("arrowfire_se.wav", SE_ID::ARROW_FIRE_SE);
+	sound.LoadSE("arrowwind_se.wav", SE_ID::ARROW_WIND_SE);
+	sound.LoadSE("back_se.wav", SE_ID::BACK_SE);
+	sound.LoadSE("ballistafire_se.wav", SE_ID::BALLISTA_FIRE_SE);
+	sound.LoadSE("ballistawind_se.wav", SE_ID::BALLISTA_WIND_SE);
+	sound.LoadSE("cannonfire_se.wav", SE_ID::CANON_FIRE_SE);
+	sound.LoadSE("canonwind_se.wav", SE_ID::CANON_WIND_SE);
+	sound.LoadSE("castlebrake_se.wav", SE_ID::CASTLE_BREAK_SE);
+	sound.LoadSE("castlehit_se.wav", SE_ID::CASTLE_HIT_SE);
+	sound.LoadSE("construction_se.wav", SE_ID::CONSTRUCTION_SE);
+	sound.LoadSE("dragondead_se.wav", SE_ID::DRAGON_DEAD_SE);
+	sound.LoadSE("dragonhit_se.wav", SE_ID::DRAGON_HIT_SE);
+	sound.LoadSE("dragonshouting_se.wav", SE_ID::DRAGON_SHOUTING_SE);
+	sound.LoadSE("dragonspear_se.wav", SE_ID::DRAGONSPEAR_SE);
+	sound.LoadSE("enter_se.wav", SE_ID::ENTER_SE);
+	sound.LoadSE("gong_se.wav", SE_ID::GONG_SE);
+	sound.LoadSE("islebrake_se.wav", SE_ID::ISLE_BREAK_SE);
+	sound.LoadSE("islehit_se.wav", SE_ID::ISLE_HIT_SE);
+	sound.LoadSE("menuroll_se.wav", SE_ID::MENU_ROLL_SE);
+	sound.LoadSE("middlewind_se.wav", SE_ID::MIDDLE_WIND_SE);
+	sound.LoadSE("normalwind_se.wav", SE_ID::NORMAL_WIND_SE);
+	sound.LoadSE("sandstorm_se.wav", SE_ID::SAND_STORM_SE);
+	sound.LoadSE("scream1_se.wav", SE_ID::SCREAM_1_SE);
+	sound.LoadSE("scream2_se.wav", SE_ID::SCREAM_2_SE);
+	sound.LoadSE("scream3_se.wav", SE_ID::SCREAM_3_SE);
+	sound.LoadSE("scream4_se.wav", SE_ID::SCREAM_4_SE);
+	sound.LoadSE("scream5_se.wav", SE_ID::SCREAM_5_SE);
+	sound.LoadSE("stormaked_se.wav", SE_ID::STORMAKED_SE);
+	sound.LoadSE("strongwind_se.wav", SE_ID::STRONGWIND_SE);
+	sound.LoadSE("switch_se.wav", SE_ID::SWITCH_SE);
 
 	sound.SetAllBGMVolume(BGMVOLUME);
 	sound.SetAllSEVolume(SEVOLUME);
