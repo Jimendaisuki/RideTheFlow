@@ -88,7 +88,7 @@ void MonhanCameraActor::Update()
 	//ƒvƒŒƒCƒ„[‚ÌŒü‚«Žæ“¾
 	Vector3 left = Vector3::Cross(tp.tackleT, Vector3(0, 1, 0).Normalized()).Normalized();
 	Vector3 up = Vector3::Cross(left, tp.tackleT).Normalized();
-
+	Vector3 playerFront = playerMat.GetPosition() + playerMat.GetFront().Normalized()*5.0f;
 	int hp = player->GetParameter().HP;
 	if (player->GetParameter().HP > 0)
 	{
@@ -148,7 +148,11 @@ void MonhanCameraActor::Update()
 					}
 					else
 					{
-						rotateLeft = -25;
+						rotateLeft = atan2(playerMat.GetPosition().y - playerFront.y,
+							Math::Sqrt(Math::Pow(playerMat.GetPosition().z - playerFront.z, 2) +
+							Math::Pow(playerMat.GetPosition().x - playerFront.x, 2))) *
+							180 / 3.1415f;
+
 						posSeveEnd = playerMat.GetPosition()
 							+ tp.tackleT*(-BackCamera) + up*UpCamera;
 					}

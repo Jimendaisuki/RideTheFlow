@@ -16,7 +16,7 @@
 #include "../NoShipArea.h"
 #include "../particle/BreakCastle.h"
 
-MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY,float scale, bool spawnShip, bool title,int titleRank) :
+MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY, float scale, bool spawnShip, bool title, int titleRank) :
 Actor(world),
 mRank(Rank),
 mPosition(position),
@@ -48,7 +48,7 @@ mScaleFloat(0.0f)
 		world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 			parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 			, parameter.radius * 2, *this));
-		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() +Vector3(0.0f,parameter.radius*2.0f,0.0f), *this, rotateY));
+		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2.0f, 0.0f), *this, rotateY));
 
 	}
 	testRnak = 1;
@@ -59,13 +59,13 @@ mScaleFloat(0.0f)
 	mTitleRank = titleRank;
 }
 
-MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY,float scale,bool spawnShip, bool title,int titleRank, Actor* _parent) :
+MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY, float scale, bool spawnShip, bool title, int titleRank, Actor* _parent) :
 Actor(world),
 mRank(Rank),
 mPosition(position),
 playerMat(Matrix4::Identity),
 rankUp(false),
-mScale(45*scale),
+mScale(45 * scale),
 spawanArmyTimer(0.0f),
 spawnShipTimer(0.0f),
 mSpawnShip(spawnShip),
@@ -119,7 +119,7 @@ void MasterCastle::Update()
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::CASTLE_AIRGUN_COL);
 
 		//積み重なる城
-		if (rankUp&&Rank>=testRnak)
+		if (rankUp&&Rank >= testRnak)
 		{
 			testRnak++;
 			mRank--;
@@ -182,10 +182,21 @@ void MasterCastle::Update()
 	}
 
 	//マトリックス計算
-	parameter.mat =
-		Matrix4::Scale(mScale)*
-		Matrix4::RotateY(mRotateY)*
-		Matrix4::Translate(mPosition);
+	if (mTitle)
+	{
+		parameter.mat =
+			Matrix4::Scale(mScale*mScaleFloat)*
+			Matrix4::RotateY(mRotateY)*
+			Matrix4::Translate(mPosition);
+	}
+	else
+	{
+		parameter.mat =
+			Matrix4::Scale(mScale)*
+			Matrix4::RotateY(mRotateY)*
+			Matrix4::Translate(mPosition);
+	}
+
 }
 
 void MasterCastle::Draw() const
@@ -199,17 +210,22 @@ void MasterCastle::Draw() const
 		Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, parameter.mat);
 		for (int i = 0; i <= mTitleRank; i++)
 		{
-			Vector3 Heght = mPosition + Vector3(0.0f, 17.0f * 2, 0.0f) + Vector3(0.0f, 30.0f*i, 0.0f);
+			Vector3 Heght = Vector3(0.0f, 17.0f * 2, 0.0f) + Vector3(0.0f, 30.0f*i, 0.0f);
 			Matrix4 castleMat = Matrix4::Scale(30.0f*mScaleFloat)*
 				Matrix4::RotateY(mRotateY)*
-				Matrix4::Translate(Heght*Vector3(1.0f,mScaleFloat,0.0f));
+				Matrix4::Translate(mPosition + Heght*Vector3(1.0f, mScaleFloat, 1.0f));
 			Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, castleMat);
 		}
+		float height = parameter.radius*2.0f*mScaleFloat + 17.0f * 2 * mScaleFloat*(mTitleRank-1);
 		Matrix4 topCastle = Matrix4::Scale(30.0f*mScaleFloat)*
 			Matrix4::RotateY(mRotateY)*
-			Matrix4::Translate(mPosition + (Vector3(0.0f, 17.0f * 2, 0.0f) + Vector3(0.0f, 30.0f * 6, 0.0f))*Vector3(1.0f, mScaleFloat, 0.0f));
+			Matrix4::Translate(mPosition +Vector3(0.0f,height,0.0f));
+
+		Matrix4 topCastle2 = Matrix4::Scale(30.0f*mScaleFloat)*
+			Matrix4::RotateY(mRotateY)*
+			Matrix4::Translate(mPosition + Vector3(0.0f, height, 0.0f)+Vector3(0.0f,35.0f*mScaleFloat,0.0f));
 		Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP2_MODEL, topCastle);
-		Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, topCastle*Matrix4::Translate(Vector3(0, 40, 0)));
+		Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, topCastle2);
 	}
 }
 
