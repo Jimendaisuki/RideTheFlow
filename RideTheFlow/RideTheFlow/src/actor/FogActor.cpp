@@ -25,7 +25,7 @@ fogStartAngle(70.0f)
 }
 FogActor::~FogActor()
 {
-
+	SetFogEnable(FALSE);
 }
 
 void FogActor::Update()

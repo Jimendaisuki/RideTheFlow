@@ -288,7 +288,7 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6)) && !tp.tackleFlag) {
+		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)) && !tp.tackleFlag) {
 				tp.tackleFlag = true;
 				tornadoFlag = false;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
@@ -324,13 +324,13 @@ void Player::Update() {
 
 		tp.dashFlag = false;
 		if (!title && !tp.tackleFlag) {
-			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) {
+			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM7)) {
 				tornadoFlag = false;
 				dashAfter = true;
 				dashAfterTime = 0.0f;
 			}
 
-			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag) {
+			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7)) && !tornadoFlag) {
 				if (dashHealFlag) {
 					dashPosStorage.clear();
 					tornadoPosStorage.clear();
