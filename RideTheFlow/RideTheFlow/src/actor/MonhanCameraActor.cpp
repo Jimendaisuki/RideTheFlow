@@ -148,7 +148,7 @@ void MonhanCameraActor::Update()
 					}
 					else
 					{
-						rotateLeft = atan2(playerMat.GetPosition().y - playerFront.y,
+						rotateLeft = -atan2(playerMat.GetPosition().y - playerFront.y,
 							Math::Sqrt(Math::Pow(playerMat.GetPosition().z - playerFront.z, 2) +
 							Math::Pow(playerMat.GetPosition().x - playerFront.x, 2))) *
 							180 / 3.1415f;
