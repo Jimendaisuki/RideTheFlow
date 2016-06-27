@@ -109,6 +109,8 @@ const float ShipHp = 10.0f;
 const float ShipDamegeTornado = 2.5f;
 //船が流れで受けるダメージ
 const float ShipDamegeWind = 0.5f;
+//船が空気砲で受けるダメージ
+const float ShipDamegeWindBall = 5.0f;
 
 //船の無敵時間
 const float ShipInvincibleTime = 3.0f;

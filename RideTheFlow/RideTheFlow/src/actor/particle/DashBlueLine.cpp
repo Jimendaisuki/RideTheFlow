@@ -23,7 +23,7 @@ dashButtonState(true)
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f, HeightMax, 0.0f);
 	parameter.radius = 10.0f;
-	ps_parameter.intervalSec = 0.05f;
+	ps_parameter.intervalSec = 0.03f;
 	ps_parameter.lifeTimeLimit = 100.0f;
 	ps_parameter.sameEmissiveNum = 1;
 	dashPositions = player.ReturnDashPosStorage();
