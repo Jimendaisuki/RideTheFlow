@@ -96,6 +96,7 @@ void TitleScene::Initialize()
 
 	screenPos = WINDOW_WIDTH / 4;
 	slideTime = 0;
+	isTitle = false;
 
 	///* フェード */
 	FadePanel::GetInstance().SetInTime(4.0f);
@@ -147,7 +148,7 @@ void TitleScene::Update()
 		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
 		// シーン終了
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
 			GamePad::GetInstance().AnyTriggerDown())
 		{
 			FadePanel::GetInstance().FadeOut();
@@ -183,12 +184,18 @@ void TitleScene::Update()
 	{
 		mIsEnd = true;
 	}
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
+		isTitle = !isTitle;
 }
 
 //描画
 void TitleScene::Draw() const
 {
 	wo.Draw();
+
+	if (isTitle)
+		return;
 
 	/* 竜巻 */
 	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);

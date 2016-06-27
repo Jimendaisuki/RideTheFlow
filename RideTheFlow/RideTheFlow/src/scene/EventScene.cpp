@@ -101,6 +101,11 @@ void EventScene::Initialize()
 
 	isTitle = false;
 
+	prePos = Vector3::Zero;
+	velocity = Vector3::Zero;
+	t = 1;
+
+
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	FadePanel::GetInstance().SetInTime(3.0f);
 }
@@ -113,7 +118,6 @@ void EventScene::Update()
 	/* ÉJÉÅÉâê›íË */
 	Vector3 playerPos = wo.GetPlayer()->GetParameter().mat.GetPosition();
 	Vector3 playerRight = -wo.GetPlayer()->GetParameter().mat.GetLeft().Normalized();
-	Camera::GetInstance().Target.Set(playerPos);
 
 	switch (status)
 	{
@@ -127,8 +131,11 @@ void EventScene::Update()
 			correctionFog - Random::GetInstance().Range(30.0f, 50.0f);
 		}
 
+		targetPos = playerPos;
 		cameraPos = playerPos + playerRight * 100;
 		currentFogFar = maxFogFar + correctionFog * Math::Sin(fogTime);
+
+		prePos = playerPos;
 
 		if (timer > 5.0f && currentFogFar > 150)
 		{
@@ -137,6 +144,14 @@ void EventScene::Update()
 		break;
 	case EVENT_DRAGON_OUT:
 		currentFogFar = maxFogFar + 300 * Math::Abs(Math::Sin(fogTime / 4.0f));
+		velocity = playerPos - prePos;
+		prePos = playerPos;
+		targetPos = playerPos;
+		cameraPos += velocity * t;
+		if (t > 0)
+			t -= Time::DeltaTime;
+		t = Math::Clamp(t, 0.0f, 1.0f);
+
 		if ((playerPos - cameraPos).Length() >= 500 && !isTitle)
 		{
 			FadePanel::GetInstance().FadeOut();
@@ -146,12 +161,24 @@ void EventScene::Update()
 	case EVENT_DRAGON_END:
 		if (!FadePanel::GetInstance().IsAction())
 		{
+			wo.GetPlayer()->SetIsDead(true);
+			wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage"));
 			currentFogFar = 100000;
+
+
+			targetPos = Vector3(0.0f, 1840.0f, -15264.0f);
+			cameraPos = Vector3(2225.0f, -312.0f - 100.0f, 4587.0f);
+
+
+			SetLightPosition(Vector3(2225.0f * 30, 312.0f * 100, 4587.0f * 30).ToVECTOR());
+			SetLightDirection(-Vector3(2225.0f * 10, 312.0f * 100, 4587.0f * 10).Normalized());
+
 			FadePanel::GetInstance().FadeIn();
-			status = EVENT_STATUS::TITLE_STANDBY;
+			status = EVENT_STATUS::EVENT_STAGE_IN;
 		}
 		break;
-	case EventScene::TITLE_STANDBY:
+	case EventScene::EVENT_STAGE_IN:
+
 		break;
 	case EventScene::TITLE_END:
 		break;
@@ -196,6 +223,7 @@ void EventScene::Update()
 
 	/* ÉJÉÅÉâê›íË */
 	Camera::GetInstance().Position.Set(cameraPos);
+	Camera::GetInstance().Target.Set(targetPos);
 
 
 	SetFogStartEnd(0, currentFogFar);
