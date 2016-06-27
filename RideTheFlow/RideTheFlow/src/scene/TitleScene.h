@@ -67,4 +67,6 @@ private:
 	int		screenHandle;
 	float	screenPos;
 	float	slideTime;
+
+	bool	isTitle;
 };

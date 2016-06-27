@@ -70,8 +70,10 @@ void TitleCameraActor::Update()
 
 		if (time + 0.1f <= useRoots_C.front().moveTime)
 		{
+			prePos = cameraPos;
+
 			float nowTime = time / useRoots_C.front().moveTime;
-			float targetTime = nowTime + 0.1f;
+			float targetTime = nowTime + 0.05f;
 
 			switch (useRoots_C.front().moveNum)
 			{
@@ -110,10 +112,9 @@ void TitleCameraActor::Update()
 				fade = !fade;
 		}
 
-		time += Time::DeltaTime;
+		time += Time::DeltaTime / 2.0f;
 	}
 
-	prePos = cameraPos;
 	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
 
 	Camera::GetInstance().Position.Set(cameraPos);
