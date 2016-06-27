@@ -21,14 +21,17 @@ CastleManager::~CastleManager()
 
 void CastleManager::Update()
 {
+
 	int masterCount = world.GetActorCount(ACTOR_ID::MASTER_CASTLE_ACTOR, ACTOR_ID::MASTER_CASTLE_ACTOR);
 	rankUpTimer += Time::DeltaTime;
-	
 	if (RankUpSecond <= rankUpTimer)
 	{
 		rankUpNum = Random::GetInstance().Range(0, masterCount);
-		std::static_pointer_cast<MasterCastle>(world.GetMasterCastle()[rankUpNum])->RankUp();
-		rankUpTimer = 0.0f;
+		if (!std::static_pointer_cast<MasterCastle>(world.GetMasterCastle()[rankUpNum])->NoRankUp())
+		{
+			std::static_pointer_cast<MasterCastle>(world.GetMasterCastle()[rankUpNum])->RankUp();
+			rankUpTimer = 0.0f;
+		}
 	}
 }
 
