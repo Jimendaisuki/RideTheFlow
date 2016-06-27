@@ -69,7 +69,7 @@ void TitleScene::Initialize()
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
 	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage"));
-	wo2.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, false));
+	wo2.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, true));
 
 	/* ポリゴンデータ */
 	amount_1 = 0;
