@@ -224,13 +224,12 @@ CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
 		player = const_cast<Actor*>(&other);
 	});
 	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
-
 	Capsule spear;
 	spear.startPos = other.parameter.mat.GetPosition() - other.parameter.mat.GetLeft().Normalized()*10.0f;
 	spear.endPos = other.parameter.mat.GetPosition() + other.parameter.mat.GetLeft().Normalized()*30.0f;
 	spear.radius = other.parameter.radius;
 
-	for (int i = 0; i < boons.size(); i += 8)
+	for (int i = 0; i < boons.size(); i += 12)
 	{
 		if (i >= boons.size())i = boons.size() - 1;
 		Sphere playerSphere;

@@ -22,11 +22,13 @@ void World::Clear(){
 	actors.Clear();
 	playerActor = nullptr;
 	cameraActor = nullptr;
+	masterCastles.clear();
 }
 
 void World::Add(ACTOR_ID id, ActorPtr actor){
 	if (id == ACTOR_ID::PLAYER_ACTOR)		playerActor = actor;
 	else if (id == ACTOR_ID::CAMERA_ACTOR)	cameraActor = actor;
+	else if (id == ACTOR_ID::MASTER_CASTLE_ACTOR)	masterCastles.push_back(actor);
 	actors.Add(id, actor);
 }
 
@@ -63,7 +65,10 @@ ActorPtr World::GetCamera() const
 {
 	return cameraActor;
 }
-
+std::vector<ActorPtr> World::GetMasterCastle() const
+{
+	return masterCastles;
+}
 int World::GetActorCount(ACTOR_ID id,ACTOR_ID id2)
 {
 	int count = actors.GetActorCount(id,id2);

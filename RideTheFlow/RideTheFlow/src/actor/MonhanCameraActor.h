@@ -43,6 +43,7 @@ private:
 	float fov;
 	float rotateLeft;
 	float rotateUp;
+	float rotateSpeed;
 
 	//ƒ^ƒbƒNƒ‹ŠÖŒW
 	Vector3 posSeveStart;

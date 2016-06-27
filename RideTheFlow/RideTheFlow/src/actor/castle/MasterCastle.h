@@ -28,6 +28,10 @@ public:
 	{
 		return Rank - mRank;
 	}
+	void RankUp()
+	{
+		rankUp = true;
+	}
 	BREAK_SELECT getBreakSelect()
 	{
 		return breakSelect;
@@ -44,18 +48,9 @@ private:
 	Vector3 toPoint;
 	float mRotateY;
 
-	//UŒ‚ŠÖŒW
-	float mSecondAttack;
-	float mArrowNumber;
-	float attackTime;
-	float attackRag;
-	int arrowCount;
 
 	//Ï‚İd‚È‚ééŠÖŒW
 	bool rankUp;
-	bool rankUpRag;
-	float rankUpRagTimer;
-	float castleTime;
 	int mRank;
 
 	int testRnak;
@@ -63,7 +58,6 @@ private:
 	float spawanArmyTimer;
 	float spawnShipTimer;
 	bool mSpawnShip;
-	bool downCastle;
 
 	float rankUpHeght;
 

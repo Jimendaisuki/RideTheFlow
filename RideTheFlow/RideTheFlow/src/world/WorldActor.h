@@ -5,6 +5,7 @@
 #include "../UIactor/UIActorManager.h"
 #include <map>
 #include <vector>
+#include "../actor/castle/MasterCastle.h"
 
 enum ACTOR_ID;
 enum UI_ID;
@@ -29,6 +30,9 @@ public:
 	//子オブジェクトを巡回
 	void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func);
 	void EachUIActor(UI_ID id, std::function<void(const UIActor&)> func);
+
+	std::vector<MasterCastle> GetMasterCastle();
+
 
 private:
 	typedef std::shared_ptr<ActorManager> ActorManagerPtr;
