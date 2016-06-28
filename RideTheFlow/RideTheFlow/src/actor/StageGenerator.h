@@ -6,7 +6,7 @@
 class StageGenerator : public Actor
 {
 public:
-	StageGenerator(IWorld& world, const std::string& fileName);
+	StageGenerator(IWorld& world, const std::string& fileName, bool isGameScene = true);
 	~StageGenerator();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -19,4 +19,5 @@ private:
 private:
 	CsvReader	csv_;
 	int			currentRow_;
+	bool		isGameScene_;
 };

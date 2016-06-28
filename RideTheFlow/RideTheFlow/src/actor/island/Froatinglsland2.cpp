@@ -6,11 +6,13 @@
 #include "../../time/Time.h"
 #include "../NoShipArea.h"
 #include "FroatinglslandParameter.h"
-Froatinglsland2::Froatinglsland2(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale) :
+#include "../castle/MasterCastle.h"
+Froatinglsland2::Froatinglsland2(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale,bool isGameFlag) :
 Actor(world),
 timer(0.0f),
 isCol(true)
 {
+
 	parameter.HP = lslandHP;
 	parameter.isDead = false;
 	parameter.radius = 150;
@@ -21,10 +23,17 @@ isCol(true)
 		Matrix4::RotateX(rotate.x) *
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
+
+	if (!isGameFlag) return;
 	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f),
 		parameter.radius, *this));
+	world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, Vector3(-1372, 1595, -3363)
+		, 314.0f, 0.0f, true, false, 1.0f, this));
+
+	world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, Vector3(-2032, 1588, -2730)
+		, 133.0f, 0.0f, true, false, 1.0f, this));
 }
 
 Froatinglsland2::~Froatinglsland2()

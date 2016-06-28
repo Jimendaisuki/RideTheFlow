@@ -64,6 +64,13 @@ void TitleCameraActor::Update()
 			rootCount %= maxRootCount;
 			GetRoot(rootCount);
 			rootCount++;
+
+			Vector3 temp = useRoots_C.front().points[0].Normalized();
+			lightPos = temp * 10000.0f;
+			lightPos.y = 40000.0f;
+			lightDir = -temp;
+			SetLightPosition(lightPos);
+			SetLightDirection(-lightPos.Normalized());
 		}
 
 		backAlpha -= Time::DeltaTime * 3.0f;
