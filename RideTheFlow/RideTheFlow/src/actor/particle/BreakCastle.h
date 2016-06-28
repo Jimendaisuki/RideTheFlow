@@ -15,7 +15,9 @@ enum CASTLE_SELECT
 	//”òs‘D
 	SHIP,
 	//•‚“‡
-	ISLE,
+	ISLE1,
+	ISLE2,
+	ISLE3,
 };
 
 //‰ó‚ê•û‚ð‘I‘ð

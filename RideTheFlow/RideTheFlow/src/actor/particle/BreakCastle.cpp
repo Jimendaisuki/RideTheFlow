@@ -106,7 +106,7 @@ void BreakCastle::TornadoBreakEmissive()
 	case MASTER_CASTLE:MasterCastleEmissive(Vector3::Zero); break;
 	case CHILD_CASTLE: break;
 	case SHIP: ShipEmissive([]{return Vector3::Zero; }); break;
-	case ISLE: break;
+	case ISLE1: break;
 	default: break;
 	}
 }
@@ -117,7 +117,7 @@ void BreakCastle::WindFlowBreakEmissive()
 	case MASTER_CASTLE:CastleWindFlowBreakEmissive(); break;
 	case CHILD_CASTLE: break;
 	case SHIP: ShipEmissive([&]{return RandomVelocity(); }); break; break;
-	case ISLE: break;
+	case ISLE1: break;
 	default: break;
 	}
 }
@@ -128,7 +128,7 @@ void BreakCastle::WindBallBreakEmissive()
 	case MASTER_CASTLE:MasterCastleEmissive(Vector3::Zero); break;
 	case CHILD_CASTLE: break;
 	case SHIP:ShipEmissive([]{return Vector3::Zero; }); break; break;
-	case ISLE: break;
+	case ISLE1: break;
 	default: break;
 	}
 }

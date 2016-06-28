@@ -15,21 +15,18 @@ const float TornadoDefaltSpeed = 1000.0f;
 Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_,float radius_) :
 Actor(world),
 position(position_.x, -800.0f, position_.z),
-velocity(velocity_),
+velocity(Vector3(velocity_.x,0.0f,velocity_.z).Normalized()),
 timer(0.0f),
 radius(radius_ * 4.0f)
 {
 	ACTIVITYTIME = 20.0f;
-	GRAVITY = 3.0f;
+	GRAVITY = 0.0f;
 	speed = TornadoDefaltSpeed;
 
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f,3000.0f,0.0f);
 	parameter.radius = radius;
 	parameter.mat =
-		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(0) *
-		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
 	parameter.id = ACTOR_ID::TORNADO_ACTOR;
@@ -40,6 +37,7 @@ radius(radius_ * 4.0f)
 
 	Sound::GetInstance().PlaySE(SE_ID::STORMAKED_SE);
 	Sound::GetInstance().PlaySE(SE_ID::STRONGWIND_SE, DX_PLAYTYPE_LOOP);
+	Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
 }
 
 Tornado::~Tornado()
@@ -49,11 +47,6 @@ Tornado::~Tornado()
 
 void Tornado::Update()
 {
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::TORNADO_STAGE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR , COL_ID::TORNADO_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_BREAK_ACTOR, COL_ID::TORNADO_CASTLE_COL);
-	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR , COL_ID::TORNADO_ISLAND_COL);
-
 	ACTIVITYTIME -= Time::DeltaTime;
 	if (ACTIVITYTIME <= 0)
 	{
@@ -61,18 +54,22 @@ void Tornado::Update()
 		Sound::GetInstance().StopSE(SE_ID::STRONGWIND_SE);
 		return;
 	}
+
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::TORNADO_STAGE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR , COL_ID::TORNADO_CASTLE_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_BREAK_ACTOR, COL_ID::TORNADO_CASTLE_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR , COL_ID::TORNADO_ISLAND_COL);
+
+
 	isHit = false;
 
-	velocity.y = -GRAVITY;
+	//velocity.y = -GRAVITY;
 	position += velocity * speed  * Time::DeltaTime;
 
 	parameter.velocity = Vector3(velocity.x, 0.0f, velocity.z).Normalized() * speed;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
-		Matrix4::RotateZ(0) *
-		Matrix4::RotateX(0) *
-		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 
 	UpdateParticles();

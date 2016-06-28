@@ -12,6 +12,9 @@ static const float FogSettingValue = 0.1f;
 static const float RangeMax = 10.0f;
 static const float AngleSettingValue = 18.0f;
 
+//sandstorm‚Ìse‚ª•·‚±‚¦‚Í‚¶‚ß‚éƒtƒHƒO‚Ì‹——£
+static const float SandStormStartPower = 2000.0f;
+
 FogActor::FogActor(IWorld& world) :
 Actor(world),
 position(Vector3::Zero),
@@ -28,6 +31,7 @@ fogStartAngle(70.0f)
 FogActor::~FogActor()
 {
 	SetFogEnable(FALSE);
+	Sound::GetInstance().StopSE(SE_ID::SAND_STORM_SE);
 }
 
 void FogActor::Update()
@@ -64,6 +68,9 @@ void FogActor::Update()
 	fogTotalPower = Math::Clamp(fogTotalPower, 10.0f, LengthMax);
 
 	SetFogStartEnd(0.0f, fogTotalPower);
+
+	if (fogTotalPower < SandStormStartPower)
+		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, (SandStormStartPower - fogTotalPower) / SandStormStartPower);
 }
 void FogActor::Draw() const
 {

@@ -133,17 +133,23 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	//}
 
 	std::vector<Vector3> playerBonePos = static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage();
-	for (int i = 0; i < playerBonePos.size();i+=6) {
-		if (i >= playerBonePos.size())i = playerBonePos.size() - 1;
+	for (int i = 0; i < playerBonePos.size();) {
 		/* PlayerData */
-		Sphere player;
-		player.position = playerBonePos[i];
+		Capsule player;
+		player.startPos = playerBonePos[i];
+		i += 6;
+		if (i >= playerBonePos.size()) {
+			i = playerBonePos.size() - 1;
+		}
+		player.endPos = playerBonePos[i];
 		player.radius = parameter.radius;
 		/* ResultData */
-		colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+		colpara = Collisin::GetInstace().SphereCapsule(bullet,player);
 		if (colpara.colFlag){
 			break;
 		}
+
+		if (i == playerBonePos.size() - 1)break;
 	}
 	colpara.colID = COL_ID::SPHERE_SPHERE_COL;
 
@@ -213,23 +219,30 @@ CollisionParameter Actor::Player_vs_ShipEnemy(const Actor& other) const
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		player = const_cast<Actor*>(&other);
 	});
-	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+	std::vector<Vector3> playerBonePos = static_cast<Player*>(player)->ReturnBonePosStorage();
 
 	//ShipEnemy
 	Sphere shipEnemy;
 	shipEnemy.position = parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*parameter.radius;
 	shipEnemy.radius = parameter.radius;
 
-	for (int i = 0; i < boons.size();i += 5)
-	{
-		if (i >= boons.size())i = boons.size() - 1;
-		Sphere playerSphere;
-		playerSphere.position = boons[i];
-		playerSphere.radius = player->parameter.radius;
-		colpara=Collisin::GetInstace().SphereSphere(shipEnemy, playerSphere);
-		colpara.colPos = boons[i];
-		if (colpara.colFlag)
+	for (int i = 0; i < playerBonePos.size();) {
+		/* PlayerData */
+		Capsule player;
+		player.startPos = playerBonePos[i];
+		i += 6;
+		if (i >= playerBonePos.size()) {
+			i = playerBonePos.size() - 1;
+		}
+		player.endPos = playerBonePos[i];
+		player.radius = parameter.radius;
+		/* ResultData */
+		colpara = Collisin::GetInstace().SphereCapsule(shipEnemy, player);
+		if (colpara.colFlag) {
 			break;
+		}
+
+		if (i == playerBonePos.size() - 1)break;
 	}
 	colpara.colID = COL_ID::PLAYER_SHIPENEMY_COL;
 	return colpara;
@@ -242,21 +255,29 @@ CollisionParameter Actor::Player_vs_DoragonSpear(const Actor& other) const
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		player = const_cast<Actor*>(&other);
 	});
-	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+	std::vector<Vector3> playerBonePos = static_cast<Player*>(player)->ReturnBonePosStorage();
 	Capsule spear;
 	spear.startPos = other.parameter.mat.GetPosition() - other.parameter.mat.GetLeft().Normalized()*10.0f;
 	spear.endPos = other.parameter.mat.GetPosition() + other.parameter.mat.GetLeft().Normalized()*30.0f;
 	spear.radius = other.parameter.radius;
 
-	for (int i = 0; i < boons.size(); i += 12)
-	{
-		if (i >= boons.size())i = boons.size() - 1;
-		Sphere playerSphere;
-		playerSphere.position = boons[i];
-		playerSphere.radius = player->parameter.radius;
-		colpara = Collisin::GetInstace().SphereCapsule(playerSphere, spear);
-		if (colpara.colFlag)
+	for (int i = 0; i < playerBonePos.size();) {
+		/* PlayerData */
+		Capsule player;
+		player.startPos = playerBonePos[i];
+		i += 6;
+		if (i >= playerBonePos.size()) {
+			i = playerBonePos.size() - 1;
+		}
+		player.endPos = playerBonePos[i];
+		player.radius = parameter.radius;
+		/* ResultData */
+		colpara = Collisin::GetInstace().CapsuleCapsule(spear, player);
+		if (colpara.colFlag) {
 			break;
+		}
+
+		if (i == playerBonePos.size() - 1)break;
 	}
 
 	colpara.colID = COL_ID::PLAYER_DORAGONSPEAR_COL;
