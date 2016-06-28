@@ -88,7 +88,7 @@ void StageGenerator::AddActor()
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
 		break;
 	case 6: // ‘D
-		if (isGameScene_)
+		if (!isGameScene_)
 		world.Add(ACTOR_ID::SHIP_ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, 2.4f, position, rotation));
 		break;
 	default:

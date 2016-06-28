@@ -32,8 +32,8 @@ void GamePlayScene::Initialize()
 {
 	boonPositions.clear();
 	mIsEnd = false;
-	player = std::make_shared<Player>(wa);
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, player);
+	//player = std::make_shared<Player>(wa);
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 
 //	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)

@@ -13,7 +13,7 @@ class  EventScene :public IScene
 		EVENT_DRAGON_END,
 		EVENT_STAGE_IN,
 		EVENT_GONG,
-		TITLE_END
+		EVENT_END
 	};
 
 public:
