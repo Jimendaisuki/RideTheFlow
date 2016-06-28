@@ -33,6 +33,22 @@ public:
 		return dashPosStorage;
 	}
 
+	void SpearHitActionStart(){
+		spearHit = !spearHit;
+		for (int i = 0; i < 109; i++) {
+			deadBeforeLocalMatrix[i] = Matrix4::ToMatrix4(MV1GetFrameLocalMatrix(modelHandle, i + 1));
+		}
+		animIndex = MV1AttachAnim(modelHandle, 4, -1, FALSE);
+		totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+
+		tp.animTime = 0.0f;
+		animBlend = 0.0f;
+
+		tp.tackleFlag = false;
+		tp.dashFlag = false;
+		spearEndFlag = false;
+	}
+
 	void Damage(float damage,bool allow = false);
 
 	bool ReturnDead(){ return dead; }
@@ -42,6 +58,9 @@ public:
 private:
 	Vector3 eventVec;
 
+	bool spearHit = false;
+	bool spearEndFlag = false;
+	Vector3 spearVec = Vector3(0, 0, 0);
 	
 	bool dead2 = false;
 	Matrix4* deadBeforeLocalMatrix;
