@@ -23,7 +23,7 @@ static const int REFRESH_RATE = 60;
 ///<summary>
 /// ゲームタイトル
 ///</summary>
-#define GAMENAME "桐生"
+#define GAMENAME "気龍"
 
 ///<summary>
 /// デフォルトのＢＧＭボリューム

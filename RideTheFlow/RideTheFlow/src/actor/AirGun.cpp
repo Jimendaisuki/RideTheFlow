@@ -4,6 +4,7 @@
 #include "../graphic/Model.h"
 #include "../math/Quaternion.h"
 #include "../sound/Sound.h"
+#include "../WindAndTornadoSetting.h"
 
 AirGun::AirGun(IWorld& world, Vector3 position_, Vector3 velocity_) :
 Actor(world),
@@ -28,9 +29,9 @@ AirGun::~AirGun(){
 
 }
 void AirGun::Update(){
-	range += Vector3::Length(velocity * 1000.0f * Time::DeltaTime);
-	position += velocity * 1000.0f * Time::DeltaTime;
-	if (range > 1000.0f){
+	range += Vector3::Length(velocity * WindBallSpeed * Time::DeltaTime);
+	position += velocity * WindBallSpeed * Time::DeltaTime;
+	if (range > WindBallLimitLength){
 		parameter.isDead = true;
 	}
 

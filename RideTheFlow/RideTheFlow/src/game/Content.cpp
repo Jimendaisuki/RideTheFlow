@@ -132,6 +132,18 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("s_parts9.mv1", SHIP_BREAK_9_MODEL, async);
 	model.Load("s_parts11.mv1", SHIP_BREAK_11_MODEL, async);
 
+	model.Load("isle1_break1.mv1", MODEL_ID::ISLE_1_BREAK_1_MODEL, async);
+	model.Load("isle1_break3.mv1", MODEL_ID::ISLE_1_BREAK_3_MODEL, async);
+	model.Load("isle1_break4.mv1", MODEL_ID::ISLE_1_BREAK_4_MODEL, async);
+	model.Load("isle2_break1.mv1", MODEL_ID::ISLE_2_BREAK_1_MODEL, async);
+	model.Load("isle2_break2.mv1", MODEL_ID::ISLE_2_BREAK_2_MODEL, async);
+	model.Load("isle2_break3.mv1", MODEL_ID::ISLE_2_BREAK_3_MODEL, async);
+	model.Load("isle2_break4.mv1", MODEL_ID::ISLE_2_BREAK_4_MODEL, async);
+	model.Load("isle3_break1.mv1", MODEL_ID::ISLE_3_BREAK_1_MODEL, async);
+	model.Load("isle3_break2.mv1", MODEL_ID::ISLE_3_BREAK_2_MODEL, async);
+	model.Load("isle3_break3.mv1", MODEL_ID::ISLE_3_BREAK_3_MODEL, async);
+	model.Load("isle3_break4.mv1", MODEL_ID::ISLE_3_BREAK_4_MODEL, async);
+
 	WorkFolder::SetWorkFolder("res/Model2D/");
 	
 	model.Load2D("smoke_black.png", MODEL_ID::SMOKE_2D, 2, Point(1, 2), Point(300, 200));

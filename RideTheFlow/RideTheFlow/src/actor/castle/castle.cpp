@@ -17,6 +17,7 @@
 #include "CastleVaristor.h"
 #include "../../math/Quaternion.h"
 #include "../../sound/Sound.h"
+#include "../../WindAndTornadoSetting.h"
 
 Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY) :
 Actor(world),
@@ -77,7 +78,9 @@ castleUpTimer(0.0f)
 		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 		, parameter.radius * 2, *this));
 	//城出現時のパーティクルを生成
-	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position,12));
+	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position, CastleAddSmokeNum, CastleAddSmokeSize, CastleAddSmokeSizePlusMin, CastleAddSmokeSizePlusMax));
+	Sound::GetInstance().PlaySE(SE_ID::CONSTRUCTION_SE);
+
 	mRank = rank;
 	mRotateY = rotateY;
 
@@ -115,6 +118,7 @@ void Castle::Update()
 		parameter.isDead = true;
 		//がれきを飛ばす
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
+		Sound::GetInstance().PlaySE(SE_ID::CASTLE_BREAK_SE);
 	}
 
 	castleUpTimer += 20.0f* Time::DeltaTime;
@@ -167,16 +171,24 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL&&damage)
 	{
 		parameter.HP -= CastleDamegeTornado;
+		//ダメージを喰らった時のパーティクル
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		//ダメージ食らった時の音
+		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		damage = false;
 	}
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
 	{
 		parameter.HP -= CastleDamegeWind;
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		damage = false;
 	}
 	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
 	{
 		parameter.HP -= CastleDamageWindBall;
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		damage = false;
 	}
 

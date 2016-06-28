@@ -6,7 +6,7 @@
 class CastleAddParticle :public Particle
 {
 public:
-	CastleAddParticle(const Vector3& position_);
+	CastleAddParticle(const Vector3& position_, float sizeBase, float sizeAddMin, float sizeAddMax );
 
 	void OnUpdate() override;
 	void Draw() const override;

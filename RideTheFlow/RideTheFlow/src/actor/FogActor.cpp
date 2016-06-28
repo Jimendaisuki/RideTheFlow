@@ -34,11 +34,14 @@ FogActor::~FogActor()
 	Sound::GetInstance().StopSE(SE_ID::SAND_STORM_SE);
 }
 
+float Length;
+
 void FogActor::Update()
 {
 	position = Camera::GetInstance().Position.Get();
 	//原点からの距離
 	float length = position.Length();
+	Length = length;
 	//カメラの前向き
 	Vector3 front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
 	//原点へ向かう方向
@@ -74,7 +77,7 @@ void FogActor::Update()
 }
 void FogActor::Draw() const
 {
-	DrawFormatString(900, 10, Vector3::Black.ToColor(), "fogTotalPower : %f", fogTotalPower);
+	DrawFormatString(900, 10, Vector3::Black.ToColor(), "fogTotalPower : %f", Length);
 }
 void FogActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

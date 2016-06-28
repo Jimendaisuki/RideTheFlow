@@ -34,6 +34,8 @@
 #include "../actor/castle/HomeActor.h"
 #include "../actor/StageGenerator.h"
 #include "../CloudSetting.h"
+#include "../actor/castle/CastleManager.h"
+#include "../WindAndTornadoSetting.h"
 
 static const Vector3 House1Pos = Vector3(0, -680, 0);
 
@@ -72,7 +74,8 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
+	//wa.Add(ACTOR_ID::BEGIN_ACTOR, std::make_shared<CastleManager>(wa));
+	//wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
@@ -113,7 +116,7 @@ void CreditScene::Initialize()
 	armyCreateTimer = 0.0f;
 	armyCount = 0;
 
-	Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
+	//Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
 }
 
 void CreditScene::Update()
@@ -174,6 +177,21 @@ void CreditScene::Draw() const
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100),1.0f, Vector3::Zero, Vector3(0.05f), diffuse, specu);
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100), Vector3::Zero, Vector3(0.1f));
 
+	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, Vector3(500, 100, 800), Vector3::Zero, Vector3(8.0f));
+
+	Model::GetInstance().Draw(MODEL_ID::ISLE_1_BREAK_1_MODEL, Vector3(0,  -100,   800) + Vector3(0,1000,0), Vector3::Zero, Vector3(8.0f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_1_BREAK_3_MODEL, Vector3(0,  -100,   800) + Vector3(0,200,0), Vector3::Zero, Vector3(8.0f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_1_BREAK_4_MODEL, Vector3(0,  -100,   800) + Vector3(0,200,0), Vector3::Zero, Vector3(8.0f));
+																		  		
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_1_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_2_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_3_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_4_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//																	  		
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_1_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_2_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_3_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_4_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
 
 	wa.Draw();
 

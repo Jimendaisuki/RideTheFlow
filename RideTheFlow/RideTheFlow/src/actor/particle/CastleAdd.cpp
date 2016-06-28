@@ -6,15 +6,20 @@
 #include "WindSetting.h"
 #include "../../time/Time.h"
 
-CastleAdd::CastleAdd(IWorld& world, const Vector3& position_, int emissiveNum) :
-Actor(world)
+#include "../../WindAndTornadoSetting.h"
+
+CastleAdd::CastleAdd(IWorld& world, const Vector3& position_, int emissiveNum, float sizeBase_, float sizeAddMin_, float sizeAddMax_) :
+Actor(world),
+sizeBase(sizeBase_),
+sizeAddMin(sizeAddMin_),
+sizeAddMax(sizeAddMax_)
 {
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 0.0f;
 	ps_parameter.position = position_;
 	ps_parameter.intervalSec = 10000.0f;
-	ps_parameter.lifeTimeLimit = 2.0f;
+	ps_parameter.lifeTimeLimit = SmokeLifeLimit;
 	ps_parameter.sameEmissiveNum = emissiveNum;
 }
 CastleAdd::~CastleAdd()
@@ -46,5 +51,6 @@ void CastleAdd::Emissive()
 		Vector3(
 		Random::GetInstance().Range(-1.0f, 1.0f),
 		Random::GetInstance().Range(-0.1f, 0.1f),
-		Random::GetInstance().Range(-1.0f, 1.0f)) * 30.0f));
+		Random::GetInstance().Range(-1.0f, 1.0f)) * 30.0f,
+		sizeBase, sizeAddMin, sizeAddMax));
 }
