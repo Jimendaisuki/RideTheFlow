@@ -194,7 +194,7 @@ Player::~Player() {
 
 
 void Player::Update() {
-	parameter.HP -= 5.0f * Time::DeltaTime;
+	//parameter.HP -= 5.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 		moveFlag = !moveFlag;
 	}
