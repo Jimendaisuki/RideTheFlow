@@ -91,15 +91,19 @@ const float dashHealSpeed = 2.0f;
 //ノーマル時or停止時からの加速度
 const float normalSpeedAccele = 1.0f;
 
+const float tackleMinus = 3.0f;
+
 /************************************************************************************************************************/
 
-Player::Player(IWorld& world, bool title_,Vector3 position_) :
+Player::Player(IWorld& world, bool title_,bool event_,Vector3 position_,Vector3 eventVec_) :
 Actor(world),
 position(position_),
 windFlowPtr(NULL),
 tornadoFlag(false),
 tornadoPtr(NULL),
-title(title_)
+title(title_),
+event(event_),
+eventVec(eventVec_)
 {
 	//paramterの初期化
 	parameter.isDead = false;
@@ -162,7 +166,10 @@ title(title_)
 	//初期ボーン
 	vertexVec = new Vector3[boneCount];
 	//posStorageに何もないときのボーンの方向
-	nonPosStorageVec = Vector3(0, 0, 1);
+	if (!event)
+		nonPosStorageVec = Vector3(0, 0, 1);
+	else
+		nonPosStorageVec = -eventVec.Normalized();
 	for (int i = 0; i < boneCount; i++) {
 		//ボーンの状態をリセット
 		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
@@ -180,7 +187,7 @@ title(title_)
 	dashSpeed = 1.0f;
 	//加速できる時間
 	dashTime = 0.0f;
-	if (!title){
+	if (!title && !event){
 		//ダッシュのスタミナゲージUIを追加
 		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
 	}
@@ -198,8 +205,8 @@ void Player::Update() {
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 		moveFlag = !moveFlag;
 	}
-	if (title)
-		moveFlag = !title;
+	if (title || event)
+		moveFlag = false;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::MASTER_CASTLE_ACTOR, COL_ID::PLAYER_CASTLE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::DORAGONSPEAR_ACTOR, COL_ID::PLAYER_DORAGONSPEAR_COL);
@@ -232,7 +239,7 @@ void Player::Update() {
 				padInputFlag = true;
 		}
 
-		if (!title){
+		if (!title && !event){
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
@@ -290,7 +297,13 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if (!title && (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)) && !tp.tackleFlag) {
+		if ((!title && !event) && 
+			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || 
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)) 
+			&& !tp.tackleFlag
+			&& tackleMinus <= dashMaxTime - dashTime
+			&& !dashHealFlag) {
+			dashTime += tackleMinus;
 				tp.tackleFlag = true;
 				tornadoFlag = false;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
@@ -327,7 +340,7 @@ void Player::Update() {
 		}
 
 		tp.dashFlag = false;
-		if (!title && !tp.tackleFlag) {
+		if ((!title && !event) && !tp.tackleFlag) {
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM7)) {
 				if (!dashHealFlag) {
 					tornadoFlag = false;
@@ -484,7 +497,6 @@ void Player::Update() {
 			dashPosStorage.clear();
 			tornadoPosStorage.clear();
 			dashSpeed -= dashAccele * Time::DeltaTime;
-			dashTime -= dashHealSpeed * Time::DeltaTime;
 
 			// 再生時間を進める
 			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
@@ -547,6 +559,7 @@ void Player::Update() {
 
 		playerRot.SetUp(up);
 		playerRot.SetLeft(left);
+		if (event)position += eventVec.Normalized() * speed * Time::DeltaTime;	
 		//マトリックスの再計算
 		parameter.mat =
 			Matrix4::Scale(scale) *
@@ -663,6 +676,12 @@ void Player::Update() {
 	}
 	if (dead2 || (tp.animTime > 180.0f && dead)) {
 		position -= Vector3(0.0f, 100.0f, 0.0f) * Time::DeltaTime;
+	}
+
+	if (allowNoDamageFlag)allowNoDamageTime += Time::DeltaTime;
+	if (allowNoDamageTime > 0.5f) {
+		allowNoDamageFlag = false;
+		allowNoDamageTime = 0.0f;
 	}
 }
 void Player::Draw() const {
@@ -835,7 +854,7 @@ void Player::Draw() const {
 		//if (tackleFlag)
 		//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
-		if (!title)
+		if (!title && !event)
 			ParameterDraw();
 
 		//if (bonePosStorage.size() > 1)
@@ -986,8 +1005,10 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::ARROW_BULLET_ACTOR)
 	{
-		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+		if (!allowNoDamageFlag) {
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+		}
 	}
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&
 		other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR&&
@@ -1007,4 +1028,12 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 		Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
+}
+
+void Player::Damage(float damage, bool allow)
+{
+	if(!allow || !allowNoDamageFlag)
+	parameter.HP -= damage;
+
+	if (allow)allowNoDamageFlag = true;
 }

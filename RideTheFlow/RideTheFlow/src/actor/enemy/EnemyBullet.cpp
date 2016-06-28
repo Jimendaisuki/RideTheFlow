@@ -125,7 +125,7 @@ void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
-		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(ArrowPower);
+		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(ArrowPower,true);
 		parameter.isDead = true;
 	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)

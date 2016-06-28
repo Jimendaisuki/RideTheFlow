@@ -16,7 +16,7 @@ struct TackleParameter{
 class Player :public Actor, public std::enable_shared_from_this<Player>
 {
 public:
-	Player(IWorld& world,bool title_ = false,Vector3 position_ = Vector3(0,0,0));
+	Player(IWorld& world,bool title_ = false,bool event_ = false,Vector3 position_ = Vector3(0,0,0),Vector3 eventVec_ = Vector3(0, 0, 0));
 	~Player();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -33,20 +33,24 @@ public:
 		return dashPosStorage;
 	}
 
-	void Damage(float damage)
-	{
-		parameter.HP -= damage;
-	}
+	void Damage(float damage,bool allow = false);
+
 	bool ReturnDead(){ return dead; }
 
+	bool OverHeat() { return dashHealFlag; }
+
 private:
+	Vector3 eventVec;
+
 	bool dead2 = false;
 	Matrix4* deadBeforeLocalMatrix;
 	int deadMatrixSet = 0;
 
+	bool allowNoDamageFlag = false;
+	float allowNoDamageTime = 0.0f;
 	bool dashAfter = false;
 	float dashAfterTime = 0.0f;
-	bool title;
+	bool title,event;
 	//デバック表示まとめ
 	void ParameterDraw()const;
 	//デバックコード(デバック表示されているもののボーンのナンバー)
