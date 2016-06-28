@@ -16,7 +16,7 @@ struct TackleParameter{
 class Player :public Actor, public std::enable_shared_from_this<Player>
 {
 public:
-	Player(IWorld& world,bool title_ = false);
+	Player(IWorld& world,bool title_ = false,Vector3 position_ = Vector3(0,0,0));
 	~Player();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -40,6 +40,7 @@ public:
 	bool ReturnDead(){ return dead; }
 
 private:
+	bool dead2 = false;
 	Matrix4* deadBeforeLocalMatrix;
 	int deadMatrixSet = 0;
 

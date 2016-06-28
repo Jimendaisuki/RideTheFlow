@@ -93,9 +93,9 @@ const float normalSpeedAccele = 1.0f;
 
 /************************************************************************************************************************/
 
-Player::Player(IWorld& world, bool title_) :
+Player::Player(IWorld& world, bool title_,Vector3 position_) :
 Actor(world),
-position(Vector3(0, 0, 0)),
+position(position_),
 windFlowPtr(NULL),
 tornadoFlag(false),
 tornadoPtr(NULL),
@@ -194,6 +194,7 @@ Player::~Player() {
 
 
 void Player::Update() {
+	//parameter.HP -= 5.0f * Time::DeltaTime;
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 		moveFlag = !moveFlag;
 	}
@@ -312,6 +313,8 @@ void Player::Update() {
 					tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
 				}
 			}
+
+			tp.dashFlag = false;
 			tp.tackleColFlag = false;
 			tp.airGunFlag = false;
 		}
@@ -326,9 +329,11 @@ void Player::Update() {
 		tp.dashFlag = false;
 		if (!title && !tp.tackleFlag) {
 			if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM7)) {
-				tornadoFlag = false;
-				dashAfter = true;
-				dashAfterTime = 0.0f;
+				if (!dashHealFlag) {
+					tornadoFlag = false;
+					dashAfter = true;
+					dashAfterTime = 0.0f;
+				}
 			}
 
 			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7)) && !tornadoFlag) {
@@ -365,7 +370,14 @@ void Player::Update() {
 
 					bool createTornado = false;
 					if (tornadoPosStorage.size() > 4) {
-						if (Vector3::Length(position - dashPosStorage[0]) < parameter.radius + tornadoCreateRadius) {
+						Sphere s;
+						Capsule c;
+						s.position = position;
+						s.radius = parameter.radius;
+						c.startPos = Vector3(dashPosStorage[0].x, -10000.0f, dashPosStorage[0].z);
+						c.endPos = Vector3(dashPosStorage[0].x, 10000.0f, dashPosStorage[0].z);
+						c.radius = tornadoCreateRadius;
+						if (Collisin::GetInstace().SphereCapsule(s,c).colFlag) {
 							createTornado = true;
 						}
 					}
@@ -450,8 +462,10 @@ void Player::Update() {
 			Vector3 cross = Vector3::Cross(beforeVec.Normalized(), trueVec.Normalized()).Normalized();
 
 			float crossAngle = Vector3::Inner(trueVec, beforeVec);
-			if (crossAngle >= 0)crossAngle = ryuuRotateAngle;
-			else crossAngle = -ryuuRotateAngle;
+			float rotateAngle = ryuuRotateAngle;
+			if (tp.dashFlag)rotateAngle /= 2.0f;
+			if (crossAngle >= 0)crossAngle = rotateAngle;
+			else crossAngle = -rotateAngle;
 			forntVec = (Vector3::Length(trueVec) *
 				beforeVec *
 				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
@@ -628,15 +642,28 @@ void Player::Update() {
 			animIndex = MV1AttachAnim(modelHandle, 2, -1, FALSE);
 		}
 		else {
-			position -= Vector3(0.0f, 100.0f, 0.0f) * Time::DeltaTime;
 			animBlend += 0.5f * Time::DeltaTime;
 			animBlend = Math::Min(animBlend, 1.0f);
 			if (tp.animTime <
-				MV1GetAttachAnimTotalTime(modelHandle, animIndex))
-				tp.animTime += 50.0f * Time::DeltaTime;
+				MV1GetAttachAnimTotalTime(modelHandle, animIndex)) {
+				tp.animTime += 60.0f * Time::DeltaTime;
+			}
+			else {
+				if (!dead2) {
+					tp.animTime = 0;
+					animBlend = 1.0f;
+					animIndex = MV1AttachAnim(modelHandle, 3, -1, FALSE);
+					dead2 = true;
+				}
+				else {
+					tp.animTime = 0;
+				}
+			}
 		}
 	}
-
+	if (dead2 || (tp.animTime > 180.0f && dead)) {
+		position -= Vector3(0.0f, 100.0f, 0.0f) * Time::DeltaTime;
+	}
 }
 void Player::Draw() const {
 	if (!dead) {
