@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\UIactor\BloodPlayer.h" />
     <ClInclude Include="src\actor\castle\CastleManager.h" />
     <ClInclude Include="src\actor\castle\CastleVaristor.h" />
     <ClInclude Include="src\actor\castle\HomeActor.h" />

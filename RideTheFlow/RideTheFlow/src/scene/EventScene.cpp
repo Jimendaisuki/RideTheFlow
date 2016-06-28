@@ -66,7 +66,7 @@ EventScene::~EventScene()
 //開始
 void EventScene::Initialize()
 {
-	wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, false));
+	wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, false, true, Vector3::Zero, Vector3::Forward));
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 
 	timer = 0.0f;
@@ -105,7 +105,7 @@ void EventScene::Initialize()
 	velocity = Vector3::Zero;
 	t = 1;
 
-	//Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
+	Sound::GetInstance().PlayBGM(BGM_ID::INTRO_BGM);
 
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	FadePanel::GetInstance().SetInTime(3.0f);
@@ -115,9 +115,6 @@ void EventScene::Update()
 {
 	/* 各種更新 */
 	wo.Update();
-
-	//if (!Sound::GetInstance().IsPlayBGM())
-	//	Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
 
 	/* カメラ設定 */
 	Vector3 playerPos = wo.GetPlayer()->GetParameter().mat.GetPosition();
@@ -132,7 +129,7 @@ void EventScene::Update()
 		{
 			fogTime = 0;
 			fogPeriod = Random::GetInstance().Range(1.0f, 3.0f);
-			correctionFog - Random::GetInstance().Range(30.0f, 50.0f);
+			correctionFog = Random::GetInstance().Range(30.0f, 50.0f);
 		}
 
 		targetPos = playerPos;
@@ -189,9 +186,11 @@ void EventScene::Update()
 		break;
 	case EventScene::EVENT_GONG:
 		Sound::GetInstance().PlaySE(SE_ID::GONG_SE);
-		status = TITLE_END;
+		status = EVENT_END;
 		break;
-	default:
+	case EventScene::EVENT_END:
+		if (!Sound::GetInstance().IsPlaySE(SE_ID::GONG_SE))
+			mIsEnd = true;
 		break;
 	}
 
@@ -285,7 +284,7 @@ void EventScene::End()
 	SetLightPosition(Vector3::Zero.ToVECTOR());
 	SetLightDirection(Vector3(0.5f, -0.5f, -0.5f).ToVECTOR());
 	SetFogEnable(FALSE);
-	Sound::GetInstance().StopBGM();
+	//Sound::GetInstance().StopSE();
 }
 
 // 竜巻計算用

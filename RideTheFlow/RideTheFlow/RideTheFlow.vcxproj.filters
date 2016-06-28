@@ -692,7 +692,7 @@
     <ClInclude Include="src\BGMVolumeSetting.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\WindAndTornadoSetting.h">
+    <ClInclude Include="src\UIactor\BloodPlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

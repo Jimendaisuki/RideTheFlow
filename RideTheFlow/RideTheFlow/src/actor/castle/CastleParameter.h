@@ -35,7 +35,7 @@ const int SpawnMaxShipEnemey = 5;
 //é‚Ì‘å–C‚ªUŒ‚‚µ‚Ä‚­‚é”ÍˆÍ
 const float CastleCannonAttackRange = 3200.0f;
 //é‚Ì‘å–C‚ÌUŒ‚ƒN[ƒ‹ƒ^ƒCƒ€(•b)
-const float CastleCannonSecondAttack = 15.0f;
+const float CastleCannonSecondAttack = 5.0f;
 //é‚ªˆê‰ñ‚Éo‚·‘å–C‚Ì’e‚Ì”
 const int CastleCannonNumber = 1;
 //é‚Ì‘å–C‚Ìù‰ñ‘¬“x

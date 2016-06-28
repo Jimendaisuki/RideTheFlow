@@ -62,7 +62,7 @@ void VaristorBullet::Update()
 		vec = Vector3::Lerp(vec, windVec, VaristorWindPercentage / 100.0f);
 	//ˆÚ“®
 	mPosition += vec*VaristorSpeed*Time::DeltaTime;
-	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
+	if (parameter.mat.GetPosition().y <= -3700) parameter.isDead = true;
 
 	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
 
