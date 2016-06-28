@@ -62,7 +62,7 @@ void CannonBullet::Update()
 		if (isWindCol)
 			vec = Vector3::Lerp(vec, windVec, CannonWindPercentage / 100.0f);
 
-	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
+		if (parameter.mat.GetPosition().y <= -4000) parameter.isDead = true;
 
 	noDeadTimer += Time::DeltaTime;
 
@@ -95,10 +95,6 @@ void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.isDead = true;
 	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
-	{
-		parameter.isDead = true;
-	}
-	else
 	{
 		parameter.isDead = true;
 	}

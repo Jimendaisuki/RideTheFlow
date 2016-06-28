@@ -24,15 +24,15 @@ isGameScene(isGameScene_)
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
 
-	if (!isGameScene)
+	if (!isGameScene_)
 		return;
 
 	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world, 
 		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
 		parameter.radius, *this));
-	world .Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f)
-		, 0.0f,0.0f, true, false,1.0f, this));
+	//world .Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, parameter.mat.GetPosition()+Vector3(0.0f,62.0f*scale.x,0.0f)
+	//	, 0.0f,0.0f, true, false,1.0f, this));
 }
 
 Froatinglsland::~Froatinglsland()

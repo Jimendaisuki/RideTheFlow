@@ -28,7 +28,7 @@ mPosition(position),
 mScale(30.0f),
 mAttackTime(0.0f),
 castleDown(true),
-isLook(false),
+isLook(true),
 InvincibleTimer(0.0f),
 damage(true),
 startPos(Vector3::Zero),
@@ -144,6 +144,7 @@ void Castle::Update()
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
+	isLook = true;
 }
 
 void Castle::Draw() const
