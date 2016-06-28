@@ -42,6 +42,7 @@ public:
 private:
 	Vector3 eventVec;
 
+	
 	bool dead2 = false;
 	Matrix4* deadBeforeLocalMatrix;
 	int deadMatrixSet = 0;

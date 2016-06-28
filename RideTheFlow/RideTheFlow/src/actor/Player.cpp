@@ -20,7 +20,7 @@
 #include "../input/GamePad.h"
 #include "enemy\DoragonSpearEnemy.h"
 #include "../sound/Sound.h"
-
+const float spearDamage = 5.0f;
 
 //ボーンの数
 const int boneCount = 38;
@@ -92,6 +92,10 @@ const float dashHealSpeed = 2.0f;
 const float normalSpeedAccele = 1.0f;
 
 const float tackleMinus = 3.0f;
+
+const float hpHeal = 0.1f;
+
+const float MaxHP = 10.0f;
 
 /************************************************************************************************************************/
 
@@ -220,8 +224,8 @@ void Player::Update() {
 
 	if (parameter.HP <= 0)dead = true;
 	if (!dead) {
-		if (parameter.HP < 10.0f)
-			parameter.HP += 0.1f * Time::DeltaTime;
+		if (parameter.HP < MaxHP)
+			parameter.HP += hpHeal * Time::DeltaTime;
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 
 		auto input = DINPUT_JOYSTATE();
@@ -1017,6 +1021,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear())
 		{
 			//龍撃槍ダメージ
+			//Damage(spearDamage);
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
@@ -1024,6 +1029,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&colpara.colFlag)
 	{
+		//Damage(spearDamage);
 		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 		Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
@@ -1035,5 +1041,8 @@ void Player::Damage(float damage, bool allow)
 	if(!allow || !allowNoDamageFlag)
 	parameter.HP -= damage;
 
-	if (allow)allowNoDamageFlag = true;
+	if (allow) {
+		parameter.HP -= damage;
+		allowNoDamageFlag = true;
+	}
 }
