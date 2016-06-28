@@ -78,7 +78,7 @@ castleUpTimer(0.0f)
 		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 		, parameter.radius * 2, *this));
 	//城出現時のパーティクルを生成
-	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position));
+	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position,12));
 	mRank = rank;
 	mRotateY = rotateY;
 

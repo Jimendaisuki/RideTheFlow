@@ -9,7 +9,8 @@ class CastleAdd :public Actor, public ParticleSystem
 {
 public:
 	//=======Actor======//
-	CastleAdd(IWorld& world, const Vector3& position_);
+	//ワールド、座標、同時生成数
+	CastleAdd(IWorld& world, const Vector3& position_, int emissiveNum);
 	~CastleAdd();
 	virtual void Update() override;
 	virtual void Draw() const override;

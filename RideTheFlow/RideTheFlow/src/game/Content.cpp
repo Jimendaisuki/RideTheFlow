@@ -6,6 +6,7 @@
 #include "../Def.h"
 #include "../math/Math.h"
 #include "../SEVolumeSetting.h"
+#include "../BGMVolumeSetting.h"
 
 // âÊëúÇì«Ç›çûÇﬁ
 void Content::LoadSprite(Sprite& sprite, Model& model)
@@ -142,12 +143,12 @@ void Content::LoadModel(Model& model, bool async)
 void Content::LoadSound(Sound& sound)
 {
 	WorkFolder::SetWorkFolder("res/Sound/GAME_BGM/");
-	sound.LoadBGM("clear_bgm.mp3", BGM_ID::CLEAR_BGM);
-	sound.LoadBGM("failed_bgm.mp3", BGM_ID::FAILED_BGM);
-	sound.LoadBGM("ingame_bgm.mp3", BGM_ID::INGAME_BGM);
-	sound.LoadBGM("intro_bgm.mp3", BGM_ID::INTRO_BGM);
-	sound.LoadBGM("menu_bgm.mp3", BGM_ID::MENU_BGM);
-	sound.LoadBGM("title_bgm.mp3", BGM_ID::TITLE_BGM);
+	sound.LoadBGM("clear_bgm.mp3", BGM_ID::CLEAR_BGM,CLEAR_BGM_VOL);
+	sound.LoadBGM("failed_bgm.mp3", BGM_ID::FAILED_BGM, FAILED_BGM_VOL);
+	sound.LoadBGM("ingame_bgm.mp3", BGM_ID::INGAME_BGM, INGAME_BGM_VOL);
+	sound.LoadBGM("intro_bgm.mp3", BGM_ID::INTRO_BGM, INTRO_BGM_VOL);
+	sound.LoadBGM("menu_bgm.mp3", BGM_ID::MENU_BGM, MENU_BGM_VOL);
+	sound.LoadBGM("title_bgm.mp3", BGM_ID::TITLE_BGM, TITLE_BGM_VOL);
 
 	WorkFolder::SetWorkFolder("res/Sound/SE/");
 	sound.LoadSE("arrowfire_se.wav", SE_ID::ARROW_FIRE_SE, ARROW_FIRE_SE_VOL);

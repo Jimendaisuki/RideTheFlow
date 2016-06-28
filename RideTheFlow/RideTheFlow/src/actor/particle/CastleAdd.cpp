@@ -6,7 +6,7 @@
 #include "WindSetting.h"
 #include "../../time/Time.h"
 
-CastleAdd::CastleAdd(IWorld& world, const Vector3& position_) :
+CastleAdd::CastleAdd(IWorld& world, const Vector3& position_, int emissiveNum) :
 Actor(world)
 {
 	parameter.id = ACTOR_ID::PARTICLE_ACTOR;
@@ -15,7 +15,7 @@ Actor(world)
 	ps_parameter.position = position_;
 	ps_parameter.intervalSec = 10000.0f;
 	ps_parameter.lifeTimeLimit = 2.0f;
-	ps_parameter.sameEmissiveNum = 4;
+	ps_parameter.sameEmissiveNum = emissiveNum;
 }
 CastleAdd::~CastleAdd()
 {
