@@ -11,7 +11,8 @@ positionHeight(positionHeight_),
 rotate(Vector3::Zero)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 0.03f * dashPositions.size();
+	//lifeParam.lifeTimeLimit = 0.02f * dashPositions.size();
+	lifeParam.lifeTimeLimit = 1.0f;
 	lifeParam.isDead = false;
 
 	moveParam.pos = dashPositions.at(0);
@@ -31,19 +32,24 @@ void DashBlueLineParticle::OnUpdate()
 	if (size < 3)
 		return;
 
+	lifeParam.lifeTime += Time::DeltaTime * 2.0f;
 	//ダッシュの軌跡をなぞる
-	int num = size - (size * (lifeParam.lifeTime / lifeParam.lifeTimeLimit));
+	//int num = size - (size * (lifeParam.lifeTime / lifeParam.lifeTimeLimit));
+	int num = size * (lifeParam.lifeTime / lifeParam.lifeTimeLimit);
+
 	//範囲外へ行かないように止める
-	if (num > size - 1 || num < 0)
+	if (num < 0)
 		return;
 
+	if (num > size - 1)
+		num = size - 1;
 	//表示する座標を計算　ダッシュの軌跡からランダムな値分ずらす
 	moveParam.pos = dashPositions.at(num) + randomPosition;
 	//Yの値は渡されてきたもので固定
 	moveParam.pos.y = positionHeight;
 
 	//アルファ値計算
-	drawParam.alpha = 1.0f * Math::Cos((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 90.0f);
+	//drawParam.alpha = 1.0f * Math::Cos((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 90.0f);
 
 	//最初のうちは向きの計算をしない
 	if (num < 1)

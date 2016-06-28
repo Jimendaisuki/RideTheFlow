@@ -10,6 +10,7 @@
 #include "../../math/Quaternion.h"
 #include "../../UIactor/Effect.h"
 #include "../Player.h"
+#include "../../sound/Sound.h"	
 
 
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
@@ -42,6 +43,8 @@ noDead(false)
 	distance = (mToPoint + mRandomTarget) - mPosition;
 
 	parent = &parent_;
+
+	Sound::GetInstance().PlaySE(SE_ID::ARROW_FIRE_SE);
 }
 EnemyBullet::~EnemyBullet()
 {

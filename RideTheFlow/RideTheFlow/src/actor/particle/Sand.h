@@ -4,12 +4,11 @@
 #include "../Player.h"
 #include "ParticleSystem.h"
 
-//É_ÉbÉVÉÖéûÇ…ê∂ê¨Ç∑ÇÈó¨ÇÍ
 class Sand :public Actor, public ParticleSystem
 {
 public:
 	//=======Actor======//
-	Sand(IWorld& world, const Vector3& position_);
+	Sand(IWorld& world, const Vector3& position_,const Vector3& vec_);
 	~Sand();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -20,5 +19,7 @@ public:
 	virtual void Emissive() override;
 
 private:
-
+	Vector3 randMin;
+	Vector3 randMax;
+	Vector3 emissiveVec;
 };

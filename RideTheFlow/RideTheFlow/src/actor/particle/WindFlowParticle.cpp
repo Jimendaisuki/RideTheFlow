@@ -7,7 +7,7 @@ WindFlowParticle::WindFlowParticle(WindFlow& windflow_, const std::vector<Vector
 :
 windFlow(windflow_),
 dashPositions(dashPositions_),
-randomPosition(Random::GetInstance().Range(-50.0f, 50.0f), 0.0f, Random::GetInstance().Range(-50.0f, 50.0f)),
+randomPosition(Random::GetInstance().Range(-200.0f, 200.0f), 0.0f, Random::GetInstance().Range(-200.0f, 200.0f)),
 positionHeight(positionHeight_),
 rotate(Vector3::Zero)
 {
