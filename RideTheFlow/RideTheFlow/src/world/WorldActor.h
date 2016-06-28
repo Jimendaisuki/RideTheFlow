@@ -31,7 +31,7 @@ public:
 	void EachActor(ACTOR_ID id, std::function<void(const Actor&)> func);
 	void EachUIActor(UI_ID id, std::function<void(const UIActor&)> func);
 
-	std::vector<MasterCastle> GetMasterCastle();
+	std::vector<ActorPtr> GetActors(ACTOR_ID id);
 
 
 private:

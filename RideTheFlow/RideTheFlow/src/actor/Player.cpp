@@ -966,10 +966,11 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 		other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR&&
 		colpara.colFlag)
 	{
-		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-		Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear())
 		{
+			//龍撃槍ダメージ
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 		}
 	}

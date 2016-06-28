@@ -33,13 +33,17 @@ public:
 	{
 		rankUp = true;
 	}
-	bool NoRankUp()
+	bool RagDead()
 	{
-		return noRankUp;
+		return isDeadRag;
 	}
 	BREAK_SELECT getBreakSelect()
 	{
 		return breakSelect;
+	}
+	bool NoRankUp()
+	{
+		return noRankUp;
 	}
 
 private:
@@ -49,9 +53,10 @@ private:
 	Vector3 toPoint;
 	float mRotateY;
 	float mScaleFloat;
+	bool isDeadRag;
+	bool noRankUp;
 	//積み重なる城関係
 	bool rankUp;
-	bool noRankUp;
 	int mRank;
 
 	int testRnak;
@@ -68,6 +73,7 @@ private:
 
 	//死因
 	BREAK_SELECT breakSelect;
+	float deadRagTimer;
 
 	//タイトル
 	bool mTitle;

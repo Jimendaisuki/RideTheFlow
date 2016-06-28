@@ -86,3 +86,14 @@ int WorldActor::GetActorCount(ACTOR_ID id, ACTOR_ID id2)
 	}
 	return count;
 }
+std::vector<ActorPtr> WorldActor::GetActors(ACTOR_ID id)
+{
+	std::vector<ActorPtr> masters;
+	if (managers[id]->getlist().size() < 1)return masters;
+
+	for (auto i : managers[id]->getlist())
+	{
+		masters.push_back(i);
+	}
+	return masters;
+}
