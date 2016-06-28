@@ -193,7 +193,7 @@ eventVec(eventVec_)
 	dashTime = 0.0f;
 	if (!title && !event){
 		//ダッシュのスタミナゲージUIを追加
-		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime));
+		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime, *this));
 	}
 	dashPosStorage.clear();
 }
