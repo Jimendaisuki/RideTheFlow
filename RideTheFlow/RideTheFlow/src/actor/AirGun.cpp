@@ -47,7 +47,7 @@ void AirGun::Update(){
 			Matrix4::Translate(position);
 	}
 
-	parameter.mat = mats.at(0);
+	parameter.mat = mats.at(1);
 }
 void AirGun::Draw() const{
 	for (int i = 1; i < 3; i++)
