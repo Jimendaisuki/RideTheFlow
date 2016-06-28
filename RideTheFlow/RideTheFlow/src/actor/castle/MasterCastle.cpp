@@ -216,7 +216,7 @@ void MasterCastle::Draw() const
 				Matrix4::Translate(mPosition + Heght*Vector3(1.0f, mScaleFloat, 1.0f));
 			Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, castleMat);
 		}
-		float height = parameter.radius*2.0f*mScaleFloat + 17.0f * 2 * mScaleFloat*(mTitleRank-1);
+		float height = parameter.radius*2.0f*mScaleFloat + 18.5f * 2 * mScaleFloat*(mTitleRank-1);
 		Matrix4 topCastle = Matrix4::Scale(30.0f*mScaleFloat)*
 			Matrix4::RotateY(mRotateY)*
 			Matrix4::Translate(mPosition +Vector3(0.0f,height,0.0f));

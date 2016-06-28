@@ -71,6 +71,7 @@ fovVelo(0.0f)
 	endTarget = Vector3::Zero;
 	rotateSpeed = 200.0f;
 
+	cameraTarget = playerMat.GetPosition();
 }
 MonhanCameraActor::~MonhanCameraActor()
 {
@@ -92,6 +93,7 @@ void MonhanCameraActor::Update()
 	int hp = player->GetParameter().HP;
 	if (player->GetParameter().HP > 0)
 	{
+		cameraTarget = playerMat.GetPosition();
 		playerPosition = playerMat.GetPosition();
 		//デフォルトでのカメラ
 		if (!tp.tackleFlag&&posMove2&&!tp.dashFlag)
@@ -208,13 +210,14 @@ void MonhanCameraActor::Update()
 		{
 			
 			posSeveStart = position;
-			posSeveEnd = Vector3(0, 0, 1) * 300 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+			posSeveEnd = Vector3(0, 0, 1) * 400 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 				playerPosition + cameraUpMove;
 			leapTimer = 0.0f;
 			playerDead = false;
 		}
 		leapTimer += 1.0f/2.0f*Time::DeltaTime;
 		restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, leapTimer);
+		cameraTarget -= Vector3(0.0f, 75.0f, 0.0f)*Time::DeltaTime;
 		if (leapTimer >= 1.0f)
 			leapTimer = 1.0f;
 	}
@@ -228,7 +231,7 @@ void MonhanCameraActor::Update()
 
 	parameter.mat = Matrix4::Translate(position);
 	Camera::GetInstance().Position.Set(position);
-	Camera::GetInstance().Target.Set(playerMat.GetPosition());
+	Camera::GetInstance().Target.Set(cameraTarget);
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
 	Camera::GetInstance().SetViewAngle(fov);

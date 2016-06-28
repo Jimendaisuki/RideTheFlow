@@ -30,7 +30,8 @@ private:
 private:
 	Matrix4 playerMat;
 	Vector3 position;
-	Vector3 playerPosition;
+	Vector3 playerPosition; 
+	Vector3 cameraTarget;
 	//ƒoƒlƒJƒƒ‰ŠÖŒW
 	Vector3 restPosition;
 	Vector3 velocity;
