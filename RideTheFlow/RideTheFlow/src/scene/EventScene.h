@@ -75,4 +75,5 @@ private:
 	float   t;
 
 	bool	isTitle;
+	int		gongCount;
 };

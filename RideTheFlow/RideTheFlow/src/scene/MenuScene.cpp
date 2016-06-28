@@ -41,10 +41,12 @@ void MenuScene::Initialize()
 	SetLightPosition(lightPos);
 	SetLightDirection(-lightPos.Normalized());
 
-	Sound::GetInstance().PlayBGM(BGM_ID::MENU_BGM);
+	/* 音 */
+	Sound::GetInstance().PlayBGM(BGM_ID::MENU_BGM, DX_PLAYTYPE_LOOP);
 
 	/* フェード */
-	FadePanel::GetInstance().SetInTime(1.0f);
+	FadePanel::GetInstance().SetInTime(2.0f);
+	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 
 void MenuScene::Update()
@@ -53,10 +55,6 @@ void MenuScene::Update()
 	{
 		mIsEnd = true;
 	}
-
-	if (!Sound::GetInstance().IsPlayBGM())
-		Sound::GetInstance().PlayBGM(BGM_ID::MENU_BGM);
-
 
 	switch (status)
 	{

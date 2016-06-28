@@ -73,6 +73,35 @@ void EventScene::Initialize()
 	mIsEnd = false;
 	status = EVENT_STATUS::EVENT_BEGIN;
 
+	/* フォグ関係 */
+	currentFogFar = 0;
+	maxFogFar = 0;
+	correctionFog = 50;
+	fogTime = 0;
+	fogPeriod = 1;
+	SetFogEnable(TRUE);
+	SetFogColor(180, 180, 200);
+	SetFogStartEnd(0, 0);
+
+	prePos = Vector3::Zero;
+	velocity = Vector3::Zero;
+	t = 1;
+
+	gongCount = 0;
+
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
+
+	/* 音 */
+	Sound::GetInstance().PlayBGM(BGM_ID::INTRO_BGM);
+
+	/* フェード */
+	FadePanel::GetInstance().SetInTime(3.0f);
+	FadePanel::GetInstance().SetOutTime(2.0f);
+
+	// 以下マスターはいらない
+	/* タイトルテキストデータ */
+	titleAlpha = 0;
+	isTitle = false;
 	/* ポリゴンデータ */
 	amount_1 = 0;
 	amount_2 = 0;
@@ -85,30 +114,6 @@ void EventScene::Initialize()
 		Vertex2D_1[i].dif.a = stormAlpha;
 		Vertex2D_2[i] = Vertex2D_1[i];
 	}
-
-	/* タイトルテキストデータ */
-	titleAlpha = 0;
-
-	currentFogFar = 0;
-	maxFogFar = 0;
-	correctionFog = 50;
-	fogTime = 0;
-	fogPeriod = 1;
-
-	SetFogEnable(TRUE);
-	SetFogColor(180, 180, 200);
-	SetFogStartEnd(0, 0);
-
-	isTitle = false;
-
-	prePos = Vector3::Zero;
-	velocity = Vector3::Zero;
-	t = 1;
-
-	Sound::GetInstance().PlayBGM(BGM_ID::INTRO_BGM);
-
-	Camera::GetInstance().SetRange(0.1f, 40000.0f);
-	FadePanel::GetInstance().SetInTime(3.0f);
 }
 
 void EventScene::Update()
@@ -169,9 +174,6 @@ void EventScene::Update()
 			targetPos = Vector3(0.0f, 1840.0f, -15264.0f);
 			cameraPos = Vector3(2225.0f, -312.0f, 4587.0f);
 
-			//SetLightPosition(Vector3(2225.0f * 30, 312.0f * 100, 4587.0f * 30).ToVECTOR());
-			//SetLightDirection(-Vector3(2225.0f * 10, 312.0f * 100, 4587.0f * 10).Normalized());
-
 			FadePanel::GetInstance().FadeIn();
 			status = EVENT_STATUS::EVENT_STAGE_IN;
 		}
@@ -185,11 +187,20 @@ void EventScene::Update()
 		}
 		break;
 	case EventScene::EVENT_GONG:
-		Sound::GetInstance().PlaySE(SE_ID::GONG_SE);
-		status = EVENT_END;
+		if ((!Sound::GetInstance().IsPlaySE(SE_ID::STORMAKED_SE)) &&
+			(!Sound::GetInstance().IsPlaySE(SE_ID::GONG_SE)))
+		{
+			Sound::GetInstance().PlaySE(SE_ID::GONG_SE);
+			gongCount++;
+		}
+		if (gongCount >= 3)
+		{
+			FadePanel::GetInstance().FadeOut();
+			status = EVENT_END;
+		}
 		break;
 	case EventScene::EVENT_END:
-		if (!Sound::GetInstance().IsPlaySE(SE_ID::GONG_SE))
+		if (!FadePanel::GetInstance().IsAction())
 			mIsEnd = true;
 		break;
 	}
@@ -197,7 +208,6 @@ void EventScene::Update()
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
 		isTitle = !isTitle;
-
 	if (isTitle)
 	{
 		// 竜巻とテキスト描画開始
@@ -284,7 +294,6 @@ void EventScene::End()
 	SetLightPosition(Vector3::Zero.ToVECTOR());
 	SetLightDirection(Vector3(0.5f, -0.5f, -0.5f).ToVECTOR());
 	SetFogEnable(FALSE);
-	//Sound::GetInstance().StopSE();
 }
 
 // 竜巻計算用

@@ -64,8 +64,6 @@ TitleScene::~TitleScene()
 //開始
 void TitleScene::Initialize()
 {
-	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM);
-
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
@@ -100,7 +98,11 @@ void TitleScene::Initialize()
 	slideTime = 0;
 	isTitle = false;
 
-	///* フェード */
+	/* 音 */
+	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
+
+	/* フェード */
 	FadePanel::GetInstance().SetInTime(4.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 }
@@ -156,6 +158,7 @@ void TitleScene::Update()
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
 			GamePad::GetInstance().AnyTriggerDown())
 		{
+			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			FadePanel::GetInstance().FadeOut();
 			status = TITLE_STATUS::TITLE_END;
 		}

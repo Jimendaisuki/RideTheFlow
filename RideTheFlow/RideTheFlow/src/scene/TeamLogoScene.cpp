@@ -27,9 +27,7 @@ void TeamLogoScene::Initialize()
 
 void TeamLogoScene::Update()
 {
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
-		mIsEnd = true;
-	}
+	mIsEnd = true;
 	wa.Update();
 }
 
