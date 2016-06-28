@@ -19,6 +19,7 @@
 #include "../UIactor/Effect.h"
 #include "../input/GamePad.h"
 #include "enemy\DoragonSpearEnemy.h"
+#include "../sound/Sound.h"
 
 
 //ボーンの数
@@ -348,7 +349,7 @@ void Player::Update() {
 					if (dashPosStorage.size() == 0){
 						windFlowPtr = std::make_shared<WindFlow>(world, *this);
 						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
-						world.Add(ACTOR_ID::WIND_ACTOR, std::make_shared<DashBlueLine>(world, *this));
+						world.Add(ACTOR_ID::DASH_BLUE_LINE_ACTOR, std::make_shared<DashBlueLine>(world, *this));
 						dashAfter = false;
 					}
 					dashPosStorage.push_back(position);
@@ -555,13 +556,13 @@ void Player::Update() {
 
 		if (!title)
 		{
-			Camera::GetInstance().SetRange(0.1f, 40000.0f);
-			Camera::GetInstance().Position.Set(
-				Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
-				parameter.mat.GetPosition() + cameraUpMove);
-			Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
-			Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
-			Camera::GetInstance().Update();
+			//Camera::GetInstance().SetRange(0.1f, 40000.0f);
+			//Camera::GetInstance().Position.Set(
+			//	Vector3(0, 0, 1) * 250.0f * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
+			//	parameter.mat.GetPosition() + cameraUpMove);
+			//Camera::GetInstance().Target.Set(parameter.mat.GetPosition());
+			//Camera::GetInstance().Up.Set(Vector3(0, 1, 0));
+			//Camera::GetInstance().Update();
 		}
 
 		Vector3* copyVertexVec = new Vector3[boneCount];
@@ -947,14 +948,18 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::VARISTOR_BULLET_ACTOR)
 	{
+		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
 	{
+		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+		Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 	else if (other.GetParameter().id == ACTOR_ID::ARROW_BULLET_ACTOR)
 	{
+		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&
@@ -963,12 +968,16 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear())
 		{
+			//龍撃槍ダメージ
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
-
 		}
 	}
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&colpara.colFlag)
 	{
+		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+		Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
 		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 }

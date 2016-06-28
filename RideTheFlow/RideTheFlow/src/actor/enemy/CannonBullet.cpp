@@ -11,6 +11,7 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../Player.h"
+#include "../../sound/Sound.h"
 
 CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ) :
 Actor(world),
@@ -35,6 +36,8 @@ noDeadTimer(0.0f)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	parent = &parent_;
+
+	Sound::GetInstance().PlaySE(SE_ID::CANON_FIRE_SE);
 
 }
 CannonBullet::~CannonBullet()

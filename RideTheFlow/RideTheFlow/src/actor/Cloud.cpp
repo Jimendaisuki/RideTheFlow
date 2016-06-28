@@ -15,12 +15,12 @@ static const float MinSize = 10.0f;
 static const float MaxSize = 50.0f;
 
 //流れに流されている時の速度
-static const float FlowSpeed = 80.0f;
+static const float FlowSpeed = 400.0f;
 
 Cloud::Cloud(IWorld& world, const Vector3& position_) :
 Actor(world),
 position(position_),
-moveSpeed(Random::GetInstance().Range(10.0f, 20.0f)),
+moveSpeed(Random::GetInstance().Range(50.0f, 60.0f)),
 moveChangeTimer(0.0f),
 moveChangeTime(Random::GetInstance().Range(30.0f, 50.0f)),
 windOutTimer(500.0f),
@@ -74,7 +74,7 @@ void Cloud::Update()
 		v.y = 0;
 		v.Normalize();
 		moveVec = v;
-		moveSpeed = Random::GetInstance().Range(5.0f, 10.0f);
+		moveSpeed = Random::GetInstance().Range(50.0f, 60.0f);
 	}
 
 	//流れから離れた場合、３秒かけてスピードを落とす
@@ -87,8 +87,8 @@ void Cloud::Update()
 	up = Vector3::Normalize(Camera::GetInstance().Up.Get());
 	front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
 	left = Vector3::Cross(up, front);
-	parameter.mat.SetFront(front);
 	parameter.mat.SetUp(up);
+	parameter.mat.SetFront(front);
 	parameter.mat.SetLeft(left);
 
 	//移動
@@ -128,11 +128,11 @@ void Cloud::Reset()
 		Random::GetInstance().Range(-1.0f, 1.0f),
 		0.0f,
 		Random::GetInstance().Range(-1.0f, 1.0f)));
-	moveSpeed = Random::GetInstance().Range(5.0f, 10.0f);
+	moveSpeed = Random::GetInstance().Range(50.0f, 60.0f);
 }
 
 bool Cloud::IsStageOut()
 {
-	//原点から1400以上離れていれば場外
-	return Vector3::Distance(Vector3::Zero, parameter.mat.GetPosition()) > 1400.0f;
+	//原点から6000以上離れていれば場外
+	return Vector3::Distance(Vector3::Zero, parameter.mat.GetPosition()) > 6000.0f;
 }

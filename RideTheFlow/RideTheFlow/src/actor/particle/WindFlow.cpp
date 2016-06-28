@@ -20,13 +20,13 @@ speed(MoveSpeed)
 	parameter.id = ACTOR_ID::WIND_ACTOR;
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f, HeightMax, 0.0f);
-	parameter.radius = 10.0f;
+	parameter.radius = 100.0f;
 	ps_parameter.intervalSec = 0.003f;
 	ps_parameter.lifeTimeLimit = 20.0f;
 	ps_parameter.sameEmissiveNum = 3;
 	dashPositions = player.ReturnDashPosStorage();
 
-	Sound::GetInstance().PlaySE(SE_ID::MIDDLE_WIND_SE);
+	Sound::GetInstance().PlaySE(SE_ID::MIDDLE_WIND_SE,DX_PLAYTYPE_LOOP);
 }
 WindFlow::~WindFlow()
 {
@@ -63,7 +63,11 @@ void WindFlow::Update()
 
 	//システム寿命が来たらアクターも寿命に
 	if (ps_parameter.isDead)
+	{
+		Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
 		parameter.isDead = true;
+	}
+		
 }
 void WindFlow::Draw() const
 {

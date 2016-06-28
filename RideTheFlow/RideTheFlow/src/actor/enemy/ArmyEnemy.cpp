@@ -8,7 +8,6 @@
 #include "../../math/Math.h"
 #include "../../UIactor/EnemyPoint.h"
 
-
 ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),

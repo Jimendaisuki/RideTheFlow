@@ -17,11 +17,11 @@ rotmat(Matrix4::Identity)
 
 	moveParam.pos = position_;
 	moveParam.vec = vec_;
-	moveParam.speed = Random::GetInstance().Range(30.0f, 60.0f);
+	moveParam.speed = Random::GetInstance().Range(60.0f, 90.0f);
 
 	drawParam.drawID = MODEL_ID::SAND_MODEL;
-	drawParam.size = 30.0f;
-	drawParam.alpha = 0.5f;
+	drawParam.size = Random::GetInstance().Range(30.0f, 90.0f);
+	drawParam.alpha = 0.0f;
 	drawParam.blendMode = BLEND_MODE::Alpha;
 	drawParam.billboardOrigin = Vector2(0, 0);
 
@@ -30,10 +30,15 @@ rotmat(Matrix4::Identity)
 
 void SandParticle::OnUpdate()
 {
-	//セルフビルボード計算
+	////セルフビルボード計算
 	up = Vector3::Normalize(Camera::GetInstance().Up.Get());
 	front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
 	left = Vector3::Cross(up, front);
+	//up = Vector3::Up;
+	//front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
+	//left = Vector3::Left;
+
+	drawParam.alpha = Math::Sin(180.0f * lifeParam.lifeTime / lifeParam.lifeTimeLimit);
 
 	//最終的な計算結果
 	rotmat.SetFront(front);

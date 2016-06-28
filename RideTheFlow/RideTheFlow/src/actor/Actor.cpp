@@ -42,6 +42,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::SHIP_SHIP_COL] = std::bind(&Actor::Ship_vs_Ship, this, std::placeholders::_1);
 	colFunc[COL_ID::BULLET_NOBULLETAREA_COL] = std::bind(&Actor::Bullet_vs_NoBulletArea, this, std::placeholders::_1);
 	colFunc[COL_ID::CASTLE_AIRGUN_COL] = std::bind(&Actor::Castle_vs_AirGun, this, std::placeholders::_1);
+	colFunc[COL_ID::ENEMY_AIRGUN_COL] = std::bind(&Actor::Enemy_vs_AirGun, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -114,6 +115,23 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	Sphere bullet;
 	bullet.position = Matrix4::GetPosition(other.parameter.mat);
 	bullet.radius = other.parameter.radius;
+
+	//Capsule player;
+	//std::vector<Vector3> playerBonePos = static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage();
+
+	//for (int i = 0; i < playerBonePos.size();i+=6) {
+	//	if (i >= playerBonePos.size())i = playerBonePos.size() - 1;
+	//	/* PlayerData */
+	//	Sphere player;
+	//	player.position = playerBonePos[i];
+	//	player.radius = parameter.radius;
+	//	/* ResultData */
+	//	colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+	//	if (colpara.colFlag){
+	//		break;
+	//	}
+	//}
+
 	std::vector<Vector3> playerBonePos = static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage();
 	for (int i = 0; i < playerBonePos.size();i+=6) {
 		if (i >= playerBonePos.size())i = playerBonePos.size() - 1;
@@ -688,6 +706,22 @@ CollisionParameter Actor::Castle_vs_AirGun(const Actor& other) const
 
 	return colpara;
 }
+CollisionParameter Actor::Enemy_vs_AirGun(const Actor& other) const
+{
+	CollisionParameter colpara;
+	Sphere ship;
+	ship.radius = parameter.radius;
+	ship.position = parameter.mat.GetPosition();
+	Sphere airgun;
+	airgun.radius = other.parameter.radius;
+	airgun.position = other.parameter.mat.GetPosition();
+
+	colpara = Collisin::GetInstace().SphereSphere(ship, airgun);
+	colpara.colID = COL_ID::ENEMY_AIRGUN_COL;
+
+	return colpara;
+}
+
 
 ActorParameter Actor::GetParameter() const
 {

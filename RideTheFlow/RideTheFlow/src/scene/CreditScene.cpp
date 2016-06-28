@@ -15,7 +15,7 @@
 #include "../actor/Stage.h"
 #include "../graphic/TextDraw.h"
 #include "../actor/castle/MasterCastle.h"
-
+#include "../game/Random.h"
 #include "../actor/MonhanCameraActor.h"
 #include "../game/WorkFolder.h"
 #include "../actor/Cloud.h"
@@ -33,6 +33,7 @@
 #include "../sound/Sound.h"
 #include "../actor/castle/HomeActor.h"
 #include "../actor/StageGenerator.h"
+#include "../CloudSetting.h"
 
 static const Vector3 House1Pos = Vector3(0, -680, 0);
 
@@ -76,6 +77,19 @@ void CreditScene::Initialize()
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 
+	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+	{
+		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), -500.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+	{
+		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+
+	wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa,Vector3(0,-700,0), Vector3::Forward));
+
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -600, 0), 1.0f, 0.0f, true, false,0));
+
 	//wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
@@ -83,7 +97,9 @@ void CreditScene::Initialize()
 
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<HomeActor>(wa, 1.0f, Vector3::Zero, Vector3(0, 170, 0)));
 
-	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100), Vector3(1,0,1) * 20.0f, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::WIND_BALL));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(-200, 0, -100), CASTLE_SELECT::SHIP, BREAK_SELECT::TORNADO));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(0, 0, -100),    CASTLE_SELECT::SHIP, BREAK_SELECT::WIND_FLOW));
+	//wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<BreakCastle>(wa, Vector3(200, 0, -100),  CASTLE_SELECT::SHIP, BREAK_SELECT::WIND_BALL));
 
 	//float bai = 8.0;
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -80, 0)	 * bai, 0.0f, true, false));
@@ -97,7 +113,7 @@ void CreditScene::Initialize()
 	armyCreateTimer = 0.0f;
 	armyCount = 0;
 
-	//Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
+	Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
 }
 
 void CreditScene::Update()
@@ -164,7 +180,7 @@ void CreditScene::Draw() const
 	//TextDraw::Draw(Point(900, 180), Vector3::Blue, Vector2(t));
 
 	////スティックの入力状態
-	//int drawx = 700;
+	//int drawx = 1000;
 	//TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
 	//TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
 	//TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
@@ -175,8 +191,8 @@ void CreditScene::Draw() const
 	//	TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
 	//}
 
-	////ステージの限界の大きさのワイヤー球
-	//DrawSphere3D(Vector3::Zero.ToVECTOR(), 1400, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
+	//ステージの限界の大きさのワイヤー球
+	//DrawSphere3D(Vector3::Zero.ToVECTOR(), 6000, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
 }
 
 //終了しているか？

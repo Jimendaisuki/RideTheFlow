@@ -11,9 +11,9 @@ failed_bgm.mp3 (死亡時一度)
 
 SE:
 
-dragonshouting_se.wav (バリスタ、大砲を食らった時の鳴き声)
+dragonshouting_se.wav (撃龍槍、大砲を食らった時の鳴き声)
 dragondead_se.wav (死んだ時の鳴き声)
-dragonhit_se.wav (大砲、撃龍槍を食らった時の音)
+dragonhit_se.wav (プレイヤーが食らった時の音)
 stormaked_se.wav (竜巻が生成された瞬間)
 castlehit_se.wav (城、飛行船がダメージを受けた時)
 castlebrake_se.wav (城、飛行船が壊れた時)

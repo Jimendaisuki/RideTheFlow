@@ -5,7 +5,7 @@
 #include "../../camera/Camera.h"
 #include "../../math/Quaternion.h"
 
-BreakCastleParticle::BreakCastleParticle(const MODEL_ID& id_, const BREAK_SELECT& break_, Vector3* parentPosition_, const Vector3& position_, const Vector3& vec_, float rotX_, float rotY_)
+BreakCastleParticle::BreakCastleParticle(const MODEL_ID& id_, const BREAK_SELECT& break_, Vector3* parentPosition_, const Vector3& position_, const Vector3& vec_, float rotX_, float rotY_, float scale_)
 :
 breakSelect(break_),
 pParentPosition(parentPosition_),
@@ -40,7 +40,7 @@ flowAddPosition(Vector3::Zero)
 
 	drawParam.drawID = id_;
 	drawParam.alpha = 0.2f;
-	drawParam.size = 30.0f;
+	drawParam.size = scale_;
 	if (breakSelect == BREAK_SELECT::TORNADO)
 	{
 		rotXAdd			 = Random::GetInstance().Range(14.0f, 20.0f);

@@ -3,6 +3,7 @@
 
 #include "../Actor.h"
 #include <memory>
+#include "../particle/BreakCastle.h"
 
 struct ShipEnemyPos
 {
@@ -62,5 +63,8 @@ private:
 	bool damege;
 
 	bool isTitle;
+
+	//Ž€ˆö
+	BREAK_SELECT breakSelect;
 };
 #endif

@@ -99,6 +99,8 @@ private:
 
 	//é‚Æ‹ó‹C–C
 	CollisionParameter Castle_vs_AirGun(const Actor& other) const;
+	//“G‚Æ‹ó‹C–C
+	CollisionParameter Enemy_vs_AirGun(const Actor& other) const;
 
 	/* Œã‚Åíœ
 	// ü‚Æ” ‚Ì“–‚½‚è”»’è

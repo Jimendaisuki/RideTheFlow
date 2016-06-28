@@ -13,6 +13,8 @@
 #include "ShipVaristorEnemy.h"
 #include "ShipCannonEnemy.h"
 #include "../castle/CastleCannon.h"
+#include "../particle/BreakCastle.h"
+
 ShipEnemy::ShipEnemy(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),
@@ -28,7 +30,8 @@ mPosition(position),
 invincibleTimer(0.0f),
 isLook(true),
 isLandCol(false),
-isTitle(false)
+isTitle(false),
+breakSelect(BREAK_SELECT::TORNADO)
 {
 	parameter.id = ACTOR_ID::SHIP_ENEMY_ACTOR;
 	parameter.HP = ShipHp;
@@ -39,7 +42,7 @@ isTitle(false)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	parameter.radius = 40.0f;
+	parameter.radius = 100.0f;
 	playerDot = 0.0f;
 
 	ShipEnemyPosition();
@@ -87,6 +90,7 @@ void ShipEnemy::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_SHIPENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::ENEMY_AIRGUN_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::SHIP_ENEMY_ACTOR, COL_ID::SHIP_SHIP_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::SHIP_ISLAND_COL);
 	ShipEnemyPosition();
@@ -162,8 +166,11 @@ void ShipEnemy::Update()
 	}
 	//HPが0になったら死ぬ
 	if (parameter.HP <= 0)
+	{
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, breakSelect));
 		parameter.isDead = true;
-	
+	}
+
 	//マトリックス計算
 	parameter.mat =
 		Quaternion::RotateAxis(Vector3::Up,shipAngle)*
@@ -200,6 +207,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.HP -= ShipDamegeTornado;
 		damege = false;
+		breakSelect = BREAK_SELECT::TORNADO;
 	}
 	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
 	{
@@ -209,6 +217,13 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 			parameter.HP -= ShipDamegeWind;
 			damege = false;
 		}
+		breakSelect = BREAK_SELECT::WIND_FLOW;
+	}
+	if (colpara.colID == COL_ID::ENEMY_AIRGUN_COL)
+	{
+		parameter.HP -= ShipDamegeWindBall;
+		damege = false;
+		breakSelect = BREAK_SELECT::WIND_BALL;
 	}
 	if (colpara.colID == COL_ID::SHIP_SHIP_COL&&colpara.colFlag)
 	{

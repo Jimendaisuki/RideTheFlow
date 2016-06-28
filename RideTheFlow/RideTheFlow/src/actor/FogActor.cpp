@@ -5,6 +5,7 @@
 #include "../camera/Camera.h"
 #include "../time/Time.h"
 #include "../math/Math.h"
+#include "../sound/Sound.h"
 
 static const float LengthMax = 12000.0f;
 static const float FogSettingValue = 0.1f;
@@ -22,6 +23,7 @@ fogStartAngle(70.0f)
 	parameter.id = ACTOR_ID::FOG_ACTOR;
 	SetFogEnable(TRUE);
 	SetFogColor(180, 180, 200);
+	Sound::GetInstance().PlaySE(SE_ID::SAND_STORM_SE, DX_PLAYTYPE_LOOP);
 }
 FogActor::~FogActor()
 {

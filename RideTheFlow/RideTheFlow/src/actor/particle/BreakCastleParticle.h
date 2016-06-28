@@ -8,7 +8,7 @@ class BreakCastleParticle :public Particle
 {
 public:
 	//モデルID、壊れ方、システムの座標、座標、移動方向*移動量、初期回転X、初期回転Y
-	BreakCastleParticle(const MODEL_ID& id_, const BREAK_SELECT& break_, Vector3* parentPosition_,const Vector3& position_, const Vector3& vec_, float rotX_, float rotY_);
+	BreakCastleParticle(const MODEL_ID& id_, const BREAK_SELECT& break_, Vector3* parentPosition_,const Vector3& position_, const Vector3& vec_, float rotX_, float rotY_ , float scale_);
 
 	void OnUpdate() override;
 	void Draw() const override;

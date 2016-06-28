@@ -12,6 +12,7 @@
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
 #include "../Player.h"
+#include "../../sound/Sound.h"
 
 VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ) :
 Actor(world),
@@ -40,6 +41,7 @@ noDeadTimer(0.0f)
 		Matrix4::Translate(position);
 	parent = &parent_;
 
+	Sound::GetInstance().PlaySE(SE_ID::BALLISTA_FIRE_SE);
 }
 VaristorBullet::~VaristorBullet()
 {

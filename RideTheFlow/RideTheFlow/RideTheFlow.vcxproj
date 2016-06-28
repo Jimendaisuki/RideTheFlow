@@ -218,7 +218,10 @@
     <ClInclude Include="src\actor\particle\DashBlueLine.h" />
     <ClInclude Include="src\actor\particle\DashBlueLineParticle.h" />
     <ClInclude Include="src\actor\StageGenerator.h" />
+    <ClInclude Include="src\BGMVolumeSetting.h" />
+    <ClInclude Include="src\CloudSetting.h" />
     <ClInclude Include="src\scene\EventScene.h" />
+    <ClInclude Include="src\SEVolumeSetting.h" />
     <ClInclude Include="src\UIactor\CsvReader.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />
     <ClInclude Include="src\UIactor\FlowRoot.h" />

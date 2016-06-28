@@ -11,6 +11,8 @@
 #include "../../game/Random.h"
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
+#include "../../sound/Sound.h"
+
 DoragonSpearEnemy::DoragonSpearEnemy(IWorld& world, Vector3 position,ShipEnemy& se,Actor& _parent) :
 Actor(world),
 coolTimer(0),
@@ -76,6 +78,7 @@ void DoragonSpearEnemy::Update()
 
 		if (preparationTimer >= DoragonSpearWithinTime)
 		{
+			Sound::GetInstance().PlaySE(SE_ID::DRAGONSPEAR_SE);
 			preparationTimer = 0.0f;
 			coolTimer = 0.0f;
 			attackSpear = true;

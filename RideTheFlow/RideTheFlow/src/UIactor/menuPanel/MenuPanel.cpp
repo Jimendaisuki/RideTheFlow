@@ -170,7 +170,7 @@ void MenuPanel::Update()
 
 		// ステータス切り替え
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (selectNum == 0)
 			{
@@ -223,7 +223,7 @@ void MenuPanel::Update()
 		pages[nowPage] = 1.0f;
 
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
 		{
 			if (nowPage <= 1)
 			{
@@ -236,7 +236,7 @@ void MenuPanel::Update()
 			nowPage--;
 		}		
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (nowPage > 3)
 			{
