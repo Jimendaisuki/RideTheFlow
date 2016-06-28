@@ -307,6 +307,7 @@
     <ClInclude Include="src\UIactor\Stamina.h" />
     <ClInclude Include="src\UIactor\UIActorManager.h" />
     <ClInclude Include="src\UIactor\UIActorPtr.h" />
+    <ClInclude Include="src\WindAndTornadoSetting.h" />
     <ClInclude Include="src\world\IWorld.h" />
     <ClInclude Include="src\UIactor\UIActor.h" />
     <ClInclude Include="src\world\World.h" />

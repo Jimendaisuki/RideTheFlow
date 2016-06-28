@@ -4,8 +4,9 @@
 #include "../../game/Random.h"
 #include "../../camera/Camera.h"
 #include "../../math/Quaternion.h"
+#include "../../WindAndTornadoSetting.h"
 
-CastleAddParticle::CastleAddParticle(const Vector3& position_)
+CastleAddParticle::CastleAddParticle(const Vector3& position_, float sizeBase, float sizeAddMin, float sizeAddMax)
 :
 xrot(Random::GetInstance().Range(-1.0f, 1.0f)),
 yrot(Random::GetInstance().Range(-1.0f, 1.0f)),
@@ -17,13 +18,13 @@ addSizeSpeed(Random::GetInstance().Range(0.01f,0.03f)),
 timer(0.0f)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 2.2f;
+	lifeParam.lifeTimeLimit = SmokeLifeLimit;
 	lifeParam.isDead = false;
 
 	moveParam.pos = position_;
 
 	drawParam.drawID = MODEL_ID::CASTLE_ADD_MODEL;
-	drawParam.size = 0.03f + Random::GetInstance().Range(-0.03f, 0.01f);
+	drawParam.size = sizeBase + Random::GetInstance().Range(sizeAddMin, sizeAddMax);
 	drawParam.alpha = 1.0f;
 }
 
@@ -31,7 +32,7 @@ void CastleAddParticle::OnUpdate()
 {
 	drawParam.size += addSizeSpeed * Time::DeltaTime;
 
-	drawParam.alpha += addAlpha * Time::DeltaTime;
+	drawParam.alpha = Math::Cos((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 90);
 
 	mat = 
 		Matrix4::Scale(drawParam.size) *

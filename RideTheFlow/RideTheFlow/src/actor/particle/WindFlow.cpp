@@ -6,23 +6,24 @@
 #include "WindSetting.h"
 #include "../../time/Time.h"
 #include "../../sound/Sound.h"
+#include "../../WindAndTornadoSetting.h"
 
-//タックルされた後の移動速度
-static const float MoveSpeed = 400.0f;
+////タックルされた後の移動速度
+//static const float MoveSpeed = 400.0f;
 
 WindFlow::WindFlow(IWorld& world, Player& player_) :
 Actor(world),
 player(player_),
 isSetting(false),
 vec(Vector3::Zero),
-speed(MoveSpeed)
+speed(WindFlowSpeed)
 {
 	parameter.id = ACTOR_ID::WIND_ACTOR;
 	parameter.isDead = false;
 	parameter.height = Vector3(0.0f, HeightMax, 0.0f);
 	parameter.radius = 100.0f;
 	ps_parameter.intervalSec = 0.003f;
-	ps_parameter.lifeTimeLimit = 20.0f;
+	ps_parameter.lifeTimeLimit = WindFlowLifeLimit;
 	ps_parameter.sameEmissiveNum = 3;
 	dashPositions = player.ReturnDashPosStorage();
 

@@ -7,6 +7,8 @@
 #include "EnemyBullet.h"
 #include "../../math/Math.h"
 #include "../../UIactor/EnemyPoint.h"
+#include "../../sound/Sound.h"
+#include "../../game/Random.h"
 
 ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
 Actor(world),
@@ -131,10 +133,14 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
 	{
 		parameter.isDead = true;
+		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
+		Sound::GetInstance().PlaySE(se);
 	}
 	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
 	{
 		//仕様確認
 		parameter.isDead = true;
+		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
+		Sound::GetInstance().PlaySE(se);
 	}
 }
