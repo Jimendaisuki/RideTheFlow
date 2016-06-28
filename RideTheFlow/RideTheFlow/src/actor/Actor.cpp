@@ -115,7 +115,10 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 	Sphere bullet;
 	bullet.position = Matrix4::GetPosition(other.parameter.mat);
 	bullet.radius = other.parameter.radius;
+
+	Capsule player;
 	std::vector<Vector3> playerBonePos = static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage();
+
 	for (int i = 0; i < playerBonePos.size();i+=6) {
 		if (i >= playerBonePos.size())i = playerBonePos.size() - 1;
 		/* PlayerData */
@@ -128,9 +131,23 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 			break;
 		}
 	}
-	colpara.colID = COL_ID::SPHERE_SPHERE_COL;
 
-	return colpara;
+	//std::vector<Vector3> playerBonePos = static_cast<Player*>(const_cast<Actor*>(this))->ReturnBonePosStorage();
+	//for (int i = 0; i < playerBonePos.size();i+=6) {
+	//	if (i >= playerBonePos.size())i = playerBonePos.size() - 1;
+	//	/* PlayerData */
+	//	Sphere player;
+	//	player.position = playerBonePos[i];
+	//	player.radius = parameter.radius;
+	//	/* ResultData */
+	//	colpara = Collisin::GetInstace().SphereSphere(player, bullet);
+	//	if (colpara.colFlag){
+	//		break;
+	//	}
+	//}
+	//colpara.colID = COL_ID::SPHERE_SPHERE_COL;
+
+	//return colpara;
 }
 
 

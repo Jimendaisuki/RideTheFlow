@@ -72,8 +72,3 @@ const int CastleSoldierNumber = 1;
 const int CastleSoldierNotLookAttack = 1;
 //城の兵士からプレイヤーが見えてないときの攻撃クールタイム(秒)
 const float CastleSoldierNotLookSecondAttack = 10.0f;
-
-
-
-////城モデルの高さの３倍(スケール弄ってるから)
-//const float CastleHeight = 30.0f;

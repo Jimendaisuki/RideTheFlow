@@ -208,7 +208,6 @@ void MonhanCameraActor::Update()
 	{
 		if (playerDead)
 		{
-			
 			posSeveStart = position;
 			posSeveEnd = Vector3(0, 0, 1) * 400 * Matrix4::RotateX(rotateLeft) * Matrix4::RotateY(rotateUp) +
 				playerPosition + cameraUpMove;
