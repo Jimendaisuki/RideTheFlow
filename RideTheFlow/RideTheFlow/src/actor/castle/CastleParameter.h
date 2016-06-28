@@ -3,9 +3,7 @@
 //プレイヤーのどのぐらい前に攻撃するか
 const float CastleCameraFrontAttack = 10.0f;
 //マスター城のHP
-const float MasterCastleHp = 10.0f;
-//ベース(砲台とかある)の城のHP
-const float BaseCastleHp = 10.0f;
+const float MasterCastleHp = 20.0f;
 
 //城がトルネードで受けるダメージ
 const float CastleDamegeTornado = 10.0f;

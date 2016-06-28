@@ -25,7 +25,7 @@ public:
 	virtual ActorPtr GetPlayer() const override;
 	virtual ActorPtr GetCamera() const override;
 
-	virtual std::vector<ActorPtr> GetMasterCastle() const override;
+	virtual std::vector<ActorPtr> GetActors(ACTOR_ID id) override;
 
 private:
 	WorldActor actors;

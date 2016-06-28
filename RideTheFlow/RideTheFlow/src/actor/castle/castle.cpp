@@ -36,7 +36,6 @@ endPos(Vector3::Zero),
 castleUpTimer(0.0f)
 {
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
-	parameter.HP = BaseCastleHp;
 	parameter.isDead = false;
 	parameter.radius = 17;
 	parameter.height = Vector3(0.0f, 34.0f, 0.0f);
@@ -111,7 +110,7 @@ void Castle::Update()
 	prevPos = mPosition;
 
 	//マスターが壊れたら自分も壊れる
-	if (parent->GetParameter().isDead)
+	if (mas->RagDead())
 	{
 		parameter.isDead = true;
 		//がれきを飛ばす

@@ -46,11 +46,10 @@ void EndhingScene::Initialize()
 	//MasterCastleの引数は左からworld,position,,Y軸回転,スケール,(浮島の上じゃないときはなし、それ以外は浮島のActor),
 	//船を出すかどうか,タイトルで使うか,タイトルで使う城の初期RANK　の順
 
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa,Vector3(100.0f),0.0f,2.4f,false,true,5));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(150.0f), 0.0f, 5.0f, true, false, 5));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300.0f), 0.0f, 5.0f, true, false, 5));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(450.0f), 0.0f, 5.0f, true, false, 5));
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(600.0f), 0.0f, 5.0f, true, false, 5));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(150.0f), 0.0f, 5.0f, true, false, 5));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300.0f), 0.0f, 5.0f, true, false, 5));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(450.0f), 0.0f, 5.0f, true, false, 5));
+	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(600.0f), 0.0f, 5.0f, true, false, 5));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-150.0f), 0.0f, 5.0f, true, false, 5));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-300.0f), 0.0f, 5.0f, true, false, 5));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-450.0f), 0.0f, 5.0f, true, false, 5));

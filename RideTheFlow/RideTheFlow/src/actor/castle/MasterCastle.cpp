@@ -15,6 +15,7 @@
 #include "../../UIactor/EnemyPoint.h"
 #include "../NoShipArea.h"
 #include "../particle/BreakCastle.h"
+#include "../../input/Keyboard.h"
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY, float scale, bool spawnShip, bool title, int titleRank) :
 Actor(world),
@@ -30,7 +31,8 @@ InvincibleTimer(0.0f),
 breakSelect(BREAK_SELECT::TORNADO),
 mTitle(title),
 rankUpHeght(17.0f),
-mScaleFloat(0.0f)
+mScaleFloat(0.0f),
+deadRagTimer(0.0f)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
 	parameter.radius = 35;
@@ -57,6 +59,7 @@ mScaleFloat(0.0f)
 	parent = this;
 	mScaleFloat = scale;
 	mTitleRank = titleRank;
+	isDeadRag = false;
 }
 
 MasterCastle::MasterCastle(IWorld& world, Vector3 position, float rotateY, float scale, bool spawnShip, bool title, int titleRank, Actor* _parent) :
@@ -74,7 +77,8 @@ breakSelect(BREAK_SELECT::WIND_BALL),
 mTitle(title),
 rankUpHeght(17.0f),
 noRankUp(false),
-mScaleFloat(0.0f)
+mScaleFloat(0.0f),
+deadRagTimer(0.0f)
 {
 	parameter.id = ACTOR_ID::MASTER_CASTLE_ACTOR;
 	parameter.radius = 35;
@@ -101,6 +105,7 @@ mScaleFloat(0.0f)
 	mRotateY = rotateY;
 	parent = _parent;
 	mTitleRank = titleRank;
+	isDeadRag = false;
 }
 
 
@@ -167,14 +172,25 @@ void MasterCastle::Update()
 			}
 		}
 		//hp‚ª0‚É‚È‚Á‚½‚çŽ€‚Ê
-		if (parameter.HP <= 0)
+		if (parameter.HP <= 0&&!isDeadRag)
 		{
 			//‚ª‚ê‚«‚ð”ò‚Î‚·
 			world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
-			parameter.isDead = true;
+			isDeadRag = true;
 		}
-	}
 
+		if (isDeadRag)
+		{
+			deadRagTimer += Time::DeltaTime;
+			if (deadRagTimer >= 0.5f)
+				parameter.isDead = true;
+		}
+
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::K))
+	{
+		parameter.HP = 0.0f;
+	}
 	if (parent->GetParameter().isDead)
 	{
 		//•‚“‡‚ª‰ó‚ê‚½‚ç

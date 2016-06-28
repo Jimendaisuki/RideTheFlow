@@ -122,7 +122,7 @@ void MonhanCameraActor::Update()
 			{
 				posEnd = false;
 				posSeveStart = position;
-				posSeveEnd = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*50.0f + parameter.mat.GetPosition();
+				posSeveEnd = Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*100.0f + parameter.mat.GetPosition();
 			}
 
 			if ((int)tp.animTime < 170)
