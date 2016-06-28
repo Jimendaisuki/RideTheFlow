@@ -75,4 +75,7 @@ private:
 	Scene	scene;
 	Point	size;
 	RECT	rect;
+
+	Vector2 tornadoPos[8];
+	float	tornadoVel[8];
 };

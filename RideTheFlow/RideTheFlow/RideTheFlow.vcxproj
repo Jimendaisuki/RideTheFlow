@@ -218,6 +218,7 @@
     <ClInclude Include="src\actor\particle\DashBlueLine.h" />
     <ClInclude Include="src\actor\particle\DashBlueLineParticle.h" />
     <ClInclude Include="src\actor\StageGenerator.h" />
+    <ClInclude Include="src\BGMVolumeSetting.h" />
     <ClInclude Include="src\CloudSetting.h" />
     <ClInclude Include="src\scene\EventScene.h" />
     <ClInclude Include="src\SEVolumeSetting.h" />
@@ -251,7 +252,6 @@
     <ClInclude Include="src\actor\Stage.h" />
     <ClInclude Include="src\actor\TestCapsule.h" />
     <ClInclude Include="src\actor\TitleCameraActor.h" />
-    <ClInclude Include="src\actor\tornado\MasterCastle.h" />
     <ClInclude Include="src\actor\castle\CastleBlock.h" />
     <ClInclude Include="src\actor\enemy\EnemyBullet.h" />
     <ClInclude Include="src\actor\particle\WindFlow.h" />

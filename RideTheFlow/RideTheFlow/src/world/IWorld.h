@@ -24,5 +24,5 @@ public:
 	virtual ActorPtr GetPlayer() const = 0;
 	virtual ActorPtr GetCamera() const = 0;
 
-	virtual std::vector<ActorPtr> GetMasterCastle() const = 0;
+	virtual std::vector<ActorPtr> GetActors(ACTOR_ID id)= 0;
 };

@@ -16,8 +16,8 @@ emissiveVec(vec_)
 	parameter.isDead = false;
 	parameter.radius = 10.0f;
 	ps_parameter.position = position_;
-	ps_parameter.intervalSec = 0.5f;
-	ps_parameter.lifeTimeLimit = 120.0f;
+	ps_parameter.intervalSec = 0.1f;
+	ps_parameter.lifeTimeLimit = 10000.0f;
 	ps_parameter.sameEmissiveNum = 3;
 }
 Sand::~Sand()

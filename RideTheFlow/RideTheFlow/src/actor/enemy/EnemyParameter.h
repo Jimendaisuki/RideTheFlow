@@ -24,7 +24,7 @@ const float ArmySpeed = 10.0f;
 const float ArmyAttackTime = 0.5f;
 //軍隊の攻撃範囲
 const float ArmyRange = 200.0f;
-//軍隊がプレイヤーから見てどこまで近づくか(度数)　　例:0度にした場合プレイヤーの真下にまで来る
+//軍隊がプレイヤーから見てどこまで近づくか(度数)　　例:0度にした場合プレイヤーの真下にまで移動する
 const float ArmyNear = 45.0f;
 //軍隊が一回に発射する矢の本数
 const int ArmyArrorwNum = 10;

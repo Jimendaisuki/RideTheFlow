@@ -65,9 +65,9 @@ ActorPtr World::GetCamera() const
 {
 	return cameraActor;
 }
-std::vector<ActorPtr> World::GetMasterCastle() const
+std::vector<ActorPtr> World::GetActors(ACTOR_ID id)
 {
-	return masterCastles;
+	return actors.GetActors(id);
 }
 int World::GetActorCount(ACTOR_ID id,ACTOR_ID id2)
 {

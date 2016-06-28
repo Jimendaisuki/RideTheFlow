@@ -2,8 +2,10 @@
 #include "../UIactor/fadePanel/FadePanel.h"
 #include "../UIactor/menuPanel/MenuPanel.h"
 #include "../actor/Stage.h"
+#include "../actor/StageGenerator.h"
 #include "../input/Keyboard.h"
 #include "../camera/Camera.h"
+#include "../sound/Sound.h"
 
 //コンストラクタ
 MenuScene::MenuScene()
@@ -22,10 +24,24 @@ void MenuScene::Initialize()
 {
 	mIsEnd = false;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
+	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage", false));
 	status = MENU_STATUS::BEGIN;
 
 	MenuPanel::GetInstance().Initialize();
+
+	/* カメラ設定 */
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
+	Camera::GetInstance().Up.Set(Vector3::Up);
+	Camera::GetInstance().Position.Set(Vector3(2225.0f, -312.0f, 4587.0f));
+	Camera::GetInstance().Target.Set(Vector3(0.0f, 1840.0f, -15264.0f));
+	Camera::GetInstance().Update();
+
+	Vector3 lightPos = Camera::GetInstance().Position.Get().Normalized() * 10000;
+	lightPos.y = 30000.0f;
+	SetLightPosition(lightPos);
+	SetLightDirection(-lightPos.Normalized());
+
+	Sound::GetInstance().PlayBGM(BGM_ID::MENU_BGM);
 
 	/* フェード */
 	FadePanel::GetInstance().SetInTime(1.0f);
@@ -37,6 +53,10 @@ void MenuScene::Update()
 	{
 		mIsEnd = true;
 	}
+
+	if (!Sound::GetInstance().IsPlayBGM())
+		Sound::GetInstance().PlayBGM(BGM_ID::MENU_BGM);
+
 
 	switch (status)
 	{
@@ -88,5 +108,6 @@ Scene MenuScene::Next() const
 void MenuScene::End()
 {
 	wo.Clear();
+	Sound::GetInstance().StopBGM();
 }
 
