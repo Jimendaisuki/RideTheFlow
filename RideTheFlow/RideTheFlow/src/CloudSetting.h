@@ -2,8 +2,8 @@
 
 //‰_‚Ìİ’è
 
+//’á‚¢‚Æ‚±‚ë‚É‚ ‚é‰_‚Ì”
+static const int CLOUD_LOW_POSITION_NUM = 20;
 //‚‚¢‚Æ‚±‚ë‚É‚ ‚é‰_‚Ì”
-static const int CLOUD_LOW_POSITION_NUM = 10;
-//’á‚¢‚Æ‚±‚ë‚É‚ ‚é’wå‚Ì”
-static const int CLOUD_HIGH_POSITION_NUM = 5;
+static const int CLOUD_HIGH_POSITION_NUM = 10;
 

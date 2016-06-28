@@ -34,11 +34,11 @@ void AirGun::Update(){
 		parameter.isDead = true;
 	}
 
-	rotates.at(0) *= Quaternion::RotateAxis(Vector3(0, 1, 0), 30.0f);
+	//rotates.at(0) *= Quaternion::RotateAxis(Vector3(0, 1, 0), 30.0f);
 	rotates.at(1) *= Quaternion::RotateAxis(Vector3(1, 1, 0).Normalized(), -30.0f);
 	rotates.at(2) *= Quaternion::RotateAxis(Vector3(0, 0, 1), 30.0f);
 		
-	for (int i = 0; i < 3; i++)
+	for (int i = 1; i < 3; i++)
 	{
 		mats.at(i) = 
 			Matrix4::Scale(0.05f + i * 0.0f) * 
@@ -49,7 +49,7 @@ void AirGun::Update(){
 	parameter.mat = mats.at(0);
 }
 void AirGun::Draw() const{
-	for (int i = 0; i < 3; i++)
+	for (int i = 1; i < 3; i++)
 	{
 		Model::GetInstance().Draw(MODEL_ID::AIR_BALL_MODEL, mats.at(i));
 	}
