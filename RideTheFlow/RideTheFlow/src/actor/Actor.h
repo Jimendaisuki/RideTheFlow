@@ -36,7 +36,7 @@ private:
 
 	CollisionParameter Player_vs_Stage(const Actor& other) const;
 
-
+	CollisionParameter Player_vs_land(const Actor& other) const;
 	/* —´vs */
 	// —´‚Æ’e
 	CollisionParameter Player_vs_Bullet(const Actor& other) const;
