@@ -3,6 +3,7 @@
 #include "../../graphic/Sprite.h"
 #include "../../input/GamePad.h"
 #include "../../input/Keyboard.h"
+#include "../../game/Random.h"
 #include "../../math/Math.h"
 #include "../../time/Time.h"
 #include "../../world/IWorld.h"
@@ -57,6 +58,29 @@ void MenuPanel::Initialize()
 		pages[i] = 0.0f;
 	}
 	textScale = 1.0f;
+
+	/* 雲設定 */
+	for (int i = 0; i < 4; i++)
+	{
+		tornadoPos[i].x = -250.f - Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+		tornadoPos[i + 4].x = WINDOW_WIDTH + 250.f + Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+
+		if (i % 2 == 0)
+		{
+			tornadoPos[i].y = Random::GetInstance().Range(-50.0f, 200.0f);
+			tornadoPos[i + 4].y = Random::GetInstance().Range(-50.0f, 200.0f);
+		}
+		else
+		{
+			tornadoPos[i].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
+			tornadoPos[i + 4].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
+		}
+
+		float num = 30.0f * (i % 2 + 2);
+
+		tornadoVel[i] = Random::GetInstance().Range(10.0f * (i % 2 + 1), num);
+		tornadoVel[i + 4] = Random::GetInstance().Range(-num, -10.0f * (i % 2 + 1));
+	}
 
 
 	/* 実行用設定 */
@@ -119,14 +143,14 @@ void MenuPanel::Update()
 		if (pages[prePage] > 0.0f)
 		{
 			pages[prePage] -= Time::DeltaTime;
-			return;
+			break;
 		}
 		pages[prePage] = 0.0f;
 		// OPEN → SELECT
 		if (textAlpha < 1.0f)
 		{
 			textAlpha += Time::DeltaTime;
-			return;
+			break;
 		}
 		textAlpha = 1.0f;
 		// 選択肢によるアルファ変更
@@ -180,7 +204,7 @@ void MenuPanel::Update()
 			textAlpha -= Time::DeltaTime * 2.0f;
 			for (int i = 0; i < 3; i++)
 				selects[selectNum] = textAlpha;
-			return;
+			break;
 		}
 		textAlpha = 0.0f;
 		// フェードアウト
@@ -206,7 +230,7 @@ void MenuPanel::Update()
 				status = MENU_PANEL_STATUS::SELECT;
 				prePage = 1;
 				nowPage = 0;
-				return;
+				break;
 			}
 			prePage = nowPage;
 			nowPage--;
@@ -219,7 +243,7 @@ void MenuPanel::Update()
 				status = MENU_PANEL_STATUS::SELECT;
 				prePage = 4;
 				nowPage = 1;
-				return;
+				break;
 			}
 			prePage = nowPage;
 			nowPage++;
@@ -234,7 +258,7 @@ void MenuPanel::Update()
 				selects[i] -= Time::DeltaTime;
 				selects[i] = Math::Clamp(selects[i], 0.0f, 1.0f);
 			}
-			return;
+			break;
 		}
 		time -= Time::DeltaTime;
 
@@ -266,7 +290,7 @@ void MenuPanel::Update()
 			if (backAlpha > 0)
 			{
 				backAlpha -= Time::DeltaTime * 3;
-				return;
+				break;
 			}
 			rollAlpha = 0.0f;
 			backAlpha = 0.0f;
@@ -289,6 +313,25 @@ void MenuPanel::Update()
 	{	// 右側
 		Vector2 position = Vector2(WINDOW_WIDTH + 100.0f, RY[i]);
 		RV[i] = (RX[i] - position.x) * bez.Get(CBezier::eNoAccel, CBezier::eSlow_Lv5, alphaTime);
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		if (tornadoPos[i].x <= -400.0f && tornadoVel[i] < 0)
+		{
+			tornadoPos[i].x = WINDOW_WIDTH + 250.0f;
+			tornadoPos[i].y += Random::GetInstance().Range(-10.0f, 10.0f);
+		}
+
+		if (tornadoPos[i].x >= (WINDOW_WIDTH + 400.0f) && tornadoVel[i] > 0)
+		{
+			tornadoPos[i].x = -250.0f;
+			tornadoPos[i].y += Random::GetInstance().Range(-10.0f, 10.0f);
+		}
+		
+		tornadoVel[i] *= Random::GetInstance().Range(0.8f, 1.3f);
+		tornadoVel[i] = Math::Clamp(tornadoVel[i], -100.0f, 100.0f);
+		tornadoPos[i].x += tornadoVel[i] * Time::DeltaTime;
 	}
 }
 
@@ -321,6 +364,11 @@ void MenuPanel::Draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_2_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[2], Scale, 0.0f);
 	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_3_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[3], Scale, 0.0f);
 	Sprite::GetInstance().Draw(SPRITE_ID::MANUAL_4_SPRITE, SCREEN_CENTER, RES_SIZE_2 / 2, pages[4], Scale, 0.0f);
+
+	for (int i = 0; i < 8; i++)
+	{
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, tornadoPos[i], Vector2(400, 300), 1, Vector2(Scale.x, 0.8f * Scale.y));
+	}
 }
 
 void MenuPanel::DrawMenu() const

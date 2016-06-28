@@ -55,4 +55,7 @@ private:
 	std::vector<RootData> roots;
 	std::list<SetRoot>	  useRoots_C;
 	std::list<SetRoot>	  useRoots_T;
+
+	Vector3 lightPos;
+	Vector3 lightDir;
 };

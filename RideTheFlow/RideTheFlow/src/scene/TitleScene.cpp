@@ -64,11 +64,13 @@ TitleScene::~TitleScene()
 //開始
 void TitleScene::Initialize()
 {
+	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM);
+
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
-	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage"));
+	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage", false));
 	wo2.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, true));
 
 	/* ポリゴンデータ */
@@ -105,6 +107,9 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {	
+	if (!Sound::GetInstance().IsPlayBGM())
+		Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM);
+
 	switch (status)
 	{
 	case TITLE_BEGIN:
@@ -237,6 +242,7 @@ void TitleScene::End()
 	wo.Clear();
 	wo2.Clear();
 	DeleteGraph(screenHandle);
+	Sound::GetInstance().StopBGM();
 }
 
 // 竜巻計算用

@@ -10,8 +10,9 @@
 #include "enemy/ShipEnemy.h"
 
 
-StageGenerator::StageGenerator(IWorld& world, const std::string& fileName) :
-Actor(world)
+StageGenerator::StageGenerator(IWorld& world, const std::string& fileName, bool isGameScene) :
+Actor(world),
+isGameScene_(isGameScene)
 {
 	parameter.id = ACTOR_ID::STAGE_ACTOR;
 	parameter.isDead = false;
@@ -66,7 +67,10 @@ void StageGenerator::AddActor()
 	switch (ActorNo)
 	{
 	case 1:	// èÈ
-		world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, true, 5));
+		if (isGameScene_)
+			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 1.0f, true, false, 1));
+		else
+			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, true, 5));
 		break;
 	case 2:	// â∆
 		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
