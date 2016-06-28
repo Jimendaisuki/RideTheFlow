@@ -79,16 +79,16 @@ void CreditScene::Initialize()
 
 	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
 	{
-		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), -500.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 	}
 	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
 	{
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 	}
 
-	wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa,Vector3(0,-700,0), Vector3::Forward));
+	//wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa,Vector3(0,-700,0), Vector3::Forward));
 
-	wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -600, 0), 1.0f, 0.0f, true, false,0));
+	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -600, 0), 1.0f, 0.0f, true, false,0));
 
 	//wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));

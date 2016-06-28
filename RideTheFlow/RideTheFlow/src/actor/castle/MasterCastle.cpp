@@ -239,7 +239,7 @@ void MasterCastle::Draw() const
 
 		Matrix4 topCastle2 = Matrix4::Scale(30.0f*mScaleFloat)*
 			Matrix4::RotateY(mRotateY)*
-			Matrix4::Translate(mPosition + Vector3(0.0f, height, 0.0f)+Vector3(0.0f,35.0f*mScaleFloat,0.0f));
+			Matrix4::Translate(mPosition + Vector3(0.0f, height, 0.0f)+Vector3(0.0f,40.0f*mScaleFloat,0.0f));
 		Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP2_MODEL, topCastle);
 		Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, topCastle2);
 	}

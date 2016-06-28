@@ -11,11 +11,11 @@
 static const int CloudMaxNum = 10;
 
 //サイズ
-static const float MinSize = 10.0f;
-static const float MaxSize = 50.0f;
+static const float MinSize = 100.0f;
+static const float MaxSize = 200.0f;
 
 //流れに流されている時の速度
-static const float FlowSpeed = 400.0f;
+static const float FlowSpeed = 250.0f;
 
 Cloud::Cloud(IWorld& world, const Vector3& position_) :
 Actor(world),
@@ -30,7 +30,7 @@ left(Vector3::Left)
 {
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::CLOUD_ACTOR;
-	parameter.radius = 40.0f;
+	parameter.radius = 300.0f;
 
 	for (int i = 0; i < CloudMaxNum; i++)
 	{
@@ -80,7 +80,7 @@ void Cloud::Update()
 	//流れから離れた場合、３秒かけてスピードを落とす
 	if (windOutTimer <= 3.0f)
 	{
-		moveSpeed -= 16.0f * (3.0f - windOutTimer) * Time::DeltaTime;
+		moveSpeed -= 80.0f * (3.0f - windOutTimer) * Time::DeltaTime;
 	}
 
 	//セルフビルボード計算

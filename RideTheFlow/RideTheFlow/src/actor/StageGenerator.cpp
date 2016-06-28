@@ -67,7 +67,7 @@ void StageGenerator::AddActor()
 	switch (ActorNo)
 	{
 	case 1:	// èÈ
-		if (isGameScene_)
+		if (isGameScene_&&position.y<0)
 			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 1.0f, true, false, 1));
 		else
 			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, true, 5));
@@ -76,15 +76,19 @@ void StageGenerator::AddActor()
 		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
 		break;
 	case 3: // ìáÇP
+		if (isGameScene_)
+		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(world, position, rotation, 8, true));
+		else
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(world, position, rotation, 8, false));
 		break;
 	case 4: // ìáÇQ
-		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f));
+		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f,isGameScene_));
 		break;
 	case 5: // ìáÇR
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
 		break;
 	case 6: // ëD
+		if (isGameScene_)
 		world.Add(ACTOR_ID::SHIP_ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, 2.4f, position, rotation));
 		break;
 	default:
