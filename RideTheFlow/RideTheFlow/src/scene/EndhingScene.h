@@ -5,7 +5,14 @@
 
 class  EndhingScene :public IScene{
 public:
-	//コンストラクタ 
+	enum ENDING_STATUS
+	{
+		ENDING_BEGIN = 0,
+
+	};
+
+public:
+		//コンストラクタ 
 	EndhingScene();
 	//デストラクタ
 	~EndhingScene();
@@ -27,5 +34,7 @@ private:
 	bool mIsEnd;
 	World wa;
 
-	float angle;
+	float		angle;
+	Vector3		cameraPos;
+	Vector3		targetPos;
 };
