@@ -18,15 +18,10 @@ enum MENU_PANEL_STATUS
 	END		= 6,
 };
 
-private:
-	MenuPanel() = default;
-	~MenuPanel() = default;
-
 public:
-	static MenuPanel &GetInstance(){
-		static MenuPanel m;
-		return m;
-	}
+	MenuPanel(Scene currentScene);
+	~MenuPanel();
+
 	// 初期化
 	void Initialize();
 	// 更新
@@ -38,7 +33,7 @@ public:
 	// ポーズシーン用
 	void DrawPause() const;
 	// 未実行なら実行させる
-	void Action(Scene scene_);
+	void Action();
 	// 実行中か？
 	bool IsAction() const;
 	// 戻るを押したか

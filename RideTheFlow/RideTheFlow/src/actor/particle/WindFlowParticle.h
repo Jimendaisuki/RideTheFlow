@@ -8,7 +8,7 @@ class WindFlowParticle:public Particle
 {
 public:
 	//(システム本体,ダッシュ時の軌跡,生成する高さ)
-	WindFlowParticle(WindFlow& windflow_,const std::vector<Vector3>& dashPositions_, float positionHeight_);
+	WindFlowParticle(WindFlow& windflow_, std::vector<Vector3>* dashPositions_, float positionHeight_);
 
 	void OnUpdate() override;
 	void Draw() const override;
@@ -16,7 +16,7 @@ public:
 private:
 	WindFlow& windFlow;
 	//プレイヤーのダッシュの軌跡
-	std::vector<Vector3> dashPositions;
+	std::vector<Vector3>* dashPositions;
 	//位置をずらして幅をもたせる
 	Vector3 randomPosition;
 

@@ -31,7 +31,7 @@ speed(WindFlowSpeed)
 }
 WindFlow::~WindFlow()
 {
-
+	Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
 }
 void WindFlow::Update()
 {
@@ -104,5 +104,5 @@ Vector3& WindFlow::GetMoveVec()
 void WindFlow::Emissive()
 {
 	if (dashPositions.size() > 0)
-		AddParticle(std::make_shared<WindFlowParticle>(*this,dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
+		AddParticle(std::make_shared<WindFlowParticle>(*this,&dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
 }

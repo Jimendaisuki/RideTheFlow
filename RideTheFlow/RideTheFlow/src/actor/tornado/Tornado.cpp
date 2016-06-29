@@ -43,7 +43,7 @@ radius(radius_ * 6.0f)
 
 Tornado::~Tornado()
 {
-
+	Sound::GetInstance().StopSE(SE_ID::STRONGWIND_SE);
 }
 
 void Tornado::Update()
