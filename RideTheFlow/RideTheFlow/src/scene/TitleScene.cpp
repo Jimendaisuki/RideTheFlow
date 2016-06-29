@@ -109,8 +109,6 @@ void TitleScene::Initialize()
 	slideTime = 0;
 	isTitle = false;
 
-	Sleep(300);
-
 	/* ‰¹ */
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);

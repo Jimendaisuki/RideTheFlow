@@ -31,4 +31,6 @@ private:
 	World wa;
 	MenuPanel	menu{ Scene::GamePlay };
 	bool		isPlayerDead;
+	bool		isGameEnd;
+	float		bgmVol;
 };

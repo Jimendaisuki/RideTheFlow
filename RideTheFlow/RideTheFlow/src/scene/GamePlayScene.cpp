@@ -8,6 +8,9 @@
 #include "../input/GamePad.h"
 #include "../game/Random.h"
 #include "../game/WorkFolder.h"
+#include "../math/Math.h"
+#include "../time/Time.h"
+#include "../sound/Sound.h"
 
 #include "../actor/Player.h"
 #include "../actor/MonhanCameraActor.h"
@@ -18,6 +21,7 @@
 #include "../CloudSetting.h"
 #include "../actor/FogActor.h"
 #include "../UIactor/MiniMap.h"
+#include "../UIactor/Failure.h"
 
 
 //コンストラクタ
@@ -34,6 +38,8 @@ GamePlayScene::~GamePlayScene()
 void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
+	isGameEnd = false;
+	isPlayerDead = false;
 
 	//モデルを一旦解放して読み込み直す
 	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
@@ -54,25 +60,70 @@ void GamePlayScene::Initialize()
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 
 	menu.Initialize();
+
+	bgmVol = 1.0f;
+	Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
 }
 
 void GamePlayScene::Update()
 {
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::E)){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::E))
 		mIsEnd = true;
+	
+	/* サウンド */
+	if (!Sound::GetInstance().IsPlayBGM())
+		Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM, DX_PLAYTYPE_LOOP);
+
+	if (isGameEnd && FadePanel::GetInstance().IsFullBlack())
+	{
+		mIsEnd = true;
+		return;
 	}
 
-	/* メニュー系統 */
+	/* メニュー更新 */
 	menu.Update();
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
-		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
-		menu.Action();
 	if (menu.IsBackSelect())
-		mIsEnd = true;
+		isGameEnd = true;
 	if (menu.IsAction())
 		return;
 
 	wa.Update();
+
+	// 終了してたら以下省略
+	if (isGameEnd)
+	{
+		bgmVol -= Time::DeltaTime;
+		bgmVol = Math::Clamp(bgmVol, 0.0f, 1.0f);
+		Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
+		return;
+	}
+
+	/* ポーズ表示 */
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+	{
+		menu.Action();
+	}
+
+	/* クリア判定 */
+	if (wa.GetActorCount(ACTOR_ID::MASTER_CASTLE_ACTOR, ACTOR_ID::MASTER_CASTLE_ACTOR) <= 0 &&
+		wa.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR) <= 0)
+	{
+		isGameEnd = true;
+		FadePanel::GetInstance().SetOutTime(0.5f);
+		FadePanel::GetInstance().FadeOut();
+	}
+
+	/* プレイヤー死亡判定 */
+	if (wa.GetPlayer()->GetParameter().HP <= 0.0f)
+	{
+		isGameEnd = true;
+		isPlayerDead = true;
+		wa.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wa));
+		Sound::GetInstance().PlayBGM(BGM_ID::FAILED_BGM);
+		FadePanel::GetInstance().SetOutTime(10.0f);
+		FadePanel::GetInstance().FadeOut();
+	}
 }
 
 //描画
@@ -102,4 +153,5 @@ Scene GamePlayScene::Next() const
 void GamePlayScene::End()
 {
 	wa.Clear();
+	Sound::GetInstance().StopBGM();
 }
