@@ -3,6 +3,7 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 #include "../world/IWorld.h"
+#include "../camera/Camera.h"
 
 const float deadTime = 2.0f;
 const float offset = 20.0f;
@@ -25,7 +26,8 @@ UIActor(world_)
 	rotate = Random::GetInstance().Range(0.0f, 359.0f);
 
 	/* カメラ位置取得 */
-	Vector3 cameraPos = world_.GetCamera()->GetParameter().mat.GetPosition();
+	//Vector3 cameraPos = world_.GetCamera()->GetParameter().mat.GetPosition();
+	Vector3 cameraPos = Camera::GetInstance().Position.Get();
 
 	/* カメラからの各種ベクトル */
 	// カメラ→プレイヤー
