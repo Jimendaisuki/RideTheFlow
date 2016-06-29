@@ -78,4 +78,7 @@ private:
 
 	Vector2 tornadoPos[8];
 	float	tornadoVel[8];
+
+	bool	isPush;
+	int		currentButton;
 };

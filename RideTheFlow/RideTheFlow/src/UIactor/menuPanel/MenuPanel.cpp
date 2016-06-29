@@ -9,6 +9,8 @@
 #include "../../world/IWorld.h"
 #include "../../actor/Actor.h"
 #include "../../game/GameFrame.h"
+#include "../../sound/Sound.h"
+
 
 const Vector2 SCREEN_CENTER = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 const Vector2 Scale = Vector2((float)WINDOW_WIDTH / 1920.0f, (float)WINDOW_HEIGHT / 1080.0f);
@@ -82,6 +84,8 @@ void MenuPanel::Initialize()
 		tornadoVel[i + 4] = Random::GetInstance().Range(-num, -10.0f * (i % 2 + 1));
 	}
 
+	currentButton = 0;
+	isPush = false;
 
 	/* 実行用設定 */
 	isAction	 = false;
@@ -120,6 +124,7 @@ void MenuPanel::Update()
 			status = MENU_PANEL_STATUS::OPEN;
 			rollBakcAlpha = 1.0f;
 			time = -DELEY_TIME;
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 		}
 		break;
 	case OPEN:		// 巻物開く
@@ -158,26 +163,54 @@ void MenuPanel::Update()
 			selects[i] = 0;
 		selects[selectNum] = 1;
 
+
+		DINPUT_JOYSTATE input;
+		GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
+		currentButton = 0;
+
+		// 十字キー
+		if (!isPush && input.POV[0] != -1)
+		{
+			currentButton = input.POV[0];
+			isPush = true;
+		}
+		if (input.POV[0] == -1 && isPush)
+			isPush = false;
+
 		// 入力処理
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT) || 
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::LEFT))	
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::LEFT) ||
+			currentButton == 27000)
+		{
+			Sound::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 			selectNum++;
+		}
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::RIGHT))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::RIGHT) ||
+			currentButton == 9000)
+		{
+			Sound::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 			selectNum--;
+		}
 		if (selectNum > 2) selectNum = 0;
 		if (selectNum < 0) selectNum = 2;
 
 		// ステータス切り替え
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (selectNum == 0)
 			{
 				if (scene == Scene::Menu)
+				{
+					Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 					status = MENU_PANEL_STATUS::PUSH;
+				}
 				else if (scene == Scene::GamePlay)
+				{
+					Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 					status = MENU_PANEL_STATUS::CLOSE;
+				}
 			}
 			else if (selectNum == 1)
 			{
@@ -222,9 +255,10 @@ void MenuPanel::Update()
 		}
 		pages[nowPage] = 1.0f;
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
 		{
+			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 			if (nowPage <= 1)
 			{
 				status = MENU_PANEL_STATUS::SELECT;
@@ -235,9 +269,10 @@ void MenuPanel::Update()
 			prePage = nowPage;
 			nowPage--;
 		}		
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
+			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			if (nowPage > 3)
 			{
 				status = MENU_PANEL_STATUS::SELECT;
