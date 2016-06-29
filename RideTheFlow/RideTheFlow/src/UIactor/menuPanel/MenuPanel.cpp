@@ -191,7 +191,8 @@ void MenuPanel::Update()
 		/* ステータス切り替え */
 		// 強制閉じる
 		if ((scene == Scene::GamePlay) && 
-			(GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
+			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
 			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
@@ -201,7 +202,7 @@ void MenuPanel::Update()
 		// ×ボタン
 		if ((scene == Scene::Menu) &&
 			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 			isBackSelect = true;

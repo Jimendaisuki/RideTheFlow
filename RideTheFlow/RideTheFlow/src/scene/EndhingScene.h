@@ -8,7 +8,10 @@ public:
 	enum ENDING_STATUS
 	{
 		ENDING_BEGIN = 0,
-
+		ENDING_FADEOUT = 1,
+		ENDING_DRAGON_OUT = 2,
+		ENDING_CLEAR = 3,
+		ENDING_END = 4
 	};
 
 public:
@@ -33,8 +36,11 @@ public:
 private:
 	bool mIsEnd;
 	World wa;
+	ENDING_STATUS	status;
 
 	float		angle;
+	float		currentFog;
 	Vector3		cameraPos;
 	Vector3		targetPos;
+	Vector3		velocity;
 };

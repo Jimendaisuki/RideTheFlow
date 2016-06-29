@@ -69,7 +69,7 @@ void GamePlayScene::Update()
 {
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::E))
 		mIsEnd = true;
-
+	
 	/* サウンド */
 	if (!Sound::GetInstance().IsPlayBGM())
 		Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM, DX_PLAYTYPE_LOOP);
@@ -82,8 +82,6 @@ void GamePlayScene::Update()
 
 	/* メニュー更新 */
 	menu.Update();
-	if (menu.IsBackSelect())
-		isGameEnd = true;
 	if (menu.IsAction())
 		return;
 
@@ -97,6 +95,15 @@ void GamePlayScene::Update()
 		Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
 		return;
 	}
+
+	if (menu.IsBackSelect())
+	{
+		isGameEnd = true;
+		FadePanel::GetInstance().SetOutTime(0.5f);
+		FadePanel::GetInstance().FadeOut();
+		return;
+	}
+
 
 	/* ポーズ表示 */
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||

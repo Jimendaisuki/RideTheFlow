@@ -18,6 +18,8 @@
 #include "../UIactor/fadePanel/FadePanel.h"
 #include "../actor/Player.h"
 #include "../actor/tornado/Tornado.h"
+#include "../actor/Cloud.h"
+#include "../CloudSetting.h"
 #include "../actor/StageGenerator.h"
 #include "../game/Random.h"
 
@@ -182,6 +184,11 @@ void EventScene::Update()
 		{
 			wo.GetPlayer()->SetIsDead(true);
 			wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage", false));
+			for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+				wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+			for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+				wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+
 			currentFogFar = 60000;
 
 			targetPos = Vector3(0.0f, 1840.0f, -15264.0f);
