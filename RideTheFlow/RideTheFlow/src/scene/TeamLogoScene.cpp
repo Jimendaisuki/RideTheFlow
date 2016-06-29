@@ -34,7 +34,6 @@ void TeamLogoScene::Update()
 //描画
 void TeamLogoScene::Draw() const
 {
-	TextDraw::Draw("チームロゴシーン スペースキーでタイトルシーンへ");
 	wa.Draw();
 }
 

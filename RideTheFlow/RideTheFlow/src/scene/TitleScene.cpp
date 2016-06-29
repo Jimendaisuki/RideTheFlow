@@ -11,13 +11,12 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 
+#include "../actor/Player.h"
 #include "../actor/Stage.h"
 #include "../actor/CameraActor.h"
 #include "../actor/TitleCameraActor.h"
-
-#include "../UIactor/fadePanel/FadePanel.h"
-#include "../actor/Player.h"
 #include "../actor/StageGenerator.h"
+#include "../UIactor/fadePanel/FadePanel.h"
 #include "../CloudSetting.h"
 #include "../actor/Cloud.h"
 #include "../game/Random.h"
@@ -166,8 +165,8 @@ void TitleScene::Update()
 		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
 		// ÉVÅ[ÉìèIóπ
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
-			GamePad::GetInstance().AnyTriggerDown())
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			FadePanel::GetInstance().FadeOut();

@@ -62,12 +62,11 @@ void GamePlayScene::Update()
 		mIsEnd = true;
 	}
 
+	/* ƒƒjƒ…[Œn“ */
+	menu.Update();
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
 		menu.Action();
-
-	menu.Update();
-
 	if (menu.IsAction())
 		return;
 
