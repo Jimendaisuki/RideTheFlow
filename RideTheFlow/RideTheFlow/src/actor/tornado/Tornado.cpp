@@ -36,6 +36,7 @@ radius(radius_ * 6.0f)
 	ps_parameter.lifeTimeLimit = 9999.0f;
 	ps_parameter.sameEmissiveNum = 2;
 
+	Sound::GetInstance().StopSE(SE_ID::STORMAKED_SE);
 	Sound::GetInstance().PlaySE(SE_ID::STORMAKED_SE);
 	Sound::GetInstance().PlaySE(SE_ID::STRONGWIND_SE, DX_PLAYTYPE_LOOP);
 	Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
