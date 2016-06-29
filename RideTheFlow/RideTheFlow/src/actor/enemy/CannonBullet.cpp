@@ -62,7 +62,7 @@ void CannonBullet::Update()
 		if (isWindCol)
 			vec = Vector3::Lerp(vec, windVec, CannonWindPercentage / 100.0f);
 
-		if (parameter.mat.GetPosition().y <= -4000) parameter.isDead = true;
+		if (parameter.mat.GetPosition().y <= -3500) parameter.isDead = true;
 
 	noDeadTimer += Time::DeltaTime;
 

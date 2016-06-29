@@ -21,11 +21,11 @@ const float VaristorBulletSize = 2.0f;
 
 /***敵の攻撃のスピード***/
 //矢のスピード
-const float ArrowSpeed = 1.0f;
+const float ArrowSpeed = 5.0f;
 //砲弾のスピード
-const float CannonSpeed = 1.0f;
+const float CannonSpeed = 5.0f;
 //バリスタのスピード
-const float VaristorSpeed = 1.0f;
+const float VaristorSpeed = 5.0f;
 
 /***共通***/
 //どのくらいカメラの前の場所に通常攻撃するか(ダッシュ中は無効)
@@ -35,9 +35,9 @@ const float cameraFrontAttack = 10.0f;
 //軍隊のスピード
 const float ArmySpeed = 10.0f;
 //軍隊の攻撃クールタイム
-const float ArmyAttackTime = 2.0f;
+const float ArmyAttackTime = 10.0f;
 //軍隊の攻撃範囲
-const float ArmyRange = 200.0f;
+const float ArmyRange = 500.0f;
 //軍隊がプレイヤーから見てどこまで近づくか(度数)　　例:0度にした場合プレイヤーの真下にまで移動する
 const float ArmyNear = 45.0f;
 //軍隊が一回に発射する矢の本数

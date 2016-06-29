@@ -14,7 +14,6 @@
 SoldierEnemy::SoldierEnemy(IWorld& world, Vector3 position, Castle& castle, float rotateY,float scale) :
 Actor(world),
 playerMat(Matrix4::Identity),
-cameraMat(Matrix4::Identity),
 attackRag(0),
 attackTime(0),
 arrowCount(0),
@@ -26,7 +25,7 @@ isLook(true)
 {
 	mScaleFloat = scale;
 	parameter.HP = 1.0f;
-	mScale=mScaleFloat;
+	mScale=mScaleFloat*2;
 	parameter.isDead = false;
 	parameter.mat = 
 		Matrix4::Scale(scale)*
@@ -47,9 +46,6 @@ void SoldierEnemy::Update()
 	 	playerMat = other.GetParameter().mat;
 	 	tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	 });
-	 world.EachActor(ACTOR_ID::CAMERA_ACTOR, [&](const Actor& other){
-	 	cameraMat = other.GetParameter().mat;
-	 });
 	 world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	 world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	 
@@ -64,7 +60,6 @@ void SoldierEnemy::Update()
 	 	mArrowNumber = CastleSoldierNotLookAttack;
 	 	mSecondAttack = CastleSoldierNotLookSecondAttack;
 	 }
-	 
 	 
 	 //ダッシュ中以外はカメラの前に矢を放つ
 	 if (tp.dashFlag)
@@ -94,7 +89,7 @@ void SoldierEnemy::Update()
 	 		attackTime = 0.0f;
 	 	}
 	 }
-	 mPosition += mCastle->GetVelocity()*Time::DeltaTime;
+	 mPosition += mCastle->GetVelocity();
 	 parameter.mat =
 		 Matrix4::Scale(mScale)*
 	 	Matrix4::RotateY(mRotateY)*
@@ -103,7 +98,6 @@ void SoldierEnemy::Update()
 void SoldierEnemy::Draw() const
 {
 	 Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, parameter.mat);
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 10, 20, 255, 255, FALSE);
 }
 void SoldierEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

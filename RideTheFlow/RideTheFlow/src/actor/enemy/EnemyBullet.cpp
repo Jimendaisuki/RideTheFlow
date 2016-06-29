@@ -87,7 +87,8 @@ void EnemyBullet::Update()
 	//ˆÚ“®
 	mPosition += vec;
 
-	if (parameter.mat.GetPosition().y <= -3700) parameter.isDead = true;
+	if (parameter.mat.GetPosition().y <= -3500)
+		parameter.isDead = true;
 
 	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
 	//is•ûŒüŒvŽZ

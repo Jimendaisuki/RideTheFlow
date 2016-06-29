@@ -62,9 +62,9 @@ const float CastleVaristorNotLookSecondAttack = 10.0f;
 
 /***é‚Ì•ºm***/
 //é‚Ì•ºm‚ªUŒ‚‚µ‚Ä‚­‚é”ÍˆÍ
-const float CastleSoldierAttackRange = 3200.0f;
+const float CastleSoldierAttackRange = 600.0f;
 //é‚Ì•ºm‚ÌUŒ‚ƒN[ƒ‹ƒ^ƒCƒ€(•b)
-const float CastleSoldierSecondAttack = 10.0f;
+const float CastleSoldierSecondAttack = 1.0f;
 //é‚ªˆê‰ñ‚Éo‚·•ºm‚Ì–î‚Ì”
 const int CastleSoldierNumber = 1;
 

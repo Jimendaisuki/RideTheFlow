@@ -16,7 +16,6 @@ public:
 private:
 	Castle* mCastle;
 	Matrix4 playerMat;
-	Matrix4 cameraMat;
 	Vector3 mPosition;
 	Vector3 toPoint;
 	float  mRotateY;

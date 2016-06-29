@@ -68,14 +68,14 @@ castleUpTimer(0.0f)
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY, scale));
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY, scale));
 
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 180 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 180 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 90 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 90 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, -90 + rotateY, scale));
+	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, -90 + rotateY, scale));
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 		, parameter.radius * 2, *this));
@@ -257,7 +257,7 @@ void Castle::CastleEnemyPosSet()
 		(parameter.mat.GetFront().Normalized()*22.0f +
 		parameter.mat.GetLeft().Normalized()*0.0f +
 		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
-		parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius*2,0.0f);
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius * 2, 0.0f);
 
 	castleEnemyPos.Spear02 =
 		(parameter.mat.GetFront().Normalized()*0.0f +
@@ -278,51 +278,51 @@ void Castle::CastleEnemyPosSet()
 		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
 
 	castleEnemyPos.Soldier01 =
-		(parameter.mat.GetFront().Normalized()*10.0f +
-		parameter.mat.GetLeft().Normalized()*32.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*27.0f +
+		parameter.mat.GetLeft().Normalized()*15.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier02 =
-		(parameter.mat.GetFront().Normalized()*-10.0f +
-		parameter.mat.GetLeft().Normalized()*32.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*27.0f +
+		parameter.mat.GetLeft().Normalized()*-15.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier03 =
-		(parameter.mat.GetFront().Normalized()*10.0f +
-		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*-27.0f +
+		parameter.mat.GetLeft().Normalized()*15.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier04 =
-		(parameter.mat.GetFront().Normalized()*-10.0f +
-		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*-27.0f +
+		parameter.mat.GetLeft().Normalized()*-15.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier05 =
-		(parameter.mat.GetFront().Normalized()*-25.0f +
-		parameter.mat.GetLeft().Normalized()*-10.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*-13.0f +
+		parameter.mat.GetLeft().Normalized()*-30.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier06 =
-		(parameter.mat.GetFront().Normalized()*-25.0f +
-		parameter.mat.GetLeft().Normalized()*10.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*13.0f +
+		parameter.mat.GetLeft().Normalized()*-30.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier07 =
-		(parameter.mat.GetFront().Normalized()*25.0f +
-		parameter.mat.GetLeft().Normalized()*-10.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*-13.0f +
+		parameter.mat.GetLeft().Normalized()*30.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier08 =
-		(parameter.mat.GetFront().Normalized()*25.0f +
-		parameter.mat.GetLeft().Normalized()*10.0f +
-		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
+		(parameter.mat.GetFront().Normalized()*13.0f +
+		parameter.mat.GetLeft().Normalized()*30.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 }
