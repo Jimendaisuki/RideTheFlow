@@ -80,7 +80,7 @@ void WindFlow::Draw() const
 	//	top.y = HeightMax;
 	//	Vector3 bottom = i;
 	//	bottom.y = HeightMin;
-	//	DrawCapsule3D(bottom.ToVECTOR(), top.ToVECTOR(), parameter.radius, 10, 1, 1, 0);
+	//	//DrawCapsule3D(bottom.ToVECTOR(), top.ToVECTOR(), parameter.radius, 10, 1, 1, 0);
 	//}
 }
 void WindFlow::OnCollide(Actor& other, CollisionParameter colpara)

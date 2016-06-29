@@ -103,7 +103,7 @@ void Cloud::Draw() const
 			parameter.mat.GetPosition() + cloudPositions.at(i), 0.4f, parameter.mat.GetRotateDegree(), cloudsizes.at(i), true);
 	}
 
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 4, GetColor(255, 0, 0), GetColor(255, 0, 0), false);
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 4, GetColor(255, 0, 0), GetColor(255, 0, 0), false);
 }
 void Cloud::OnCollide(Actor& other, CollisionParameter colpara)
 {

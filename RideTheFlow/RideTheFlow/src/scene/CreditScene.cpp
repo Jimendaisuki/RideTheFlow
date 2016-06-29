@@ -199,7 +199,7 @@ void CreditScene::Draw() const
 	//}
 
 	//ステージの限界の大きさのワイヤー球
-	//DrawSphere3D(Vector3::Zero.ToVECTOR(), 6000, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
+	////DrawSphere3D(Vector3::Zero.ToVECTOR(), 6000, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
 }
 
 //終了しているか？

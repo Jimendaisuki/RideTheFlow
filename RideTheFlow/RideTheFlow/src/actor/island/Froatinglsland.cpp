@@ -68,7 +68,7 @@ void Froatinglsland::Draw() const
 {
 	Vector3 startPos = parameter.mat.GetPosition() - Vector3(0.0f, parameter.radius / 3, 0.0f);
 	Vector3 endPos = parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius / 2, 0.0f);
-	DrawCapsule3D(startPos.ToVECTOR(), endPos.ToVECTOR(), parameter.radius, 10, 1, 1, FALSE);
+	//DrawCapsule3D(startPos.ToVECTOR(), endPos.ToVECTOR(), parameter.radius, 10, 1, 1, FALSE);
 	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, parameter.mat);
 }
 

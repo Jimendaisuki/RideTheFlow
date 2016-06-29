@@ -881,28 +881,28 @@ void Player::Draw() const {
 			else
 				Model::GetInstance().Draw(MODEL_ID::TEST_TITLE_MODEL, Vector3::Zero, 1.0f);
 			for (auto i : tornadoPosStorage) {
-				/*DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
+				/*//DrawSphere3D(dashPosStorage[i], tornadoCreateRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);*/
 			}
 			//if (damageFlag){
-			//	DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
+			//	//DrawSphere3D(parameter.mat.GetPosition(), 10, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE);
 			//}
 
 			//if (tackleFlag)
-			//DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
+			////DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 
 			if (!title && !event)
-				ParameterDraw();
+				//ParameterDraw();
 
 			//if (bonePosStorage.size() > 1)
 			//for (int count = 2; count < bonePosStorage.size() ; count++){
 			//	int Color = GetColor(0, 0, 255);
-			//	DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
+			//	//DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
 			//}
 
 			//if (dashPosStorage.size() > 1)
 			//for (int count = 0; count < dashPosStorage.size() - 1; count++) {
 			//	int Color = GetColor(0, 0, 255);
-			//	DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
+			//	//DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
 			//}
 
 			SAFE_DELETE_ARRAY(drawVertexVec);

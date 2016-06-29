@@ -80,7 +80,7 @@ void FogActor::Update()
 }
 void FogActor::Draw() const
 {
-	DrawFormatString(900, 10, Vector3::Black.ToColor(), "fogTotalPower : %f", Length);
+	//DrawFormatString(900, 10, Vector3::Black.ToColor(), "fogTotalPower : %f", Length);
 }
 void FogActor::OnCollide(Actor& other, CollisionParameter colpara)
 {
