@@ -75,6 +75,7 @@ void MenuPanel::Initialize()
 	/* â_ê›íË */
 	SetCloud();
 
+	backAlpha = 0.0f;
 	currentButton = 0;
 	isPush = false;
 
@@ -115,13 +116,14 @@ void MenuPanel::Update()
 			status = MENU_PANEL_STATUS::OPEN;
 			rollBakcAlpha = 1.0f;
 			time = -DELEY_TIME;
-			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 		}
 		break;
 	case OPEN:		// ä™ï®äJÇ≠
 		// èàóù
 		time += Time::DeltaTime;
 
+		if (!Sound::GetInstance().IsPlaySE(SE_ID::MENU_ROLL_SE))
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 		moveVec = MOVE_WIDTH * Scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
 		size = Point(moveVec / Scale.x, 0) + RES_SIZE_1.ToPoint();
 		rect.left = moveVec / Scale.x;
@@ -207,7 +209,6 @@ void MenuPanel::Update()
 				}
 				else if (scene == Scene::GamePlay)
 				{
-					Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 					status = MENU_PANEL_STATUS::CLOSE;
 				}
 			}
@@ -266,10 +267,7 @@ void MenuPanel::Update()
 				status = MENU_PANEL_STATUS::PUSH;
 			}
 			else
-			{
-				Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 				status = MENU_PANEL_STATUS::CLOSE;
-			}
 		}
 
 		// ñﬂÇÈ
@@ -315,6 +313,8 @@ void MenuPanel::Update()
 			break;
 		}
 		time -= Time::DeltaTime;
+		if (!Sound::GetInstance().IsPlaySE(SE_ID::MENU_ROLL_SE))
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 
 		moveVec = MOVE_WIDTH * Scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
 		size = Point(moveVec / Scale.x, 0) + RES_SIZE_1.ToPoint();

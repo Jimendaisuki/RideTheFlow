@@ -11,13 +11,12 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 
+#include "../actor/Player.h"
 #include "../actor/Stage.h"
 #include "../actor/CameraActor.h"
 #include "../actor/TitleCameraActor.h"
-
-#include "../UIactor/fadePanel/FadePanel.h"
-#include "../actor/Player.h"
 #include "../actor/StageGenerator.h"
+#include "../UIactor/fadePanel/FadePanel.h"
 #include "../CloudSetting.h"
 #include "../actor/Cloud.h"
 #include "../game/Random.h"
@@ -110,14 +109,12 @@ void TitleScene::Initialize()
 	slideTime = 0;
 	isTitle = false;
 
-	Sleep(300);
-
 	/* 音 */
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
 
 	/* フェード */
-	FadePanel::GetInstance().SetInTime(5.0f);
+	FadePanel::GetInstance().SetInTime(3.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 
@@ -134,7 +131,7 @@ void TitleScene::Update()
 		// ドラゴンが動く
 		if (slideTime < 1)
 		{
-			screenPos = Math::Lerp(WINDOW_WIDTH / 4.0f, endScreenPos, slideTime);
+			screenPos = Math::Lerp(350.0f, endScreenPos, slideTime);
 			slideTime += Time::DeltaTime / 3.0f;
 		}
 		else
@@ -166,8 +163,8 @@ void TitleScene::Update()
 		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
 		// シーン終了
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
-			GamePad::GetInstance().AnyTriggerDown())
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			FadePanel::GetInstance().FadeOut();

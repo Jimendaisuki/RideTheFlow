@@ -1,13 +1,9 @@
 #include "TeamLogoScene.h"
 #include "../AllInclude.h"
-#include <sstream>
-#include <iomanip>
 #include "Scene.h"
-#include "../actor/Player.h"
-#include "../actor/AnimTestActor.h"
-#include "../actor/CameraActor.h"
 #include "../input/Keyboard.h"
-#include "../graphic/TextDraw.h"
+#include "../graphic/Sprite.h"
+#include "../Def.h"
 
 //コンストラクタ
 TeamLogoScene::TeamLogoScene()
@@ -34,8 +30,8 @@ void TeamLogoScene::Update()
 //描画
 void TeamLogoScene::Draw() const
 {
-	TextDraw::Draw("チームロゴシーン スペースキーでタイトルシーンへ");
 	wa.Draw();
+	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_SPRITE, Vector2(WINDOW_WIDTH - 700.0f, WINDOW_HEIGHT - 125.0f));
 }
 
 //終了しているか？

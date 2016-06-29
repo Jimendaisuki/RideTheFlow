@@ -126,7 +126,8 @@ void EventScene::Update()
 	wo.Update();
 
 	/* イベントカット */
-	if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+	if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
+		Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
 	{
 		FadePanel::GetInstance().FadeOut();
 		status = EVENT_END;

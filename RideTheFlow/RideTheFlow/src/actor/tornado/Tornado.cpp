@@ -84,7 +84,7 @@ void Tornado::Draw() const
 	//BottomPos = Matrix4::GetPosition(parameter.mat);
 	//TopPos = BottomPos + velocity * 1000.0f;
 
-	DrawCapsule3D((position + parameter.height).ToVECTOR(), position, parameter.radius, 20, Vector3::Red.ToColor(), Vector3::Red.ToColor(), false);
+	//DrawCapsule3D((position + parameter.height).ToVECTOR(), position, parameter.radius, 20, Vector3::Red.ToColor(), Vector3::Red.ToColor(), false);
 
 	//DrawFormatString(10, 70, GetColor(255, 255, 255), "TopPoint	  : %f %f %f", TopPos.x, TopPos.y, TopPos.z);
 	//DrawFormatString(10, 90, GetColor(255, 255, 255), "BottomPoint: %f %f %f", BottomPos.x, BottomPos.y, BottomPos.z);

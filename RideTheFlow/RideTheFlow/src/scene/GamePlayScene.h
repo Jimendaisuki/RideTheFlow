@@ -27,8 +27,10 @@ public:
 	virtual void End()override;
 
 private:
-
 	bool mIsEnd;
 	World wa;
 	MenuPanel	menu{ Scene::GamePlay };
+	bool		isPlayerDead;
+	bool		isGameEnd;
+	float		bgmVol;
 };
