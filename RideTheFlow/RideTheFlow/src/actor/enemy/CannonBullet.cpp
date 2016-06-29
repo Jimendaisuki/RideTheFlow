@@ -62,7 +62,7 @@ void CannonBullet::Update()
 		if (isWindCol)
 			vec = Vector3::Lerp(vec, windVec, CannonWindPercentage / 100.0f);
 
-		if (parameter.mat.GetPosition().y <= -4000) parameter.isDead = true;
+		if (parameter.mat.GetPosition().y <= -3500) parameter.isDead = true;
 
 	noDeadTimer += Time::DeltaTime;
 
@@ -73,7 +73,7 @@ void CannonBullet::Update()
 	}
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Scale(Vector3(8)) *
+		Matrix4::Scale(Vector3(mScale*ConnonBulletSize)) *
 		Matrix4::Translate(mPosition);
 }
 

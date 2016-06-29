@@ -55,11 +55,7 @@ void Froatinglsland3::Update()
 
 void Froatinglsland3::Draw() const
 {
-
-
 	Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, parameter.mat);
-
-
 }
 
 void Froatinglsland3::OnCollide(Actor& other, CollisionParameter colpara)

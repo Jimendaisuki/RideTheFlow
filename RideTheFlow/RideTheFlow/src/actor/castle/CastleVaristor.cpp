@@ -12,7 +12,7 @@
 #include "../../math/Quaternion.h"
 #include "../enemy/VaristorBullet.h"
 
-CastleVaristor::CastleVaristor(IWorld& world, Vector3 position, Castle& _castle, float rotateY) :
+CastleVaristor::CastleVaristor(IWorld& world, Vector3 position, Castle& _castle, float rotateY,float scale) :
 Actor(world),
 playerMat(Matrix4::Identity),
 attackRag(0),
@@ -21,12 +21,15 @@ arrowCount(0),
 playerAngle(0),
 playerDot(0),
 mPosition(position),
-mScale(1.0f),
+mScale(scale),
 angle(0.0f),
-isLook(true)
+isLook(true),
+mScaleFloat(scale)
 {
 	parameter.isDead = false;
-	parameter.mat = Matrix4::Translate(mPosition);
+	parameter.mat =
+		Matrix4::Scale(scale)*
+		Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
 	mRotateY = rotateY;
 	castle = &_castle;

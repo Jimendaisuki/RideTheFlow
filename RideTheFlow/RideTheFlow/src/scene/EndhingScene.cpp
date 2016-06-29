@@ -1,32 +1,22 @@
 #include"EndhingScene.h"
+#include "../math/Math.h"
 #include "../math/Vector2.h"
+#include "../time/Time.h"
 #include "../input/Keyboard.h"
-
-#include"../actor/MonhanCameraActor.h"
+#include "../input/GamePad.h"
 #include "../actor/Player.h"
-#include "../actor/castle/MasterCastle.h"
-#include "../camera/Camera.h"
 #include "../actor/Stage.h"
 #include "../actor/Cloud.h"
-#include "../actor/enemy/ArmyEnemy.h"
-#include "../actor/enemy/VaristorEnemy.h"
-#include "../actor/enemy/CannonEnemy.h"
-#include "../actor/enemy/ShipEnemy.h"
-#include "../actor/enemy/DoragonSpearEnemy.h"
-#include "../actor/enemy/ShipVaristorEnemy.h"
-#include "../actor/island/Froatinglsland.h"
-#include "../actor/island/Froatinglsland2.h"
-#include "../actor/island/Froatinglsland3.h"
-#include "../actor/castle/CastleManager.h"
-#include "../UIactor/MiniMap.h"
-#include "../actor/StageGenerator.h"
-//火曜日　木曜日
+#include "../camera/Camera.h"
+#include "../UIactor/fadePanel/FadePanel.h"
+#include "../UIactor/Clear.h"
+
+float const LENGTH = 10000.0f;
+float const HEIGHT = 10000.0f;
+
 //コンストラクタ
 EndhingScene::EndhingScene()
 {
-	timeTest = 0;
-	//mIsEnd = false;
-	position = Vector3::Zero;
 }
 
 //デストラクタ
@@ -37,21 +27,25 @@ EndhingScene::~EndhingScene()
 //開始
 void EndhingScene::Initialize()
 {
-	boonPositions.clear();
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
- 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CastleManager>(wa));
-
-	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0.0f,0.0f,0.0f), 0.0f, 2.4f, true, false, 1));
-	//MasterCastleの引数は左からworld,position,,Y軸回転,スケール,(浮島の上じゃないときはなし、それ以外は浮島のActor),
-	//船を出すかどうか,タイトルで使うか,タイトルで使う城の初期RANK　の順
-
-	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", true));
-
-	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(wa, Vector3::Zero,1,1));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+
+	angle = 0.0f;
+	float x = Math::Sin(angle) * LENGTH;
+	float z = Math::Cos(angle) * LENGTH;
+	cameraPos = Vector3(x, HEIGHT, z);
+	targetPos = Vector3::Up * 1000.0f;
+
+	Camera::GetInstance().Up.Set(Vector3::Up);
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
+	Camera::GetInstance().Position.Set(cameraPos);
+	Camera::GetInstance().Target.Set(targetPos);
+	Camera::GetInstance().Update();
+
+
+	FadePanel::GetInstance().SetInTime(0.5f);
+	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 
 void EndhingScene::Update()
@@ -60,14 +54,14 @@ void EndhingScene::Update()
 		mIsEnd = true;
 	}
 
+	angle += Time::DeltaTime * 10.0;
+	float x = Math::Sin(angle) * LENGTH;
+	float z = Math::Cos(angle) * LENGTH;
+	cameraPos = Vector3(x, HEIGHT, z);
+	targetPos = Vector3::Up * 2000.0f;
 
-
-	if (wa.GetActorCount(ACTOR_ID::MASTER_CASTLE_ACTOR, ACTOR_ID::MASTER_CASTLE_ACTOR) <= 0 &&
-		wa.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR) <= 0)
-	{
-		//mIsEnd = true;
-	}
-
+	Camera::GetInstance().Position.Set(cameraPos);
+	Camera::GetInstance().Target.Set(targetPos);
 	Camera::GetInstance().Update();
 	wa.Update();
 }
@@ -75,7 +69,6 @@ void EndhingScene::Update()
 //描画
 void EndhingScene::Draw() const
 {
-	
 	wa.Draw();
 }
 
@@ -88,10 +81,10 @@ bool EndhingScene::IsEnd() const
 //次のシーンを返す
 Scene EndhingScene::Next() const
 {
-	return Scene::Credit;
+	return Scene::Title;
 }
 
-void EndhingScene::End(){
-	boonPositions.clear();
+void EndhingScene::End()
+{
 	wa.Clear();
 }

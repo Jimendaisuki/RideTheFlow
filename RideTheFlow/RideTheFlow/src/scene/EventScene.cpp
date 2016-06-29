@@ -170,7 +170,8 @@ void EventScene::Update()
 			t -= Time::DeltaTime;
 		t = Math::Clamp(t, 0.0f, 1.0f);
 
-		if ((playerPos - cameraPos).Length() >= 500 && !isTitle)
+		if ((playerPos - cameraPos).Length() >= 500 && !isTitle &&
+			!FadePanel::GetInstance().IsAction())
 		{
 			FadePanel::GetInstance().FadeOut();
 			status = EVENT_STATUS::EVENT_DRAGON_END;

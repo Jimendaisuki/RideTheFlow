@@ -62,7 +62,8 @@ void VaristorBullet::Update()
 		vec = Vector3::Lerp(vec, windVec, VaristorWindPercentage / 100.0f);
 	//移動
 	mPosition += vec*VaristorSpeed*Time::DeltaTime;
-	if (parameter.mat.GetPosition().y <= -3700) parameter.isDead = true;
+	if (parameter.mat.GetPosition().y <= -3000)
+		parameter.isDead = true;
 
 	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
 
@@ -70,7 +71,7 @@ void VaristorBullet::Update()
 	seveVec.Normalize();
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Scale(mScale) *
+		Matrix4::Scale(mScale*VaristorBulletSize) *
 		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), seveVec).Normalized(), Vector3::Inner(Vector3(0, 0, -1), seveVec)) *
 		Matrix4::Translate(mPosition);
 

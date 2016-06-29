@@ -80,7 +80,8 @@ void ArmyEnemy::Update()
 	//UŒ‚
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
-	if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
+
+	if (attackTime >= mSecondAttack&&attackRag >= 0.0f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
 	{
