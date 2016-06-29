@@ -104,5 +104,5 @@ Vector3& WindFlow::GetMoveVec()
 void WindFlow::Emissive()
 {
 	if (dashPositions.size() > 0)
-		AddParticle(std::make_shared<WindFlowParticle>(*this,dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
+		AddParticle(std::make_shared<WindFlowParticle>(*this,&dashPositions, Random::GetInstance().Range(HeightMin, HeightMax)));
 }
