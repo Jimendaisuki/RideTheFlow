@@ -13,7 +13,7 @@ Actor(world)
 	parameter.HP = lslandHP;
 
 	parameter.isDead = false;
-	parameter.radius = 120*scale.x;
+	parameter.radius = 80*scale.x;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -24,7 +24,8 @@ Actor(world)
 	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f),
-		parameter.radius, *this));
+		parameter.radius*scale.x, *this));
+	DxLib::MV1SetupCollInfo(MODEL_ID::ISLE_3_MODEL, -1);
 }
 
 Froatinglsland3::~Froatinglsland3()
@@ -54,7 +55,11 @@ void Froatinglsland3::Update()
 
 void Froatinglsland3::Draw() const
 {
+
+
 	Model::GetInstance().Draw(MODEL_ID::ISLE_3_MODEL, parameter.mat);
+
+
 }
 
 void Froatinglsland3::OnCollide(Actor& other, CollisionParameter colpara)

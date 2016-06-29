@@ -28,7 +28,8 @@ isCol(true)
 	//‘D‚ª“ü‚ç‚È‚¢‚æ‚¤‚Éİ’è
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f),
-		parameter.radius, *this));
+		parameter.radius*scale.x, *this));
+	DxLib::MV1SetupCollInfo(MODEL_ID::ISLE_2_MODEL, -1);
 }
 
 Froatinglsland2::~Froatinglsland2()

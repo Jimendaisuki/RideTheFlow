@@ -48,7 +48,7 @@ void EndhingScene::Initialize()
 	//MasterCastleの引数は左からworld,position,,Y軸回転,スケール,(浮島の上じゃないときはなし、それ以外は浮島のActor),
 	//船を出すかどうか,タイトルで使うか,タイトルで使う城の初期RANK　の順
 
-	//wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", true));
+	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", true));
 
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(wa, Vector3::Zero,1,1));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
@@ -65,7 +65,7 @@ void EndhingScene::Update()
 	if (wa.GetActorCount(ACTOR_ID::MASTER_CASTLE_ACTOR, ACTOR_ID::MASTER_CASTLE_ACTOR) <= 0 &&
 		wa.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR) <= 0)
 	{
-		mIsEnd = true;
+		//mIsEnd = true;
 	}
 
 	Camera::GetInstance().Update();

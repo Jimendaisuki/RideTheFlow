@@ -90,7 +90,7 @@ void StageGenerator::AddActor()
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f,isGameScene_));
 		break;
 	case 5: // “‡‚R
-		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
+		world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
 		break;
 	case 6: // ‘D
 		if (!isGameScene_)

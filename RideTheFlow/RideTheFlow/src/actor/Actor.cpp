@@ -124,7 +124,6 @@ CollisionParameter Actor::Player_vs_land(const Actor& other) const
 	/* ResultData */
 	if (colpara.colFlag)
 	{
-
 		while (colpara.colFlag){
 			sphere.position += colpara.colPos.Normalized() * 1.0f;
 			stageflag = true;
@@ -163,26 +162,14 @@ CollisionParameter Actor::Player_vs_land(const Actor& other) const
 	}
 	if (!colpara.colFlag)
 	{
-		sphere.position = parameter.mat.GetPosition();
-		sphere.radius = parameter.radius;
-		ModelData stage2;
-		stage2.MHandle = Model::GetInstance().GetHandle(MODEL_ID::ISLE_3_MODEL);
-		stage2.MFrameIndex = -1;
-		stageflag = false;
-
-		colpara = Collisin::GetInstace().ModelSphere(stage2, sphere);
-		/* ResultData */
-		while (colpara.colFlag){
-			sphere.position += colpara.colPos.Normalized() * 1.0f;
-			stageflag = true;
-			colpara = Collisin::GetInstace().ModelSphere(stage2, sphere);
-		}
-
-		colpara.colPos = sphere.position;
-		colpara.colID = COL_ID::PLAYER_LAND_COL;
-		if (stageflag)
+		Capsule stage2;
+		stage2.startPos = other.parameter.mat.GetPosition() - Vector3(0.0f, other.parameter.radius / 3, 0.0f);
+		stage2.endPos = other.parameter.mat.GetPosition() + Vector3(0.0f, other.parameter.radius / 2, 0.0f);
+		stage2.radius = other.parameter.radius;
+		colpara = Collisin::GetInstace().PushedBack_SphereCapsule(sphere, stage2);
+		if (colpara.colFlag)
 		{
-			colpara.colFlag = true;
+			colpara.colID = COL_ID::PLAYER_LAND_COL;
 			return colpara;
 		}
 	}
