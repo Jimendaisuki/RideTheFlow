@@ -20,6 +20,8 @@ private:
 	void WindFlowBreak();
 	//空気砲による壊れ方
 	void WindBallBreak();
+	//ダメージ
+	void DamageBreak();
 
 private:
 	//壊れ方

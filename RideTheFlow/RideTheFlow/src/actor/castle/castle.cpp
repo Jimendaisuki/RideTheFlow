@@ -119,7 +119,7 @@ void Castle::Update()
 	{
 		parameter.isDead = true;
 		//がれきを飛ばす
-		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, breakSelect));
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, breakSelect));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_BREAK_SE);
 	}
 
@@ -156,9 +156,9 @@ void Castle::Update()
 void Castle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 }
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)
@@ -176,6 +176,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		//ダメージ食らった時の音
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
 		damage = false;
 	}
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
@@ -183,6 +184,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= CastleDamegeWind;
 		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
 		damage = false;
 	}
 	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
@@ -190,6 +192,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= CastleDamageWindBall;
 		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
 		damage = false;
 	}
 

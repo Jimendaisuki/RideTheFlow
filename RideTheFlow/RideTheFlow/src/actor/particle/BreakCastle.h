@@ -30,6 +30,7 @@ enum BREAK_SELECT
 	WIND_FLOW,
 	//空気砲
 	WIND_BALL,
+	DAMAGE,
 	BREAK_END,
 };
 
@@ -57,11 +58,16 @@ private:
 	//空気砲による壊れ方
 	void WindBallBreakUpdate();
 	void WindBallBreakEmissive();
+	//ダメージによる壊れ方
+	void DamageEmissive();
 
-	void CastleWindFlowBreakEmissive();
-	void MasterCastleEmissive(const Vector3& vec_);
+	void CastleWindFlowBreakEmissive( float scale_);
+	void MasterCastleEmissive(const Vector3& vec_,float scale_);
 
 	void ShipEmissive(std::function<Vector3()> vecFunc);
+
+	void CastleDamageEmissive(std::function<Vector3()> vecFunc);
+	void ShipDamageEmissive(std::function<Vector3()> vecFunc);
 
 	Vector3 RandomVelocity();
 

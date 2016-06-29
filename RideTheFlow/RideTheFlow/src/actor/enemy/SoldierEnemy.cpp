@@ -99,7 +99,7 @@ void SoldierEnemy::Update()
 void SoldierEnemy::Draw() const
 {
 	// Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 10, 20, 255, 255, FALSE);
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 10, 20, 255, 255, FALSE);
 }
 void SoldierEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

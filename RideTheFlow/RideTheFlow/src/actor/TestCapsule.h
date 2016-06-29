@@ -50,7 +50,7 @@ void TestCapsule::Update()
 
 void TestCapsule::Draw() const
 {
-	DrawCapsule3D(parameter.mat.GetPosition, parameter.mat.GetPosition + parameter.height, parameter.radius, 8, GetColor(0, 0, 255), GetColor(0, 0, 255), FALSE);
+	//DrawCapsule3D(parameter.mat.GetPosition, parameter.mat.GetPosition + parameter.height, parameter.radius, 8, GetColor(0, 0, 255), GetColor(0, 0, 255), FALSE);
 }
 
 void TestCapsule::OnCollide(Actor& other, CollisionParameter colpara)

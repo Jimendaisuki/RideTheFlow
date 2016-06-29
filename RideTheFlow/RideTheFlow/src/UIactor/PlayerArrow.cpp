@@ -54,5 +54,5 @@ void PlayerArrow::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::MAP_PLAYER_SPRITE, drawPos_, Vector2(32, 32), 1.0f, MINI_MAP_SCALE / 2, angle_, true, false);
 	Vector3 Pos = player->GetParameter().mat.GetPosition();
-	DrawFormatString(0, 300, GetColor(255, 255, 255), "PlayerPos:[%f][%f][%f]", Pos.x, Pos.y, Pos.z);
+	//DrawFormatString(0, 300, GetColor(255, 255, 255), "PlayerPos:[%f][%f][%f]", Pos.x, Pos.y, Pos.z);
 }

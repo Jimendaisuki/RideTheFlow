@@ -65,7 +65,7 @@ void CastleTop::Update()
 	if (mMc->GetParameter().isDead)
 	{
 		parameter.isDead = true;
-		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, mMc->getBreakSelect()));
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, mMc->getBreakSelect()));
 	}
 	parameter.mat = Matrix4::Scale(mScale)*
 		Matrix4::RotateY(mRotateY)*

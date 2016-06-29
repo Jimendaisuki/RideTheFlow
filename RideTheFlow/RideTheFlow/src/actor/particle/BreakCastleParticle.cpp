@@ -47,7 +47,7 @@ flowAddPosition(Vector3::Zero)
 		rotYAdd			 = Random::GetInstance().Range(18.0f, 24.0f);
 		risingSpeed		 = Random::GetInstance().Range(30.0f, 40.0f);
 		tornadeDegree	 = Random::GetInstance().Range(0.0f, 360.0f);
-		tornadeAddRadius = Random::GetInstance().Range(10.0f, 16.0f);
+		tornadeAddRadius = Random::GetInstance().Range(70.0f, 100.0f);
 	}
 	else if(breakSelect == BREAK_SELECT::WIND_FLOW)
 	{
@@ -64,7 +64,14 @@ flowAddPosition(Vector3::Zero)
 		ballRotYSpeed = Random::GetInstance().Range(-90.0f, 90.0f);
 		moveParam.vec.y = Random::GetInstance().Range(-30.0f, -8.0f);
 	}
-	
+	else if (breakSelect == BREAK_SELECT::DAMAGE)
+	{
+		lifeParam.lifeTimeLimit = 3.0f;
+		flowRotXSpeed = Random::GetInstance().Range(-20.0f, 20.0f);
+		flowRotYSpeed = Random::GetInstance().Range(-20.0f, 20.0f);
+		flowRotXAdd = Random::GetInstance().Range(-5.0f, 5.0f);
+		flowRotYAdd = Random::GetInstance().Range(-5.0f, 5.0f);
+	}
 }
 
 void BreakCastleParticle::OnUpdate()
@@ -77,6 +84,7 @@ void BreakCastleParticle::OnUpdate()
 	case TORNADO: TornadoBreak(); break;
 	case WIND_FLOW: WindFlowBreak(); break;
 	case WIND_BALL: WindBallBreak(); break;
+	case DAMAGE: DamageBreak(); break;
 	default:
 		break;
 	}
@@ -106,7 +114,7 @@ void BreakCastleParticle::TornadoBreak()
 		Math::Cos(tornadeDegree) * tornadeRadius,
 		0.0f,
 		Math::Sin(tornadeDegree) * tornadeRadius);
-	if (tornadeRadius < 120.0f)
+	if (tornadeRadius < 300.0f)
 		tornadeRadius += tornadeAddRadius * Time::DeltaTime;
 	tornadeDegree += tornadeSpeed * Time::DeltaTime;
 
@@ -149,6 +157,27 @@ void BreakCastleParticle::WindBallBreak()
 	//‰ñ“]ŒvŽZ
 	rotX += ballRotXSpeed * Time::DeltaTime;
 	rotY += ballRotYSpeed * Time::DeltaTime;
+
+	rotmat =
+		Matrix4::RotateY(rotY) *
+		Matrix4::RotateX(rotX);
+
+	mat =
+		Matrix4::Scale(drawParam.size) *
+		rotmat *
+		Matrix4::Translate(*pParentPosition + moveParam.pos);
+}
+
+void BreakCastleParticle::DamageBreak()
+{
+	//ˆÚ“®
+	moveParam.pos += moveParam.vec * Time::DeltaTime;
+
+	//‰ñ“]ŒvŽZ
+	flowRotXSpeed += flowRotXAdd * Time::DeltaTime;
+	flowRotYSpeed += flowRotYAdd * Time::DeltaTime;
+	rotX += flowRotXSpeed * Time::DeltaTime;
+	rotY += flowRotYSpeed * Time::DeltaTime;
 
 	rotmat =
 		Matrix4::RotateY(rotY) *
