@@ -64,6 +64,8 @@ void MenuScene::Initialize()
 
 void MenuScene::Update()
 {
+	wo.Update();
+
 	switch (status)
 	{
 	case BEGIN:

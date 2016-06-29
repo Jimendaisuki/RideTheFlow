@@ -148,7 +148,7 @@ void TitleScene::Update()
 			Vertex2D_2[i].dif.a = stormAlpha;
 		}
 		
-		if (stormAlpha >= StormMaxAlpha / 2)
+		if (stormAlpha >= StormMaxAlpha / 3)
 			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
 
 		if (titleAlpha >= 1.0f)
