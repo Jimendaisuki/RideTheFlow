@@ -11,17 +11,31 @@ const float VaristorPower = 1.0f;
 const float DoragonSperarPower = 5.0f;
 
 
+/****敵の攻撃の大きさ****/
+//矢の大きさ
+const float ArrowSize = 2.0f;
+//砲弾の大きさ
+const float ConnonBulletSize = 3.0f;
+//バリスタ弾の大きさ
+const float VaristorBulletSize = 2.0f;
+
+/***敵の攻撃のスピード***/
+//矢のスピード
+const float ArrowSpeed = 1.0f;
+//砲弾のスピード
+const float CannonSpeed = 1.0f;
+//バリスタのスピード
+const float VaristorSpeed = 1.0f;
 
 /***共通***/
 //どのくらいカメラの前の場所に通常攻撃するか(ダッシュ中は無効)
 const float cameraFrontAttack = 10.0f;
 
 /****敵軍隊****/
-
 //軍隊のスピード
 const float ArmySpeed = 10.0f;
 //軍隊の攻撃クールタイム
-const float ArmyAttackTime = 0.5f;
+const float ArmyAttackTime = 2.0f;
 //軍隊の攻撃範囲
 const float ArmyRange = 200.0f;
 //軍隊がプレイヤーから見てどこまで近づくか(度数)　　例:0度にした場合プレイヤーの真下にまで移動する
@@ -35,15 +49,13 @@ const float NotLookArmyAttackTime = 20.0f;
 const float NotLookArmyArrorwNum = 0;
 
 //軍隊の攻撃精度
-const float ArmyArrowAccuracy = 50.0f;
+const float ArmyArrowAccuracy = 100.0f;
 //軍隊の攻撃が流れの影響を受ける割合
 const float ArmyWindPercentage = 80.0f;
 
 
 /****敵バリスタ****/
 
-//バリスタの弾スピード
-const float VaristorSpeed = 3.0f;
 //バリスタの攻撃クールタイム
 const float VaristorAttackTime = 5.0f;
 //バリスタが一回に発射する矢の数
@@ -73,8 +85,6 @@ const float VaristorWindPercentage = 75.0f;
 
 /****敵大砲****/
 
-//大砲の弾スピード
-const float CannonSpeed = 3.0f;
 //大砲の攻撃クールタイム
 const float CannonAttackTime = 0.1f;
 //大砲の攻撃範囲

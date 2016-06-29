@@ -80,7 +80,23 @@ void ArmyEnemy::Update()
 	//UŒ‚
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
-	if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
+
+	//if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
+	//	Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
+	//	abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
+	//{
+	//	attackRag = 0.0f;
+	//	arrowCount++;
+	//	world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<EnemyBullet>(world, mPosition, toPoint, *this));
+	//	if (arrowCount >= mArrowNumber)
+	//	{
+	//		arrowCount = 0;
+	//		attackTime = 0.0f;
+	//	}
+	//}
+
+
+	if (attackTime >= mSecondAttack&&attackRag >= 0.0f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
 	{

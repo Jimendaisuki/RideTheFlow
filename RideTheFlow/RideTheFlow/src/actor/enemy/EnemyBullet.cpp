@@ -16,7 +16,7 @@
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
 time(0),
-speed(3.0f),
+speed(ArrowSpeed),
 distance(0, 0, 0),
 mPosition(position),
 mScale(1.0f,1.0f,1.0f),
@@ -95,7 +95,7 @@ void EnemyBullet::Update()
 	vec.Normalize();
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Scale(mScale) *
+		Matrix4::Scale(mScale*ArrowSize) *
 		Quaternion::RotateAxis(Vector3::Cross(Vector3(0, 0, -1), vec).Normalized(), Vector3::Inner(Vector3(0,0,-1),vec)) *
 		Matrix4::Translate(mPosition);
 

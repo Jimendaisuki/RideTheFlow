@@ -7,7 +7,7 @@
 class CastleVaristor :public Actor, public std::enable_shared_from_this<CastleVaristor>
 {
 public:
-	CastleVaristor(IWorld& world, Vector3 position, Castle& castle, float rotateY);
+	CastleVaristor(IWorld& world, Vector3 position, Castle& castle, float rotateY,float scale);
 	~CastleVaristor();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -23,6 +23,7 @@ private:
 	float playerDot;
 	float backDot;
 	float angle;
+	float mScaleFloat;
 	//çUåÇä÷åW
 	float mSecondAttack;
 	float mArrowNumber;

@@ -7,7 +7,7 @@
 class SoldierEnemy : public Actor, public std::enable_shared_from_this<SoldierEnemy>
 {
 public:
-	SoldierEnemy(IWorld& world, Vector3 position,Castle& castle,float rotateY);
+	SoldierEnemy(IWorld& world, Vector3 position,Castle& castle,float rotateY,float scale);
 	~SoldierEnemy();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -30,6 +30,8 @@ private:
 	float attackRag;
 	int arrowCount;
 	bool isLook;
+	float mScaleFloat;
+	float mScale;
 
 };
 

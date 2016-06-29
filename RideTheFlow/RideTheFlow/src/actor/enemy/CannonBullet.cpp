@@ -73,7 +73,7 @@ void CannonBullet::Update()
 	}
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Scale(Vector3(8)) *
+		Matrix4::Scale(Vector3(mScale*ConnonBulletSize)) *
 		Matrix4::Translate(mPosition);
 }
 
