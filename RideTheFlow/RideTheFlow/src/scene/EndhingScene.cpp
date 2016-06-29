@@ -47,7 +47,7 @@ void EndhingScene::Initialize()
 	//MasterCastleの引数は左からworld,position,,Y軸回転,スケール,(浮島の上じゃないときはなし、それ以外は浮島のActor),
 	//船を出すかどうか,タイトルで使うか,タイトルで使う城の初期RANK　の順
 
-	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", true));
+	//wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", true));
 
 
 	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland>(wa, Vector3::Zero,1,1));

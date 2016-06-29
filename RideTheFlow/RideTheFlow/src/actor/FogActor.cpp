@@ -12,8 +12,10 @@ static const float FogSettingValue = 0.1f;
 static const float RangeMax = 10.0f;
 static const float AngleSettingValue = 18.0f;
 
-//sandstormのseが聞こえはじめるフォグの距離
-static const float SandStormStartPower = 2000.0f;
+//sandstormのseが聞こえはじめる、原点からの距離
+static const float SandStormStartLength = 6000.0f;
+//最大になる距離
+static const float SandStormLengthMax = 8000.0f;
 
 FogActor::FogActor(IWorld& world) :
 Actor(world),
@@ -26,6 +28,7 @@ fogStartAngle(70.0f)
 	parameter.id = ACTOR_ID::FOG_ACTOR;
 	SetFogEnable(TRUE);
 	SetFogColor(180, 180, 200);
+	Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, 0.0f);
 	Sound::GetInstance().PlaySE(SE_ID::SAND_STORM_SE, DX_PLAYTYPE_LOOP);
 }
 FogActor::~FogActor()
@@ -72,8 +75,8 @@ void FogActor::Update()
 
 	SetFogStartEnd(0.0f, fogTotalPower);
 
-	if (fogTotalPower < SandStormStartPower)
-		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, (SandStormStartPower - fogTotalPower) / SandStormStartPower);
+	if (length > SandStormStartLength)
+		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, (SandStormStartLength - length) / (SandStormLengthMax - SandStormStartLength));
 }
 void FogActor::Draw() const
 {

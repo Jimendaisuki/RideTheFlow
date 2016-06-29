@@ -87,6 +87,17 @@ void Sound::PlaySE(const SE_ID& id, int playtype)
 	PlaySoundMem(m_SEs[id], playtype);
 }
 
+void Sound::PlaySEDuplicate(const SE_ID& id, int playtype)
+{
+	if (IsPlaySE(id) && playtype == DX_PLAYTYPE_LOOP)
+		return;
+
+	auto dupHandle = DuplicateSoundMem(m_SEs[id]);
+
+	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[id]) * 255), m_SEs[id]);
+	PlaySoundMem(dupHandle, playtype);
+}
+
 // BGM‚ðŽ~‚ß‚é
 void Sound::StopBGM()
 {

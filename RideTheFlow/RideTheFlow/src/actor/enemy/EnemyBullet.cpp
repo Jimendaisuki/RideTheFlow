@@ -44,7 +44,7 @@ noDead(false)
 
 	parent = &parent_;
 
-	Sound::GetInstance().PlaySE(SE_ID::ARROW_FIRE_SE);
+	Sound::GetInstance().PlaySEDuplicate(SE_ID::ARROW_FIRE_SE);
 }
 EnemyBullet::~EnemyBullet()
 {

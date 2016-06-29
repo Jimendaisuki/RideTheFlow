@@ -37,7 +37,7 @@ noDeadTimer(0.0f)
 		Matrix4::Translate(position);
 	parent = &parent_;
 
-	Sound::GetInstance().PlaySE(SE_ID::CANON_FIRE_SE);
+	Sound::GetInstance().PlaySEDuplicate(SE_ID::CANON_FIRE_SE);
 
 }
 CannonBullet::~CannonBullet()

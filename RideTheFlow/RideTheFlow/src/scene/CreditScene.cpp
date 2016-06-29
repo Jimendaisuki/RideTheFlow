@@ -55,31 +55,20 @@ CreditScene::~CreditScene()
 //開始
 void CreditScene::Initialize()
 {
-	////mIsEnd = false;
-	////wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	////wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
-	////wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-
-	////wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0), true));
-
-	////wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
-	////wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-
 	////モデルを一旦解放して読み込み直す
 	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
 	WorkFolder::SetWorkFolder("res/Model/");
 	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
 	
 	mIsEnd = false;
-	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	//wa.Add(ACTOR_ID::BEGIN_ACTOR, std::make_shared<CastleManager>(wa));
+	wa.Add(ACTOR_ID::BEGIN_ACTOR, std::make_shared<CastleManager>(wa));
 	//wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
-
 	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
 	{
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
@@ -89,6 +78,8 @@ void CreditScene::Initialize()
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 	}
 
+
+	////============================テスト用======================================
 	//wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa,Vector3(0,-700,0), Vector3::Forward));
 
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -600, 0), 1.0f, 0.0f, true, false,0));
@@ -110,8 +101,6 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(-30, -80, 300)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20,  -80, -400)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -80, 700)	 * bai, 0.0f, true, false));
-
-
 
 	armyCreateTimer = 0.0f;
 	armyCount = 0;

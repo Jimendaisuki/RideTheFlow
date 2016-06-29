@@ -41,7 +41,7 @@ noDeadTimer(0.0f)
 		Matrix4::Translate(position);
 	parent = &parent_;
 
-	Sound::GetInstance().PlaySE(SE_ID::BALLISTA_FIRE_SE);
+	Sound::GetInstance().PlaySEDuplicate(SE_ID::BALLISTA_FIRE_SE);
 }
 VaristorBullet::~VaristorBullet()
 {
