@@ -43,7 +43,7 @@ bool TeamLogoScene::IsEnd() const
 //Ÿ‚ÌƒV[ƒ“‚ğ•Ô‚·
 Scene TeamLogoScene::Next() const
 {
-	return Scene::Ending;
+	return Scene::Title;
 }
 
 void TeamLogoScene::End(){
