@@ -57,8 +57,8 @@ Cloud::~Cloud()
 void Cloud::Update()
 {
 	//“–‚½‚è”»’èƒZƒbƒg
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
 
 	moveChangeTimer += Time::DeltaTime;
 	windOutTimer += Time::DeltaTime;

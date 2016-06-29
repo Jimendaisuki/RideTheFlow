@@ -46,7 +46,7 @@ void SoldierEnemy::Update()
 	 	playerMat = other.GetParameter().mat;
 	 	tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	 });
-	 world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
+	 ////world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	 world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	 
 	 //ÉvÉåÉCÉÑÅ[Ç™å©Ç¶ÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©
