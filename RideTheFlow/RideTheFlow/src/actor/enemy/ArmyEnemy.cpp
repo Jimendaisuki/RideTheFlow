@@ -9,11 +9,11 @@
 #include "../../UIactor/EnemyPoint.h"
 #include "../../sound/Sound.h"
 #include "../../game/Random.h"
+#include "../../camera/Camera.h"
 
 ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),
-cameraMat(Matrix4::Identity),
 attackRag(0),
 attackTime(0),
 arrowCount(0),
@@ -40,7 +40,6 @@ void ArmyEnemy::Update()
 {
 	TackleParameter tp;
 	tp = player->ReturnTackleParameter();
-	cameraMat = world.GetCamera()->GetParameter().mat;
 	playerMat = player->GetParameter().mat;
 	 
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);

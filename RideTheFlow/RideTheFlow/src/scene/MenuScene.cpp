@@ -6,6 +6,10 @@
 #include "../input/Keyboard.h"
 #include "../camera/Camera.h"
 #include "../sound/Sound.h"
+#include "../CloudSetting.h"
+#include "../actor/Cloud.h"
+#include "../game/Random.h"
+
 
 //コンストラクタ
 MenuScene::MenuScene()
@@ -41,6 +45,15 @@ void MenuScene::Initialize()
 	SetLightPosition(lightPos);
 	SetLightDirection(-lightPos.Normalized());
 
+	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+	{
+		wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+	{
+		wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+
 	/* 音 */
 	Sound::GetInstance().PlayBGM(BGM_ID::MENU_BGM, DX_PLAYTYPE_LOOP);
 
@@ -51,11 +64,6 @@ void MenuScene::Initialize()
 
 void MenuScene::Update()
 {
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
-	{
-		mIsEnd = true;
-	}
-
 	switch (status)
 	{
 	case BEGIN:

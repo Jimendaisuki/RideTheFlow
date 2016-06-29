@@ -18,6 +18,9 @@
 #include "../UIactor/fadePanel/FadePanel.h"
 #include "../actor/Player.h"
 #include "../actor/StageGenerator.h"
+#include "../CloudSetting.h"
+#include "../actor/Cloud.h"
+#include "../game/Random.h"
 
 /* 竜巻ポリゴン用データ */
 const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
@@ -71,6 +74,15 @@ void TitleScene::Initialize()
 	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage", false));
 	wo2.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, true));
 
+	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+	{
+		wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+	{
+		wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+
 	/* ポリゴンデータ */
 	amount_1 = 0;
 	amount_2 = 0;
@@ -111,9 +123,6 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {	
-	if (!Sound::GetInstance().IsPlayBGM())
-		Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM);
-
 	switch (status)
 	{
 	case TITLE_BEGIN:
@@ -188,13 +197,7 @@ void TitleScene::Update()
 
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 
-	/* 以下デバッグ用 */
-	// シーン終了
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
-	{
-		mIsEnd = true;
-	}
-
+	/* タイトルロゴ */
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
 		isTitle = !isTitle;
 }

@@ -23,13 +23,12 @@ public:
 	virtual void EachUIActor(UI_ID id, std::function<void(const UIActor&)> func) override;
 
 	virtual ActorPtr GetPlayer() const override;
-	virtual ActorPtr GetCamera() const override;
 
 	virtual std::vector<ActorPtr> GetActors(ACTOR_ID id) override;
 
 private:
 	WorldActor actors;
-	ActorPtr   playerActor, cameraActor;
+	ActorPtr   playerActor;
 	std::vector<ActorPtr> masterCastles;
 	
 };

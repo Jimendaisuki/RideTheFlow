@@ -125,6 +125,13 @@ void EventScene::Update()
 	/* 各種更新 */
 	wo.Update();
 
+	/* イベントカット */
+	if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+	{
+		FadePanel::GetInstance().FadeOut();
+		status = EVENT_END;
+	}
+
 	/* カメラ設定 */
 	Vector3 playerPos = wo.GetPlayer()->GetParameter().mat.GetPosition();
 	Vector3 playerRight = Vector3::Left;
@@ -192,7 +199,7 @@ void EventScene::Update()
 	case EventScene::EVENT_STAGE_IN:
 		currentFogFar -= 6000 * Time::DeltaTime;
 		
-		stormVol = 6000.0f / currentFogFar;
+		stormVol = 10000.0f / currentFogFar;
 		stormVol = Math::Clamp(stormVol, 0.2f, 1.0f);
 		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, stormVol);
 		if (currentFogFar < 10000 && stormVol >= 1.0f)
@@ -263,13 +270,6 @@ void EventScene::Update()
 
 	timer += Time::DeltaTime;
 	fogTime += fogPeriod;
-
-	/* 以下デバッグ用 */
-	// シーン終了
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
-	{
-		mIsEnd = true;
-	}
 }
 
 //描画

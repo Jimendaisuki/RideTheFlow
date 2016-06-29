@@ -3,8 +3,8 @@
 #include "IScene.h"
 #include "ISceneMediator.h"
 #include "../world/World.h"
-
-class Player;
+#include "../UIactor/fadePanel/FadePanel.h"
+#include "../UIactor/menuPanel/MenuPanel.h"
 
 class  GamePlayScene :public IScene{
 public:
@@ -30,6 +30,5 @@ private:
 
 	bool mIsEnd;
 	World wa;
-	std::vector<Vector3>boonPositions;
-	std::shared_ptr<Player> player;
+	MenuPanel	menu{ Scene::GamePlay };
 };

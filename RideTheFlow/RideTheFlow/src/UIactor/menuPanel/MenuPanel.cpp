@@ -73,27 +73,7 @@ void MenuPanel::Initialize()
 	textScale = 1.0f;
 
 	/* 雲設定 */
-	for (int i = 0; i < 4; i++)
-	{
-		tornadoPos[i].x = -250.f - Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
-		tornadoPos[i + 4].x = WINDOW_WIDTH + 250.f + Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
-
-		if (i % 2 == 0)
-		{
-			tornadoPos[i].y = Random::GetInstance().Range(-50.0f, 200.0f);
-			tornadoPos[i + 4].y = Random::GetInstance().Range(-50.0f, 200.0f);
-		}
-		else
-		{
-			tornadoPos[i].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
-			tornadoPos[i + 4].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
-		}
-
-		float num = 30.0f * (i % 2 + 2);
-
-		tornadoVel[i] = Random::GetInstance().Range(10.0f * (i % 2 + 1), num);
-		tornadoVel[i + 4] = Random::GetInstance().Range(-num, -10.0f * (i % 2 + 1));
-	}
+	SetCloud();
 
 	currentButton = 0;
 	isPush = false;
@@ -206,8 +186,16 @@ void MenuPanel::Update()
 		if (selectNum > 2) selectNum = 0;
 		if (selectNum < 0) selectNum = 2;
 
-		// ステータス切り替え
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
+		/* ステータス切り替え */
+		// 強制閉じる
+		if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
+		{
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
+			status = MENU_PANEL_STATUS::CLOSE;
+		}
+		// 通常処理
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (selectNum == 0)
@@ -268,7 +256,24 @@ void MenuPanel::Update()
 		}
 		pages[nowPage] = 1.0f;
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
+		// 強制閉じる
+		if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+		{
+			pages[nowPage] = 0;
+			if (scene == Scene::Menu)
+			{
+				selectNum = 0;
+				status = MENU_PANEL_STATUS::PUSH;
+			}
+			else
+			{
+				Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
+				status = MENU_PANEL_STATUS::CLOSE;
+			}
+		}
+
+		// 戻る
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
@@ -282,7 +287,8 @@ void MenuPanel::Update()
 			prePage = nowPage;
 			nowPage--;
 		}		
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
+		// 進む
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
@@ -340,6 +346,7 @@ void MenuPanel::Update()
 				backAlpha -= Time::DeltaTime * 3;
 				break;
 			}
+			tornadoAlpha = 0;
 			rollAlpha = 0.0f;
 			backAlpha = 0.0f;
 			isAction = false;
@@ -415,7 +422,7 @@ void MenuPanel::Draw() const
 
 	for (int i = 0; i < 8; i++)
 	{
-		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, tornadoPos[i], Vector2(400, 300), 1, Vector2(Scale.x, 0.8f * Scale.y));
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, tornadoPos[i], Vector2(400, 300), tornadoAlpha, Vector2(Scale.x, 0.8f * Scale.y));
 	}
 }
 
@@ -435,14 +442,6 @@ void MenuPanel::DrawMenu() const
 	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], Scale * textScale, true, false);
 	float posX[3] = { textDrawPos_s.x, textDrawPos_m.x, textDrawPos_b.x };
 	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(Scale.x), true, false);
-
-	/* 中心から移動用
-	Point size = Point(move * 2 / scale.x, 0) + RES_SIZE_1.ToPoint();
-	rect.left = 0.0f + move / scale.x;
-	rect.right = rect.left + RES_SIZE_1.x;
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_3_SPRITE, SCREEN_CENTER + Vector2(move, 0.0f), size, RES_SIZE_1 / 2, alpha, scale, 180.0f, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_2_SPRITE, SCREEN_CENTER - Vector2(move, 0.0f), rect, RES_SIZE_1 / 2, alpha, scale, 0.0f, true, false);
-	*/
 }
 
 void MenuPanel::DrawPause() const
@@ -469,6 +468,7 @@ void MenuPanel::Action()
 	if (isAction) return;
 	Initialize();
 	isAction = true;
+	tornadoAlpha = 1.0f;
 }
 // 実行中か？
 bool MenuPanel::IsAction() const
@@ -494,4 +494,31 @@ void MenuPanel::Close()
 void MenuPanel::Stop()
 {
 	isAction = false;
+}
+
+void MenuPanel::SetCloud()
+{
+	tornadoAlpha = 1.0f;
+
+	for (int i = 0; i < 4; i++)
+	{
+		tornadoPos[i].x = -250.f - Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+		tornadoPos[i + 4].x = WINDOW_WIDTH + 250.f + Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+
+		if (i % 2 == 0)
+		{
+			tornadoPos[i].y = Random::GetInstance().Range(-50.0f, 200.0f);
+			tornadoPos[i + 4].y = Random::GetInstance().Range(-50.0f, 200.0f);
+		}
+		else
+		{
+			tornadoPos[i].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
+			tornadoPos[i + 4].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
+		}
+
+		float num = 30.0f * (i % 2 + 2);
+
+		tornadoVel[i] = Random::GetInstance().Range(10.0f * (i % 2 + 1), num);
+		tornadoVel[i + 4] = Random::GetInstance().Range(-num, -10.0f * (i % 2 + 1));
+	}
 }
