@@ -4,7 +4,7 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 
-class  TitleScene :public IScene
+class  TitleScene : public IScene
 {
 enum TITLE_STATUS
 {

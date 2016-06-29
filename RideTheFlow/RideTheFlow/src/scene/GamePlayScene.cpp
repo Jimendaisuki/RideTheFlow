@@ -40,7 +40,7 @@ void GamePlayScene::Initialize()
 	WorkFolder::SetWorkFolder("res/Model/");
 	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
 
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, false, Vector3(0.0f, 0.0f, -5500.0f), Vector3::Forward));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::BEGIN_ACTOR,  std::make_shared<CastleManager>(wa));
@@ -67,6 +67,8 @@ void GamePlayScene::Update()
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
 		menu.Action();
+	if (menu.IsBackSelect())
+		mIsEnd = true;
 	if (menu.IsAction())
 		return;
 
@@ -89,7 +91,12 @@ bool GamePlayScene::IsEnd() const
 //éüÇÃÉVÅ[ÉìÇï‘Ç∑
 Scene GamePlayScene::Next() const
 {
-	return Scene::Ending;
+	if (menu.IsBackSelect())
+		return Scene::Menu;
+	else if (isPlayerDead)
+		return Scene::Title;
+	else
+		return Scene::Ending;
 }
 
 void GamePlayScene::End()

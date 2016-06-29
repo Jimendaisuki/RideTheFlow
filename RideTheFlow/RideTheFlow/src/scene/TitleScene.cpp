@@ -116,7 +116,7 @@ void TitleScene::Initialize()
 	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
 
 	/* フェード */
-	FadePanel::GetInstance().SetInTime(5.0f);
+	FadePanel::GetInstance().SetInTime(3.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 
@@ -133,7 +133,7 @@ void TitleScene::Update()
 		// ドラゴンが動く
 		if (slideTime < 1)
 		{
-			screenPos = Math::Lerp(WINDOW_WIDTH / 4.0f, endScreenPos, slideTime);
+			screenPos = Math::Lerp(350.0f, endScreenPos, slideTime);
 			slideTime += Time::DeltaTime / 3.0f;
 		}
 		else
