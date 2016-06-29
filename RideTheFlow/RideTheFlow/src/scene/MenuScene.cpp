@@ -27,7 +27,7 @@ void MenuScene::Initialize()
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage", false));
 	status = MENU_STATUS::BEGIN;
 
-	MenuPanel::GetInstance().Initialize();
+	menu.Initialize();
 
 	/* カメラ設定 */
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
@@ -59,16 +59,16 @@ void MenuScene::Update()
 	switch (status)
 	{
 	case BEGIN:
-		if (FadePanel::GetInstance().IsFullClear() && !MenuPanel::GetInstance().IsAction())
+		if (FadePanel::GetInstance().IsFullClear() && !menu.IsAction())
 		{
-			MenuPanel::GetInstance().Action(Scene::Menu);
+			menu.Action();
 			status = MENU_STATUS::STANBAY;
 		}
 		break;
 	case STANBAY:
-		if (MenuPanel::GetInstance().IsEnd())
+		if (menu.IsEnd())
 		{
-			FadePanel::GetInstance().FadeOut(1.0f);
+			FadePanel::GetInstance().FadeOut();
 			status = MENU_STATUS::END;
 		}
 		break;
@@ -80,14 +80,14 @@ void MenuScene::Update()
 		break;
 	}
 
-	MenuPanel::GetInstance().Update();
+	menu.Update();
 }
 
 //描画
 void MenuScene::Draw() const
 {
 	wo.Draw();
-	MenuPanel::GetInstance().Draw();
+	menu.Draw();
 }
 
 //終了しているか？
@@ -99,7 +99,7 @@ bool MenuScene::IsEnd() const
 //次のシーンを返す
 Scene MenuScene::Next() const
 {
-	if (MenuPanel::GetInstance().IsBackSelect()) return Scene::Title;
+	if (menu.IsBackSelect()) return Scene::Title;
 	else return Scene::Event;
 }
 

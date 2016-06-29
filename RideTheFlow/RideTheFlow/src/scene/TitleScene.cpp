@@ -98,12 +98,14 @@ void TitleScene::Initialize()
 	slideTime = 0;
 	isTitle = false;
 
+	Sleep(300);
+
 	/* 音 */
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
 
 	/* フェード */
-	FadePanel::GetInstance().SetInTime(4.0f);
+	FadePanel::GetInstance().SetInTime(5.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 

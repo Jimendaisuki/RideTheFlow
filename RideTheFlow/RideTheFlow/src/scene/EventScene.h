@@ -74,6 +74,9 @@ private:
 	Vector3 velocity;
 	float   t;
 
+	bool	isStageLook;
+	float	stormVol;
+
 	bool	isTitle;
 	int		gongCount;
 };

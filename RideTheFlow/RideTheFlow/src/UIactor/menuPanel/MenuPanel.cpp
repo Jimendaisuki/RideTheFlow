@@ -26,6 +26,17 @@ const float RY[5] = { 0.0f, WINDOW_HEIGHT / 10.0f, WINDOW_HEIGHT * 0.25f, WINDOW
 float LV[6] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 float RV[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
+MenuPanel::MenuPanel(Scene currentScene) :
+scene(currentScene)
+{
+
+}
+
+MenuPanel::~MenuPanel()
+{
+
+}
+
 void MenuPanel::Initialize()
 {
 	/* 初期設定 */
@@ -55,7 +66,7 @@ void MenuPanel::Initialize()
 	/* マニュアル */
 	nowPage = 1;
 	prePage = 0;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		pages[i] = 0.0f;
 	}
@@ -216,6 +227,7 @@ void MenuPanel::Update()
 			{
 				prePage = 0;
 				nowPage = 1;
+				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 				status = MENU_PANEL_STATUS::MANUAL;
 			}
 			else if (selectNum == 2)
@@ -225,6 +237,7 @@ void MenuPanel::Update()
 				else if (scene == Scene::GamePlay)
 				{
 					isBackSelect = true;
+					Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 					Close();
 				}
 			}
@@ -255,7 +268,7 @@ void MenuPanel::Update()
 		}
 		pages[nowPage] = 1.0f;
 
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
@@ -269,7 +282,7 @@ void MenuPanel::Update()
 			prePage = nowPage;
 			nowPage--;
 		}		
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z) ||
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
@@ -451,11 +464,9 @@ void MenuPanel::DrawPause() const
 }
 
 // 未実行なら実行
-void MenuPanel::Action(Scene scene_)
+void MenuPanel::Action()
 {
 	if (isAction) return;
-	/* 現在のシーンを取得 */
-	scene = scene_;
 	Initialize();
 	isAction = true;
 }

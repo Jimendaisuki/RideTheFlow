@@ -87,15 +87,19 @@ void EventScene::Initialize()
 	velocity = Vector3::Zero;
 	t = 1;
 
+	isStageLook = false;
+
 	gongCount = 0;
+	stormVol = 1.0f;
 
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 
 	/* 音 */
 	Sound::GetInstance().PlayBGM(BGM_ID::INTRO_BGM);
+	Sound::GetInstance().PlaySE(SE_ID::SAND_STORM_SE, DX_PLAYTYPE_LOOP);
 
 	/* フェード */
-	FadePanel::GetInstance().SetInTime(3.0f);
+	FadePanel::GetInstance().SetInTime(2.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 
 	// 以下マスターはいらない
@@ -123,7 +127,7 @@ void EventScene::Update()
 
 	/* カメラ設定 */
 	Vector3 playerPos = wo.GetPlayer()->GetParameter().mat.GetPosition();
-	Vector3 playerRight = -wo.GetPlayer()->GetParameter().mat.GetLeft().Normalized();
+	Vector3 playerRight = Vector3::Left;
 
 	switch (status)
 	{
@@ -174,15 +178,26 @@ void EventScene::Update()
 			targetPos = Vector3(0.0f, 1840.0f, -15264.0f);
 			cameraPos = Vector3(2225.0f, -312.0f, 4587.0f);
 
+			isStageLook = true;
+			stormVol = 0;
+
+			Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, stormVol);
+			Sound::GetInstance().SetSEVolume(SE_ID::STORMAKED_SE, 0.0f);
+			Sound::GetInstance().PlaySE(SE_ID::SAND_STORM_SE);
+			FadePanel::GetInstance().SetOutTime(0.5f);
 			FadePanel::GetInstance().FadeIn();
 			status = EVENT_STATUS::EVENT_STAGE_IN;
 		}
 		break;
 	case EventScene::EVENT_STAGE_IN:
 		currentFogFar -= 6000 * Time::DeltaTime;
-		if (currentFogFar < 10000)
+		
+		stormVol = 6000.0f / currentFogFar;
+		stormVol = Math::Clamp(stormVol, 0.2f, 1.0f);
+		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, stormVol);
+		if (currentFogFar < 10000 && stormVol >= 1.0f)
 		{
-			wo.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wo, Vector3(3000.0f, 0.0f, 0.0f), Vector2(100), Vector3::Zero, 200.0f));
+			wo.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wo, Vector3(3000.0f, 0.0f, 0.0f), Vector2(100), Vector3::Zero, 800.0f));
 			status = EventScene::EVENT_GONG;
 		}
 		break;
@@ -242,10 +257,9 @@ void EventScene::Update()
 	/* カメラ設定 */
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
-
+	Camera::GetInstance().Update();
 
 	SetFogStartEnd(0, currentFogFar);
-	Camera::GetInstance().Update();
 
 	timer += Time::DeltaTime;
 	fogTime += fogPeriod;
@@ -263,8 +277,11 @@ void EventScene::Draw() const
 {
 	wo.Draw();
 
-	Model::GetInstance().Draw(MODEL_ID::GONG_MODEL, Vector3(1648.6f, -93.0f, 4023.7f), 1, Vector3(0.0f, 90.0f, 0.0f), Vector3(4.0f), true);
-	Model::GetInstance().Draw(MODEL_ID::GONG_MODEL, Vector3(1819.4f, -93.0f, 4032.3f), 1, Vector3(0.0f, 90.0f, 0.0f), Vector3(4.0f), true);
+	if (isStageLook)
+	{
+		Model::GetInstance().Draw(MODEL_ID::GONG_MODEL, Vector3(1648.6f, -93.0f, 4023.7f), 1, Vector3(0.0f, 90.0f, 0.0f), Vector3(4.0f), true);
+		Model::GetInstance().Draw(MODEL_ID::GONG_MODEL, Vector3(1819.4f, -93.0f, 4032.3f), 1, Vector3(0.0f, 90.0f, 0.0f), Vector3(4.0f), true);
+	}
 
 	/* 竜巻 */
 	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
@@ -294,6 +311,9 @@ void EventScene::End()
 	SetLightPosition(Vector3::Zero.ToVECTOR());
 	SetLightDirection(Vector3(0.5f, -0.5f, -0.5f).ToVECTOR());
 	SetFogEnable(FALSE);
+	Sound::GetInstance().StopSE(SE_ID::SAND_STORM_SE);
+	Sound::GetInstance().SetSEVolume(SE_ID::STORMAKED_SE, 1.0f);
+	Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, 1.0f);
 }
 
 // 竜巻計算用
