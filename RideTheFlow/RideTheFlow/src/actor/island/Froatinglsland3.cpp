@@ -13,7 +13,7 @@ Actor(world)
 	parameter.HP = lslandHP;
 
 	parameter.isDead = false;
-	parameter.radius = 120;
+	parameter.radius = 120*scale.x;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -59,9 +59,4 @@ void Froatinglsland3::Draw() const
 
 void Froatinglsland3::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::TORNADO_ISLAND_COL&&isCol)
-	{
-		parameter.HP -= lslandDamage;
-		isCol = false;
-	}
 }

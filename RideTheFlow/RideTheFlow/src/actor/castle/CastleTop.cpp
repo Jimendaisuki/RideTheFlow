@@ -8,29 +8,28 @@
 #include"CastleParameter.h"
 #include "../NoShipArea.h"
 
-CastleTop::CastleTop(IWorld& world, Vector3 position, MasterCastle& mc,float rotateY) :
+CastleTop::CastleTop(IWorld& world, Vector3 position, MasterCastle& mc,float rotateY,float scale) :
 Actor(world),
 playerMat(Matrix4::Identity),
 startPos(position),
 endPos(position),
 mPosition(position),
-mScale(30.0f),
+mScale(30.0f*scale),
 castleDown(true),
 noColTimer(0),
 noCol(false),
 castleUpTimer(0.0f)
-
 {
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
-	Vector2 side = Vector2(mScale.x, mScale.z) / 2;
+
 	parameter.isDead = false;
-	parameter.radius = 35;
-	parameter.height = Vector3(0.0f, 30.0f, 0.0f);
+	parameter.radius = 35*scale;
+	parameter.height = Vector3(0.0f, 30.0f, 0.0f)*scale;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
 		Matrix4::RotateX(0) *
-		Matrix4::RotateY(0) *
+		Matrix4::RotateY(rotateY) *
 		Matrix4::Translate(position);
 	mMc = &mc;
 	mRank = 0.0f;
@@ -39,6 +38,7 @@ castleUpTimer(0.0f)
 		, parameter.radius, *this));
 	mRotateY = rotateY;
 	sevePos = mPosition;
+	mScaleFloat = scale;
 }
 
 CastleTop::~CastleTop()
@@ -56,7 +56,7 @@ void CastleTop::Update()
 	if (mMc->castleRankUp())
 	{
 		startPos = mPosition;
-		endPos = mPosition + Vector3(0.0f, 34.0f, 0.0f);
+		endPos = mPosition + Vector3(0.0f, 34.0f, 0.0f)*mScaleFloat;
 		castleUpTimer = 0.0f;
 	}
 
@@ -75,8 +75,7 @@ void CastleTop::Update()
 void CastleTop::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP2_MODEL, parameter.mat);
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, parameter.mat*Matrix4::Translate(Vector3(0, 40, 0)));
-	DrawFormatString(0, 432, GetColor(0, 0, 0), "Rank  %d", mRank);
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_TOP_MODEL, parameter.mat*Matrix4::Translate(Vector3(0, 40, 0)*mScaleFloat));
 }
 
 void CastleTop::OnCollide(Actor& other, CollisionParameter colpara)

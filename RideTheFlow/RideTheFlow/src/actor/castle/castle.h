@@ -33,7 +33,7 @@ struct CastleEnemyPos
 class Castle : public Actor, public std::enable_shared_from_this<Castle>
 {
 public:
-	Castle(IWorld& world, Vector3 position,Actor& _parent,int rank,float rotateY);
+	Castle(IWorld& world, Vector3 position,Actor& _parent,int rank,float rotateY,float scale);
 	~Castle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -70,6 +70,7 @@ private:
 	int mRank;
 	float mRotateY;
 	float castleUpTimer;
+	float mScaleFloat;
 
 	bool damage;
 	float InvincibleTimer;

@@ -32,7 +32,7 @@ const int ArmyArrorwNum = 10;
 //軍隊からプレイヤーが見えていないときの攻撃クールタイム
 const float NotLookArmyAttackTime = 20.0f;
 //軍隊からプレイヤーが見えていないときの一回に発射する矢の本数
-const float NotLookArmyArrorwNum = 5;
+const float NotLookArmyArrorwNum = 0;
 
 //軍隊の攻撃精度
 const float ArmyArrowAccuracy = 50.0f;
@@ -62,7 +62,7 @@ const float VaristorSwingSpeed = 100.0f;
 //バリスタからプレイヤーが見えていないときの攻撃クールタイム
 const float NotLookVaristorAttackTime = 10.0f;
 //バリスタからプレイヤーが見えていないときの一回に発射する矢の本数
-const float NotLookVaristorArrowNum = 2;
+const float NotLookVaristorArrowNum = 0;
 
 //バリスタ攻撃精度(小さいほど高精度)
 const float VaristorArrowAccuracy = 10.0f;
@@ -93,7 +93,7 @@ const float ConnonSwingSpeed = 50.0f;
 //大砲からプレイヤーが見えていないときの攻撃クールタイム
 const float NotLookCannonAttackTime = 30.0f;
 //大砲からプレイヤーが見えていないときの一回に発射する砲弾の数
-const float NotLookCannonShellNum = 1;
+const float NotLookCannonShellNum = 0;
 
 //大砲攻撃精度(小さいほど高精度)
 const float CannonShellAccuracy = 10.0f;
@@ -140,7 +140,7 @@ const float ShipVaristorSwingSpeed = 100.0f;
 //船バリスタからプレイヤーが見えていないときの攻撃クールタイム
 const float ShipNotLookVaristorAttackTime = 10.0f;
 //船バリスタからプレイヤーが見えていないときの一回に発射する矢の本数
-const float ShipNotLookVaristorArrowNum = 2;
+const float ShipNotLookVaristorArrowNum = 0;
 
 
 //船大砲の攻撃クールタイム
@@ -161,7 +161,7 @@ const float ShipConnonSwingSpeed = 50.0f;
 //船大砲からプレイヤーが見えていないときの攻撃クールタイム
 const float ShipNotLookCannonAttackTime = 30.0f;
 //船大砲からプレイヤーが見えていないときの一回に発射する砲弾の数
-const float ShipNotLookCannonShellNum = 1;
+const float ShipNotLookCannonShellNum = 0;
 
 
 /***撃龍槍***/

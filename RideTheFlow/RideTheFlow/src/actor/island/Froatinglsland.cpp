@@ -31,8 +31,6 @@ isGameScene(isGameScene_)
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world, 
 		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
 		parameter.radius, *this));
-	//world .Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, parameter.mat.GetPosition()+Vector3(0.0f,62.0f*scale.x,0.0f)
-	//	, 0.0f,0.0f, true, false,1.0f, this));
 }
 
 Froatinglsland::~Froatinglsland()
@@ -70,9 +68,4 @@ void Froatinglsland::Draw() const
 
 void Froatinglsland::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::TORNADO_ISLAND_COL&&isCol)
-	{
-		parameter.HP -= lslandDamage;
-		isCol = false;
-	}
 }

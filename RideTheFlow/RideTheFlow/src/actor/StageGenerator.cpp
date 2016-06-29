@@ -68,7 +68,12 @@ void StageGenerator::AddActor()
 	{
 	case 1:	// èÈ
 		if (isGameScene_)
-			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 1.0f, true, false, 1));
+		{
+			if (position.y>0)
+				world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, true, false, 1));
+			else
+				world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, false, 1));
+		}
 		else
 			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, true, 5));
 		break;

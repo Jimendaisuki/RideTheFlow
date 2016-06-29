@@ -184,10 +184,6 @@ void ShipEnemy::Draw() const
 {
 	//ƒ‚ƒfƒ‹‚Ì•ûŒü‚ªˆá‚¤
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
-	if (!isTitle)
-		DrawFormatString(0, 432, GetColor(0, 0, 0), "ShipHp   %f", parameter.HP);
-
-
 }
 void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

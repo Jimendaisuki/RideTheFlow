@@ -19,14 +19,13 @@
 #include "../../sound/Sound.h"
 #include "../../WindAndTornadoSetting.h"
 
-Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY) :
+Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY,float scale) :
 Actor(world),
 arrowCount(0),
 attackRag(0.0f),
 playerMat(Matrix4::Identity),
 velocity(Vector3::Zero),
 mPosition(position),
-mScale(30.0f),
 mAttackTime(0.0f),
 castleDown(true),
 isLook(true),
@@ -36,10 +35,11 @@ startPos(Vector3::Zero),
 endPos(Vector3::Zero),
 castleUpTimer(0.0f)
 {
+	mScale = Vector3(30.0f, 30.0f, 30.0f)*scale;
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	parameter.isDead = false;
-	parameter.radius = 17;
-	parameter.height = Vector3(0.0f, 34.0f, 0.0f);
+	parameter.radius = 17*scale;
+	parameter.height = Vector3(0.0f, 34.0f, 0.0f)*scale;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -49,11 +49,13 @@ castleUpTimer(0.0f)
 	test = parameter.mat.GetFront().Normalized() * 100 + parameter.mat.GetPosition();
 	parent = &_parent;
 	//城に乗っている敵の位置をセット
+	Vector3 enemyScaleSet = Vector3(scale, scale, scale);
+	mScaleFloat = scale;
 	CastleEnemyPosSet();
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90 + rotateY,scale));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0 + rotateY, scale));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90 + rotateY, scale));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180 + rotateY, scale));
 
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor01, *this, -90));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor02, *this, 0));
@@ -61,19 +63,19 @@ castleUpTimer(0.0f)
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor04, *this, 180));
 
 
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY,scale));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0 + rotateY, scale));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY, scale));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY, scale));
 
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07, *this, 0 + rotateY));
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier03*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier04*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier05*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier06*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier07*enemyScaleSet, *this, 0 + rotateY));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier08*enemyScaleSet, *this, 0 + rotateY));
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 		, parameter.radius * 2, *this));
@@ -121,7 +123,7 @@ void Castle::Update()
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_BREAK_SE);
 	}
 
-	castleUpTimer += 20.0f* Time::DeltaTime;
+	castleUpTimer += 1.0f* Time::DeltaTime;
 	if (mas->castleRankUp())
 	{
 		startPos = mPosition;
@@ -153,9 +155,7 @@ void Castle::Update()
 
 void Castle::Draw() const
 {
-
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f)), parameter.radius, 10, 1, 1, TRUE);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
@@ -205,124 +205,124 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 void Castle::CastleEnemyPosSet()
 {
 	castleEnemyPos.cannon01 =
-		parameter.mat.GetFront().Normalized()*-25.0f +
+		(parameter.mat.GetFront().Normalized()*-25.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*5.0f )*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.cannon02 =
-		parameter.mat.GetFront().Normalized()*25.0f +
+		(parameter.mat.GetFront().Normalized()*25.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*5.0f )*mScaleFloat+
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.cannon03 =
-		parameter.mat.GetFront().Normalized()*25.0f +
+		(parameter.mat.GetFront().Normalized()*25.0f +
 		parameter.mat.GetLeft().Normalized()*32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.cannon04 =
-		parameter.mat.GetFront().Normalized()*-25.0f +
+		(parameter.mat.GetFront().Normalized()*-25.0f +
 		parameter.mat.GetLeft().Normalized()*32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor01 =
-		parameter.mat.GetFront().Normalized()*15.0f +
+		(parameter.mat.GetFront().Normalized()*15.0f +
 		parameter.mat.GetLeft().Normalized()*-30.0f +
-		parameter.mat.GetUp().Normalized()*6.0f +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor02 =
-		parameter.mat.GetFront().Normalized()*28.0f +
+		(parameter.mat.GetFront().Normalized()*28.0f +
 		parameter.mat.GetLeft().Normalized()*15.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor03 =
-		parameter.mat.GetFront().Normalized()*-15.0f +
+		(parameter.mat.GetFront().Normalized()*-15.0f +
 		parameter.mat.GetLeft().Normalized()*30.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.varistor04 =
-		parameter.mat.GetFront().Normalized()*-28.0f +
+		(parameter.mat.GetFront().Normalized()*-28.0f +
 		parameter.mat.GetLeft().Normalized()*-15.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 
 	castleEnemyPos.Spear01 =
-		parameter.mat.GetFront().Normalized()*22.0f +
+		(parameter.mat.GetFront().Normalized()*22.0f +
 		parameter.mat.GetLeft().Normalized()*0.0f +
-		parameter.mat.GetUp().Normalized()*15.0f +
-		parameter.mat.GetPosition();
+		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
+		parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius*2,0.0f);
 
 	castleEnemyPos.Spear02 =
-		parameter.mat.GetFront().Normalized()*0.0f +
+		(parameter.mat.GetFront().Normalized()*0.0f +
 		parameter.mat.GetLeft().Normalized()*22.0f +
-		parameter.mat.GetUp().Normalized()*15.0f +
-		parameter.mat.GetPosition();
+		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
 
 	castleEnemyPos.Spear03 =
-		parameter.mat.GetFront().Normalized()*-22.0f +
+		(parameter.mat.GetFront().Normalized()*-22.0f +
 		parameter.mat.GetLeft().Normalized()*0.0f +
-		parameter.mat.GetUp().Normalized()*15.0f +
-		parameter.mat.GetPosition();
+		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
 
 	castleEnemyPos.Spear04 =
-		parameter.mat.GetFront().Normalized()*0.0f +
+		(parameter.mat.GetFront().Normalized()*0.0f +
 		parameter.mat.GetLeft().Normalized()*-22.0f +
-		parameter.mat.GetUp().Normalized()*15.0f +
-		parameter.mat.GetPosition();
+		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
 
 	castleEnemyPos.Soldier01 =
-		parameter.mat.GetFront().Normalized()*10.0f +
+		(parameter.mat.GetFront().Normalized()*10.0f +
 		parameter.mat.GetLeft().Normalized()*32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier02 =
-		parameter.mat.GetFront().Normalized()*-10.0f +
+		(parameter.mat.GetFront().Normalized()*-10.0f +
 		parameter.mat.GetLeft().Normalized()*32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier03 =
-		parameter.mat.GetFront().Normalized()*10.0f +
+		(parameter.mat.GetFront().Normalized()*10.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier04 =
-		parameter.mat.GetFront().Normalized()*-10.0f +
+		(parameter.mat.GetFront().Normalized()*-10.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier05 =
-		parameter.mat.GetFront().Normalized()*-25.0f +
+		(parameter.mat.GetFront().Normalized()*-25.0f +
 		parameter.mat.GetLeft().Normalized()*-10.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier06 =
-		parameter.mat.GetFront().Normalized()*-25.0f +
+		(parameter.mat.GetFront().Normalized()*-25.0f +
 		parameter.mat.GetLeft().Normalized()*10.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier07 =
-		parameter.mat.GetFront().Normalized()*25.0f +
+		(parameter.mat.GetFront().Normalized()*25.0f +
 		parameter.mat.GetLeft().Normalized()*-10.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.Soldier08 =
-		parameter.mat.GetFront().Normalized()*25.0f +
+		(parameter.mat.GetFront().Normalized()*25.0f +
 		parameter.mat.GetLeft().Normalized()*10.0f +
-		parameter.mat.GetUp().Normalized()*5.0f +
+		parameter.mat.GetUp().Normalized()*-5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 }

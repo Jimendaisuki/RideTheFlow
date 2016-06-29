@@ -728,7 +728,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	Capsule castle;
 	castle.startPos = other.parameter.mat.GetPosition();
 	castle.endPos = castle.startPos + other.parameter.height;
-	castle.radius = 80.0f;
+	castle.radius = 80.0f*2.4f;
 	Sphere player;
 	player.position = parameter.mat.GetPosition();
 	player.radius = parameter.radius;
@@ -736,7 +736,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	Capsule masterCastle;
 	masterCastle.startPos = other.parameter.mat.GetPosition();
 	masterCastle.endPos = masterCastle.startPos+Vector3(0.0f,0.1f,0.0f);
-	masterCastle.radius = 100.0f;
+	masterCastle.radius = 100.0f*2.4f;
 
 
 	colpara = Collisin::GetInstace().PushedBack_SphereCapsule(player, castle);
