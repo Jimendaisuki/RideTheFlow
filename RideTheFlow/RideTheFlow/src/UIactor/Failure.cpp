@@ -25,7 +25,7 @@ void Failure::Update()
 {
 	if (textAlpha < 1)
 	{
-		textAlpha += Time::DeltaTime / 2.0f;
+		textAlpha += Time::DeltaTime / 6.0f;
 		return;
 	}
 	textAlpha = 1;
@@ -35,7 +35,7 @@ void Failure::Update()
 	scale = Math::Clamp(scale, 0.6f, 5.0f);
 
 	if (backAlpha <= 5.0f)
-		backAlpha += Time::DeltaTime / 1.0f;
+		backAlpha += Time::DeltaTime / 2.0f;
 	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
 }
 

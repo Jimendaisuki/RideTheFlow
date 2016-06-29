@@ -28,7 +28,7 @@ const float x[4] = { STORM_POS.x + SIZE_HALF.x / 2.0f, STORM_POS.x - SIZE_HALF.x
 const float y[4] = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y - SIZE_HALF.y };
 const float u[4] = { 0, 0, 1, 1 };
 const float v[4] = { 0, 1, 1, 0 };
-const int	StormMaxAlpha		= 255 / 3;
+const int	StormMaxAlpha		= 255 * 3 / 3;
 const float StormAlphaEndTime	= 6.0f;
 /* タイトルテキスト用データ */
 const float TitleAlphaEndTime	= 2.0f;

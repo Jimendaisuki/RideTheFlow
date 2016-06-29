@@ -11,8 +11,8 @@
 #include "../UIactor/fadePanel/FadePanel.h"
 #include "../UIactor/Clear.h"
 
-float const LENGTH = 10000.0f;
-float const HEIGHT = 10000.0f;
+float const LENGTH = 8000.0f;
+float const HEIGHT = 3000.0f;
 
 //コンストラクタ
 EndhingScene::EndhingScene()
@@ -28,7 +28,7 @@ EndhingScene::~EndhingScene()
 void EndhingScene::Initialize()
 {
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, true, Vector3::Zero, Vector3::Forward));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 
 	angle = 0.0f;
@@ -37,8 +37,6 @@ void EndhingScene::Initialize()
 	cameraPos = Vector3(x, HEIGHT, z);
 	targetPos = Vector3::Up * 1000.0f;
 
-	Camera::GetInstance().Up.Set(Vector3::Up);
-	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
 	Camera::GetInstance().Update();
@@ -60,10 +58,14 @@ void EndhingScene::Update()
 	cameraPos = Vector3(x, HEIGHT, z);
 	targetPos = Vector3::Up * 2000.0f;
 
+	wa.Update();
+
+	/* カメラ */
+	Camera::GetInstance().Up.Set(Vector3::Up);
+	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 	Camera::GetInstance().Position.Set(cameraPos);
 	Camera::GetInstance().Target.Set(targetPos);
 	Camera::GetInstance().Update();
-	wa.Update();
 }
 
 //描画
