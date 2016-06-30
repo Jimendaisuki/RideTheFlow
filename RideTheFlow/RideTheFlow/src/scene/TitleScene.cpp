@@ -128,8 +128,14 @@ void TitleScene::Update()
 			status = TITLE_STATUS::TITLE_DRAGON_IN;
 		break;
 	case TITLE_DRAGON_IN:
+		// 省略
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+		{
+			Pass();
+		}
 		// ドラゴンが動く
-		if (slideTime < 1)
+		if (slideTime <= 1.0f)
 		{
 			screenPos = Math::Lerp(350.0f, endScreenPos, slideTime);
 			slideTime += Time::DeltaTime / 3.0f;
@@ -138,6 +144,12 @@ void TitleScene::Update()
 			status = TITLE_STATUS::TITLE_TEXTURE_IN;
 		break;
 	case TITLE_TEXTURE_IN:
+		// 省略
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+		{
+			Pass();
+		}
 		// 竜巻とテキスト描画開始
 		stormAlphaTime += (Time::DeltaTime / StormAlphaEndTime);
 		stormAlpha = (int)(StormMaxAlpha * stormAlphaTime);
@@ -151,7 +163,7 @@ void TitleScene::Update()
 		if (stormAlpha >= StormMaxAlpha / 3)
 			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
 
-		if (titleAlpha >= 1.0f)
+		if (titleAlpha > 1.0f)
 			status = TITLE_STATUS::TITLE_STANDBY;
 		break;
 	case TITLE_STANDBY:
@@ -292,4 +304,15 @@ void TitleScene::VertexMove(VERTEX2D vertexs_[], int count_, float time_)
 		nowPosition.y = a*a*y[start] + 2 * a*time_*dirPos.y + time_*time_*y[end];
 		vertexs_[i].pos = nowPosition;
 	}
+}
+
+void TitleScene::Pass()
+{
+	slideTime = 1.0f;
+	for (int i = 0; i < 6; i++)
+	{
+		Vertex2D_1[i].dif.a = 40;
+		Vertex2D_2[i].dif.a = 40;
+	}
+	titleAlpha = 1.0f;
 }
