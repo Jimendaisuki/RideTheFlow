@@ -228,7 +228,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 			breakSelect = BREAK_SELECT::WIND_FLOW;
 		}		
 	}
-	if (colpara.colID == COL_ID::ENEMY_AIRGUN_COL)
+	if (colpara.colID == COL_ID::ENEMY_AIRGUN_COL&&damege)
 	{
 		parameter.HP -= ShipDamegeWindBall;
 		damege = false;
