@@ -34,6 +34,10 @@ public:
 	virtual void End()override;
 
 private:
+	void TornadoCalculation();
+	void VertexMove(VERTEX2D vertexs_[], int count_, float time_);
+
+private:
 	bool mIsEnd;
 	World wa;
 	ENDING_STATUS	status;
@@ -45,4 +49,19 @@ private:
 	Vector3		cameraPos;
 	Vector3		targetPos;
 	Vector3		velocity;
+
+	/* 竜巻ポリゴン用データ */
+	int			texhandle;
+	int			stormAlpha;
+	int			count_1;
+	int			count_2;
+	float		stormAlphaTime;
+	float		amount_1;
+	float		amount_2;
+	VERTEX2D	Vertex2D_1[6];
+	VERTEX2D	Vertex2D_2[6];
+
+	/* タイトルテキスト用データ */
+	float titleAlpha;
+	bool	isTitle;
 };

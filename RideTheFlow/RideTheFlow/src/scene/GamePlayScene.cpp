@@ -67,9 +67,6 @@ void GamePlayScene::Initialize()
 
 void GamePlayScene::Update()
 {
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::E))
-		mIsEnd = true;
-	
 	/* ƒTƒEƒ“ƒh */
 	if (!Sound::GetInstance().IsPlayBGM())
 		Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM, DX_PLAYTYPE_LOOP);

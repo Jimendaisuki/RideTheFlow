@@ -2,6 +2,7 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 #include "../world/IWorld.h"
+#include "../UIactor/fadePanel/FadePanel.h"
 
 const Vector2 DefScale = (WINDOW_WIDTH / 1920.0f, WINDOW_HEIGHT / 1080.0f);
 
@@ -34,9 +35,16 @@ void Failure::Update()
 		scale += Time::DeltaTime / 1.5f;
 	scale = Math::Clamp(scale, 0.6f, 5.0f);
 
-	if (backAlpha <= 5.0f)
+	if (backAlpha <= 1.0f)
 		backAlpha += Time::DeltaTime / 2.0f;
 	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
+
+	if ((backAlpha >= 1.0f) && 
+		(!FadePanel::GetInstance().IsAction()))
+	{
+		FadePanel::GetInstance().SetOutTime(2.0f);
+		FadePanel::GetInstance().FadeOut();
+	}
 }
 
 void Failure::Draw() const

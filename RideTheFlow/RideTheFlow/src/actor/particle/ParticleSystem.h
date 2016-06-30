@@ -48,6 +48,17 @@ public:
 	//パーティクルシステムが終了しているか？
 	bool IsDeadSystem();
 
+	ParticleSystemParameter GetPSParemeter()
+	{
+		return ps_parameter;
+	}
+
+	//残りの生存時間を返す
+	float GetLifeTimeSub()
+	{
+		return ps_parameter.lifeTimeLimit - lifeTime;
+	}
+
 protected:
 	//パーティクルを保管
 	std::list<ParticlePtr> particles;

@@ -17,6 +17,7 @@
 #include "../particle/CastleAdd.h"
 #include "../../sound/Sound.h"
 #include "../../WindAndTornadoSetting.h"
+#include "../../UIactor/EnemyPoint.h"
 
 ShipEnemy::ShipEnemy(IWorld& world, Vector3 position) :
 Actor(world),
@@ -49,6 +50,8 @@ breakSelect(BREAK_SELECT::TORNADO)
 	playerDot = 0.0f;
 
 	ShipEnemyPosition();
+
+	world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
 
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<DoragonSpearEnemy>(world, shipEnemyPos.spearPos,*this,*this));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ShipVaristorEnemy>(world, shipEnemyPos.varistorPosLeft,*this,true,-90));

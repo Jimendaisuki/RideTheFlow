@@ -66,6 +66,10 @@ void TornadoParticle::OnUpdate()
 		0.0f,
 		Math::Sin(tornadeDegree) * tornadeRadius);
 
+	//システムが死ぬ1秒前から消え始める
+	if (tornade._Get()->GetLifeTimeSub() <= 1.0f)
+		drawParam.alpha = tornade._Get()->GetLifeTimeSub();
+
 	//セルフビルボード計算
 	up = Vector3::Normalize(Camera::GetInstance().Up.Get());
 	front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
@@ -84,4 +88,6 @@ void TornadoParticle::Draw() const
 	//	false, drawParam.blendMode, drawParam.alpha);
 
 	Model::GetInstance().Draw(drawParam.drawID, moveParam.pos, drawParam.alpha, rotmat.GetRotateDegree(), drawParam.size, true);
+	
+	//DrawFormatString(0, 0, GetColor(0, 0, 0), "%f", drawParam.alpha);
 }

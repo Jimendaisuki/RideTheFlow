@@ -40,7 +40,7 @@ noDeadTimer(0.0f)
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
 	parent = &parent_;
-
+	coppyPosition = position;
 	Sound::GetInstance().PlaySEDuplicate(SE_ID::BALLISTA_FIRE_SE);
 }
 VaristorBullet::~VaristorBullet()
@@ -62,10 +62,10 @@ void VaristorBullet::Update()
 		vec = Vector3::Lerp(vec, windVec, VaristorWindPercentage / 100.0f);
 	//ˆÚ“®
 	mPosition += vec*VaristorSpeed*Time::DeltaTime;
-	if (parameter.mat.GetPosition().y <= -3000)
+	if (parameter.mat.GetPosition().y <= -3600)
 		parameter.isDead = true;
 
-	mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
+	//mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
 
 	seveVec = mPosition - prevPosition;
 	seveVec.Normalize();
@@ -103,14 +103,10 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
-		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(VaristorPower);
+		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(*this,VaristorPower);
 		parameter.isDead = true;
 	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
-	{
-		parameter.isDead = true;
-	}
-	else
 	{
 		parameter.isDead = true;
 	}

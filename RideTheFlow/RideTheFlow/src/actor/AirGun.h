@@ -16,4 +16,5 @@ private:
 	float range;
 	std::vector<Matrix4> rotates;
 	std::vector<Matrix4> mats;
+	float alpha;
 };

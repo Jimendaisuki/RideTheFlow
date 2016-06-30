@@ -34,7 +34,7 @@ EnemyPoint::~EnemyPoint()
 void EnemyPoint::Update()
 {
 	
-	if (enemy==nullptr)
+	if (enemy==nullptr || enemy->GetParameter().isDead)
 	{
 		parameter.isDead = true;
 		return;

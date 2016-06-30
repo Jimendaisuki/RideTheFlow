@@ -10,7 +10,9 @@ AirGun::AirGun(IWorld& world, Vector3 position_, Vector3 velocity_) :
 Actor(world),
 position(position_),
 velocity(Vector3::Normalize(velocity_)),
-range(0.0f){
+range(0.0f),
+alpha(1.0f)
+{
 	for (int i = 0; i < 3; i++)
 	{
 		rotates.push_back(Matrix4::Identity);
@@ -48,11 +50,19 @@ void AirGun::Update(){
 	}
 
 	parameter.mat = mats.at(1);
+
+	//ƒAƒ‹ƒtƒ@’lŒvŽZA‚P•b‚ÅÁ‚¦‚é
+	float sub = WindBallLimitLength - range;
+	if (sub < WindBallSpeed)
+	{
+		alpha = sub / WindBallSpeed;
+	}
+	
 }
 void AirGun::Draw() const{
 	for (int i = 1; i < 3; i++)
 	{
-		Model::GetInstance().Draw(MODEL_ID::AIR_BALL_MODEL, mats.at(i));
+		Model::GetInstance().Draw(MODEL_ID::AIR_BALL_MODEL, mats.at(i), alpha);
 	}
 	////DrawSphere3D(position, 10.0f, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), true);
 	//Model::GetInstance().Draw(MODEL_ID::AIR_BALL_MODEL, position, Vector3::Zero, Vector3(0.05f));
