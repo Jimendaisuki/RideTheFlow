@@ -47,6 +47,7 @@ void GamePlayScene::Initialize()
 	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
 
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, false, Vector3(0.0f, 0.0f, -5500.0f), Vector3(0,0,1)));
+	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0.0f, 0.0f, -5500.0f), Vector2(100), Vector3::Zero, 100.0f));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::BEGIN_ACTOR,  std::make_shared<CastleManager>(wa));
@@ -60,7 +61,7 @@ void GamePlayScene::Initialize()
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 
 	menu.Initialize();
-
+	FadePanel::GetInstance().SetInTime(2.0f);
 	bgmVol = 1.0f;
 	Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
 }
@@ -124,9 +125,10 @@ void GamePlayScene::Update()
 		isGameEnd = true;
 		isPlayerDead = true;
 		wa.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wa));
+		Sound::GetInstance().StopBGM();
 		Sound::GetInstance().PlayBGM(BGM_ID::FAILED_BGM);
-		FadePanel::GetInstance().SetOutTime(13.0f);
-		FadePanel::GetInstance().FadeOut();
+		//FadePanel::GetInstance().SetOutTime(13.0f);
+		//FadePanel::GetInstance().FadeOut();
 	}
 }
 

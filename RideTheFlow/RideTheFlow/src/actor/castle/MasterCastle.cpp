@@ -189,7 +189,7 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
 	if (colpara.colID == COL_ID::TORNADO_CASTLE_COL&&damage)
 	{
-		parameter.HP -= CastleDamegeWind;
+		parameter.HP -= CastleDamegeTornado;
 		damage = false;
 		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);

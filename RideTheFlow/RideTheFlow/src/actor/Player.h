@@ -130,4 +130,5 @@ private:
 	bool waitAnimSet;
 
 	bool moveFlag = true;
+	bool initMove;
 };

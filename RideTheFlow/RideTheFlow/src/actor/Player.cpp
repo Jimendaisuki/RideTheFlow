@@ -21,6 +21,7 @@
 #include "enemy\DoragonSpearEnemy.h"
 #include "enemy\EnemyParameter.h"
 #include "../sound/Sound.h"
+#include "../UIactor/fadePanel/FadePanel.h"
 const float spearDamage = 5.0f;
 
 //ボーンの数
@@ -194,6 +195,7 @@ eventVec(eventVec_)
 		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime, *this));
 	}
 	dashPosStorage.clear();
+	initMove = false;
 }
 Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
@@ -204,10 +206,17 @@ Player::~Player() {
 
 void Player::Update() {
 	Vector3 beforePos = position;
-	//parameter.HP -= 5.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
-		moveFlag = !moveFlag;
+
+	if (!initMove&&!FadePanel::GetInstance().IsAction())
+	{
+ 		initMove = true;
 	}
+
+
+	//parameter.HP -= 5.0f * Time::DeltaTime;
+	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
+	//	moveFlag = !moveFlag;
+	//}
 	if (title || event)
 		moveFlag = false;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
@@ -272,8 +281,9 @@ void Player::Update() {
 					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
 				}
 			}
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f) {
-				vec.z += speed * Time::DeltaTime;
+			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f
+				||(!initMove&&!title&&!event)) {
+					vec.z += speed * Time::DeltaTime;
 				leftStickMove = true;
 				if (!tp.tackleFlag) {
 					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
@@ -499,7 +509,8 @@ void Player::Update() {
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
 				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f) {
+				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f||
+				!initMove) {
 				posStorage.push_back(position);
 				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
 			}
