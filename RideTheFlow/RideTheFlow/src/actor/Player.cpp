@@ -1201,7 +1201,7 @@ void Player::Damage(float damage, bool allow)
 		if (!allow || !allowNoDamageFlag)
 			parameter.HP -= damage;
 
-		if (allow) {
+		if (allow && !allowNoDamageFlag) {
 			parameter.HP -= damage;
 			allowNoDamageFlag = true;
 		}
