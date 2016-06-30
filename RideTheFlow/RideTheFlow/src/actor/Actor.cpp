@@ -16,7 +16,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 {
 	colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::Player_vs_Bullet, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_STAGE_COL] = std::bind(&Actor::Player_vs_Stage, this, std::placeholders::_1);
-	colFunc[COL_ID::TORNADO_STAGE_COL ] = std::bind(&Actor::Tornado_vs_Stage,  this, std::placeholders::_1);
+	colFunc[COL_ID::TORNADO_STAGE_COL] = std::bind(&Actor::Tornado_vs_Stage, this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_CASTLE_COL] = std::bind(&Actor::Tornado_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_ISLAND_COL] = std::bind(&Actor::Tornado_vs_IsLand, this, std::placeholders::_1);
 	colFunc[COL_ID::TORNADO_ENEMY_COL] = std::bind(&Actor::Tornado_vs_Enemy, this, std::placeholders::_1);
@@ -36,7 +36,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::CASTLE_CASTLE_COL] = std::bind(&Actor::Castle_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::SHIP_ISLAND_COL] = std::bind(&Actor::Ship_vs_Island, this, std::placeholders::_1);
 	colFunc[COL_ID::ENEMY_WIND_COL] = std::bind(&Actor::Enemy_vs_Wind, this, std::placeholders::_1);
-	colFunc[COL_ID::CASTLE_WIND_COL ] = std::bind(&Actor::Castle_vs_Wind, this, std::placeholders::_1);
+	colFunc[COL_ID::CASTLE_WIND_COL] = std::bind(&Actor::Castle_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_CASTLE_COL] = std::bind(&Actor::Player_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::MASTERCASTLE_CASTLE_COL] = std::bind(&Actor::MasterCastle_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::SHIP_SHIP_COL] = std::bind(&Actor::Ship_vs_Ship, this, std::placeholders::_1);
@@ -141,7 +141,7 @@ CollisionParameter Actor::Player_vs_land(const Actor& other) const
 	if (!colpara.colFlag)
 	{
 		ModelData stage1;
- 		stage1.MHandle = Model::GetInstance().GetHandle(MODEL_ID::ISLE_2_MODEL);
+		stage1.MHandle = Model::GetInstance().GetHandle(MODEL_ID::ISLE_2_MODEL);
 		stage1.MFrameIndex = -1;
 		stageflag = false;
 		colpara = Collisin::GetInstace().ModelSphere(stage1, sphere);
@@ -214,7 +214,7 @@ CollisionParameter Actor::Player_vs_Bullet(const Actor& other) const{
 		player.endPos = playerBonePos[i];
 		player.radius = parameter.radius;
 		/* ResultData */
-		colpara = Collisin::GetInstace().SphereCapsule(bullet,player);
+		colpara = Collisin::GetInstace().SphereCapsule(bullet, player);
 		if (colpara.colFlag){
 			break;
 		}
@@ -257,7 +257,7 @@ CollisionParameter Actor::Player_vs_Wind(const Actor& other) const{
 	std::vector<Vector3> dashPositions = w->GetDashPositions();
 	int dashPositionSize = dashPositions.size();
 	if (dashPositionSize < 2)
-	{		
+	{
 		colpara.colID = COL_ID::PLAYER_WIND_COL;
 		return colpara;
 	}
@@ -409,13 +409,13 @@ CollisionParameter Actor::Tornado_vs_Castle(const Actor& other) const{
 	Capsule tornado;
 	tornado.startPos = Matrix4::GetPosition(parameter.mat);
 	tornado.endPos = tornado.startPos + parameter.height;
-	tornado.radius   = parameter.radius;
+	tornado.radius = parameter.radius;
 
 	/* CastleData */
 	Capsule castle;
 	castle.startPos = Matrix4::GetPosition(other.parameter.mat);
 	castle.endPos = castle.startPos + other.parameter.height;
-	castle.radius	= other.parameter.radius;
+	castle.radius = other.parameter.radius;
 
 	/* ResultData */
 	colpara = Collisin::GetInstace().CapsuleCapsule(tornado, castle);
@@ -438,7 +438,7 @@ CollisionParameter Actor::Tornado_vs_IsLand(const Actor& other) const{
 	/* IslandData */
 	Sphere island;
 	island.position = Matrix4::GetPosition(other.parameter.mat);
-	island.radius	= other.parameter.radius;
+	island.radius = other.parameter.radius;
 
 	colpara = Collisin::GetInstace().SphereCapsule(island, tornado);
 
@@ -556,33 +556,33 @@ CollisionParameter Actor::PlayerCastleLine_vs_Cloud(const Actor& other) const
 {
 	Actor* player;
 	CollisionParameter colpara;
-		world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-			player = const_cast<Actor*>(&other);
+	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		player = const_cast<Actor*>(&other);
 	});
-		std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
-		Vector3 topPlayerPos = boons[0];
-		Vector3 endPlayerPos = boons[boons.size()-1];
-		int boonCount = 0;
-		int boonNum = 0;
-		
+	std::vector<Vector3> boons = static_cast<Player*>(player)->ReturnBonePosStorage();
+	Vector3 topPlayerPos = boons[0];
+	Vector3 endPlayerPos = boons[boons.size() - 1];
+	int boonCount = 0;
+	int boonNum = 0;
+
 	//Cloud
-		Sphere cloudSphere;
-		cloudSphere.position = Matrix4::GetPosition(other.parameter.mat);
-		cloudSphere.radius = other.parameter.radius;
+	Sphere cloudSphere;
+	cloudSphere.position = Matrix4::GetPosition(other.parameter.mat);
+	cloudSphere.radius = other.parameter.radius;
 	//PlayerBoon　プレイヤーの頭としっぽ
-		Line toTopLine;
-		toTopLine.startPos = topPlayerPos;
-		toTopLine.endPos = parameter.mat.GetPosition();
-		Line toEndLine;
-		toEndLine.startPos = endPlayerPos;
-		toEndLine.endPos = parameter.mat.GetPosition();
-		
-		if (Collisin::GetInstace().SegmentSphere(toTopLine, cloudSphere).colFlag)
-		 if (Collisin::GetInstace().SegmentSphere(toEndLine, cloudSphere).colFlag)
-		{
-			colpara.colFlag = true;
-			colpara.colAll = true;
-		}
+	Line toTopLine;
+	toTopLine.startPos = topPlayerPos;
+	toTopLine.endPos = parameter.mat.GetPosition();
+	Line toEndLine;
+	toEndLine.startPos = endPlayerPos;
+	toEndLine.endPos = parameter.mat.GetPosition();
+
+	if (Collisin::GetInstace().SegmentSphere(toTopLine, cloudSphere).colFlag)
+	if (Collisin::GetInstace().SegmentSphere(toEndLine, cloudSphere).colFlag)
+	{
+		colpara.colFlag = true;
+		colpara.colAll = true;
+	}
 	colpara.colID = COL_ID::PLAYERTOCASTLELINE_CLOUD_COL;
 	return colpara;
 }
@@ -592,15 +592,18 @@ CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
 	CollisionParameter colpara;
 	Line armyEnemy;
 	armyEnemy.startPos = parameter.mat.GetPosition();
-	armyEnemy.endPos = parameter.mat.GetPosition()+Vector3(0,1,0);
+	armyEnemy.endPos = parameter.mat.GetPosition() + Vector3(0.0f, 100.0f, 0.0f);
+
 
 	ModelData stage;
 	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
 	stage.MFrameIndex = -1;
+	bool stageflag = false;
+
 	colpara = Collisin::GetInstace().ModelLine(stage, armyEnemy);
+
 	colpara.colID = COL_ID::ARMYENEMY_STAGE_COL;
 	return colpara;
-
 }
 
 CollisionParameter Actor::Bullet_vs_Wind(const Actor& other) const{
@@ -630,8 +633,8 @@ CollisionParameter Actor::Castle_vs_Castle(const Actor& other) const
 		colpara.colFlag = false;
 	}
 
- 	return colpara;
-	
+	return colpara;
+
 }
 CollisionParameter Actor::MasterCastle_vs_Castle(const Actor& other) const
 {
@@ -669,7 +672,7 @@ CollisionParameter Actor::Castle_vs_Wind(const Actor& other) const
 {
 	CollisionParameter colpara;
 	Sphere castle;
-	castle.position = parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f);
+	castle.position = parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f);
 	castle.radius = parameter.radius;
 
 	WindFlow* w = static_cast<WindFlow*>(const_cast<Actor*>(&other));
@@ -722,7 +725,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 
 	Capsule masterCastle;
 	masterCastle.startPos = other.parameter.mat.GetPosition();
-	masterCastle.endPos = masterCastle.startPos+Vector3(0.0f,0.1f,0.0f);
+	masterCastle.endPos = masterCastle.startPos + Vector3(0.0f, 0.1f, 0.0f);
 	masterCastle.radius = 100.0f*2.4f;
 
 

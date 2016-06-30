@@ -107,6 +107,7 @@ void ArmyEnemy::Update()
 	downTime += Time::DeltaTime;
 	if (downTime >= 1.0f)
 	{
+
 		mPosition.y -= 50.0f*Time::DeltaTime;
 		downTime = 3.0f;
 	}
