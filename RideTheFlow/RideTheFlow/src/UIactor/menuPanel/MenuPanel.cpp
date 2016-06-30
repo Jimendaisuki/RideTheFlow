@@ -216,34 +216,39 @@ void MenuPanel::Update()
 		{
 			if (selectNum == 0)
 			{
-				if (scene == Scene::Menu)
-				{
-					Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
-					status = MENU_PANEL_STATUS::PUSH;
-				}
-				else if (scene == Scene::GamePlay)
-				{
-					status = MENU_PANEL_STATUS::CLOSE;
-				}
+				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
+				status = MENU_PANEL_STATUS::PUSH;
+
+				//if (scene == Scene::Menu)
+				//{
+				//	Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
+				//	status = MENU_PANEL_STATUS::PUSH;
+				//}
+				//else if (scene == Scene::GamePlay)
+				//{
+				//	status = MENU_PANEL_STATUS::CLOSE;
+				//}
 			}
 			else if (selectNum == 1)
 			{
 				prePage = 0;
 				nowPage = 1;
 				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
-				status = MENU_PANEL_STATUS::MANUAL;
+				status = MENU_PANEL_STATUS::PUSH;
 			}
 			else if (selectNum == 2)
 			{
 				if (scene == Scene::Menu)
 				{
-					GameFrame::GameEnd();
+					isBackSelect = true;
+					Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
+					status = MENU_PANEL_STATUS::PUSH;
 				}
 				else if (scene == Scene::GamePlay)
 				{
 					isBackSelect = true;
 					Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
-					Close();
+					status = MENU_PANEL_STATUS::PUSH;
 				}
 			}
 		}
@@ -253,8 +258,8 @@ void MenuPanel::Update()
 		if (textAlpha > 0.0f)
 		{
 			textAlpha -= Time::DeltaTime * 2.0f;
-			for (int i = 0; i < 3; i++)
-				selects[selectNum] = textAlpha;
+			//for (int i = 0; i < 3; i++)
+			//	selects[selectNum] = textAlpha;
 			break;
 		}
 		textAlpha = 0.0f;
@@ -280,10 +285,14 @@ void MenuPanel::Update()
 			if (scene == Scene::Menu)
 			{
 				selectNum = 0;
+				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 				status = MENU_PANEL_STATUS::PUSH;
 			}
 			else
+			{
+				Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 				status = MENU_PANEL_STATUS::CLOSE;
+			}
 		}
 
 		// 戻る
@@ -347,7 +356,43 @@ void MenuPanel::Update()
 	case PUSH:
 		selects[selectNum] -= Time::DeltaTime * 2.5f;
 		textScale += Time::DeltaTime / 5.0;
-		isEnd = true;
+		if (selects[selectNum] <= 0.0f)
+		{
+			if (scene == Scene::GamePlay)
+			{
+				if (selectNum == 0)
+				{
+					status = MENU_PANEL_STATUS::CLOSE;
+				}
+				else if (selectNum == 1)
+				{
+					status = MENU_PANEL_STATUS::MANUAL;
+					textScale = 1.0f;
+				}
+				else if (selectNum == 2)
+				{
+					status = MENU_PANEL_STATUS::CLOSE;
+				}
+			}
+			else
+			{
+				if (selectNum == 0)
+				{
+					isEnd = true;
+				}
+				else if (selectNum == 1)
+				{
+					status = MENU_PANEL_STATUS::MANUAL;
+					textScale = 1.0f;
+				}
+				else if (selectNum == 2)
+				{
+					GameFrame::GameEnd();
+				}
+			}
+				//isEnd = true;
+			break;
+		}
 		break;
 	case END:		// フェードアウトから終了
 		if (rollAlpha > 0.0f)
