@@ -50,13 +50,12 @@ void BreakCastle::Update()
 	default:
 		break;
 	}
-
 }
 void BreakCastle::Draw() const
 {
 	DrawParticles();
 
-	DrawSphere3D(ps_parameter.position.ToVECTOR(), parameter.radius, 5, Vector3::Blue.ToColor(), Vector3::Blue.ToColor(), FALSE);
+	//DrawSphere3D(ps_parameter.position.ToVECTOR(), parameter.radius, 5, Vector3::Blue.ToColor(), Vector3::Blue.ToColor(), FALSE);
 }
 void BreakCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
