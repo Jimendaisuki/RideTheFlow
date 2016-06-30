@@ -125,8 +125,8 @@ void GamePlayScene::Update()
 		isPlayerDead = true;
 		wa.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wa));
 		Sound::GetInstance().PlayBGM(BGM_ID::FAILED_BGM);
-		FadePanel::GetInstance().SetOutTime(13.0f);
-		FadePanel::GetInstance().FadeOut();
+		//FadePanel::GetInstance().SetOutTime(13.0f);
+		//FadePanel::GetInstance().FadeOut();
 	}
 }
 
