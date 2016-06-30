@@ -3,6 +3,7 @@
 #include "../time/Time.h"
 #include "../world/IWorld.h"
 #include "../UIactor/fadePanel/FadePanel.h"
+#include "../sound/Sound.h"
 
 const Vector2 DefScale = (WINDOW_WIDTH / 1920.0f, WINDOW_HEIGHT / 1080.0f);
 
@@ -15,6 +16,7 @@ UIActor(world_)
 	textAlpha = 0.0f;
 	backAlpha = 0.0f;
 	scale = 0.0f;
+	bgmVol = 1.0f;
 }
 
 Failure::~Failure()
@@ -45,6 +47,17 @@ void Failure::Update()
 		FadePanel::GetInstance().SetOutTime(5.0f);
 		FadePanel::GetInstance().FadeOut();
 	}
+
+	if ((backAlpha >= 1.0f) &&
+		(FadePanel::GetInstance().IsAction()))
+	{
+		bgmVol -= Time::DeltaTime / 3.0f;
+	}
+
+	bgmVol = Math::Clamp(bgmVol, 0.0f, 1.0f);
+	Sound::GetInstance().SetAllBGMVolume(bgmVol);
+	Sound::GetInstance().SetAllSEVolume(bgmVol);
+
 }
 
 void Failure::Draw() const

@@ -13,4 +13,5 @@ private:
 	float	textAlpha;
 	float	backAlpha;
 	float	scale;
+	float	bgmVol;
 };

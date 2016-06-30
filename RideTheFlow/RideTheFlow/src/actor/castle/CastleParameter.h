@@ -3,14 +3,14 @@
 //プレイヤーのどのぐらい前に攻撃するか
 const float CastleCameraFrontAttack = 10.0f;
 //マスター城のHP
-const float MasterCastleHp = 20.0f;
+const float MasterCastleHp = 40.0f;
 
 //城がトルネードで受けるダメージ
-const float CastleDamegeTornado = 40.0f;
+const float CastleDamegeTornado = 10.0f;
 //城が流れで受けるダメージ
-const float CastleDamegeWind = 1.5f;
+const float CastleDamegeWind = 5.0f;
 //城が空気砲で受けるダメージ
-const float CastleDamageWindBall = 2.0f;
+const float CastleDamageWindBall = 5.0f;
 
 //城の無敵時間
 const float CastleInvincibleTime = 3.0f;
@@ -18,28 +18,28 @@ const float CastleInvincibleTime = 3.0f;
 //城の上に積み重なる城の段数
 const int Rank = 5;
 //城が積みあがる時間(秒)
-const float RankUpSecond =10.0f;
+const float RankUpSecond = 5.0f;
 
 //城が排出する軍隊の時間
-const float SpawnArmyEnemyTime =10.0f;
+const float SpawnArmyEnemyTime = 5.0f;
 //城が排出する軍隊の最大軍隊数
-const int SpawnMaxArmyEnemy = 50;
+const int SpawnMaxArmyEnemy = 25;
 
 /**浮島の城限定**/
 //城が排出する船の時間
-const float SpawnShipEnemyTime = 10.0f;
+const float SpawnShipEnemyTime = 5.0f;
 //城が排出する船の最大船数
-const int SpawnMaxShipEnemey = 0;
+const int SpawnMaxShipEnemey = 5;
 
 /***城の大砲***/
 //城の大砲が攻撃してくる範囲
-const float CastleCannonAttackRange = 2000.0f;
+const float CastleCannonAttackRange = 1000.0f;
 //城の大砲の攻撃クールタイム(秒)
 const float CastleCannonSecondAttack = 5.0f;
 //城が一回に出す大砲の弾の数
 const int CastleCannonNumber = 1;
 //城の大砲の旋回速度
-const float CastleCannonSwingSpeed = 50.0f;
+const float CastleCannonSwingSpeed = 100.0f;
 //城の大砲からプレイヤーが見えてないときの一回に出す大砲の弾の数
 const int CastleCannonNotLookAttack = 0;
 //城の大砲からプレイヤーが見えてないときの攻撃クールタイム(秒)
@@ -47,13 +47,13 @@ const float CastleCannonNotLookSecondAttack = 10.0f;
 
 /***城のバリスター***/
 //城のバリスターが攻撃してくる範囲
-const float CastleVaristorAttackRange = 2000.0f;
+const float CastleVaristorAttackRange = 1000.0f;
 //城のバリスターの攻撃クールタイム(秒)
 const float CastleVaristorSecondAttack = 5.0f;
 //城が一回に出すバリスターの矢の数
 const int CastleVaristorNumber = 1;
 //城のバリスターの旋回速度
-const float CastleVaristorSwingSpeed = 50.0f;
+const float CastleVaristorSwingSpeed = 100.0f;
 //城のバリスターからプレイヤーが見えてないときの一回に出すバリスターの矢の数
 const int CastleVaristorNotLookAttack = 0;
 //城のバリスターからプレイヤーが見えてないときの攻撃クールタイム(秒)

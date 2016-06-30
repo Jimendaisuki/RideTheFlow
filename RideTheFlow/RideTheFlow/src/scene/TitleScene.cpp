@@ -163,7 +163,7 @@ void TitleScene::Update()
 		if (stormAlpha >= StormMaxAlpha / 3)
 			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
 
-		if (titleAlpha > 1.0f)
+		if (titleAlpha >= 1.0f)
 			status = TITLE_STATUS::TITLE_STANDBY;
 		break;
 	case TITLE_STANDBY:

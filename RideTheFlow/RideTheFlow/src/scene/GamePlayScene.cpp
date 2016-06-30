@@ -70,7 +70,7 @@ void GamePlayScene::Initialize()
 void GamePlayScene::Update()
 {
 	/* ƒTƒEƒ“ƒh */
-	if (!Sound::GetInstance().IsPlayBGM())
+	if (!Sound::GetInstance().IsPlayBGM() && !isGameEnd)
 		Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM, DX_PLAYTYPE_LOOP);
 
 	if (isGameEnd && FadePanel::GetInstance().IsFullBlack())
@@ -159,5 +159,7 @@ void GamePlayScene::End()
 {
 	wa.Clear();
 	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().SetAllBGMVolume(1.0f);
+	Sound::GetInstance().SetAllSEVolume(1.0f);
 	Camera::GetInstance().SetViewAngle(60.0f);
 }

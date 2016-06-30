@@ -49,7 +49,7 @@ VaristorBullet::~VaristorBullet()
 void VaristorBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 	time += VaristorSpeed*Time::DeltaTime;
 	prevPosition = mPosition;
 	//êiçsï˚å¸ÇåvéZ
@@ -108,6 +108,6 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
 	{
-		parameter.isDead = true;
+		//parameter.isDead = true;
 	}
 }

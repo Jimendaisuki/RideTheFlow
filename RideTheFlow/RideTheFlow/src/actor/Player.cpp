@@ -77,7 +77,7 @@ const float tackleAnimAttackTiming = 193.0f;
 const float waitAnimBlendSpeed = 2.0f;
 
 //加速できる時間
-const float dashMaxTime = 20.0f;
+const float dashMaxTime = 10.0f;
 
 ////加速する際の加速度
 //const float dashAccele = 1.0f;
@@ -95,9 +95,9 @@ const float normalSpeedAccele = 1.0f;
 
 const float tackleMinus = 3.0f;
 
-const float hpHeal = 0.1f;
+const float hpHeal = 0.5f;
 
-const float MaxHP = 10.0f;
+const float MaxHP = 20.0f;
 
 /************************************************************************************************************************/
 

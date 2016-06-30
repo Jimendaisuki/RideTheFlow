@@ -48,7 +48,7 @@ void CannonBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
 	world.SetCollideSelect(shared_from_this(), this->GetParameter().id, COL_ID::SPHERE_SPHERE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 	time += CannonSpeed*Time::DeltaTime;
 	//êiçsï˚å¸ÇåvéZ
 		vec = Vector3(
@@ -96,6 +96,6 @@ void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
 	{
-		parameter.isDead = true;
+		//parameter.isDead = true;
 	}
 }
