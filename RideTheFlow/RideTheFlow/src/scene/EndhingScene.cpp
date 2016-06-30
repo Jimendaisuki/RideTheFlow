@@ -117,7 +117,7 @@ void EndhingScene::Update()
 		{
 			wa.UIAdd(UI_ID::CLEAR_UI, std::make_shared<Clear>(wa));
 			wa.GetPlayer()->SetIsDead(true);
-			velocity = (cameraPos.Normalized() + Vector3(0.5f, 0.5f, 0.5f)).Normalized() * 10.0f;
+			velocity = (cameraPos.Normalized() + Vector3(0.5f, 0.5f, 0.5f)).Normalized() * 2.0f;
 			Sound::GetInstance().PlayBGM(BGM_ID::CLEAR_BGM);
 			status = ENDING_CLEAR;
 		}
@@ -141,7 +141,7 @@ void EndhingScene::Update()
 		}
 		if (!FadePanel::GetInstance().IsAction())
 		{
-			FadePanel::GetInstance().SetOutTime(3.0f);
+			FadePanel::GetInstance().SetOutTime(8.0f);
 			FadePanel::GetInstance().FadeOut();
 		}
 		break;
