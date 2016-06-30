@@ -309,7 +309,6 @@ void Player::Update() {
 			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || 
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)) 
 			&& !tp.tackleFlag
-			&& tackleMinus <= dashMaxTime - dashTime
 			&& !dashHealFlag
 			&& !spearHit) {
 			dashTime += tackleMinus;
@@ -345,6 +344,7 @@ void Player::Update() {
 			dashHealFlag = true;
 		}
 		if (dashTime <= 0.0f) {
+			dashTime = 0;
 			dashHealFlag = false;
 		}
 
@@ -720,15 +720,15 @@ void Player::Update() {
 	}
 }
 void Player::Draw() const {
-	DrawFormatString(0, 0, GetColor(0, 0, 0), "%d", allowNoDamageFlag);
+	//骨の数だけ用意する
+	Vector3* drawVertexVec = new Vector3[boneCount];
+	Matrix4* drawMatrixVec = new Matrix4[boneCount];
+	Matrix4* localDrawMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
+	Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
+	Matrix4* localAnimMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
 
 	if (!dead) {
 		if (!spearHit){
-			//骨の数だけ用意する
-			Vector3* drawVertexVec = new Vector3[boneCount];
-			Matrix4* drawMatrixVec = new Matrix4[boneCount];
-			Matrix4* localDrawMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
-			Matrix4* localAnimDrawMatrixVec = new Matrix4[boneCount];
 
 			//初期化
 			for (int i = 0; i < boneCount; i++) {
@@ -891,29 +891,8 @@ void Player::Draw() const {
 
 			//if (tackleFlag)
 			////DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
-
-			if (!title && !event)
-				//ParameterDraw();
-
-			//if (bonePosStorage.size() > 1)
-			//for (int count = 2; count < bonePosStorage.size() ; count++){
-			//	int Color = GetColor(0, 0, 255);
-			//	//DrawSphere3D(bonePosStorage[count],5,parameter.radius,GetColor(0,0,255), Color,false);
-			//}
-
-			//if (dashPosStorage.size() > 1)
-			//for (int count = 0; count < dashPosStorage.size() - 1; count++) {
-			//	int Color = GetColor(0, 0, 255);
-			//	//DrawLine3D(dashPosStorage[count], dashPosStorage[count + 1], Color);
-			//}
-
-			SAFE_DELETE_ARRAY(drawVertexVec);
-			SAFE_DELETE_ARRAY(drawMatrixVec);
-			SAFE_DELETE_ARRAY(localDrawMatrixVec);
-			SAFE_DELETE_ARRAY(localAnimDrawMatrixVec);
 		}
 		else{
-			Matrix4* localAnimMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
 			for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 				localAnimMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
 			}
@@ -951,11 +930,6 @@ void Player::Draw() const {
 				}
 			}
 			else{
-				//骨の数だけ用意する
-				Vector3* drawVertexVec = new Vector3[boneCount];
-				Matrix4* drawMatrixVec = new Matrix4[boneCount];
-				Matrix4* localDrawMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
-
 				//初期化
 				for (int i = 0; i < boneCount; i++) {
 					drawVertexVec[i] = vertexVec[i];
@@ -1047,18 +1021,11 @@ void Player::Draw() const {
 							, localAnimMatrixVec[count], animBlend)
 							));
 					}
-				
-
-				SAFE_DELETE_ARRAY(drawVertexVec);
-				SAFE_DELETE_ARRAY(drawMatrixVec);
-				SAFE_DELETE_ARRAY(localDrawMatrixVec);
 			}
-			SAFE_DELETE_ARRAY(localAnimMatrixVec);
 			Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 		}
 	}
 	else {
-		Matrix4* localAnimMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
 		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 			localAnimMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
 		}
@@ -1093,12 +1060,15 @@ void Player::Draw() const {
 				, localAnimMatrixVec[count], animBlend)
 				));
 		}
-		SAFE_DELETE_ARRAY(localAnimMatrixVec);
 
 		Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
-
-
 	}
+
+	SAFE_DELETE_ARRAY(drawVertexVec);
+	SAFE_DELETE_ARRAY(drawMatrixVec);
+	SAFE_DELETE_ARRAY(localDrawMatrixVec);
+	SAFE_DELETE_ARRAY(localAnimMatrixVec);
+	SAFE_DELETE_ARRAY(localAnimDrawMatrixVec);
 }
 
 void Player::ParameterDraw() const {
@@ -1234,7 +1204,7 @@ void Player::Damage(float damage, bool allow)
 		if (!allow || !allowNoDamageFlag)
 			parameter.HP -= damage;
 
-		if (allow && !allowNoDamageFlag) {
+		if (allow) {
 			parameter.HP -= damage;
 			allowNoDamageFlag = true;
 		}
