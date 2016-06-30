@@ -11,6 +11,7 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 #include "../sound/Sound.h"
+#include "../camera/Camera.h"
 
 #include "../actor/Player.h"
 #include "../actor/MonhanCameraActor.h"
@@ -127,8 +128,6 @@ void GamePlayScene::Update()
 		wa.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wa));
 		Sound::GetInstance().StopBGM();
 		Sound::GetInstance().PlayBGM(BGM_ID::FAILED_BGM);
-		//FadePanel::GetInstance().SetOutTime(13.0f);
-		//FadePanel::GetInstance().FadeOut();
 	}
 }
 
@@ -160,4 +159,5 @@ void GamePlayScene::End()
 {
 	wa.Clear();
 	Sound::GetInstance().StopBGM();
+	Camera::GetInstance().SetViewAngle(60.0f);
 }

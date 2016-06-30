@@ -327,8 +327,8 @@ void EventScene::End()
 	SetLightDirection(Vector3(0.5f, -0.5f, -0.5f).ToVECTOR());
 	SetFogEnable(FALSE);
 	Sound::GetInstance().StopSE(SE_ID::SAND_STORM_SE);
-	Sound::GetInstance().SetSEVolume(SE_ID::STORMAKED_SE, 1.0f);
 	Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, 1.0f);
+	Sound::GetInstance().SetSEVolume(SE_ID::STORMAKED_SE, 0.0f);
 }
 
 // —³ŠªŒvŽZ—p

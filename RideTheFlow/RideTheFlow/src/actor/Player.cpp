@@ -210,6 +210,7 @@ void Player::Update() {
 	if (!initMove&&!FadePanel::GetInstance().IsAction())
 	{
  		initMove = true;
+		Sound::GetInstance().SetSEVolume(SE_ID::STORMAKED_SE, 1.0f);
 	}
 
 

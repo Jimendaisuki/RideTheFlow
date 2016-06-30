@@ -42,7 +42,7 @@ void Failure::Update()
 	if ((backAlpha >= 1.0f) && 
 		(!FadePanel::GetInstance().IsAction()))
 	{
-		FadePanel::GetInstance().SetOutTime(2.0f);
+		FadePanel::GetInstance().SetOutTime(5.0f);
 		FadePanel::GetInstance().FadeOut();
 	}
 }

@@ -4,20 +4,20 @@
 //矢の攻撃力
 const float ArrowPower = 1.0f;
 //大砲の攻撃力
-const float CannonPower = 2.0f;
+const float CannonPower = 5.0f;
 //バリスタの攻撃力
-const float VaristorPower = 1.0f;
+const float VaristorPower = 2.0f;
 //龍激走の攻撃力
-const float DoragonSperarPower = 5.0f;
+const float DoragonSperarPower = 10.0f;
 
 
 /****敵の攻撃の大きさ****/
 //矢の大きさ
 const float ArrowSize = 2.0f;
 //砲弾の大きさ
-const float ConnonBulletSize = 3.0f;
+const float ConnonBulletSize = 10.0f;
 //バリスタ弾の大きさ
-const float VaristorBulletSize = 2.0f;
+const float VaristorBulletSize = 3.0f;
 
 /***敵の攻撃のスピード***/
 //矢のスピード
@@ -37,7 +37,7 @@ const float ArmySpeed = 10.0f;
 //軍隊の攻撃クールタイム
 const float ArmyAttackTime = 10.0f;
 //軍隊の攻撃範囲
-const float ArmyRange = 500.0f;
+const float ArmyRange = 2000.0f;
 //軍隊がプレイヤーから見てどこまで近づくか(度数)　　例:0度にした場合プレイヤーの真下にまで移動する
 const float ArmyNear = 45.0f;
 //軍隊が一回に発射する矢の本数
@@ -63,9 +63,9 @@ const int VaristorArrorwNum = 2;
 //バリスタの攻撃範囲
 const float VaristorRange = 300.0f;
 //バリスタが発射できるZを軸にした最高角度（度）
-const float VaristorAttackMaxAngle = 45.0f;
+const float VaristorAttackMaxAngle = 80.0f;
 //バリスタが発射できるZを軸にした最小角度（度）
-const float VaristorAttackMinAngle = -45.0f;
+const float VaristorAttackMinAngle = -80.0f;
 //バリスタの初速度
 const float VaristorInitialVelocity = 60.0f;
 //バリスタの旋回速度
@@ -92,9 +92,9 @@ const float CannonRange = 300.0f;
 //大砲が一回に発射する砲弾の数
 const int CannonShellNum = 1;
 //大砲の発射できるZを軸にした最高角度（度）
-const float  CannonAttackMaxAngle = 45.0f;
+const float  CannonAttackMaxAngle = 80.0f;
 //大砲の発射できるZを軸にした最低角度（度）
-const float CannonAttackMinAngle = -45.0f;
+const float CannonAttackMinAngle = -80.0f;
 //大砲の玉の初速度
 const float CannonInitialVelocity = 100.0f;
 //大砲の旋回速度
