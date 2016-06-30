@@ -156,7 +156,7 @@ void Castle::Update()
 void Castle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
-	DrawFormatString(0, 464, GetColor(0, 0, 0), "positionx   %f,%f,%f", parameter.mat.GetPosition().x, parameter.mat.GetPosition().y, parameter.mat.GetPosition().z);
+	//DrawFormatString(0, 464, GetColor(0, 0, 0), "positionx   %f,%f,%f", parameter.mat.GetPosition().x, parameter.mat.GetPosition().y, parameter.mat.GetPosition().z);
 	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetFront().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
 	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * -100 + parameter.mat.GetPosition()), 20, 10, 1, 1, TRUE);
