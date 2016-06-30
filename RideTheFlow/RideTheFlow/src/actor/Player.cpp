@@ -1152,7 +1152,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
 	{
 		if (!spearHit){
-			Damage(CannonPower);
+			Damage(other,CannonPower);
 			SpearHitActionStart();
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
@@ -1173,7 +1173,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear())
 		{
 			if (!spearHit){
-				Damage(spearDamage);
+				Damage(other, spearDamage);
 				SpearHitActionStart();
 				//龍撃槍ダメージ
 				Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
@@ -1185,7 +1185,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&colpara.colFlag)
 	{
 		if (!spearHit){
-			Damage(spearDamage);
+			Damage(other,spearDamage);
 			SpearHitActionStart();
 			//龍撃槍ダメージ
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
@@ -1195,7 +1195,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 }
 
-void Player::Damage(float damage, bool allow)
+void Player::Damage(Actor& bullet, float damage, bool allow)
 {
 	if (!spearHit){
 		if (!allow || !allowNoDamageFlag)
@@ -1204,6 +1204,7 @@ void Player::Damage(float damage, bool allow)
 		if (allow && !allowNoDamageFlag) {
 			parameter.HP -= damage;
 			allowNoDamageFlag = true;
+			Effect::GetInstance().DamegeEffect(world, bullet.parent->GetParameter().mat.GetPosition());
 		}
 	}
 }

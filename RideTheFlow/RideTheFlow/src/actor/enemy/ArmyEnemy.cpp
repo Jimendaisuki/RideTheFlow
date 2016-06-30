@@ -117,7 +117,7 @@ void ArmyEnemy::Draw() const
 	for (int j = 0; j < 3; j++)
 	{
 		Matrix4 m;
-		m = Matrix4::RotateY(rotate.y-90) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
+		m = Matrix4::Scale(4.0f) * Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
 		Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, m);
 	}
 }
