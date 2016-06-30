@@ -63,9 +63,9 @@ const int VaristorArrorwNum = 2;
 //バリスタの攻撃範囲
 const float VaristorRange = 1000.0f;
 //バリスタが発射できるZを軸にした最高角度（度）
-const float VaristorAttackMaxAngle = 80.0f;
+const float VaristorAttackMaxAngle = 90.0f;
 //バリスタが発射できるZを軸にした最小角度（度）
-const float VaristorAttackMinAngle = -80.0f;
+const float VaristorAttackMinAngle = -90.0f;
 //バリスタの初速度
 const float VaristorInitialVelocity = 100.0f;
 //バリスタの旋回速度
@@ -88,15 +88,15 @@ const float VaristorWindPercentage = 75.0f;
 //大砲の攻撃クールタイム
 const float CannonAttackTime = 0.1f;
 //大砲の攻撃範囲
-const float CannonRange = 300.0f;
+const float CannonRange = 1000.0f;
 //大砲が一回に発射する砲弾の数
 const int CannonShellNum = 1;
 //大砲の発射できるZを軸にした最高角度（度）
-const float  CannonAttackMaxAngle = 80.0f;
+const float  CannonAttackMaxAngle = 90.0f;
 //大砲の発射できるZを軸にした最低角度（度）
-const float CannonAttackMinAngle = -80.0f;
+const float CannonAttackMinAngle = -90.0f;
 //大砲の玉の初速度
-const float CannonInitialVelocity = 100.0f;
+const float CannonInitialVelocity = 200.0f;
 //大砲の旋回速度
 const float ConnonSwingSpeed = 100.0f;
 
@@ -137,13 +137,13 @@ const float ShipVaristorAttackTime = 2.0f;
 //船バリスタが一回に発射する矢の数
 const int ShipVaristorArrorwNum = 2;
 //船バリスタの攻撃範囲
-const float ShipVaristorRange = 300.0f;
+const float ShipVaristorRange = 1000.0f;
 //船バリスタが発射できるZを軸にした最高角度（度）
-const float ShipVaristorAttackMaxAngle = 80.0f;
+const float ShipVaristorAttackMaxAngle = 90.0f;
 //船バリスタが発射できるZを軸にした最小角度（度）
-const float ShipVaristorAttackMinAngle = -80.0f;
+const float ShipVaristorAttackMinAngle = -90.0f;
 //船バリスタの初速度
-const float ShipVaristorInitialVelocity = 100.0f;
+const float ShipVaristorInitialVelocity = 200.0f;
 //船バリスタの旋回速度
 const float ShipVaristorSwingSpeed = 100.0f;
 
@@ -160,11 +160,11 @@ const float ShipCannonRange = 1000.0f;
 //船大砲が一回に発射する砲弾の数
 const int ShipCannonShellNum = 2;
 //船大砲の発射できるZを軸にした最高角度（度）
-const float  ShipCannonAttackMaxAngle = 80.0f;
+const float  ShipCannonAttackMaxAngle = 90.0f;
 //船大砲の発射できるZを軸にした最低角度（度）
-const float ShipCannonAttackMinAngle = -80.0f;
+const float ShipCannonAttackMinAngle = -90.0f;
 //船大砲の玉の初速度
-const float ShipCannonInitialVelocity = 100.0f;
+const float ShipCannonInitialVelocity = 200.0f;
 //船大砲の旋回速度
 const float ShipConnonSwingSpeed = 100.0f;
 
