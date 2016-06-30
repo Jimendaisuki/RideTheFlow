@@ -20,9 +20,8 @@ isEndingScene_(isEndingScene)
 
 	currentRow_ = 0;
 	csv_.load("res/" + fileName + ".csv");
-
+	tempCount = 0;
 	DataLoad();
-
 	parameter.isDead = true;
 }
 
@@ -93,7 +92,12 @@ void StageGenerator::AddActor()
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f,isGameScene_));
 		break;
 	case 5: // “‡‚R
-		world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
+		if (tempCount == 0)
+			world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 8.0f));
+		else
+			world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
+
+		tempCount++;
 		break;
 	case 6: // ‘D
 		if (isEndingScene_)

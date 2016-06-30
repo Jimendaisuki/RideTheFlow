@@ -21,4 +21,6 @@ private:
 	int			currentRow_;
 	bool		isGameScene_;
 	bool		isEndingScene_;
+
+	int			tempCount;
 };

@@ -23,12 +23,15 @@ mPosition(position),
 toPoint(Vector3::Zero),
 rotate(Vector3::Zero),
 isLook(true),
-downTime(0.0f)
+downTime(0.0f),
+mScaleFroat(4.0f)
 {
 	parameter.id = ACTOR_ID::ARMY_ENEMY_ACTOR;
 	parameter.HP = 1.0f;
 	parameter.isDead = false;
-	parameter.mat = Matrix4::Translate(mPosition);
+	parameter.mat =
+		Matrix4::Scale(mScaleFroat)*
+		Matrix4::Translate(mPosition);
 	parameter.radius = 10.0f;
 	player = static_cast<Player*>(world.GetPlayer().get());
 	world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
@@ -102,12 +105,14 @@ void ArmyEnemy::Update()
 			Vector3(1, 0, 1)*ArmySpeed*Time::DeltaTime;
 	}
 	downTime += Time::DeltaTime;
-	if (downTime >= 2.0f)
+	if (downTime >= 1.0f)
 	{
-		mPosition.y -= 5.0f*Time::DeltaTime;
+		mPosition.y -= 50.0f*Time::DeltaTime;
 		downTime = 3.0f;
 	}
-	parameter.mat = Matrix4::Translate(mPosition);
+	parameter.mat =
+		Matrix4::Scale(mScaleFroat)*
+		Matrix4::Translate(mPosition);
 	Vector3 v = Vector3::Direction(parameter.mat.GetPosition(), player->GetParameter().mat.GetPosition()).Normalized();
 	rotate.y = Math::Degree(Math::Atan2(v.x, v.z)) - 90.0f;
 }
@@ -117,7 +122,7 @@ void ArmyEnemy::Draw() const
 	for (int j = 0; j < 3; j++)
 	{
 		Matrix4 m;
-		m = Matrix4::Scale(4.0f) * Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition + Vector3(10 * i, 0, 10 * j));
+		m = Matrix4::Scale(mScaleFroat)*Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition + Vector3(40 * i, 0, 40 * j));
 		Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, m);
 	}
 }

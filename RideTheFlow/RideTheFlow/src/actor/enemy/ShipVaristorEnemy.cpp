@@ -147,7 +147,6 @@ void ShipVaristorEnemy::Update()
 void ShipVaristorEnemy::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, parameter.mat);
-	Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, enemyMat);
 }
 void ShipVaristorEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

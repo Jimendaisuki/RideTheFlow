@@ -7,9 +7,9 @@
 #include "../time/Time.h"
 #include <string>
 #include "../math/Math.h"
-#include "Player.h"
 #include "../UIactor/Effect.h"
 #include "../input/GamePad.h"
+#include "../UIactor/Effect.h"
 
 const Vector3 cameraUpMove = Vector3(0, 30, 0);
 const Vector3 cameraDistance = 150.0f;
@@ -48,9 +48,12 @@ fovVelo(0.0f)
 	//パラメーター設定
 	parameter.isDead = false;
 	parameter.id = ACTOR_ID::CAMERA_ACTOR;
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
-	});
+
+	player = static_cast<Player*>(world.GetPlayer().get());
+	playerMat = player->GetParameter().mat;
+	//world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+	//	playerMat = other.GetParameter().mat;
+	//});
 	//バネ設定
 	springParameter.stiffness = 3.0f;
 	springParameter.friction = 0.1f;
@@ -60,7 +63,7 @@ fovVelo(0.0f)
 	springTargetParameter.friction = 0.1f;
 	springTargetParameter.mass = 2.0f;
 
-
+	rotateUp = 180.0;
 	position = DefaultCamera();
 	restPosition = position;
 	fov = 60.0f;
@@ -75,15 +78,19 @@ fovVelo(0.0f)
 }
 MonhanCameraActor::~MonhanCameraActor()
 {
+	player = nullptr;
 }
 void MonhanCameraActor::Update()
 {
 	TackleParameter tp;
-	Player* player;
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		playerMat = other.GetParameter().mat;
-		player = static_cast<Player*>(const_cast<Actor*>(&other));
-	});
+	//Player* player;
+	//world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+	//	playerMat = other.GetParameter().mat;
+	//	player = static_cast<Player*>(const_cast<Actor*>(&other));
+	//});
+
+	playerMat = player->GetParameter().mat;
+
 	tp = player->ReturnTackleParameter();
 
 	//プレイヤーの向き取得
@@ -196,6 +203,10 @@ void MonhanCameraActor::Update()
 			springParameter.stiffness = 3.0f;
 			restLeapTimer = 1.0f;
 			fov = Math::Lerp(60.0f, MaxFov, leapTimer);
+
+			Vector3 frontPos = player->GetParameter().mat.GetPosition() + (player->GetParameter().mat.GetFront().Normalized() * 100.0f);
+
+			Effect::GetInstance().DashEffect(world, frontPos);
 		}
 		else
 		{

@@ -111,6 +111,7 @@ void SpeedLine::Update()
 
 	alphaTime += Time::DeltaTime * (200 + 50 * speed);
 	alpha = Math::Sin(alphaTime);
+	alpha = Math::Clamp(alpha, 0.0f, 0.4f);
 	if (alpha <= 0) parameter.isDead = true;
 }
 

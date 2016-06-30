@@ -111,7 +111,7 @@ void MasterCastle::Update()
 			spawanArmyTimer += Time::DeltaTime;
 			if (spawanArmyTimer >= SpawnArmyEnemyTime&&world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::ARMY_ENEMY_ACTOR) < SpawnMaxArmyEnemy)
 			{
-				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, parameter.mat.GetFront().Normalized()*-65.0f + Vector3(0, 15, 0) + mPosition));
+				world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(world, (parameter.mat.GetFront().Normalized()*-65.0f + Vector3(0, 15, 0)*mScaleFloat)+ mPosition));
 				spawanArmyTimer = 0.0f;
 			}
 		}
