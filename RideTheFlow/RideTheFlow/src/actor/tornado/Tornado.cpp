@@ -33,7 +33,7 @@ radius(radius_ * 6.0f)
 	parameter.id = ACTOR_ID::TORNADO_ACTOR;
 
 	ps_parameter.intervalSec = 0.05f;
-	ps_parameter.lifeTimeLimit = 9999.0f;
+	ps_parameter.lifeTimeLimit = TornadoLifeLimit;
 	ps_parameter.sameEmissiveNum = 2;
 
 	Sound::GetInstance().StopSE(SE_ID::STORMAKED_SE);

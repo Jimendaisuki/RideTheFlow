@@ -49,7 +49,7 @@ public:
 		spearEndFlag = false;
 	}
 
-	void Damage(float damage,bool allow = false);
+	void Damage(Actor& bullet,float damage,bool allow = false);
 
 	bool ReturnDead(){ return dead; }
 

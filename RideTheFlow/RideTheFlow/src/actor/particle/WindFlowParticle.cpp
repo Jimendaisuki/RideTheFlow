@@ -43,6 +43,9 @@ void WindFlowParticle::OnUpdate()
 
 	//アルファ値計算
 	drawParam.alpha = 1.0f * Math::Sin((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 180.0f);
+	//システムが死ぬ1秒前から消え始める
+	if (windFlow.GetLifeTimeSub() <= 1.0f)
+		drawParam.alpha = windFlow.GetLifeTimeSub();
 
 	//最初のうちは向きの計算をしない
 	if (num < 1)
