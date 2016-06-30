@@ -34,6 +34,8 @@
 #include "../actor/castle/HomeActor.h"
 #include "../actor/StageGenerator.h"
 #include "../CloudSetting.h"
+#include "../actor/castle/CastleManager.h"
+#include "../WindAndTornadoSetting.h"
 
 static const Vector3 House1Pos = Vector3(0, -680, 0);
 
@@ -53,30 +55,20 @@ CreditScene::~CreditScene()
 //開始
 void CreditScene::Initialize()
 {
-	////mIsEnd = false;
-	////wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	////wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
-	////wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-
-	////wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(700, -20, 0), true));
-
-	////wa.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<FroatingIsland>(wa, Vector3(-550, 120, -650), 0, 1));
-	////wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-
 	////モデルを一旦解放して読み込み直す
 	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
 	WorkFolder::SetWorkFolder("res/Model/");
 	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
 	
 	mIsEnd = false;
-	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
+	wa.Add(ACTOR_ID::BEGIN_ACTOR, std::make_shared<CastleManager>(wa));
+	//wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
-
 	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
 	{
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
@@ -86,6 +78,8 @@ void CreditScene::Initialize()
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 	}
 
+
+	////============================テスト用======================================
 	//wa.Add(ACTOR_ID::SAND_ACTOR, std::make_shared<Sand>(wa,Vector3(0,-700,0), Vector3::Forward));
 
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(0, -600, 0), 1.0f, 0.0f, true, false,0));
@@ -108,12 +102,10 @@ void CreditScene::Initialize()
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(20,  -80, -400)	 * bai, 0.0f, true, false));
 	//wa.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, Vector3(300, -80, 700)	 * bai, 0.0f, true, false));
 
-
-
 	armyCreateTimer = 0.0f;
 	armyCount = 0;
 
-	Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
+	//Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM);
 }
 
 void CreditScene::Update()
@@ -174,6 +166,21 @@ void CreditScene::Draw() const
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100),1.0f, Vector3::Zero, Vector3(0.05f), diffuse, specu);
 	//Model::GetInstance().Draw(MODEL_ID::CASTLE_ADD_MODEL, Vector3(0, 0, -100), Vector3::Zero, Vector3(0.1f));
 
+	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, Vector3(500, 100, 800), Vector3::Zero, Vector3(8.0f));
+
+	Model::GetInstance().Draw(MODEL_ID::ISLE_1_BREAK_1_MODEL, Vector3(0,  -100,   800) + Vector3(0,1000,0), Vector3::Zero, Vector3(8.0f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_1_BREAK_3_MODEL, Vector3(0,  -100,   800) + Vector3(0,200,0), Vector3::Zero, Vector3(8.0f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_1_BREAK_4_MODEL, Vector3(0,  -100,   800) + Vector3(0,200,0), Vector3::Zero, Vector3(8.0f));
+																		  		
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_1_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_2_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_3_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_2_BREAK_4_MODEL, Vector3(1000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//																	  		
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_1_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_2_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_3_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
+	//Model::GetInstance().Draw(MODEL_ID::ISLE_3_BREAK_4_MODEL, Vector3(2000,100, -300), Vector3::Zero, Vector3(4.8f));
 
 	wa.Draw();
 
@@ -192,7 +199,7 @@ void CreditScene::Draw() const
 	//}
 
 	//ステージの限界の大きさのワイヤー球
-	//DrawSphere3D(Vector3::Zero.ToVECTOR(), 6000, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
+	////DrawSphere3D(Vector3::Zero.ToVECTOR(), 6000, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);
 }
 
 //終了しているか？

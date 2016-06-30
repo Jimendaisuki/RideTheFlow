@@ -43,6 +43,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::BULLET_NOBULLETAREA_COL] = std::bind(&Actor::Bullet_vs_NoBulletArea, this, std::placeholders::_1);
 	colFunc[COL_ID::CASTLE_AIRGUN_COL] = std::bind(&Actor::Castle_vs_AirGun, this, std::placeholders::_1);
 	colFunc[COL_ID::ENEMY_AIRGUN_COL] = std::bind(&Actor::Enemy_vs_AirGun, this, std::placeholders::_1);
+	colFunc[COL_ID::PLAYER_LAND_COL] = std::bind(&Actor::Player_vs_land, this, std::placeholders::_1);
 	//colFunc[COL_ID::SPHERE_SPHERE_COL] = std::bind(&Actor::SphereSphere, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_CAPSULE_COL] = std::bind(&Actor::CapsuleCapsule, this, std::placeholders::_1);
 	//colFunc[COL_ID::CAPSULE_AABB_COL] = std::bind(&Actor::CapsuleAABBSegment, this, std::placeholders::_1);
@@ -103,6 +104,75 @@ CollisionParameter Actor::Player_vs_Stage(const Actor& other) const{
 	if (stageflag || rangeflag)
 		colpara.colFlag = true;
 
+	return colpara;
+}
+
+CollisionParameter Actor::Player_vs_land(const Actor& other) const
+{
+	CollisionParameter colpara;
+	Sphere sphere;
+	sphere.position = parameter.mat.GetPosition();
+	sphere.radius = parameter.radius;
+
+	//対ステージ
+	ModelData stage;
+	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::ISLE_1_MODEL);
+	stage.MFrameIndex = -1;
+	bool stageflag = false;
+
+	colpara = Collisin::GetInstace().ModelSphere(stage, sphere);
+	/* ResultData */
+	if (colpara.colFlag)
+	{
+		while (colpara.colFlag){
+			sphere.position += colpara.colPos.Normalized() * 1.0f;
+			stageflag = true;
+			colpara = Collisin::GetInstace().ModelSphere(stage, sphere);
+		}
+
+		colpara.colPos = sphere.position;
+		colpara.colID = COL_ID::PLAYER_LAND_COL;
+		if (stageflag)
+		{
+			colpara.colFlag = true;
+			return colpara;
+		}
+	}
+	if (!colpara.colFlag)
+	{
+		ModelData stage1;
+ 		stage1.MHandle = Model::GetInstance().GetHandle(MODEL_ID::ISLE_2_MODEL);
+		stage1.MFrameIndex = -1;
+		stageflag = false;
+		colpara = Collisin::GetInstace().ModelSphere(stage1, sphere);
+		/* ResultData */
+		while (colpara.colFlag){
+			sphere.position += colpara.colPos.Normalized() * 1.0f;
+			stageflag = true;
+			colpara = Collisin::GetInstace().ModelSphere(stage1, sphere);
+		}
+
+		colpara.colPos = sphere.position;
+		colpara.colID = COL_ID::PLAYER_LAND_COL;
+		if (stageflag)
+		{
+			colpara.colFlag = true;
+			return colpara;
+		}
+	}
+	if (!colpara.colFlag)
+	{
+		Capsule stage2;
+		stage2.startPos = other.parameter.mat.GetPosition() - Vector3(0.0f, other.parameter.radius / 3, 0.0f);
+		stage2.endPos = other.parameter.mat.GetPosition() + Vector3(0.0f, other.parameter.radius / 2, 0.0f);
+		stage2.radius = other.parameter.radius;
+		colpara = Collisin::GetInstace().PushedBack_SphereCapsule(sphere, stage2);
+		if (colpara.colFlag)
+		{
+			colpara.colID = COL_ID::PLAYER_LAND_COL;
+			return colpara;
+		}
+	}
 	return colpara;
 }
 
@@ -645,7 +715,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	Capsule castle;
 	castle.startPos = other.parameter.mat.GetPosition();
 	castle.endPos = castle.startPos + other.parameter.height;
-	castle.radius = 80.0f;
+	castle.radius = 80.0f*2.4f;
 	Sphere player;
 	player.position = parameter.mat.GetPosition();
 	player.radius = parameter.radius;
@@ -653,7 +723,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	Capsule masterCastle;
 	masterCastle.startPos = other.parameter.mat.GetPosition();
 	masterCastle.endPos = masterCastle.startPos+Vector3(0.0f,0.1f,0.0f);
-	masterCastle.radius = 100.0f;
+	masterCastle.radius = 100.0f*2.4f;
 
 
 	colpara = Collisin::GetInstace().PushedBack_SphereCapsule(player, castle);

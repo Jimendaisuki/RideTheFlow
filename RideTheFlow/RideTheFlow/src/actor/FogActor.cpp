@@ -12,8 +12,10 @@ static const float FogSettingValue = 0.1f;
 static const float RangeMax = 10.0f;
 static const float AngleSettingValue = 18.0f;
 
-//sandstormのseが聞こえはじめるフォグの距離
-static const float SandStormStartPower = 2000.0f;
+//sandstormのseが聞こえはじめる、原点からの距離
+static const float SandStormStartLength = 6000.0f;
+//最大になる距離
+static const float SandStormLengthMax = 8000.0f;
 
 FogActor::FogActor(IWorld& world) :
 Actor(world),
@@ -26,6 +28,7 @@ fogStartAngle(70.0f)
 	parameter.id = ACTOR_ID::FOG_ACTOR;
 	SetFogEnable(TRUE);
 	SetFogColor(180, 180, 200);
+	Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, 0.0f);
 	Sound::GetInstance().PlaySE(SE_ID::SAND_STORM_SE, DX_PLAYTYPE_LOOP);
 }
 FogActor::~FogActor()
@@ -34,11 +37,14 @@ FogActor::~FogActor()
 	Sound::GetInstance().StopSE(SE_ID::SAND_STORM_SE);
 }
 
+float Length;
+
 void FogActor::Update()
 {
 	position = Camera::GetInstance().Position.Get();
 	//原点からの距離
 	float length = position.Length();
+	Length = length;
 	//カメラの前向き
 	Vector3 front = Vector3::Normalize(Camera::GetInstance().Target.Get() - Camera::GetInstance().Position.Get());
 	//原点へ向かう方向
@@ -69,12 +75,12 @@ void FogActor::Update()
 
 	SetFogStartEnd(0.0f, fogTotalPower);
 
-	if (fogTotalPower < SandStormStartPower)
-		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, (SandStormStartPower - fogTotalPower) / SandStormStartPower);
+	if (length > SandStormStartLength)
+		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, (SandStormStartLength - length) / (SandStormLengthMax - SandStormStartLength));
 }
 void FogActor::Draw() const
 {
-	DrawFormatString(900, 10, Vector3::Black.ToColor(), "fogTotalPower : %f", fogTotalPower);
+	//DrawFormatString(900, 10, Vector3::Black.ToColor(), "fogTotalPower : %f", Length);
 }
 void FogActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

@@ -11,13 +11,15 @@
 #include "../math/Math.h"
 #include "../time/Time.h"
 
+#include "../actor/Player.h"
 #include "../actor/Stage.h"
 #include "../actor/CameraActor.h"
 #include "../actor/TitleCameraActor.h"
-
-#include "../UIactor/fadePanel/FadePanel.h"
-#include "../actor/Player.h"
 #include "../actor/StageGenerator.h"
+#include "../UIactor/fadePanel/FadePanel.h"
+#include "../CloudSetting.h"
+#include "../actor/Cloud.h"
+#include "../game/Random.h"
 
 /* 竜巻ポリゴン用データ */
 const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
@@ -26,7 +28,7 @@ const float x[4] = { STORM_POS.x + SIZE_HALF.x / 2.0f, STORM_POS.x - SIZE_HALF.x
 const float y[4] = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y - SIZE_HALF.y };
 const float u[4] = { 0, 0, 1, 1 };
 const float v[4] = { 0, 1, 1, 0 };
-const int	StormMaxAlpha		= 255 / 3;
+const int	StormMaxAlpha		= 255 * 3 / 3;
 const float StormAlphaEndTime	= 6.0f;
 /* タイトルテキスト用データ */
 const float TitleAlphaEndTime	= 2.0f;
@@ -64,14 +66,21 @@ TitleScene::~TitleScene()
 //開始
 void TitleScene::Initialize()
 {
-	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM);
-
 	mIsEnd = false;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
 	wo.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wo, "TitleStage", false));
 	wo2.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, true));
+
+	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+	{
+		wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
+	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+	{
+		wo.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wo, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	}
 
 	/* ポリゴンデータ */
 	amount_1 = 0;
@@ -100,16 +109,17 @@ void TitleScene::Initialize()
 	slideTime = 0;
 	isTitle = false;
 
-	///* フェード */
-	FadePanel::GetInstance().SetInTime(4.0f);
+	/* 音 */
+	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
+
+	/* フェード */
+	FadePanel::GetInstance().SetInTime(3.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 }
 
 void TitleScene::Update()
 {	
-	if (!Sound::GetInstance().IsPlayBGM())
-		Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM);
-
 	switch (status)
 	{
 	case TITLE_BEGIN:
@@ -121,7 +131,7 @@ void TitleScene::Update()
 		// ドラゴンが動く
 		if (slideTime < 1)
 		{
-			screenPos = Math::Lerp(WINDOW_WIDTH / 4.0f, endScreenPos, slideTime);
+			screenPos = Math::Lerp(350.0f, endScreenPos, slideTime);
 			slideTime += Time::DeltaTime / 3.0f;
 		}
 		else
@@ -138,7 +148,7 @@ void TitleScene::Update()
 			Vertex2D_2[i].dif.a = stormAlpha;
 		}
 		
-		if (stormAlpha >= StormMaxAlpha / 2)
+		if (stormAlpha >= StormMaxAlpha / 3)
 			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
 
 		if (titleAlpha >= 1.0f)
@@ -153,9 +163,10 @@ void TitleScene::Update()
 		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
 		// シーン終了
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X) ||
-			GamePad::GetInstance().AnyTriggerDown())
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
 		{
+			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			FadePanel::GetInstance().FadeOut();
 			status = TITLE_STATUS::TITLE_END;
 		}
@@ -183,13 +194,7 @@ void TitleScene::Update()
 
 	Camera::GetInstance().SetRange(0.1f, 40000.0f);
 
-	/* 以下デバッグ用 */
-	// シーン終了
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
-	{
-		mIsEnd = true;
-	}
-
+	/* タイトルロゴ */
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
 		isTitle = !isTitle;
 }

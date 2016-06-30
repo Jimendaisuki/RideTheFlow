@@ -9,6 +9,8 @@
 #include "../../world/IWorld.h"
 #include "../../actor/Actor.h"
 #include "../../game/GameFrame.h"
+#include "../../sound/Sound.h"
+
 
 const Vector2 SCREEN_CENTER = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 const Vector2 Scale = Vector2((float)WINDOW_WIDTH / 1920.0f, (float)WINDOW_HEIGHT / 1080.0f);
@@ -23,6 +25,17 @@ const float RX[5] = { WINDOW_WIDTH, WINDOW_WIDTH * 0.9f, WINDOW_WIDTH * 1.1f, WI
 const float RY[5] = { 0.0f, WINDOW_HEIGHT / 10.0f, WINDOW_HEIGHT * 0.25f, WINDOW_HEIGHT * 0.6f, WINDOW_HEIGHT };
 float LV[6] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 float RV[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+MenuPanel::MenuPanel(Scene currentScene) :
+scene(currentScene)
+{
+
+}
+
+MenuPanel::~MenuPanel()
+{
+
+}
 
 void MenuPanel::Initialize()
 {
@@ -53,35 +66,18 @@ void MenuPanel::Initialize()
 	/* マニュアル */
 	nowPage = 1;
 	prePage = 0;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		pages[i] = 0.0f;
 	}
 	textScale = 1.0f;
 
 	/* 雲設定 */
-	for (int i = 0; i < 4; i++)
-	{
-		tornadoPos[i].x = -250.f - Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
-		tornadoPos[i + 4].x = WINDOW_WIDTH + 250.f + Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+	SetCloud();
 
-		if (i % 2 == 0)
-		{
-			tornadoPos[i].y = Random::GetInstance().Range(-50.0f, 200.0f);
-			tornadoPos[i + 4].y = Random::GetInstance().Range(-50.0f, 200.0f);
-		}
-		else
-		{
-			tornadoPos[i].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
-			tornadoPos[i + 4].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
-		}
-
-		float num = 30.0f * (i % 2 + 2);
-
-		tornadoVel[i] = Random::GetInstance().Range(10.0f * (i % 2 + 1), num);
-		tornadoVel[i + 4] = Random::GetInstance().Range(-num, -10.0f * (i % 2 + 1));
-	}
-
+	backAlpha = 0.0f;
+	currentButton = 0;
+	isPush = false;
 
 	/* 実行用設定 */
 	isAction	 = false;
@@ -126,6 +122,8 @@ void MenuPanel::Update()
 		// 処理
 		time += Time::DeltaTime;
 
+		if (!Sound::GetInstance().IsPlaySE(SE_ID::MENU_ROLL_SE))
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 		moveVec = MOVE_WIDTH * Scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
 		size = Point(moveVec / Scale.x, 0) + RES_SIZE_1.ToPoint();
 		rect.left = moveVec / Scale.x;
@@ -158,40 +156,93 @@ void MenuPanel::Update()
 			selects[i] = 0;
 		selects[selectNum] = 1;
 
+
+		DINPUT_JOYSTATE input;
+		GetJoypadDirectInputState(DX_INPUT_PAD1, &input);
+		currentButton = 0;
+
+		// 十字キー
+		if (!isPush && input.POV[0] != -1)
+		{
+			currentButton = input.POV[0];
+			isPush = true;
+		}
+		if (input.POV[0] == -1 && isPush)
+			isPush = false;
+
 		// 入力処理
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT) || 
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::LEFT))	
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LEFT) ||
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::LEFT) ||
+			currentButton == 27000)
+		{
+			Sound::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 			selectNum++;
+		}
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::RIGHT) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::RIGHT))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::RIGHT) ||
+			currentButton == 9000)
+		{
+			Sound::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 			selectNum--;
+		}
 		if (selectNum > 2) selectNum = 0;
 		if (selectNum < 0) selectNum = 2;
 
-		// ステータス切り替え
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
+		/* ステータス切り替え */
+		// 強制閉じる
+		if ((scene == Scene::GamePlay) && 
+			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
+		{
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
+			status = MENU_PANEL_STATUS::CLOSE;
+			break;
+		}
+		// ×ボタン
+		if ((scene == Scene::Menu) &&
+			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
+		{
+			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
+			isBackSelect = true;
+			Close();
+			break;
+		}
+
+		// 通常処理
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (selectNum == 0)
 			{
 				if (scene == Scene::Menu)
+				{
+					Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 					status = MENU_PANEL_STATUS::PUSH;
+				}
 				else if (scene == Scene::GamePlay)
+				{
 					status = MENU_PANEL_STATUS::CLOSE;
+				}
 			}
 			else if (selectNum == 1)
 			{
 				prePage = 0;
 				nowPage = 1;
+				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 				status = MENU_PANEL_STATUS::MANUAL;
 			}
 			else if (selectNum == 2)
 			{
 				if (scene == Scene::Menu)
+				{
 					GameFrame::GameEnd();
+				}
 				else if (scene == Scene::GamePlay)
 				{
 					isBackSelect = true;
+					Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 					Close();
 				}
 			}
@@ -222,9 +273,24 @@ void MenuPanel::Update()
 		}
 		pages[nowPage] = 1.0f;
 
+		// 強制閉じる
+		if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+		{
+			pages[nowPage] = 0;
+			if (scene == Scene::Menu)
+			{
+				selectNum = 0;
+				status = MENU_PANEL_STATUS::PUSH;
+			}
+			else
+				status = MENU_PANEL_STATUS::CLOSE;
+		}
+
+		// 戻る
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
 		{
+			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 			if (nowPage <= 1)
 			{
 				status = MENU_PANEL_STATUS::SELECT;
@@ -235,9 +301,11 @@ void MenuPanel::Update()
 			prePage = nowPage;
 			nowPage--;
 		}		
-		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N) ||
+		// 進む
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
+			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			if (nowPage > 3)
 			{
 				status = MENU_PANEL_STATUS::SELECT;
@@ -261,6 +329,8 @@ void MenuPanel::Update()
 			break;
 		}
 		time -= Time::DeltaTime;
+		if (!Sound::GetInstance().IsPlaySE(SE_ID::MENU_ROLL_SE))
+			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 
 		moveVec = MOVE_WIDTH * Scale.x * 2 * bez.Get(CBezier::eSlow_Lv5, CBezier::eSlow_Lv5, time);
 		size = Point(moveVec / Scale.x, 0) + RES_SIZE_1.ToPoint();
@@ -292,6 +362,7 @@ void MenuPanel::Update()
 				backAlpha -= Time::DeltaTime * 3;
 				break;
 			}
+			tornadoAlpha = 0;
 			rollAlpha = 0.0f;
 			backAlpha = 0.0f;
 			isAction = false;
@@ -367,7 +438,7 @@ void MenuPanel::Draw() const
 
 	for (int i = 0; i < 8; i++)
 	{
-		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, tornadoPos[i], Vector2(400, 300), 1, Vector2(Scale.x, 0.8f * Scale.y));
+		Sprite::GetInstance().Draw(SPRITE_ID::TORNADO_SPRITE, tornadoPos[i], Vector2(400, 300), tornadoAlpha, Vector2(Scale.x, 0.8f * Scale.y));
 	}
 }
 
@@ -387,14 +458,6 @@ void MenuPanel::DrawMenu() const
 	Sprite::GetInstance().Draw(SPRITE_ID::EXIT_GAME_SPRITE, textDrawPos_b, TEXT_SIZE / 2.0f, selects[2], Scale * textScale, true, false);
 	float posX[3] = { textDrawPos_s.x, textDrawPos_m.x, textDrawPos_b.x };
 	Sprite::GetInstance().Draw(SPRITE_ID::POINT_SPRITE, Vector2(posX[selectNum], WINDOW_HEIGHT / 6.0f), Vector2(24.0f, 24.0f), selects[selectNum], Vector2(Scale.x), true, false);
-
-	/* 中心から移動用
-	Point size = Point(move * 2 / scale.x, 0) + RES_SIZE_1.ToPoint();
-	rect.left = 0.0f + move / scale.x;
-	rect.right = rect.left + RES_SIZE_1.x;
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_3_SPRITE, SCREEN_CENTER + Vector2(move, 0.0f), size, RES_SIZE_1 / 2, alpha, scale, 180.0f, true, false);
-	Sprite::GetInstance().Draw(SPRITE_ID::MENU_ROLL_2_SPRITE, SCREEN_CENTER - Vector2(move, 0.0f), rect, RES_SIZE_1 / 2, alpha, scale, 0.0f, true, false);
-	*/
 }
 
 void MenuPanel::DrawPause() const
@@ -416,13 +479,12 @@ void MenuPanel::DrawPause() const
 }
 
 // 未実行なら実行
-void MenuPanel::Action(Scene scene_)
+void MenuPanel::Action()
 {
 	if (isAction) return;
-	/* 現在のシーンを取得 */
-	scene = scene_;
 	Initialize();
 	isAction = true;
+	tornadoAlpha = 1.0f;
 }
 // 実行中か？
 bool MenuPanel::IsAction() const
@@ -448,4 +510,31 @@ void MenuPanel::Close()
 void MenuPanel::Stop()
 {
 	isAction = false;
+}
+
+void MenuPanel::SetCloud()
+{
+	tornadoAlpha = 1.0f;
+
+	for (int i = 0; i < 4; i++)
+	{
+		tornadoPos[i].x = -250.f - Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+		tornadoPos[i + 4].x = WINDOW_WIDTH + 250.f + Random::GetInstance().Range(0.0f, 300.0f) * (i % 2 + 1);
+
+		if (i % 2 == 0)
+		{
+			tornadoPos[i].y = Random::GetInstance().Range(-50.0f, 200.0f);
+			tornadoPos[i + 4].y = Random::GetInstance().Range(-50.0f, 200.0f);
+		}
+		else
+		{
+			tornadoPos[i].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
+			tornadoPos[i + 4].y = WINDOW_HEIGHT - Random::GetInstance().Range(-50.0f, 200.0f);
+		}
+
+		float num = 30.0f * (i % 2 + 2);
+
+		tornadoVel[i] = Random::GetInstance().Range(10.0f * (i % 2 + 1), num);
+		tornadoVel[i + 4] = Random::GetInstance().Range(-num, -10.0f * (i % 2 + 1));
+	}
 }

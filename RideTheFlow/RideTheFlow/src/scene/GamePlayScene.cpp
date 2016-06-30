@@ -3,24 +3,31 @@
 #include <sstream>
 #include <iomanip>
 #include "Scene.h"
-#include "../actor/Player.h"
-#include "../actor/CameraActor.h"
-
 #include "../math/Vector2.h"
 #include "../input/Keyboard.h"
+#include "../input/GamePad.h"
+#include "../game/Random.h"
+#include "../game/WorkFolder.h"
+#include "../math/Math.h"
+#include "../time/Time.h"
+#include "../sound/Sound.h"
 
-#include "../actor/tornado/Tornado.h"
+#include "../actor/Player.h"
+#include "../actor/MonhanCameraActor.h"
 #include "../actor/Stage.h"
-#include "../actor/castle/MasterCastle.h"
+#include "../actor/StageGenerator.h"
+#include "../actor/castle/CastleManager.h"
+#include "../actor/Cloud.h"
+#include "../CloudSetting.h"
+#include "../actor/FogActor.h"
+#include "../UIactor/MiniMap.h"
+#include "../UIactor/Failure.h"
 
 
 //コンストラクタ
 GamePlayScene::GamePlayScene()
 {
-
-	//mIsEnd = false;
 }
-
 
 //デストラクタ
 GamePlayScene::~GamePlayScene()
@@ -30,44 +37,107 @@ GamePlayScene::~GamePlayScene()
 //開始
 void GamePlayScene::Initialize()
 {
-	boonPositions.clear();
 	mIsEnd = false;
-	//player = std::make_shared<Player>(wa);
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	isGameEnd = false;
+	isPlayerDead = false;
 
-//	for (int i = 1; i < MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL)); i++)
-//	{
-//		if (i % 2 == 0)
-//		{
-//			Vector3 Position = Vector3::ToVECTOR(MV1GetFramePosition(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), i));
-//			boonPositions.push_back(Position);
-//		}
-//	}
-//	for (auto i : boonPositions)
-//	{
-//		wa.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<MasterCastle>(wa, i,false));
-//	}
-	int num = MV1GetFrameNum(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL));
+	//モデルを一旦解放して読み込み直す
+	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
+	WorkFolder::SetWorkFolder("res/Model/");
+	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
+
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, false, Vector3(0.0f, 0.0f, -5500.0f), Vector3::Forward));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-//	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<CameraActor>(wa));
-	
-	//wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0, 0, 0), Vector3(10, 0, 0)));
+	wa.Add(ACTOR_ID::BEGIN_ACTOR,  std::make_shared<CastleManager>(wa));
+	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
+	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
+	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
+
+	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+
+	menu.Initialize();
+
+	bgmVol = 1.0f;
+	Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
 }
 
 void GamePlayScene::Update()
 {
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::E))
 		mIsEnd = true;
+	
+	/* サウンド */
+	if (!Sound::GetInstance().IsPlayBGM())
+		Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM, DX_PLAYTYPE_LOOP);
+
+	if (isGameEnd && FadePanel::GetInstance().IsFullBlack())
+	{
+		mIsEnd = true;
+		return;
 	}
 
+	/* メニュー更新 */
+	menu.Update();
+	if (menu.IsAction())
+		return;
+
 	wa.Update();
+
+	// 終了してたら以下省略
+	if (isGameEnd)
+	{
+		bgmVol -= Time::DeltaTime;
+		bgmVol = Math::Clamp(bgmVol, 0.0f, 1.0f);
+		Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
+		return;
+	}
+
+	if (menu.IsBackSelect())
+	{
+		isGameEnd = true;
+		FadePanel::GetInstance().SetOutTime(0.5f);
+		FadePanel::GetInstance().FadeOut();
+		return;
+	}
+
+
+	/* ポーズ表示 */
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+	{
+		menu.Action();
+	}
+
+	/* クリア判定 */
+	if (wa.GetActorCount(ACTOR_ID::MASTER_CASTLE_ACTOR, ACTOR_ID::MASTER_CASTLE_ACTOR) <= 0 &&
+		wa.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR) <= 0)
+	{
+		isGameEnd = true;
+		FadePanel::GetInstance().SetOutTime(0.5f);
+		FadePanel::GetInstance().FadeOut();
+	}
+
+	/* プレイヤー死亡判定 */
+	if (wa.GetPlayer()->GetParameter().HP <= 0.0f)
+	{
+		isGameEnd = true;
+		isPlayerDead = true;
+		wa.UIAdd(UI_ID::FAILERE_UI, std::make_shared<Failure>(wa));
+		Sound::GetInstance().PlayBGM(BGM_ID::FAILED_BGM);
+		FadePanel::GetInstance().SetOutTime(13.0f);
+		FadePanel::GetInstance().FadeOut();
+	}
 }
 
 //描画
 void GamePlayScene::Draw() const
 {
 	wa.Draw();
+	menu.Draw();
 }
 
 //終了しているか？
@@ -79,10 +149,16 @@ bool GamePlayScene::IsEnd() const
 //次のシーンを返す
 Scene GamePlayScene::Next() const
 {
-	return Scene::Ending;
+	if (menu.IsBackSelect())
+		return Scene::Menu;
+	else if (isPlayerDead)
+		return Scene::Title;
+	else
+		return Scene::Ending;
 }
 
-void GamePlayScene::End(){
-	boonPositions.clear();
+void GamePlayScene::End()
+{
 	wa.Clear();
+	Sound::GetInstance().StopBGM();
 }

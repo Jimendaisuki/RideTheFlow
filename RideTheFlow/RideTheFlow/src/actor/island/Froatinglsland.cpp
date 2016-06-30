@@ -15,7 +15,7 @@ isGameScene(isGameScene_)
 	parameter.HP = lslandHP;
 
 	parameter.isDead = false;
-	parameter.radius = 120;
+	parameter.radius = 90;
 
 	parameter.mat =
 		Matrix4::Scale(scale) *
@@ -24,15 +24,16 @@ isGameScene(isGameScene_)
 		Matrix4::RotateY(rotate.y) *
 		Matrix4::Translate(position);
 
-	if (!isGameScene)
+	if (!isGameScene_)
 		return;
 
 	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world, 
 		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
-		parameter.radius, *this));
-	world .Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, parameter.mat.GetPosition()+Vector3(0.0f,parameter.radius,0.0f)
-		, 0.0f,0.0f, true, false,1.0f, this));
+		parameter.radius*scale.x, *this));
+
+	DxLib::MV1SetupCollInfo(MODEL_ID::ISLE_1_MODEL, -1);
+
 }
 
 Froatinglsland::~Froatinglsland()
@@ -65,14 +66,12 @@ void Froatinglsland::Update()
 
 void Froatinglsland::Draw() const
 {
+	Vector3 startPos = parameter.mat.GetPosition() - Vector3(0.0f, parameter.radius / 3, 0.0f);
+	Vector3 endPos = parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius / 2, 0.0f);
+	//DrawCapsule3D(startPos.ToVECTOR(), endPos.ToVECTOR(), parameter.radius, 10, 1, 1, FALSE);
 	Model::GetInstance().Draw(MODEL_ID::ISLE_1_MODEL, parameter.mat);
 }
 
 void Froatinglsland::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::TORNADO_ISLAND_COL&&isCol)
-	{
-		parameter.HP -= lslandDamage;
-		isCol = false;
-	}
 }

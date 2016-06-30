@@ -11,7 +11,7 @@
 #include "../../UIactor/Effect.h"
 #include "../../math/Quaternion.h"
 #include "../Player.h"
-CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position, Actor& _parent, float rotateY) :
+CastleDoragonSpear::CastleDoragonSpear(IWorld& world, Vector3 position, Actor& _parent, float rotateY,float scale) :
 Actor(world),
 coolTimer(0),
 preparationTimer(0),
@@ -19,14 +19,14 @@ spearAttackTimer(0),
 spearStopTimer(0),
 mPosition(position),
 tubePos(position),
-mScale(2.8f),
+mScale(2.8f*scale),
 playerWithin(false),
 attackSpear(false),
 endAttack(false),
 playerWithinTimer(0.0f)
 {
 	parameter.isDead = false;
-	parameter.radius = 20.0f;
+	parameter.radius = 20.0f*scale;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -38,8 +38,9 @@ playerWithinTimer(0.0f)
 	mRotateY = rotateY;
 	parent = &_parent;
 	castle = static_cast<Castle*>(const_cast<Actor*>(&_parent));
-	startPos = mPosition;
-	endPos = parameter.mat.GetLeft().Normalized() * 60 + mPosition;
+	startPos = position;
+	endPos = (parameter.mat.GetLeft().Normalized() * 60)*scale + position;
+	mScaleFloat = scale;
 }
 
 CastleDoragonSpear::~CastleDoragonSpear()
@@ -55,12 +56,9 @@ void CastleDoragonSpear::Update()
 		player = const_cast<Actor*>(&other);
 	});
 
-	////城の速度を足す
-	Vector3 v = castle->GetVelocity();
-	startPos += castle->GetVelocity();
-	endPos += castle->GetVelocity();
 
-	if (Vector3::Distance(playerMat.GetPosition(), parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f) <=
+
+	if (Vector3::Distance(playerMat.GetPosition(), parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f*mScaleFloat) <=
 		parameter.radius + 8.0f)
 	{
 		playerWithin = true;
@@ -118,6 +116,8 @@ void CastleDoragonSpear::Update()
 	{
 		parameter.isDead = true;
 	}
+	startPos += castle->GetVelocity();
+	endPos += castle->GetVelocity();
 
 	mPosition = Vector3::Lerp(startPos, endPos, spearAttackTimer);
 	////マトリックス計算
@@ -137,12 +137,12 @@ void CastleDoragonSpear::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL, parameter.mat);
 	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f), parameter.radius, 20, 1, 1, FALSE);
-	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*50.0f), parameter.radius, 20, 1, 1, FALSE);
+	////DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	parameter.radius, 20, 255, 255, FALSE);
 	//////圏内
-	//DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
+	////DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*70.0f), 
 	//	parameter.radius, 20, 255, 255, FALSE);
 }

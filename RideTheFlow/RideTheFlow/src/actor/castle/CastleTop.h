@@ -7,7 +7,7 @@
 class CastleTop : public Actor, public std::enable_shared_from_this<CastleTop >
 {
 public:
-	CastleTop(IWorld& world, Vector3 position, MasterCastle& mc,float rotateY);
+	CastleTop(IWorld& world, Vector3 position, MasterCastle& mc,float rotateY,float scale);
 	~CastleTop();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -31,4 +31,5 @@ private:
 	int mRank;
 	float castleUpTimer;
 	float mRotateY;
+	float mScaleFloat;
 };

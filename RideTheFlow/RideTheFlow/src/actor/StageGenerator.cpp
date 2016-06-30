@@ -67,8 +67,13 @@ void StageGenerator::AddActor()
 	switch (ActorNo)
 	{
 	case 1:	// èÈ
-		if (isGameScene_&&position.y<0)
-			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 1.0f, true, false, 1));
+		if (isGameScene_)
+		{
+			if (position.y>0)
+				world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, true, false, 1));
+			else
+				world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, false, 1));
+		}
 		else
 			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, true, 5));
 		break;
@@ -85,7 +90,7 @@ void StageGenerator::AddActor()
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f,isGameScene_));
 		break;
 	case 5: // ìáÇR
-		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
+		world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
 		break;
 	case 6: // ëD
 		if (!isGameScene_)

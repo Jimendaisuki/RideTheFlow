@@ -11,7 +11,7 @@
 #include  "../../Def.h"
 #include "../../math/Quaternion.h"
 
-CastleCannon::CastleCannon(IWorld& world, Vector3 position,Castle& _castle,float rotateY) :
+CastleCannon::CastleCannon(IWorld& world, Vector3 position,Castle& _castle,float rotateY,float scale) :
 Actor(world),
 playerMat(Matrix4::Identity),
 attackRag(0),
@@ -20,15 +20,16 @@ arrowCount(0),
 playerAngle(0),
 playerDot(0),
 mPosition(position),
-mScale(2.0f),
+mScale(2.0f*scale),
 angle(0.0f),
 isLook(true)
 {
 	parameter.isDead = false;
 	parameter.mat = Matrix4::Translate(mPosition);
-	parameter.radius = 10.0f;
+	parameter.radius = 10.0f*scale;
 	mRotateY = rotateY;
 	castle = &_castle;
+	mScaleFloat = scale;
 
 }
 CastleCannon::~CastleCannon()
@@ -133,7 +134,7 @@ void CastleCannon::Update()
 void CastleCannon::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
-	DrawLine3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 255);
+	////DrawLine3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), Vector3::ToVECTOR(parameter.mat.GetLeft().Normalized() * 100 + parameter.mat.GetPosition()), 255);
 	//DrawFormatString(0, 400, GetColor(0, 0, 0), "playerdot   %f", playerDot);
 }
 void CastleCannon::OnCollide(Actor& other, CollisionParameter colpara)

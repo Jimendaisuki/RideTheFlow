@@ -14,6 +14,9 @@
 #include "ShipCannonEnemy.h"
 #include "../castle/CastleCannon.h"
 #include "../particle/BreakCastle.h"
+#include "../particle/CastleAdd.h"
+#include "../../sound/Sound.h"
+#include "../../WindAndTornadoSetting.h"
 
 ShipEnemy::ShipEnemy(IWorld& world, Vector3 position) :
 Actor(world),
@@ -86,7 +89,7 @@ void ShipEnemy::Update()
 	});
 
 	//‚ ‚½‚è”»’è
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
+	////world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::PLAYER_ACTOR, COL_ID::PLAYER_SHIPENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
@@ -181,10 +184,6 @@ void ShipEnemy::Draw() const
 {
 	//ƒ‚ƒfƒ‹‚Ì•ûŒü‚ªˆá‚¤
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
-	if (!isTitle)
-		DrawFormatString(0, 432, GetColor(0, 0, 0), "ShipHp   %f", parameter.HP);
-
-
 }
 void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
@@ -208,6 +207,10 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= ShipDamegeTornado;
 		damege = false;
 		breakSelect = BREAK_SELECT::TORNADO;
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, BREAK_SELECT::DAMAGE));
+
 	}
 	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
 	{
@@ -215,15 +218,22 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		if (damege)
 		{
 			parameter.HP -= ShipDamegeWind;
+			Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
+			world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, BREAK_SELECT::DAMAGE));
+			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 			damege = false;
-		}
-		breakSelect = BREAK_SELECT::WIND_FLOW;
+			breakSelect = BREAK_SELECT::WIND_FLOW;
+		}		
 	}
 	if (colpara.colID == COL_ID::ENEMY_AIRGUN_COL)
 	{
 		parameter.HP -= ShipDamegeWindBall;
 		damege = false;
 		breakSelect = BREAK_SELECT::WIND_BALL;
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, BREAK_SELECT::DAMAGE));
+
 	}
 	if (colpara.colID == COL_ID::SHIP_SHIP_COL&&colpara.colFlag)
 	{

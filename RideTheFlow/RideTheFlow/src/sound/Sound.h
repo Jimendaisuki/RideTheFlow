@@ -43,6 +43,10 @@ public:
 	///</summary>
 	void PlaySE(const SE_ID& id, int playtype = DX_PLAYTYPE_BACK);
 	///<summary>
+	/// “¯ˆêSE‚ªd‚È‚ç‚È‚¢‚æ‚¤‚É–Â‚ç‚·
+	///</summary>
+	void PlaySEDuplicate(const SE_ID& id, int playtype = DX_PLAYTYPE_BACK);
+	///<summary>
 	/// BGM‚ğ~‚ß‚é
 	///</summary>
 	void StopBGM();

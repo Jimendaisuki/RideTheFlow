@@ -37,7 +37,7 @@ noDeadTimer(0.0f)
 		Matrix4::Translate(position);
 	parent = &parent_;
 
-	Sound::GetInstance().PlaySE(SE_ID::CANON_FIRE_SE);
+	Sound::GetInstance().PlaySEDuplicate(SE_ID::CANON_FIRE_SE);
 
 }
 CannonBullet::~CannonBullet()
@@ -62,7 +62,7 @@ void CannonBullet::Update()
 		if (isWindCol)
 			vec = Vector3::Lerp(vec, windVec, CannonWindPercentage / 100.0f);
 
-	if (parameter.mat.GetPosition().y <= -100) parameter.isDead = true;
+		if (parameter.mat.GetPosition().y <= -3500) parameter.isDead = true;
 
 	noDeadTimer += Time::DeltaTime;
 
@@ -73,7 +73,7 @@ void CannonBullet::Update()
 	}
 	//マトリックス計算
 	parameter.mat =
-		Matrix4::Scale(Vector3(4)) *
+		Matrix4::Scale(Vector3(mScale*ConnonBulletSize)) *
 		Matrix4::Translate(mPosition);
 }
 
@@ -91,14 +91,10 @@ void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
 	{
-		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(CannonPower);
+		//static_cast<Player*>(const_cast<Actor*>(&other))->Damage(CannonPower);
 		parameter.isDead = true;
 	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
-	{
-		parameter.isDead = true;
-	}
-	else
 	{
 		parameter.isDead = true;
 	}

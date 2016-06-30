@@ -7,11 +7,13 @@
 #include "EnemyBullet.h"
 #include "../../math/Math.h"
 #include "../../UIactor/EnemyPoint.h"
+#include "../../sound/Sound.h"
+#include "../../game/Random.h"
+#include "../../camera/Camera.h"
 
 ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
 Actor(world),
 playerMat(Matrix4::Identity),
-cameraMat(Matrix4::Identity),
 attackRag(0),
 attackTime(0),
 arrowCount(0),
@@ -38,10 +40,9 @@ void ArmyEnemy::Update()
 {
 	TackleParameter tp;
 	tp = player->ReturnTackleParameter();
-	cameraMat = world.GetCamera()->GetParameter().mat;
 	playerMat = player->GetParameter().mat;
 	 
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
+	////world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
@@ -79,7 +80,8 @@ void ArmyEnemy::Update()
 	//攻撃
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
-	if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
+
+	if (attackTime >= mSecondAttack&&attackRag >= 0.0f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)
 	{
@@ -131,10 +133,14 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::TORNADO_ENEMY_COL)
 	{
 		parameter.isDead = true;
+		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
+		Sound::GetInstance().PlaySE(se);
 	}
 	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
 	{
 		//仕様確認
 		parameter.isDead = true;
+		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
+		Sound::GetInstance().PlaySE(se);
 	}
 }

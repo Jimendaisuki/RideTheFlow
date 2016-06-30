@@ -3,7 +3,7 @@
 #include "../../math/Math.h"
 #include "../../game/Random.h"
 
-WindFlowParticle::WindFlowParticle(WindFlow& windflow_, const std::vector<Vector3>& dashPositions_, float positionHeight_)
+WindFlowParticle::WindFlowParticle(WindFlow& windflow_, std::vector<Vector3>* dashPositions_, float positionHeight_)
 :
 windFlow(windflow_),
 dashPositions(dashPositions_),
@@ -12,10 +12,10 @@ positionHeight(positionHeight_),
 rotate(Vector3::Zero)
 {
 	lifeParam.lifeTime = 0.0f;
-	lifeParam.lifeTimeLimit = 0.03f * dashPositions.size();
+	lifeParam.lifeTimeLimit = 0.03f * dashPositions->size();
 	lifeParam.isDead = false;
 
-	moveParam.pos = dashPositions.at(0);
+	moveParam.pos = dashPositions->at(0);
 
 	drawParam.drawID = MODEL_ID::WIND_MODEL;
 	drawParam.size = 30.0f;
@@ -27,17 +27,17 @@ rotate(Vector3::Zero)
 void WindFlowParticle::OnUpdate()
 {
 	//要素数が足りない場合ははじく
-	if (dashPositions.size() < 3)
+	if (dashPositions->size() < 3)
 		return;
 
 	//ダッシュの軌跡をなぞる
-	int num = (dashPositions.size() - 1) * (lifeParam.lifeTime / lifeParam.lifeTimeLimit);
+	int num = (dashPositions->size() - 1) * (lifeParam.lifeTime / lifeParam.lifeTimeLimit);
 	//範囲外へ行かないように止める
-	if (num > dashPositions.size() - 1)
+	if (num > dashPositions->size() - 1)
 		return;
 
 	//表示する座標を計算　ダッシュの軌跡からランダムな値分ずらす　＋　タックルヒット後の移動量を追加
-	moveParam.pos = dashPositions.at(num) + randomPosition + windFlow.GetMoveVec();
+	moveParam.pos = dashPositions->at(num) + randomPosition + windFlow.GetMoveVec();
 	//Yの値は渡されてきたもので固定
 	moveParam.pos.y = positionHeight;
 
@@ -48,7 +48,7 @@ void WindFlowParticle::OnUpdate()
 	if (num < 1)
 		return;
 	//進行方向
-	Vector3 v = Vector3::Normalize(dashPositions.at(num) - dashPositions.at(num - 1));
+	Vector3 v = Vector3::Normalize(dashPositions->at(num) - dashPositions->at(num - 1));
 	//回転計算
 	rotate.y = Math::Degree(Math::Atan2(v.x, v.z));
 }

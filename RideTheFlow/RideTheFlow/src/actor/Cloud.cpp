@@ -57,8 +57,8 @@ Cloud::~Cloud()
 void Cloud::Update()
 {
 	//“–‚½‚è”»’èƒZƒbƒg
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
+	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
 
 	moveChangeTimer += Time::DeltaTime;
 	windOutTimer += Time::DeltaTime;
@@ -103,7 +103,7 @@ void Cloud::Draw() const
 			parameter.mat.GetPosition() + cloudPositions.at(i), 0.4f, parameter.mat.GetRotateDegree(), cloudsizes.at(i), true);
 	}
 
-	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 4, GetColor(255, 0, 0), GetColor(255, 0, 0), false);
+	////DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), parameter.radius, 4, GetColor(255, 0, 0), GetColor(255, 0, 0), false);
 }
 void Cloud::OnCollide(Actor& other, CollisionParameter colpara)
 {

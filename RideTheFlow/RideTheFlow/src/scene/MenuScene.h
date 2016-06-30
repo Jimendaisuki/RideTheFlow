@@ -3,9 +3,9 @@
 #include "IScene.h"
 #include "ISceneMediator.h"
 #include "../world/World.h"
+#include "../UIactor/menuPanel/MenuPanel.h"
 
-
-class  MenuScene :public IScene
+class MenuScene :public IScene
 {
 enum MENU_STATUS
 {
@@ -41,4 +41,6 @@ private:
 	bool mIsEnd;
 	World wo;
 	MENU_STATUS	status;
+
+	MenuPanel	menu{ Scene::Menu };
 };

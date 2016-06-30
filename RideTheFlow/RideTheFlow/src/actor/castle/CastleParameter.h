@@ -13,35 +13,35 @@ const float CastleDamegeWind = 2.5f;
 const float CastleDamageWindBall = 4.0f;
 
 //城の無敵時間
-const float CastleInvincibleTime = 3.0f;
+const float CastleInvincibleTime = 1.0f;
 
 //城の上に積み重なる城の段数
 const int Rank = 5;
 //城が積みあがる時間(秒)
-const float RankUpSecond =1.0f;
+const float RankUpSecond =8.0f;
 
 //城が排出する軍隊の時間
-const float SpawnArmyEnemyTime = 5.0f;
+const float SpawnArmyEnemyTime =3.0f;
 //城が排出する軍隊の最大軍隊数
-const int SpawnMaxArmyEnemy = 20;
+const int SpawnMaxArmyEnemy = 100;
 
 /**浮島の城限定**/
 //城が排出する船の時間
-const float SpawnShipEnemyTime = 3000.0f;
+const float SpawnShipEnemyTime = 3.0f;
 //城が排出する船の最大船数
 const int SpawnMaxShipEnemey = 5;
 
 /***城の大砲***/
 //城の大砲が攻撃してくる範囲
-const float CastleCannonAttackRange = 3200.0f;
+const float CastleCannonAttackRange = 500.0f;
 //城の大砲の攻撃クールタイム(秒)
-const float CastleCannonSecondAttack = 15.0f;
+const float CastleCannonSecondAttack = 10.0f;
 //城が一回に出す大砲の弾の数
 const int CastleCannonNumber = 1;
 //城の大砲の旋回速度
 const float CastleCannonSwingSpeed = 25.0f;
 //城の大砲からプレイヤーが見えてないときの一回に出す大砲の弾の数
-const int CastleCannonNotLookAttack = 1;
+const int CastleCannonNotLookAttack = 0;
 //城の大砲からプレイヤーが見えてないときの攻撃クールタイム(秒)
 const float CastleCannonNotLookSecondAttack = 10.0f;
 
@@ -55,20 +55,20 @@ const int CastleVaristorNumber = 1;
 //城のバリスターの旋回速度
 const float CastleVaristorSwingSpeed = 25.0f;
 //城のバリスターからプレイヤーが見えてないときの一回に出すバリスターの矢の数
-const int CastleVaristorNotLookAttack = 1;
+const int CastleVaristorNotLookAttack = 0;
 //城のバリスターからプレイヤーが見えてないときの攻撃クールタイム(秒)
 const float CastleVaristorNotLookSecondAttack = 10.0f;
 
 
 /***城の兵士***/
 //城の兵士が攻撃してくる範囲
-const float CastleSoldierAttackRange = 3200.0f;
+const float CastleSoldierAttackRange = 600.0f;
 //城の兵士の攻撃クールタイム(秒)
-const float CastleSoldierSecondAttack = 10.0f;
+const float CastleSoldierSecondAttack = 1.0f;
 //城が一回に出す兵士の矢の数
 const int CastleSoldierNumber = 1;
 
 //城の兵士からプレイヤーが見えてないときの一回に出す兵士の矢の数
-const int CastleSoldierNotLookAttack = 1;
+const int CastleSoldierNotLookAttack = 0;
 //城の兵士からプレイヤーが見えてないときの攻撃クールタイム(秒)
 const float CastleSoldierNotLookSecondAttack = 10.0f;

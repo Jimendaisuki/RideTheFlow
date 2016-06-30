@@ -37,7 +37,7 @@ void CannonEnemy::Update()
 		tp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnTackleParameter();
 	});
 	//あたり判定
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
+	////world.SetCollideSelect(shared_from_this(), ACTOR_ID::CLOUD_ACTOR, COL_ID::PLAYERTOCASTLELINE_CLOUD_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
 	//プレイヤーの前
@@ -117,7 +117,7 @@ void CannonEnemy::Update()
 void CannonEnemy::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
-	DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 5, 20, 1, 1, FALSE);
+	//DrawSphere3D(Vector3::ToVECTOR(parameter.mat.GetPosition()), 5, 20, 1, 1, FALSE);
 }
 void CannonEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

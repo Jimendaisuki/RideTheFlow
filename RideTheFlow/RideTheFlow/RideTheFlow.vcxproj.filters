@@ -476,9 +476,6 @@
     <ClInclude Include="src\graphic\BlendMode.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\tornado\MasterCastle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\actor\castle\MasterCastle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -693,6 +690,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\BGMVolumeSetting.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIactor\BloodPlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

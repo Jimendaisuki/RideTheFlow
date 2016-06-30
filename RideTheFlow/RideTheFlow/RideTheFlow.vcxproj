@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\UIactor\BloodPlayer.h" />
     <ClInclude Include="src\actor\castle\CastleManager.h" />
     <ClInclude Include="src\actor\castle\CastleVaristor.h" />
     <ClInclude Include="src\actor\castle\HomeActor.h" />
@@ -306,6 +307,7 @@
     <ClInclude Include="src\UIactor\Stamina.h" />
     <ClInclude Include="src\UIactor\UIActorManager.h" />
     <ClInclude Include="src\UIactor\UIActorPtr.h" />
+    <ClInclude Include="src\WindAndTornadoSetting.h" />
     <ClInclude Include="src\world\IWorld.h" />
     <ClInclude Include="src\UIactor\UIActor.h" />
     <ClInclude Include="src\world\World.h" />

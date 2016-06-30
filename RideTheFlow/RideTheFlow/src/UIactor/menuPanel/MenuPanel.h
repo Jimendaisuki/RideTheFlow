@@ -18,27 +18,18 @@ enum MENU_PANEL_STATUS
 	END		= 6,
 };
 
-private:
-	MenuPanel() = default;
-	~MenuPanel() = default;
-
 public:
-	static MenuPanel &GetInstance(){
-		static MenuPanel m;
-		return m;
-	}
+	MenuPanel(Scene currentScene);
+	~MenuPanel();
+
 	// 初期化
 	void Initialize();
 	// 更新
 	void Update();
 	// 描画
 	void Draw() const;
-	// メニューシーン用
-	void DrawMenu() const;
-	// ポーズシーン用
-	void DrawPause() const;
 	// 未実行なら実行させる
-	void Action(Scene scene_);
+	void Action();
 	// 実行中か？
 	bool IsAction() const;
 	// 戻るを押したか
@@ -49,6 +40,14 @@ public:
 	void Close();
 	// 止める
 	void Stop();
+
+private:
+	// メニューシーン用
+	void DrawMenu() const;
+	// ポーズシーン用
+	void DrawPause() const;
+	//
+	void SetCloud();
 
 
 private:
@@ -78,4 +77,8 @@ private:
 
 	Vector2 tornadoPos[8];
 	float	tornadoVel[8];
+	float	tornadoAlpha;
+
+	bool	isPush;
+	int		currentButton;
 };

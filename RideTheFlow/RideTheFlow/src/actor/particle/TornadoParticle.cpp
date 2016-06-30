@@ -4,17 +4,18 @@
 #include "../../game/Random.h"
 #include "../../camera/Camera.h"
 #include "WindSetting.h"
+#include "../../WindAndTornadoSetting.h"
 
 TornadoParticle::TornadoParticle(std::weak_ptr<Tornado> tornade_, float radius)
 :
 tornade(tornade_),
 tornadePos(tornade._Get()->GetParameter().mat.GetPosition()),
 tornadeMove(Vector3::Zero),
-tornadeRadius(Random::GetInstance().Range(radius/2, radius/2 + 30.0f)),
+tornadeRadius(Random::GetInstance().Range(radius/3.0f, radius/3.0f + 30.0f)),
 tornadeAddRadius(Random::GetInstance().Range(60.0f, 80.0f)),
 tornadeSpeed(700.0f),
 tornadeDegree(Random::GetInstance().Range(1.0f, 360.0f)),
-risingSpeed(Random::GetInstance().Range(300.0f,400.0f)),
+risingSpeed(Random::GetInstance().Range(TornadoParticleRizeSpeedMin, TornadoParticleRizeSpeedMax)),
 risingAddSpeed(Random::GetInstance().Range(0, 2)),
 tornadeAddPosition(Vector3::Zero),
 position(tornade_._Get()->GetParameter().mat.GetPosition()),
@@ -32,7 +33,7 @@ frame(Random::GetInstance().Range(1, 2))
 
 	drawParam.drawID = MODEL_ID::TORNADOPOLY_MODEL;
 	//drawParam.drawID = MODEL_ID::TORNADOPOLY_MODEL;
-	drawParam.size = 50.0f;
+	drawParam.size = 50.0f + radius / 100.0f;
 	drawParam.alpha = 0.8f;
 }
 

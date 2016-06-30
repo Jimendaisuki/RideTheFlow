@@ -5,7 +5,17 @@
 
 class  EndhingScene :public IScene{
 public:
-	//コンストラクタ 
+	enum ENDING_STATUS
+	{
+		ENDING_BEGIN = 0,
+		ENDING_FADEOUT = 1,
+		ENDING_DRAGON_OUT = 2,
+		ENDING_CLEAR = 3,
+		ENDING_END = 4
+	};
+
+public:
+		//コンストラクタ 
 	EndhingScene();
 	//デストラクタ
 	~EndhingScene();
@@ -26,7 +36,11 @@ public:
 private:
 	bool mIsEnd;
 	World wa;
-	int timeTest;
-	Vector3 position;
-	std::vector<Vector3>boonPositions;
+	ENDING_STATUS	status;
+
+	float		angle;
+	float		currentFog;
+	Vector3		cameraPos;
+	Vector3		targetPos;
+	Vector3		velocity;
 };

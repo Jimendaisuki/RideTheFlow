@@ -22,7 +22,6 @@ public:
 	virtual void EachUIActor(UI_ID id, std::function<void(const UIActor&)> func) = 0;
 
 	virtual ActorPtr GetPlayer() const = 0;
-	virtual ActorPtr GetCamera() const = 0;
 
 	virtual std::vector<ActorPtr> GetActors(ACTOR_ID id)= 0;
 };

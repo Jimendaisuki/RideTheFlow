@@ -7,7 +7,7 @@
 class CastleCannon :public Actor, public std::enable_shared_from_this<CastleCannon>
 {
 public:
-	CastleCannon(IWorld& world, Vector3 position,Castle& castle,float rotateY);
+	CastleCannon(IWorld& world, Vector3 position,Castle& castle,float rotateY,float scale);
 	~CastleCannon();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -23,6 +23,7 @@ private:
 	float playerDot;
 	float backDot;
 	float angle;
+	float mScaleFloat;
 	//çUåÇä÷åW
 	float mSecondAttack;
 	float mArrowNumber;
