@@ -89,5 +89,5 @@ void TornadoParticle::Draw() const
 
 	Model::GetInstance().Draw(drawParam.drawID, moveParam.pos, drawParam.alpha, rotmat.GetRotateDegree(), drawParam.size, true);
 	
-	DrawFormatString(0, 0, GetColor(0, 0, 0), "%f", drawParam.alpha);
+	//DrawFormatString(0, 0, GetColor(0, 0, 0), "%f", drawParam.alpha);
 }
