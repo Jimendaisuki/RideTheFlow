@@ -37,6 +37,7 @@ public:
 private:
 	void TornadoCalculation();
 	void VertexMove(VERTEX2D vertexs_[], int count_, float time_);
+	void Pass();
 
 private:
 	bool  mIsEnd;
