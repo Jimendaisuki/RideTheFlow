@@ -27,6 +27,7 @@ speed(WindFlowSpeed)
 	ps_parameter.sameEmissiveNum = 3;
 	dashPositions = player.ReturnDashPosStorage();
 
+	Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
 	Sound::GetInstance().PlaySE(SE_ID::MIDDLE_WIND_SE,DX_PLAYTYPE_LOOP);
 }
 WindFlow::~WindFlow()

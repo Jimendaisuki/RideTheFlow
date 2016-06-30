@@ -38,6 +38,8 @@ private:
 	World wa;
 	ENDING_STATUS	status;
 
+	float		length;
+	float		seVol;
 	float		angle;
 	float		currentFog;
 	Vector3		cameraPos;

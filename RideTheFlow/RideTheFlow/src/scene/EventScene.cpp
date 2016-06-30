@@ -68,6 +68,11 @@ EventScene::~EventScene()
 //開始
 void EventScene::Initialize()
 {
+	//モデルを一旦解放して読み込み直す
+	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
+	WorkFolder::SetWorkFolder("res/Model/");
+	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
+
 	wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, false, true, Vector3::Zero, Vector3::Forward));
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 
@@ -128,8 +133,9 @@ void EventScene::Update()
 	wo.Update();
 
 	/* イベントカット */
-	if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
-		Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE))
+	if ((!FadePanel::GetInstance().IsAction()) &&
+		(GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
+		Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)))
 	{
 		FadePanel::GetInstance().FadeOut();
 		status = EVENT_END;
@@ -206,7 +212,7 @@ void EventScene::Update()
 		}
 		break;
 	case EventScene::EVENT_STAGE_IN:
-		currentFogFar -= 6000 * Time::DeltaTime;
+		currentFogFar -= 7500.0f * Time::DeltaTime;
 		
 		stormVol = 10000.0f / currentFogFar;
 		stormVol = Math::Clamp(stormVol, 0.2f, 1.0f);

@@ -143,18 +143,16 @@ void MasterCastle::Update()
 		}
 
 	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::K))
-	{
-		parameter.HP = 0.0f;
-	}
+	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::K))
+	//{
+	//	parameter.HP = 0.0f;
+	//}
 
 	//マトリックス計算
 		parameter.mat =
 			Matrix4::Scale(mScale)*
 			Matrix4::RotateY(mRotateY)*
 			Matrix4::Translate(mPosition);
-	
-
 }
 
 void MasterCastle::Draw() const

@@ -18,6 +18,8 @@ enum CASTLE_SELECT
 	ISLE1,
 	ISLE2,
 	ISLE3,
+	//ŒR‘à
+	ARMY_ENEMY,
 };
 
 //‰ó‚ê•û‚ð‘I‘ð
@@ -65,6 +67,7 @@ private:
 	void MasterCastleEmissive(const Vector3& vec_,float scale_);
 
 	void ShipEmissive(std::function<Vector3()> vecFunc);
+	void ArmyEnemyEmissive(std::function<Vector3()> vecFunc);
 
 	void CastleDamageEmissive(std::function<Vector3()> vecFunc);
 	void ShipDamageEmissive(std::function<Vector3()> vecFunc);

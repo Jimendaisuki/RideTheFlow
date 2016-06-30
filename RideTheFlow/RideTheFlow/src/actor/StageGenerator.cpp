@@ -10,18 +10,18 @@
 #include "enemy/ShipEnemy.h"
 
 
-StageGenerator::StageGenerator(IWorld& world, const std::string& fileName, bool isGameScene) :
+StageGenerator::StageGenerator(IWorld& world, const std::string& fileName, bool isGameScene, bool isEndingScene) :
 Actor(world),
-isGameScene_(isGameScene)
+isGameScene_(isGameScene),
+isEndingScene_(isEndingScene)
 {
 	parameter.id = ACTOR_ID::STAGE_ACTOR;
 	parameter.isDead = false;
 
 	currentRow_ = 0;
 	csv_.load("res/" + fileName + ".csv");
-
+	tempCount = 0;
 	DataLoad();
-
 	parameter.isDead = true;
 }
 
@@ -67,6 +67,8 @@ void StageGenerator::AddActor()
 	switch (ActorNo)
 	{
 	case 1:	// é
+		if (isEndingScene_)
+			break;
 		if (isGameScene_)
 		{
 			if (position.y>0)
@@ -90,9 +92,16 @@ void StageGenerator::AddActor()
 		world.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Froatinglsland2>(world, position, rotation, 4.8f,isGameScene_));
 		break;
 	case 5: // “‡‚R
-		world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
+		if (tempCount == 0)
+			world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 8.0f));
+		else
+			world.Add(ACTOR_ID::ISLAND_ACTOR, std::make_shared<Froatinglsland3>(world, position, rotation, 4.8f));
+
+		tempCount++;
 		break;
 	case 6: // ‘D
+		if (isEndingScene_)
+			break;
 		if (!isGameScene_)
 		world.Add(ACTOR_ID::SHIP_ENEMY_ACTOR, std::make_shared<ShipEnemy>(world, 2.4f, position, rotation));
 		break;

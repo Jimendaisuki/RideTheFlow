@@ -171,10 +171,7 @@ eventVec(eventVec_)
 	//初期ボーン
 	vertexVec = new Vector3[boneCount];
 	//posStorageに何もないときのボーンの方向
-	if (!event)
-		nonPosStorageVec = Vector3(0, 0, 1);
-	else
-		nonPosStorageVec = -eventVec.Normalized();
+	nonPosStorageVec = -eventVec.Normalized();
 	for (int i = 0; i < boneCount; i++) {
 		//ボーンの状態をリセット
 		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
@@ -711,12 +708,11 @@ void Player::Update() {
 		animBlend += 0.5f * Time::DeltaTime;
 		else
 			animBlend -= 10.0f * Time::DeltaTime;
-		if (animBlend < 0.0f && spearEndFlag){
+		if (animBlend < -20.0f && spearEndFlag){
 			spearHit = false;
 			waitAnimSet = true;
 		}
 		animBlend = Math::Min(animBlend, 1.0f);
-		animBlend = Math::Max(animBlend, 0.0f);
 	}
 }
 void Player::Draw() const {
@@ -1057,7 +1053,7 @@ void Player::Draw() const {
 				Matrix4::ToMATRIX(
 				Matrix4::Slerp(
 				deadBeforeLocalMatrix[count]
-				, localAnimMatrixVec[count], animBlend)
+				, localAnimMatrixVec[count], animBlend <= 0.0f ? 0.0f:animBlend)
 				));
 		}
 
@@ -1204,7 +1200,7 @@ void Player::Damage(float damage, bool allow)
 		if (!allow || !allowNoDamageFlag)
 			parameter.HP -= damage;
 
-		if (allow) {
+		if (allow && !allowNoDamageFlag) {
 			parameter.HP -= damage;
 			allowNoDamageFlag = true;
 		}
