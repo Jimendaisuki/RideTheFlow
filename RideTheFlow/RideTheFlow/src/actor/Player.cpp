@@ -1210,12 +1210,17 @@ void Player::Damage(Actor& bullet, float damage, bool allow)
 {
 	if (!spearHit){
 		if (!allow || !allowNoDamageFlag)
+		{
 			parameter.HP -= damage;
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+		}
+			
 
 		if (allow && !allowNoDamageFlag) {
 			parameter.HP -= damage;
 			allowNoDamageFlag = true;
 			Effect::GetInstance().DamegeEffect(world, bullet.parent->GetParameter().mat.GetPosition());
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 		}
 	}
 }
