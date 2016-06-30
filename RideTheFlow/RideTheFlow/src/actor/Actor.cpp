@@ -592,7 +592,7 @@ CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
 	CollisionParameter colpara;
 	Line armyEnemy;
 	armyEnemy.startPos = parameter.mat.GetPosition();
-	armyEnemy.endPos = parameter.mat.GetPosition() - Vector3::Down*parameter.radius;
+	armyEnemy.endPos = parameter.mat.GetPosition()+Vector3(0,1,0);
 
 	ModelData stage;
 	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
