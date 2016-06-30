@@ -16,7 +16,7 @@ struct TackleParameter{
 class Player :public Actor, public std::enable_shared_from_this<Player>
 {
 public:
-	Player(IWorld& world,bool title_ = false,bool event_ = false,Vector3 position_ = Vector3(0,0,0),Vector3 eventVec_ = Vector3(0, 0, 0));
+	Player(IWorld& world,bool title_ = false,bool event_ = false,Vector3 position_ = Vector3(0,0,0),Vector3 eventVec_ = Vector3(0, 0, -1));
 	~Player();
 	virtual void Update() override;
 	virtual void Draw() const override;
