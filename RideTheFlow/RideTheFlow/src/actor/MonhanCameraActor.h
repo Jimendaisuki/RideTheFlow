@@ -1,6 +1,7 @@
 #ifndef MONHAN_CAMERA_ACTOR_H_
 #define MONHAN_CAMERA_ACTOR_H_
 #include "Actor.h"
+#include "Player.h"
 
 struct SpringParameter{
 	//ƒoƒl‚Ì‹­‚³
@@ -65,6 +66,8 @@ private:
 	float restRotate;
 	float rotateVelo;
 	float fovVelo;
+
+	Player* player;
 };
 
 #endif

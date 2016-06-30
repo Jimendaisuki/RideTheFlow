@@ -212,7 +212,7 @@ void EventScene::Update()
 		}
 		break;
 	case EventScene::EVENT_STAGE_IN:
-		currentFogFar -= 6000 * Time::DeltaTime;
+		currentFogFar -= 7500.0f * Time::DeltaTime;
 		
 		stormVol = 10000.0f / currentFogFar;
 		stormVol = Math::Clamp(stormVol, 0.2f, 1.0f);
