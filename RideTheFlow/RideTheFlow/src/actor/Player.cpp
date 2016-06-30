@@ -171,10 +171,7 @@ eventVec(eventVec_)
 	//初期ボーン
 	vertexVec = new Vector3[boneCount];
 	//posStorageに何もないときのボーンの方向
-	if (!event)
-		nonPosStorageVec = Vector3(0, 0, 1);
-	else
-		nonPosStorageVec = -eventVec.Normalized();
+	nonPosStorageVec = -eventVec.Normalized();
 	for (int i = 0; i < boneCount; i++) {
 		//ボーンの状態をリセット
 		MV1ResetFrameUserLocalMatrix(modelHandle, i + 1);
