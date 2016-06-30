@@ -720,6 +720,8 @@ void Player::Update() {
 	}
 }
 void Player::Draw() const {
+	DrawFormatString(0, 0, GetColor(0, 0, 0), "%d", allowNoDamageFlag);
+
 	if (!dead) {
 		if (!spearHit){
 			//骨の数だけ用意する
@@ -1094,6 +1096,8 @@ void Player::Draw() const {
 		SAFE_DELETE_ARRAY(localAnimMatrixVec);
 
 		Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+
+
 	}
 }
 
@@ -1230,7 +1234,7 @@ void Player::Damage(float damage, bool allow)
 		if (!allow || !allowNoDamageFlag)
 			parameter.HP -= damage;
 
-		if (allow) {
+		if (allow && !allowNoDamageFlag) {
 			parameter.HP -= damage;
 			allowNoDamageFlag = true;
 		}

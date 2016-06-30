@@ -10,6 +10,7 @@
 #include "../../sound/Sound.h"
 #include "../../game/Random.h"
 #include "../../camera/Camera.h"
+#include "../particle/BreakCastle.h"
 
 ArmyEnemy::ArmyEnemy(IWorld& world, Vector3 position) :
 Actor(world),
@@ -135,6 +136,7 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.isDead = true;
 		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
 		Sound::GetInstance().PlaySE(se);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::ARMY_ENEMY, BREAK_SELECT::TORNADO));
 	}
 	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
 	{
@@ -142,5 +144,7 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.isDead = true;
 		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
 		Sound::GetInstance().PlaySE(se);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::ARMY_ENEMY, BREAK_SELECT::WIND_FLOW));
+
 	}
 }

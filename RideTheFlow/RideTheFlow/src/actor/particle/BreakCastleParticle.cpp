@@ -39,7 +39,7 @@ flowAddPosition(Vector3::Zero)
 	moveParam.vec = vec_;
 
 	drawParam.drawID = id_;
-	drawParam.alpha = 0.2f;
+	drawParam.alpha = 1.0f;
 	drawParam.size = scale_;
 	if (breakSelect == BREAK_SELECT::TORNADO)
 	{
@@ -92,7 +92,9 @@ void BreakCastleParticle::OnUpdate()
 
 void BreakCastleParticle::Draw() const
 {
-	Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), drawParam.alpha,mat.GetRotateDegree(), mat.GetScale());
+	Model::GetInstance().Draw(drawParam.drawID, mat, drawParam.alpha);
+
+	//Model::GetInstance().Draw(drawParam.drawID, mat.GetPosition(), drawParam.alpha,mat.GetRotateDegree(), mat.GetScale());
 }
 
 void BreakCastleParticle::TornadoBreak()

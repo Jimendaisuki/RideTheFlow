@@ -26,7 +26,7 @@ breakSelect(break_)
 	ps_parameter.sameEmissiveNum = 1;
 	ps_parameter.trigger = true;
 
-	if (breakSelect == BREAK_SELECT::WIND_BALL)
+	if (breakSelect == BREAK_SELECT::WIND_BALL || breakSelect == BREAK_SELECT::DAMAGE)
 		ps_parameter.lifeTimeLimit = 3.1f;
 }
 BreakCastle::~BreakCastle()
@@ -56,7 +56,7 @@ void BreakCastle::Draw() const
 {
 	DrawParticles();
 
-	////DrawSphere3D(ps_parameter.position.ToVECTOR(), parameter.radius, 5, Vector3::Blue.ToColor(), Vector3::Blue.ToColor(), FALSE);
+	DrawSphere3D(ps_parameter.position.ToVECTOR(), parameter.radius, 5, Vector3::Blue.ToColor(), Vector3::Blue.ToColor(), FALSE);
 }
 void BreakCastle::OnCollide(Actor& other, CollisionParameter colpara)
 {
@@ -107,6 +107,7 @@ void BreakCastle::TornadoBreakEmissive()
 	case MASTER_CASTLE:MasterCastleEmissive(Vector3::Zero,45.0f * 2.4f); break;
 	case CHILD_CASTLE:MasterCastleEmissive(Vector3::Zero, 45.0f * 1.2f); break;
 	case SHIP: ShipEmissive([]{return Vector3::Zero; }); break;
+	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return Vector3::Zero; }); break;
 	case ISLE1: break;
 	default: break;
 	}
@@ -119,6 +120,7 @@ void BreakCastle::WindFlowBreakEmissive()
 	case CHILD_CASTLE:CastleWindFlowBreakEmissive(45.0f * 1.2f); break;
 	case SHIP: ShipEmissive([&]{return RandomVelocity(); }); break; break;
 	case ISLE1: break;
+	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return RandomVelocity(); }); break;
 	default: break;
 	}
 }
@@ -130,6 +132,7 @@ void BreakCastle::WindBallBreakEmissive()
 	case CHILD_CASTLE:MasterCastleEmissive(Vector3::Zero, 45.0f * 1.2f); break;
 	case SHIP:ShipEmissive([]{return Vector3::Zero; }); break;
 	case ISLE1: break;
+	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return RandomVelocity() * 10.0f; }); break;
 	default: break;
 	}
 }
@@ -235,6 +238,15 @@ void BreakCastle::ShipDamageEmissive(std::function<Vector3()> vecFunc)
 	AddParticle(std::make_shared<BreakCastleParticle>(MODEL_ID::SHIP_BREAK_6_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 40, 0), vecFunc(), 0, 0, 1.0f));
 	AddParticle(std::make_shared<BreakCastleParticle>(MODEL_ID::SHIP_BREAK_9_MODEL, breakSelect, &ps_parameter.position, Vector3(0, 20, 0), vecFunc(), 0, 0, 1.0f));
 	AddParticle(std::make_shared<BreakCastleParticle>(MODEL_ID::SHIP_BREAK_11_MODEL, breakSelect, &ps_parameter.position, Vector3(-40, 40, 0), vecFunc(), 0, 0, 1.0f));
+}
+
+void BreakCastle::ArmyEnemyEmissive(std::function<Vector3()> vecFunc)
+{
+	for (int i = 0; i < 9; i++)
+	{
+		AddParticle(std::make_shared<BreakCastleParticle>(
+			MODEL_ID::HUMAN_BALLISTA_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, vecFunc(), 30.0f*i, 30.0f*i, 4.0f));
+	}
 }
 
 Vector3 BreakCastle::RandomVelocity()
