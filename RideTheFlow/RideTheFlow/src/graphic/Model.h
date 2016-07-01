@@ -164,6 +164,9 @@ public:
 	///</summary>
 	void Draw(const MODEL_ID& id, const Matrix4& mat);
 
+	/// ３Ｄモデルを描画する（モデルID、ポジション、アルファ）
+	void Draw(const int& handle, const Vector3& position, float alpha);
+
 	///<summary>
 	/// ３Ｄ空間に２Ｄ画像を描画する（モデルID、座標、表示コマ番号、横のサイズ）
 	///</summary>

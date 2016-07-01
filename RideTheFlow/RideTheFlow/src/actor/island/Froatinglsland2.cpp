@@ -7,6 +7,7 @@
 #include "../NoShipArea.h"
 #include "FroatinglslandParameter.h"
 #include "../castle/MasterCastle.h"
+#include "../../math/Math.h"
 Froatinglsland2::Froatinglsland2(IWorld& world, Vector3 position, Vector3 rotate, Vector3 scale,bool isGameFlag) :
 Actor(world),
 timer(0.0f),
@@ -26,6 +27,7 @@ isCol(true)
 
 	if (!isGameFlag) return;
 	//ëDÇ™ì¸ÇÁÇ»Ç¢ÇÊÇ§Ç…ê›íË
+	float maxRadius = Math::Sqrt(100.0f * 100.0f + 75.0f * 75.0f) * scale.x;
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f),
 		parameter.radius*scale.x, *this));

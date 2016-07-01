@@ -43,9 +43,9 @@ void GamePlayScene::Initialize()
 	isPlayerDead = false;
 
 	//ƒ‚ƒfƒ‹‚ğˆê’U‰ğ•ú‚µ‚Ä“Ç‚İ‚İ’¼‚·
-	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
-	WorkFolder::SetWorkFolder("res/Model/");
-	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
+	//Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
+	//WorkFolder::SetWorkFolder("res/Model/");
+	//Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
 
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, false, Vector3(0.0f, 0.0f, -5500.0f), Vector3(0,0,1)));
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0.0f, 0.0f, -5500.0f), Vector2(100), Vector3::Zero, 100.0f));

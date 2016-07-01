@@ -158,7 +158,8 @@ eventVec(eventVec_)
 
 	//モデルハンドルを取得する(アニメーションのために)
 	if (!title)
-		modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+		//modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL);
+		modelHandle = MV1DuplicateModel(Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL));
 	else
 
 		modelHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_TITLE_MODEL);
@@ -888,7 +889,8 @@ void Player::Draw() const {
 
 			}
 			if (!title)
-				Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+				//Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+				Model::GetInstance().Draw(modelHandle, Vector3::Zero, 1.0f);
 			else
 				Model::GetInstance().Draw(MODEL_ID::TEST_TITLE_MODEL, Vector3::Zero, 1.0f);
 			for (auto i : tornadoPosStorage) {
@@ -1031,7 +1033,8 @@ void Player::Draw() const {
 							));
 					}
 			}
-			Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+			//Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+			Model::GetInstance().Draw(modelHandle, Vector3::Zero, 1.0f);
 		}
 	}
 	else {
@@ -1070,7 +1073,8 @@ void Player::Draw() const {
 				));
 		}
 
-		Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+		//Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
+		Model::GetInstance().Draw(modelHandle, Vector3::Zero, 1.0f);
 	}
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
