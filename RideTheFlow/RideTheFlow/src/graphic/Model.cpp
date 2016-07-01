@@ -423,6 +423,15 @@ void Model::Draw(const MODEL_ID& id, const Matrix4& mat)
 	MV1DrawModel(handle);
 }
 
+/// ３Ｄモデルを描画する（モデルID、ポジション、アルファ）
+void Model::Draw(const int& handle, const Vector3& position, float alpha)
+{
+	MV1SetPosition(handle, VGet(position.x, position.y, position.z));
+	MV1SetOpacityRate(handle, alpha);
+	MV1DrawModel(handle);
+}
+
+
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）
 void Model::Draw2D(const MODEL_ID& id, const Vector3& position, int frame, float size)
 {

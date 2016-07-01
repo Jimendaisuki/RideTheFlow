@@ -131,4 +131,6 @@ private:
 
 	bool moveFlag = true;
 	bool initMove;
+
+	int	 DupModelHandle;
 };
