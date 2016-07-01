@@ -129,9 +129,12 @@ const float ShipInvincibleTime = 3.0f;
 //船のスピード
 const float ShipSpeed = 50.0f;
 //船の高さを変えるスピード
-const float ShipUpDownSpeed = 50.0f;
+const float ShipUpDownSpeed = 200.0f;
 //船の旋回速度
 const float ShipSwingSpeed = 50.0f;
+//船の風に流される大きさ
+const float ShipWind = 2.0f;
+
 //船バリスタの攻撃クールタイム
 const float ShipVaristorAttackTime = 2.0f;
 //船バリスタが一回に発射する矢の数
@@ -146,6 +149,7 @@ const float ShipVaristorAttackMinAngle = -90.0f;
 const float ShipVaristorInitialVelocity = 200.0f;
 //船バリスタの旋回速度
 const float ShipVaristorSwingSpeed = 100.0f;
+
 
 //船バリスタからプレイヤーが見えていないときの攻撃クールタイム
 const float ShipNotLookVaristorAttackTime = 10.0f;

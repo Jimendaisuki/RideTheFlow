@@ -217,7 +217,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	if (colpara.colID == COL_ID::ENEMY_WIND_COL)
 	{
-		mPosition += colpara.colVelosity;
+		mPosition += colpara.colVelosity*ShipWind;
 		if (damege)
 		{
 			parameter.HP -= ShipDamegeWind;
