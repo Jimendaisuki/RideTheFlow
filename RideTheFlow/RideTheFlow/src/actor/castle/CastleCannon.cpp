@@ -119,7 +119,7 @@ void CastleCannon::Update()
 		}
 	}
 	//ƒx[ƒX‚Ìé‚ªŽ€‚ñ‚¾‚çŽ€‚Ê
-	if (castle->GetParameter().isDead)
+	if (castle->GetDeadRagFlag())
 	{
 		parameter.isDead = true;
 	}

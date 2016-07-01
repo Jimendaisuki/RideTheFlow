@@ -89,7 +89,9 @@ castleUpTimer(0.0f)
 	sevePos = mPosition;
 	prevPos = mPosition;
 	startPos = mPosition;
-	endPos = endPos = mPosition + Vector3(0.0f, parameter.radius * 2.0f, 0.0f);
+	endPos =  mPosition + Vector3(0.0f, parameter.radius * 2.0f, 0.0f);
+	deadRagCount = 0.0f;
+	deadRagFlag = false;
 }
 
 
@@ -115,12 +117,18 @@ void Castle::Update()
 	prevPos = mPosition;
 
 	//マスターが壊れたら自分も壊れる
-	if (mas->RagDead())
+	if (parent->GetParameter().isDead)
 	{
-		parameter.isDead = true;
+		deadRagFlag = true;
+	}
+	if (deadRagFlag)
+	{
+		deadRagCount += Time::DeltaTime;
 		//がれきを飛ばす
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, breakSelect));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_BREAK_SE);
+		if (deadRagCount >= 0.1f)
+			parameter.isDead = true;
 	}
 
 	castleUpTimer += 15.0f* Time::DeltaTime;
@@ -164,7 +172,6 @@ void Castle::Draw() const
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 {
-
 	//全部見えてなかったら
 	if (colpara.colID == COL_ID::PLAYERTOCASTLELINE_CLOUD_COL&&colpara.colAll)
 	{

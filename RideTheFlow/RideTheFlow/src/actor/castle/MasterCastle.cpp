@@ -71,6 +71,10 @@ MasterCastle::~MasterCastle()
 
 void MasterCastle::Update()
 {
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::K))
+	{
+		parameter.isDead = true;
+	}
 	if (!mTitle)
 	{
 		//‚ ‚½‚è”»’è

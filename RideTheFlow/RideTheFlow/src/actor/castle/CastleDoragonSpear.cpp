@@ -112,7 +112,7 @@ void CastleDoragonSpear::Update()
 		}
 	}
 	//é‚ªŽ€‚ñ‚¾‚çŽ©•ª‚àŽ€‚Ê
-	if (castle->GetParameter().isDead)
+	if (castle->GetDeadRagFlag())
 	{
 		parameter.isDead = true;
 	}

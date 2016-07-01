@@ -47,6 +47,10 @@ public:
 	{
 		return isLook;
 	}
+	bool GetDeadRagFlag()
+	{
+		return deadRagFlag;
+	}
 private:
 	void CastleEnemyPosSet();
 private:
@@ -71,6 +75,9 @@ private:
 	float mRotateY;
 	float castleUpTimer;
 	float mScaleFloat;
+	
+	float deadRagCount;
+	bool deadRagFlag;
 
 	bool damage;
 	float InvincibleTimer;
