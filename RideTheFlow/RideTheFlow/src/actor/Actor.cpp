@@ -598,7 +598,6 @@ CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
 	ModelData stage;
 	stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
 	stage.MFrameIndex = -1;
-	bool stageflag = false;
 
 	colpara = Collisin::GetInstace().ModelLine(stage, armyEnemy);
 

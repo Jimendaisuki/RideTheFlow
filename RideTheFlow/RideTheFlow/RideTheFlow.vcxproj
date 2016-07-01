@@ -145,7 +145,6 @@
     <ClCompile Include="src\scene\EndhingScene.cpp" />
     <ClCompile Include="src\actor\Actor.cpp" />
     <ClCompile Include="src\actor\ActorManager.cpp" />
-    <ClCompile Include="src\actor\AnimTestActor.cpp" />
     <ClCompile Include="src\actor\CameraActor.cpp" />
     <ClCompile Include="src\actor\castle\castle.cpp" />
     <ClCompile Include="src\actor\Collision.cpp" />
@@ -261,7 +260,6 @@
     <ClInclude Include="src\scene\CreditScene.h" />
     <ClInclude Include="src\scene\EndhingScene.h" />
     <ClInclude Include="src\actor\Actor.h" />
-    <ClInclude Include="src\actor\AnimTestActor.h" />
     <ClInclude Include="src\actor\CameraActor.h" />
     <ClInclude Include="src\actor\castle\castle.h" />
     <ClInclude Include="src\actor\Collision.h" />

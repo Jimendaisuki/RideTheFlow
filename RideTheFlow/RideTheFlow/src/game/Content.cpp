@@ -69,14 +69,10 @@ void Content::LoadModel(Model& model, bool async)
 {
 	WorkFolder::SetWorkFolder("res/Model/");
 
-	model.Load("Plane.x", MODEL_ID::PLANE_MODEL, async, 0, true);
 	model.Load("dra_test.mv1", MODEL_ID::TEST_MODEL, async);
 	model.Load("dra_test_title.mv1", MODEL_ID::TEST_TITLE_MODEL, async);
 	
 	//model.Load("dragon.mv1", MODEL_ID::TEST_MODEL, async);
-	model.Load("renga.x", MODEL_ID::BOX_MODEL, async);
-	model.Load("cylinder.x", MODEL_ID::TORNADO_MODEL, async);
-	model.Load("map.pmd", MODEL_ID::STAGE_MODEL, async);
 	model.Load("field.mv1", MODEL_ID::TEST_STAGE, async);
 	model.Load("action_range.mv1", MODEL_ID::STAGE_ACTION_RANGE_MODEL, async);
 	model.Load("sky_dome_11.X", MODEL_ID::SKY_MODEL, async);
@@ -112,17 +108,16 @@ void Content::LoadModel(Model& model, bool async)
 	model.Load("smoke.mv1", MODEL_ID::CASTLE_ADD_MODEL, async);
 	model.Load("airball.mv1", MODEL_ID::AIR_BALL_MODEL, async);
 
-	model.Load("castle_break1.mv1",MODEL_ID::CASTLE_BREAK_1_MODEL,async);
-	model.Load("castle_break2.mv1",MODEL_ID::CASTLE_BREAK_2_MODEL,async);
-	model.Load("castle_break3.mv1",MODEL_ID::CASTLE_BREAK_3_MODEL,async);
-	model.Load("castle_break4.mv1",MODEL_ID::CASTLE_BREAK_4_MODEL,async);
-	model.Load("castle_break5.mv1",MODEL_ID::CASTLE_BREAK_5_MODEL,async);
-	model.Load("castle_break6.mv1",MODEL_ID::CASTLE_BREAK_6_MODEL,async);
-	model.Load("castle_break7.mv1",MODEL_ID::CASTLE_BREAK_7_MODEL,async);
+	model.Load("Castle/castle_break1.mv1",MODEL_ID::CASTLE_BREAK_1_MODEL,async);
+	model.Load("Castle/castle_break2.mv1",MODEL_ID::CASTLE_BREAK_2_MODEL,async);
+	model.Load("Castle/castle_break3.mv1",MODEL_ID::CASTLE_BREAK_3_MODEL,async);
+	model.Load("Castle/castle_break4.mv1",MODEL_ID::CASTLE_BREAK_4_MODEL,async);
+	model.Load("Castle/castle_break5.mv1",MODEL_ID::CASTLE_BREAK_5_MODEL,async);
+	model.Load("Castle/castle_break6.mv1",MODEL_ID::CASTLE_BREAK_6_MODEL,async);
+	model.Load("Castle/castle_break7.mv1",MODEL_ID::CASTLE_BREAK_7_MODEL,async);
 
 	model.Load("human_low_ballista.mv1", MODEL_ID::HUMAN_BALLISTA_MODEL, async);
 	model.Load("human_low_cannon.mv1", MODEL_ID::HUMAN_CANNON_MODEL, async);
-	model.Load("human_archer2.mv1", MODEL_ID::HUMAN_ARCHER_MODEL, async);
 	
 	model.Load("s_parts1.mv1", SHIP_BREAK_1_MODEL, async);
 	model.Load("s_parts2.mv1", SHIP_BREAK_2_MODEL, async);

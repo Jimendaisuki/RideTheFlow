@@ -38,7 +38,7 @@ mScaleFroat(4.0f)
 }
 ArmyEnemy::~ArmyEnemy()
 {
-	
+	player = nullptr;
 }
 void ArmyEnemy::Update()
 {

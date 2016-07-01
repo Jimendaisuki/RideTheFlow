@@ -68,11 +68,6 @@ EventScene::~EventScene()
 //ŠJn
 void EventScene::Initialize()
 {
-	//ƒ‚ƒfƒ‹‚ğˆê’U‰ğ•ú‚µ‚Ä“Ç‚İ‚İ’¼‚·
-	Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
-	WorkFolder::SetWorkFolder("res/Model/");
-	Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
-
 	wo.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wo, false, true, Vector3::Zero, Vector3::Forward));
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 
