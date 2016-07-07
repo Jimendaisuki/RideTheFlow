@@ -28,13 +28,13 @@ enemy(&enemy_)
 
 EnemyPoint::~EnemyPoint()
 {
-
+	enemy = nullptr;
 }
 
 void EnemyPoint::Update()
 {
 	
-	if (enemy==nullptr || enemy->GetParameter().isDead)
+	if (enemy == nullptr || enemy->GetParameter().isDead)
 	{
 		parameter.isDead = true;
 		return;

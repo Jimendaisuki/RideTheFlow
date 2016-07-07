@@ -103,10 +103,6 @@ void EndhingScene::Initialize()
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().SetOutTime(2.0f);
 
-	/* フェード */
-	FadePanel::GetInstance().SetInTime(2.0f);
-	FadePanel::GetInstance().SetOutTime(2.0f);
-
 	// 以下マスターはいらない
 	/* タイトルテキストデータ */
 	titleAlpha = 0;
@@ -131,33 +127,6 @@ void EndhingScene::Update()
 
 	switch (status)
 	{
-	//case EndhingScene::ENDING_BEGIN:
-	//	angle += Time::DeltaTime * 40.0;
-	//	x = Math::Sin(angle) * LENGTH;
-	//	z = Math::Cos(angle) * LENGTH;
-	//	cameraPos = Vector3(x, HEIGHT, z);
-	//	targetPos = Vector3::Up * 2000.0f;
-	//	if (angle > 360.0f)
-	//	{
-	//		FadePanel::GetInstance().FadeOut();
-	//		status = ENDING_FADEOUT;
-	//	}
-	//	break;
-	//case EndhingScene::ENDING_FADEOUT:
-	//	angle += Time::DeltaTime * 40.0;
-	//	x = Math::Sin(angle) * LENGTH;
-	//	z = Math::Cos(angle) * LENGTH;
-	//	cameraPos = Vector3(x, HEIGHT, z);
-	//	targetPos = Vector3::Up * 2000.0f;
-	//	if (!FadePanel::GetInstance().IsAction())
-	//	{
-	//		wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, true, Vector3(2100.0f, -100.0f, 4100.0f), Vector3(-0.5f, 0.8f, -1.0f)));
-	//		status = ENDING_DRAGON_OUT;
-	//		currentFog = 1000;
-	//		FadePanel::GetInstance().SetInTime(1.0f);
-	//		FadePanel::GetInstance().FadeIn();
-	//	}
-	//	break;
 	case EndhingScene::ENDING_DRAGON_OUT:
 		length = (cameraPos - wa.GetPlayer()->GetParameter().mat.GetPosition()).Length();
 		seVol = (1.0f - length / 1500.0f) * 3.0f;
@@ -185,7 +154,8 @@ void EndhingScene::Update()
 		cameraPos += velocity;
 		currentFog += 8000 * Time::DeltaTime;
 
-		if (!Sound::GetInstance().IsPlayBGM())
+		if (!Sound::GetInstance().IsPlayBGM() &&
+			FadePanel::GetInstance().IsFullBlack())
 		{
 			mIsEnd = true;
 			return;

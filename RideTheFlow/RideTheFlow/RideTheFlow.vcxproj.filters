@@ -479,9 +479,6 @@
     <ClInclude Include="src\actor\castle\CastleParameter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\actor\TestCapsule.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\actor\particle\ParticleSystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

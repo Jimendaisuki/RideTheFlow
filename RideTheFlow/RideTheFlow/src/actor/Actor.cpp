@@ -50,8 +50,9 @@ Actor::Actor(IWorld& world_) :world(world_)
 	//colFunc[COL_ID::CYLINDER_BOX_COL] = std::bind(&Actor::CylinderBox, this, std::placeholders::_1);
 }
 
-Actor::~Actor(){
-
+Actor::~Actor()
+{
+	parent = nullptr;
 }
 
 void Actor::Collide(COL_ID id, Actor& other){

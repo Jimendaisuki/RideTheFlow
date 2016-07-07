@@ -9,7 +9,7 @@ Actor(world){
 	parameter.isDead = false;
 }
 Stage::~Stage(){
-
+	parent = nullptr;
 }
 
 void Stage::Update(){

@@ -134,5 +134,5 @@ protected:
 	IWorld& world;
 
 public:
-	Actor* parent;
+	Actor* parent = nullptr;
 };

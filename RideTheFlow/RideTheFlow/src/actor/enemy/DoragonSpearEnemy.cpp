@@ -48,7 +48,8 @@ endAttack(false)
 
 DoragonSpearEnemy::~DoragonSpearEnemy()
 {
-
+	parent = nullptr;
+	mSe = nullptr;
 }
 void DoragonSpearEnemy::Update()
 {

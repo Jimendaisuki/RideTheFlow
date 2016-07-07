@@ -77,7 +77,7 @@ isTitle(true)
 
 ShipEnemy::~ShipEnemy()
 {
-
+	parent = nullptr;
 }
 void ShipEnemy::Update()
 {

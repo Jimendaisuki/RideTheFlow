@@ -45,6 +45,7 @@ noDeadTimer(0.0f)
 }
 VaristorBullet::~VaristorBullet()
 {
+	parent = nullptr;
 }
 void VaristorBullet::Update()
 {

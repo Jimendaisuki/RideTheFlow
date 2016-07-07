@@ -10,6 +10,7 @@
 #include "../../actor/Actor.h"
 #include "../../game/GameFrame.h"
 #include "../../sound/Sound.h"
+#include "../fadePanel/FadePanel.h"
 
 
 const Vector2 SCREEN_CENTER = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
@@ -195,8 +196,7 @@ void MenuPanel::Update()
 			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
 			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
 		{
-			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
-			status = MENU_PANEL_STATUS::CLOSE;
+			Close();
 			break;
 		}
 		// ×ボタン
@@ -205,6 +205,7 @@ void MenuPanel::Update()
 			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
+			FadePanel::GetInstance().SetOutTime(0.5f);
 			isBackSelect = true;
 			Close();
 			break;
@@ -215,29 +216,19 @@ void MenuPanel::Update()
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM2))
 		{
 			if (selectNum == 0)
-			{
+			{	// 右
 				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 				status = MENU_PANEL_STATUS::PUSH;
-
-				//if (scene == Scene::Menu)
-				//{
-				//	Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
-				//	status = MENU_PANEL_STATUS::PUSH;
-				//}
-				//else if (scene == Scene::GamePlay)
-				//{
-				//	status = MENU_PANEL_STATUS::CLOSE;
-				//}
 			}
 			else if (selectNum == 1)
-			{
+			{	// 中
 				prePage = 0;
 				nowPage = 1;
 				Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 				status = MENU_PANEL_STATUS::PUSH;
 			}
 			else if (selectNum == 2)
-			{
+			{	// 左
 				if (scene == Scene::Menu)
 				{
 					isBackSelect = true;
@@ -359,38 +350,24 @@ void MenuPanel::Update()
 		if (selects[selectNum] <= 0.0f)
 		{
 			if (scene == Scene::GamePlay)
-			{
+			{	// ゲームプレイシーン
 				if (selectNum == 0)
-				{
 					status = MENU_PANEL_STATUS::CLOSE;
-				}
 				else if (selectNum == 1)
-				{
 					status = MENU_PANEL_STATUS::MANUAL;
-					textScale = 1.0f;
-				}
 				else if (selectNum == 2)
-				{
 					status = MENU_PANEL_STATUS::CLOSE;
-				}
 			}
 			else
-			{
+			{	// メニューシーン
 				if (selectNum == 0)
-				{
 					isEnd = true;
-				}
 				else if (selectNum == 1)
-				{
 					status = MENU_PANEL_STATUS::MANUAL;
-					textScale = 1.0f;
-				}
 				else if (selectNum == 2)
-				{
 					GameFrame::GameEnd();
-				}
 			}
-				//isEnd = true;
+			textScale = 1.0f;
 			break;
 		}
 		break;

@@ -31,7 +31,4 @@ void MiniMap::Update()
 void MiniMap::Draw() const
 {
 	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP_SPRITE, MAP_DRAW_POSITION, Vector2(256, 256), 1.0f, MINI_MAP_SCALE, 0, true, false);
-	//auto a = MV1GetMeshMaxPosition(Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE), 0);
-	//auto a = player->GetParameter().mat.GetPosition();
-	//DrawFormatString(0, 600, GetColor(255, 255, 255), "FPS:		[%f][%f][%f]", a.x, a.y, a.z);
 }

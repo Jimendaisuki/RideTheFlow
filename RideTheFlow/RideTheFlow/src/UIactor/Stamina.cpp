@@ -41,8 +41,7 @@ void Stamina::Draw() const
 {
 	float gageColorNum = 255.0f * ((*maxStamina - *nowStamina) / *maxStamina);
 	SetDrawBright(255.0f, gageColorNum, gageColorNum);
-	if (player->OverHeat())
-		SetDrawBright(255, 0, 0);
+	if (player->OverHeat())	SetDrawBright(255, 0, 0);
 	Sprite::GetInstance().Draw(SPRITE_ID::STAMINA_BACK_SPRITE , DrawPosition, Vector2::Zero, 1, scale, true, false);
 	SetDrawBright(255, 255, 255);
 	Sprite::GetInstance().Draw(SPRITE_ID::STAMINA_SPRITE, DrawPosition, Point(offset / 2.0f + gageX * (((*maxStamina - *nowStamina) / *maxStamina)), resSize.y), Vector2::Zero, 1, scale, 0, true, false);

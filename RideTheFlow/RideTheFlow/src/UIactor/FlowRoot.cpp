@@ -34,7 +34,8 @@ FlowRoot::~FlowRoot()
 {
 	drawPoints.clear();
 	playerTraces.clear();
-	player = nullptr;
+	player	 = nullptr;
+	arrowPos = nullptr;
 }
 
 void FlowRoot::Update()

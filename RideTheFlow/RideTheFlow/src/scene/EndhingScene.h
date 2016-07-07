@@ -7,11 +7,9 @@ class  EndhingScene :public IScene{
 public:
 	enum ENDING_STATUS
 	{
-		ENDING_BEGIN = 0,
-		ENDING_FADEOUT = 1,
-		ENDING_DRAGON_OUT = 2,
-		ENDING_CLEAR = 3,
-		ENDING_END = 4
+		ENDING_DRAGON_OUT	= 1,
+		ENDING_CLEAR		= 2,
+		ENDING_END			= 3,
 	};
 
 public:
