@@ -32,6 +32,7 @@ isCol(true)
 		parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f),
 		parameter.radius*scale.x, *this));
 	DxLib::MV1SetupCollInfo(MODEL_ID::ISLE_2_MODEL, -1);
+	parameter.handle = MV1DuplicateModel(Model::GetInstance().GetHandle(MODEL_ID::ISLE_2_MODEL));
 }
 
 Froatinglsland2::~Froatinglsland2()

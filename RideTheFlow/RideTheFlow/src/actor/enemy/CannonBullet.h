@@ -7,7 +7,7 @@
 class CannonBullet :public Actor, public std::enable_shared_from_this<CannonBullet>
 {
 public:
-	CannonBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ);
+	CannonBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec);
 	~CannonBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -24,6 +24,8 @@ private:
 	float mRotateZ;
 	float noDeadTimer;
 	bool noDead;
+
+	float mInitialVec;
 
 	//１フレーム前の座標
 	Vector3 prevPosition;

@@ -13,7 +13,7 @@
 #include "../Player.h"
 #include "../../sound/Sound.h"
 
-CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ) :
+CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ,float InitialVec) :
 Actor(world),
 time(0),
 speed(CannonSpeed),
@@ -22,7 +22,8 @@ mScale(1.0f),
 mRotateY(rotateY),
 mRotateZ(attackAngleZ),
 noDead(false),
-noDeadTimer(0.0f)
+noDeadTimer(0.0f),
+mInitialVec(InitialVec)
 {
 	mRotateY += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
 	mRotateZ += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
@@ -52,9 +53,9 @@ void CannonBullet::Update()
 	time += CannonSpeed*Time::DeltaTime;
 	//êiçsï˚å¸ÇåvéZ
 		vec = Vector3(
-			CannonInitialVelocity*Math::Cos(mRotateY),
-			CannonInitialVelocity*Math::Sin(mRotateZ) - 9.8f*time,
-			CannonInitialVelocity*Math::Sin(-mRotateY));
+			mInitialVec*Math::Cos(mRotateY),
+			mInitialVec*Math::Sin(mRotateZ) - 9.8f*time,
+			mInitialVec*Math::Sin(-mRotateY));
 	
 	//à⁄ìÆ
 		mPosition += vec*CannonSpeed*Time::DeltaTime;

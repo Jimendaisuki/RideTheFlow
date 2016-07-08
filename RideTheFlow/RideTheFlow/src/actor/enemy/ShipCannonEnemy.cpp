@@ -170,7 +170,7 @@ void ShipCannonEnemy::Attack()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this, rotate.y - 90, attackAngle));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this, rotate.y - 90, attackAngle,ShipCannonInitialVelocity));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;

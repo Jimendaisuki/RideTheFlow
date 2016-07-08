@@ -7,7 +7,7 @@
 class VaristorBullet :public Actor, public std::enable_shared_from_this<VaristorBullet>
 {
 public:
-	VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ);
+	VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec);
 	~VaristorBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -25,6 +25,7 @@ private:
 	float mRotateZ;
 	float noDeadTimer;
 	float noDead;
+	float mInitialVec;
 
 	//１フレーム前の座標
 	Vector3 prevPosition;

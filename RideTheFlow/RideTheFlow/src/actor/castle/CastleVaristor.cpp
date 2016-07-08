@@ -117,7 +117,7 @@ void CastleVaristor::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition + Vector3(0, 10, 0), *this, mRotateY - 90, attackAngleZ));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition + Vector3(0, 10, 0), *this, mRotateY - 90, attackAngleZ, CastleCannonInitialVelocity));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;

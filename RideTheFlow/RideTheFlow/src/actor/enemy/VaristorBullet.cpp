@@ -14,7 +14,7 @@
 #include "../Player.h"
 #include "../../sound/Sound.h"
 
-VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ) :
+VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec) :
 Actor(world),
 time(0),
 speed(VaristorSpeed),
@@ -26,7 +26,8 @@ windVec(Vector3::Zero),
 isWindCol(false),
 seveVec(Vector3::Zero),
 noDead(false),
-noDeadTimer(0.0f)
+noDeadTimer(0.0f),
+mInitialVec(InitialVec)
 {
 	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
 	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
@@ -55,9 +56,9 @@ void VaristorBullet::Update()
 	prevPosition = mPosition;
 	//êiçsï˚å¸ÇåvéZ
 	vec = Vector3(
-		VaristorInitialVelocity*Math::Cos(mRotateY),
-		VaristorInitialVelocity*Math::Sin(mRotateZ+20) - 9.8f*time,
-		VaristorInitialVelocity*Math::Sin(-mRotateY));
+		mInitialVec*Math::Cos(mRotateY),
+		mInitialVec*Math::Sin(mRotateZ + 20) - 9.8f*time,
+		mInitialVec*Math::Sin(-mRotateY));
 	//ó¨ÇÍÇÃå¸Ç´Çâ¡ñ°
 	if (isWindCol)
 		vec = Vector3::Lerp(vec, windVec, VaristorWindPercentage / 100.0f);
