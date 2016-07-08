@@ -123,8 +123,8 @@ void ArmyEnemy::Draw() const
 	for (int j = 0; j < 3; j++)
 	{
 		Matrix4 m;
-		m = Matrix4::Scale(mScaleFroat)*Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition + Vector3(40 * i, 0, 40 * j));
-		Model::GetInstance().Draw(MODEL_ID::HUMAN_BALLISTA_MODEL, m);
+		m = Matrix4::Scale(mScaleFroat)*Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition-Vector3(-40,0,-40) + Vector3(40 * i, 0, 40 * j));
+		Model::GetInstance().Draw(MODEL_ID::HUMAN_CANNON_MODEL, m);
 	}
 }
 void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
