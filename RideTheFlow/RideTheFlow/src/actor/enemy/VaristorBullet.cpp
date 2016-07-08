@@ -49,7 +49,7 @@ VaristorBullet::~VaristorBullet()
 void VaristorBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
-	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 	time += VaristorSpeed*Time::DeltaTime;
 	prevPosition = mPosition;
 	//is•ûŒü‚ðŒvŽZ
@@ -80,13 +80,13 @@ void VaristorBullet::Update()
 	isWindCol = false;
 
 
-	noDeadTimer += Time::DeltaTime;
+	//noDeadTimer += Time::DeltaTime;
 
-	if (noDeadTimer >= 1.0f)
-	{
-		noDead = true;
-		noDeadTimer = 10.0f;
-	}
+	//if (noDeadTimer >= 1.0f)
+	//{
+	//	noDead = true;
+	//	noDeadTimer = 10.0f;
+	//}
 }
 
 void VaristorBullet::Draw() const
@@ -106,8 +106,8 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(*this,VaristorPower);
 		parameter.isDead = true;
 	}
-	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
+	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL)
 	{
-		//parameter.isDead = true;
+		parameter.isDead = true;
 	}
 }

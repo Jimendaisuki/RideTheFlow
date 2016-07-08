@@ -149,8 +149,8 @@ CollisionParameter Collisin::ModelLine(const ModelData& model, const Line& line)
 	{
 		colpara.colFlag = true;
 		colpara.colPos  = HitPoly.HitPosition;
+		colpara.colVelosity = HitPoly.Normal;
 	}
-
 	return colpara;
 }
 

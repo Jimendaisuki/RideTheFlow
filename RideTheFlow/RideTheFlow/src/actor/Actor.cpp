@@ -591,8 +591,8 @@ CollisionParameter Actor::ArmyEnemy_vs_Stage(const Actor& other)const
 {
 	CollisionParameter colpara;
 	Line armyEnemy;
-	armyEnemy.startPos = parameter.mat.GetPosition();
-	armyEnemy.endPos = parameter.mat.GetPosition() + Vector3(0.0f, 100.0f, 0.0f);
+	armyEnemy.startPos = parameter.mat.GetPosition() + Vector3(0.0f, -1000.0f, 0.0f);
+	armyEnemy.endPos = parameter.mat.GetPosition() + Vector3(0.0f, 1000.0f, 0.0f);
 
 
 	ModelData stage;
@@ -773,14 +773,7 @@ CollisionParameter Actor::Ship_vs_Ship(const Actor& other)const
 CollisionParameter Actor::Bullet_vs_NoBulletArea(const Actor& other)const
 {
 	CollisionParameter colpara;
-	Sphere bullet;
-	bullet.radius = parameter.radius;
-	bullet.position = parameter.mat.GetPosition();
-	Sphere noBullet;
-	noBullet.radius = other.parameter.radius;
-	noBullet.position = other.parameter.mat.GetPosition();
-
-	colpara = Collisin::GetInstace().SphereSphere(bullet, noBullet);
+	colpara = Player_vs_land(other);
 	colpara.colID = COL_ID::BULLET_NOBULLETAREA_COL;
 	return colpara;
 }

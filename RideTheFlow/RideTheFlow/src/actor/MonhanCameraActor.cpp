@@ -251,7 +251,7 @@ void MonhanCameraActor::Draw() const
 {
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "ShipÇÃêî   %d", world.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR));
 	////DrawLine3D(Vector3::ToVECTOR(playerMat.GetPosition()), Vector3::ToVECTOR(playerMat.GetUp().Normalized()*100.0f + playerMat.GetPosition()), 1);
-	//DrawFormatString(0, 128, GetColor(255, 255, 255), "playerHp    %f", );
+	DrawFormatString(0, 128, GetColor(255, 255, 255), "åRë‡ÇÃêî:%d",world.GetActorCount(ACTOR_ID::ENEMY_ACTOR,ACTOR_ID::ARMY_ENEMY_ACTOR));
 }
 void MonhanCameraActor::OnCollide(Actor& other, CollisionParameter colpara)
 {

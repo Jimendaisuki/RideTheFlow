@@ -53,7 +53,7 @@ EnemyBullet::~EnemyBullet()
 void EnemyBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
-	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::NO_SHIP_AREA_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 
 	prevPosition = mPosition;
 
@@ -131,6 +131,6 @@ void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
 	{
-		//parameter.isDead = true;
+		parameter.isDead = true;
 	}
 }
