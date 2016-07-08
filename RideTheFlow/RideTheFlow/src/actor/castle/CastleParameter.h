@@ -3,7 +3,7 @@
 //プレイヤーのどのぐらい前に攻撃するか
 const float CastleCameraFrontAttack = 10.0f;
 //マスター城のHP
-const float MasterCastleHp = 40.0f;
+const float MasterCastleHp = 20.0f;
 
 //城がトルネードで受けるダメージ
 const float CastleDamegeTornado = 10.0f;
@@ -13,7 +13,7 @@ const float CastleDamegeWind = 5.0f;
 const float CastleDamageWindBall = 5.0f;
 
 //城の無敵時間
-const float CastleInvincibleTime = 3.0f;
+const float CastleInvincibleTime = 10.0f;
 
 //城の上に積み重なる城の段数
 const int Rank = 5;

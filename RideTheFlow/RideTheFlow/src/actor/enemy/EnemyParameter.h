@@ -123,7 +123,7 @@ const float ShipDamegeWind = 5.0f;
 const float ShipDamegeWindBall = 5.0f;
 
 //船の無敵時間
-const float ShipInvincibleTime = 3.0f;
+const float ShipInvincibleTime = 10.0f;
 
 
 //船のスピード
