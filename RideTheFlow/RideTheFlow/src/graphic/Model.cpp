@@ -430,6 +430,12 @@ void Model::Draw(const int& handle, const Vector3& position, float alpha)
 	MV1SetOpacityRate(handle, alpha);
 	MV1DrawModel(handle);
 }
+/// ３Ｄモデルを描画する（モデルID、マトリックス）
+void Model::Draw(const int handle, const Matrix4& mat)
+{
+	MV1SetMatrix(handle, Matrix4::ToMATRIX(mat));
+	MV1DrawModel(handle);
+}
 
 
 // ３Ｄ空間に２Ｄ画像を描画する（アセット名、座標、表示コマ番号、横のサイズ）

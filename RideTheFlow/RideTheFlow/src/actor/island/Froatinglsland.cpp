@@ -32,10 +32,6 @@ isGameScene(isGameScene_)
 		parameter.mat.GetPosition()+Vector3(0.0f,0.0f,0.0f),
 		parameter.radius*scale.x, *this));
 
-	DxLib::MV1SetupCollInfo(MODEL_ID::ISLE_1_MODEL, -1);
-
-	parameter.handle = MV1DuplicateModel(Model::GetInstance().GetHandle(MODEL_ID::ISLE_1_MODEL));
-
 }
 
 Froatinglsland::~Froatinglsland()

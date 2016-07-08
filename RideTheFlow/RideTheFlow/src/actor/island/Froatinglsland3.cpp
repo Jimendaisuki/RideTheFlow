@@ -27,14 +27,10 @@ Actor(world)
 	world.Add(ACTOR_ID::NO_SHIP_AREA_ACTOR, std::make_shared<NoShipArea>(world,
 		parameter.mat.GetPosition() + Vector3(0.0f, 0.0f, 0.0f),
 		maxRadius, *this));
-	//DxLib::MV1SetupCollInfo(MODEL_ID::ISLE_3_MODEL, -1);
-	parameter.handle = MV1DuplicateModel(Model::GetInstance().GetHandle(MODEL_ID::ISLE_3_MODEL));
-	int a = 0;
 }
 
 Froatinglsland3::~Froatinglsland3()
 {
-	parameter.handle = NULL;
 }
 
 void Froatinglsland3::Update()
