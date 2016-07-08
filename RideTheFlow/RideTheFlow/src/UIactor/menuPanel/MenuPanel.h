@@ -4,7 +4,6 @@
 #include "../../math/Point.h"
 #include "../../math/Vector2.h"
 #include "../../scene/Scene.h"
-#include <array>
 
 class MenuPanel
 {
@@ -17,7 +16,6 @@ enum MENU_PANEL_STATUS
 	CLOSE	= 4,
 	PUSH	= 5,
 	END		= 6,
-	NONE	= 7,
 };
 
 public:
@@ -62,10 +60,10 @@ private:
 	float	time;
 	float	moveVec;
 	int		selectNum;
-	std::array<float, 3> selects;
+	float	selects[3];
 	int		nowPage;
 	int		prePage;
-	std::array<float, 5> pages;
+	float	pages[5];
 	Vector2 drawPosition;
 	float	textScale;
 	bool	isAction;
@@ -77,8 +75,8 @@ private:
 	Point	size;
 	RECT	rect;
 
-	std::array<Vector2, 8>	tornadoPos;
-	std::array<float, 8>	tornadoVel;
+	Vector2 tornadoPos[8];
+	float	tornadoVel[8];
 	float	tornadoAlpha;
 
 	bool	isPush;

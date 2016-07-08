@@ -25,7 +25,6 @@ speed(WindFlowSpeed)
 	ps_parameter.intervalSec = 0.003f;
 	ps_parameter.lifeTimeLimit = WindFlowLifeLimit;
 	ps_parameter.sameEmissiveNum = 3;
-	dashPositions.clear();
 	dashPositions = player.ReturnDashPosStorage();
 
 	Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
@@ -33,7 +32,6 @@ speed(WindFlowSpeed)
 }
 WindFlow::~WindFlow()
 {
-	dashPositions.clear();
 	Sound::GetInstance().StopSE(SE_ID::MIDDLE_WIND_SE);
 }
 void WindFlow::Update()

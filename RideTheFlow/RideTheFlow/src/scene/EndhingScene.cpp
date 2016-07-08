@@ -59,7 +59,6 @@ EndhingScene::EndhingScene()
 //デストラクタ
 EndhingScene::~EndhingScene()
 {
-
 }
 
 //開始
@@ -71,7 +70,6 @@ void EndhingScene::Initialize()
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", false , true));
 
 	isTitle = false;
-	isPass = false;
 
 	/* フォグ関係 */
 	SetFogEnable(TRUE);
@@ -126,20 +124,6 @@ void EndhingScene::Initialize()
 void EndhingScene::Update()
 {
 	wa.Update();
-
-	/* イベントカット */
-	if ((!FadePanel::GetInstance().IsAction()) &&
-		(GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
-		Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)))
-	{
-		FadePanel::GetInstance().FadeOut();
-		isPass = true;
-	}
-	if (isPass && !FadePanel::GetInstance().IsAction())
-	{
-		mIsEnd = true;
-		return;
-	}
 
 	switch (status)
 	{
@@ -196,7 +180,6 @@ void EndhingScene::Update()
 	Camera::GetInstance().Target.Set(targetPos);
 	Camera::GetInstance().Update();
 
-	/*
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z))
 		isTitle = !isTitle;
 	if (isTitle)
@@ -229,8 +212,7 @@ void EndhingScene::Update()
 
 
 	/* 竜巻ポリゴンの計算 */
-	//TornadoCalculation();
-	
+	TornadoCalculation();
 }
 
 //描画
@@ -239,8 +221,8 @@ void EndhingScene::Draw() const
 	wa.Draw();
 
 	/* 竜巻 */
-	DrawPolygon2D(Vertex2D_1.data(), 2, texhandle, true);
-	DrawPolygon2D(Vertex2D_2.data(), 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_2, 2, texhandle, true);
 	//DrawPolygon2D(Vertex2D_1, 2, Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), true);
 
 	/* テキスト */
@@ -283,8 +265,8 @@ void EndhingScene::TornadoCalculation()
 		count_2++;
 	}
 	// 頂点の移動
-	VertexMove(Vertex2D_1.data(), count_1, amount_1);
-	VertexMove(Vertex2D_2.data(), count_2, amount_2);
+	VertexMove(Vertex2D_1, count_1, amount_1);
+	VertexMove(Vertex2D_2, count_2, amount_2);
 	// 共有頂点データコピー
 	Vertex2D_1[4] = Vertex2D_1[0];
 	Vertex2D_1[5] = Vertex2D_1[2];
