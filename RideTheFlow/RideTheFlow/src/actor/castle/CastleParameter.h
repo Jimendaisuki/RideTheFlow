@@ -2,6 +2,7 @@
 
 //プレイヤーのどのぐらい前に攻撃するか
 const float CastleCameraFrontAttack = 10.0f;
+
 //マスター城のHP
 const float MasterCastleHp = 20.0f;
 
