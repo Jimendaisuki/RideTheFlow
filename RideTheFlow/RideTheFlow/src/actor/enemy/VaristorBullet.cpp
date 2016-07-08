@@ -14,7 +14,7 @@
 #include "../Player.h"
 #include "../../sound/Sound.h"
 
-VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec) :
+VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ, float InitialVec, float Accuracy) :
 Actor(world),
 time(0),
 speed(VaristorSpeed),
@@ -29,8 +29,8 @@ noDead(false),
 noDeadTimer(0.0f),
 mInitialVec(InitialVec)
 {
-	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
-	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
+	mRotateY += Random::GetInstance().Range(-Accuracy, Accuracy);
+	mRotateZ += Random::GetInstance().Range(-Accuracy, Accuracy);
 	parameter.id = ACTOR_ID::VARISTOR_BULLET_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 10.0f;

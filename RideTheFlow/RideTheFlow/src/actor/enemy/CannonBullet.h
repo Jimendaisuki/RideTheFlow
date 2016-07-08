@@ -7,7 +7,7 @@
 class CannonBullet :public Actor, public std::enable_shared_from_this<CannonBullet>
 {
 public:
-	CannonBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec);
+	CannonBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ, float InitialVec, float Accuracy);
 	~CannonBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;

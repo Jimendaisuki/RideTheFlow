@@ -7,7 +7,7 @@
 class VaristorBullet :public Actor, public std::enable_shared_from_this<VaristorBullet>
 {
 public:
-	VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec);
+	VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec, float Accuracy);
 	~VaristorBullet();
 	virtual void Update() override;
 	virtual void Draw() const override;

@@ -156,6 +156,9 @@ const float ShipNotLookVaristorAttackTime = 10.0f;
 //船バリスタからプレイヤーが見えていないときの一回に発射する矢の本数
 const float ShipNotLookVaristorArrowNum = 0;
 
+//船バリスタ攻撃精度(小さいほど高精度)
+const float ShipVaristorArrowAccuracy = 10.0f;
+
 
 //船大砲の攻撃クールタイム
 const float ShipCannonAttackTime = 2.0f;
@@ -176,6 +179,9 @@ const float ShipConnonSwingSpeed = 100.0f;
 const float ShipNotLookCannonAttackTime = 30.0f;
 //船大砲からプレイヤーが見えていないときの一回に発射する砲弾の数
 const float ShipNotLookCannonShellNum = 0;
+
+//船大砲攻撃精度(小さいほど高精度)
+const float ShipCannonBulletAccuracy = 10.0f;
 
 
 /***撃龍槍***/

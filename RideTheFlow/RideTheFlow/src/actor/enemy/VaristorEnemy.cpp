@@ -101,7 +101,7 @@ void VaristorEnemy::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition, *this, rotate.y-90,attackAngleZ,VaristorInitialVelocity));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition, *this, rotate.y-90,attackAngleZ,VaristorInitialVelocity,VaristorArrowAccuracy));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;

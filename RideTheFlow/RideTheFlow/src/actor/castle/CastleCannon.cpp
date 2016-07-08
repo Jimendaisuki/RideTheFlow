@@ -111,7 +111,7 @@ void CastleCannon::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition+Vector3(0,10,0), *this, mRotateY - 90, attackAngleZ,CastleCannonInitialVelocity));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition+Vector3(0,10,0), *this, mRotateY - 90, attackAngleZ,CastleCannonInitialVelocity,CastleCannonBulletAccuracy));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;
