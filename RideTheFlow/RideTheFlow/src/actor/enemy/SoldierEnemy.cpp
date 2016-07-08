@@ -37,7 +37,7 @@ isLook(true)
 }
 SoldierEnemy::~SoldierEnemy()
 {
-
+	mCastle = nullptr;
 }
 void SoldierEnemy::Update()
 {

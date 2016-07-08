@@ -48,7 +48,7 @@ noDead(false)
 }
 EnemyBullet::~EnemyBullet()
 {
-
+	parent = nullptr;
 }
 void EnemyBullet::Update()
 {

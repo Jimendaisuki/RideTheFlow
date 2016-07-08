@@ -20,7 +20,7 @@ prevDash(false)
 
 PlayerArrow::~PlayerArrow()
 {
-
+	player = nullptr;
 }
 
 void PlayerArrow::Update()

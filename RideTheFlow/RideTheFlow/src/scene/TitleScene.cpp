@@ -28,7 +28,7 @@ const float x[4] = { STORM_POS.x + SIZE_HALF.x / 2.0f, STORM_POS.x - SIZE_HALF.x
 const float y[4] = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y - SIZE_HALF.y };
 const float u[4] = { 0, 0, 1, 1 };
 const float v[4] = { 0, 1, 1, 0 };
-const int	StormMaxAlpha		= 255 * 3 / 3;
+const int	StormMaxAlpha		= 255 / 2;
 const float StormAlphaEndTime	= 6.0f;
 /* タイトルテキスト用データ */
 const float TitleAlphaEndTime	= 2.0f;
@@ -103,7 +103,7 @@ void TitleScene::Initialize()
 	pressScale = 0;
 
 	/* スクリーンデータ */
-	screenHandle = MakeScreen(WINDOW_WIDTH * 1.5f, WINDOW_HEIGHT, TRUE);
+	screenHandle = MakeScreen((int)(WINDOW_WIDTH * 1.5f), WINDOW_HEIGHT, TRUE);
 
 	screenPos = WINDOW_WIDTH / 4;
 	slideTime = 0;
@@ -180,6 +180,7 @@ void TitleScene::Update()
 		{
 			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			FadePanel::GetInstance().FadeOut();
+			pressTextAlpha = 1.0f;
 			status = TITLE_STATUS::TITLE_END;
 		}
 		break;
@@ -309,10 +310,6 @@ void TitleScene::VertexMove(VERTEX2D vertexs_[], int count_, float time_)
 void TitleScene::Pass()
 {
 	slideTime = 1.0f;
-	for (int i = 0; i < 6; i++)
-	{
-		Vertex2D_1[i].dif.a = 40;
-		Vertex2D_2[i].dif.a = 40;
-	}
+	stormAlphaTime = 1.0f;
 	titleAlpha = 1.0f;
 }

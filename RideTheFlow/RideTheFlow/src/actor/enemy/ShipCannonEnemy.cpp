@@ -34,7 +34,8 @@ mLeft(left)
 }
 ShipCannonEnemy::~ShipCannonEnemy()
 {
-
+	parent = nullptr;
+	mSe = nullptr;
 }
 void ShipCannonEnemy::Update()
 {

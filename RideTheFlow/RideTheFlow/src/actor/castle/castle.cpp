@@ -97,7 +97,8 @@ castleUpTimer(0.0f)
 
 Castle::~Castle()
 {
-
+	parent = nullptr;
+	delete parent;
 }
 
 void Castle::Update()

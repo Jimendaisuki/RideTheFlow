@@ -37,7 +37,10 @@ mScaleFloat(scale)
 }
 CastleVaristor::~CastleVaristor()
 {
-
+	parent = nullptr;
+	castle = nullptr;
+	delete parent;
+	delete castle;
 }
 void CastleVaristor::Update()
 {
@@ -122,7 +125,7 @@ void CastleVaristor::Update()
 		}
 	}
 	//ƒx[ƒX‚Ìé‚ªŽ€‚ñ‚¾‚çŽ€‚Ê
-	if (castle->GetDeadRagFlag())
+	if (castle->GetDeadRagFlag() || castle == nullptr)
 	{
 		parameter.isDead = true;
 	}

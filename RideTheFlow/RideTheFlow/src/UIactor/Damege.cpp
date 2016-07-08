@@ -1,9 +1,6 @@
 #include "Damege.h"
 #include "../math/Math.h"
 
-//#include "../actor/Actor.h"
-//#include "../world/IWorld.h"
-
 const float deadTime  = 2.0f;
 const float offset    = 20.0f;
 const Vector2 HD	  = Vector2(1920, 1080);
@@ -25,7 +22,6 @@ UIActor(world)
 
 Damege::~Damege()
 {
-	// ƒ|ƒCƒ“ƒ^‰ð•ú
 	nowHP = nullptr;
 }
 

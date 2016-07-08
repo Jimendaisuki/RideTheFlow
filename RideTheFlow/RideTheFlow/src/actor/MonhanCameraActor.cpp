@@ -250,6 +250,10 @@ void MonhanCameraActor::Update()
 void MonhanCameraActor::Draw() const
 {
 	//DrawFormatString(0, 464, GetColor(0, 0, 0), "ShipÇÃêî   %d", world.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR));
+	DrawFormatString(0, 432, GetColor(0, 0, 0), "VaristorÇÃêî   %d", world.GetActorCount(ACTOR_ID::ENEMY_BULLET, ACTOR_ID::VARISTOR_BULLET_ACTOR));
+	DrawFormatString(0, 400, GetColor(0, 0, 0), "CabnnonÇÃêî   %d", world.GetActorCount(ACTOR_ID::ENEMY_BULLET, ACTOR_ID::CANNON_BULLET_ACTOR));
+	DrawFormatString(0, 368, GetColor(0, 0, 0), "ñÓÇÃêî   %d", world.GetActorCount(ACTOR_ID::ENEMY_BULLET, ACTOR_ID::ARROW_BULLET_ACTOR));
+	DrawFormatString(0, 464, GetColor(0, 0, 0), "ShipÇÃêî   %d", world.GetActorCount(ACTOR_ID::ENEMY_ACTOR, ACTOR_ID::ARMY_ENEMY_ACTOR));
 	////DrawLine3D(Vector3::ToVECTOR(playerMat.GetPosition()), Vector3::ToVECTOR(playerMat.GetUp().Normalized()*100.0f + playerMat.GetPosition()), 1);
 	DrawFormatString(0, 128, GetColor(255, 255, 255), "åRë‡ÇÃêî:%d",world.GetActorCount(ACTOR_ID::ENEMY_ACTOR,ACTOR_ID::ARMY_ENEMY_ACTOR));
 }

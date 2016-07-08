@@ -202,6 +202,9 @@ Player::~Player() {
 	SAFE_DELETE_ARRAY(vertexVec);
 	SAFE_DELETE_ARRAY(deadBeforeLocalMatrix);
 	posStorage.clear();
+
+	if (!title)
+		MV1DeleteModel(modelHandle);
 }
 
 

@@ -45,10 +45,20 @@ playerWithinTimer(0.0f)
 
 CastleDoragonSpear::~CastleDoragonSpear()
 {
-
+	parent = nullptr;
+	castle = nullptr;
+	delete parent;
+	delete castle;
 }
 void CastleDoragonSpear::Update()
 {
+	//é‚ªŽ€‚ñ‚¾‚çŽ©•ª‚àŽ€‚Ê
+	if (castle->GetDeadRagFlag() || parent == nullptr)
+	{
+		parameter.isDead = true;
+		return;
+	}
+
 	Actor* player;
 	Matrix4 playerMat;
 	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
@@ -110,11 +120,6 @@ void CastleDoragonSpear::Update()
 			spearAttackTimer = 0.0f;
 			endAttack = false;
 		}
-	}
-	//é‚ªŽ€‚ñ‚¾‚çŽ©•ª‚àŽ€‚Ê
-	if (castle->GetDeadRagFlag())
-	{
-		parameter.isDead = true;
 	}
 	startPos += castle->GetVelocity();
 	endPos += castle->GetVelocity();

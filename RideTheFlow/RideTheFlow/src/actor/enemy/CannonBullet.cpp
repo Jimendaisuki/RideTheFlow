@@ -42,7 +42,7 @@ noDeadTimer(0.0f)
 }
 CannonBullet::~CannonBullet()
 {
-
+	parent = nullptr;
 }
 void CannonBullet::Update()
 {

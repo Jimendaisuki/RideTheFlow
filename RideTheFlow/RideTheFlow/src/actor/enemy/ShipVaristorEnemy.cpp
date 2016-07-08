@@ -34,7 +34,8 @@ mLeft(left)
 }
 ShipVaristorEnemy::~ShipVaristorEnemy()
 {
-
+	parent = nullptr;
+	mSe = nullptr;
 }
 void ShipVaristorEnemy::Update()
 {

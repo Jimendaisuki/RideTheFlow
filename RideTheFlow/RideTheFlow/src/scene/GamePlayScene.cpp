@@ -42,11 +42,6 @@ void GamePlayScene::Initialize()
 	isGameEnd = false;
 	isPlayerDead = false;
 
-	//モデルを一旦解放して読み込み直す
-	//Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
-	//WorkFolder::SetWorkFolder("res/Model/");
-	//Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL, false);
-
 	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, false, false, Vector3(0.0f, 0.0f, -5500.0f), Vector3(0,0,1)));
 	wa.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wa, Vector3(0.0f, 0.0f, -5500.0f), Vector2(100), Vector3::Zero, 100.0f));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
@@ -62,9 +57,9 @@ void GamePlayScene::Initialize()
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
 
 	menu.Initialize();
-	FadePanel::GetInstance().SetInTime(2.0f);
 	bgmVol = 1.0f;
 	Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
+	FadePanel::GetInstance().SetInTime(2.0f);
 }
 
 void GamePlayScene::Update()
@@ -73,7 +68,8 @@ void GamePlayScene::Update()
 	if (!Sound::GetInstance().IsPlayBGM() && !isGameEnd)
 		Sound::GetInstance().PlayBGM(BGM_ID::INGAME_BGM, DX_PLAYTYPE_LOOP);
 
-	if (isGameEnd && FadePanel::GetInstance().IsFullBlack())
+	/* シーン終了判定 */
+	if (isGameEnd && FadePanel::GetInstance().IsFullBlack() && bgmVol <= 0.0f)
 	{
 		mIsEnd = true;
 		return;
@@ -84,6 +80,7 @@ void GamePlayScene::Update()
 	if (menu.IsAction())
 		return;
 
+	/* アクター更新 */
 	wa.Update();
 
 	// 終了してたら以下省略
@@ -92,6 +89,7 @@ void GamePlayScene::Update()
 		bgmVol -= Time::DeltaTime;
 		bgmVol = Math::Clamp(bgmVol, 0.0f, 1.0f);
 		Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
+		Sound::GetInstance().SetAllSEVolume(bgmVol);
 		return;
 	}
 
@@ -105,8 +103,9 @@ void GamePlayScene::Update()
 
 
 	/* ポーズ表示 */
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
-		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+	if (!isGameEnd &&
+		(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
+		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9)))
 	{
 		menu.Action();
 	}

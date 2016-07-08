@@ -55,11 +55,6 @@ CreditScene::~CreditScene()
 //ŠJn
 void CreditScene::Initialize()
 {
-	////ƒ‚ƒfƒ‹‚ğˆê’U‰ğ•ú‚µ‚Ä“Ç‚İ‚İ’¼‚·
-	//Model::GetInstance().Delete(MODEL_ID::TEST_MODEL);
-	//WorkFolder::SetWorkFolder("res/Model/");
-	//Model::GetInstance().Load("dra_test.mv1", MODEL_ID::TEST_MODEL,false);
-	
 	mIsEnd = false;
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
