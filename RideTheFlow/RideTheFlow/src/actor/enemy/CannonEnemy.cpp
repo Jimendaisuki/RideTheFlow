@@ -101,7 +101,7 @@ void CannonEnemy::Update()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this,rotate.y-90,attackAngleZ,CannonInitialVelocity));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<CannonBullet>(world, mPosition, *this,rotate.y-90,attackAngleZ,CannonInitialVelocity,CannonShellAccuracy));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;

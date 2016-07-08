@@ -2,6 +2,7 @@
 
 //プレイヤーのどのぐらい前に攻撃するか
 const float CastleCameraFrontAttack = 10.0f;
+
 //マスター城のHP
 const float MasterCastleHp = 20.0f;
 
@@ -47,6 +48,8 @@ const float CastleCannonNotLookSecondAttack = 10.0f;
 //城の大砲の初速度
 const float CastleCannonInitialVelocity = 100.0f;
 
+//城の大砲の攻撃精度(小さいほど高精度)
+const float CastleCannonBulletAccuracy = 10.0f;
 
 /***城のバリスター***/
 //城のバリスターが攻撃してくる範囲
@@ -63,6 +66,13 @@ const int CastleVaristorNotLookAttack = 0;
 const float CastleVaristorNotLookSecondAttack = 10.0f;
 //城のバリスターの初速度
 const float CastleVaristorInitialVelocity = 100.0f;
+
+//城のバリスタ攻撃精度(小さいほど高精度)
+const float CastleVaristorArrowAccuracy = 10.0f;
+
+
+
+
 
 /***城の兵士***/
 //城の兵士が攻撃してくる範囲

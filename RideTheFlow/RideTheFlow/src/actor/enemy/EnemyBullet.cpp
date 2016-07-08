@@ -115,6 +115,7 @@ void EnemyBullet::Update()
 void EnemyBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
+	DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
