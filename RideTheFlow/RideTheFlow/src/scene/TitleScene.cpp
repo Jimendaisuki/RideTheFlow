@@ -221,9 +221,9 @@ void TitleScene::Draw() const
 		return;
 
 	/* 竜巻 */
-	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
-	DrawPolygon2D(Vertex2D_2, 2, texhandle, true);
-	DrawPolygon2D(Vertex2D_1, 2, Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), true);
+	DrawPolygon2D(Vertex2D_1.data(), 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_2.data(), 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_1.data(), 2, Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), true);
 
 	/* 龍 */
 	SetDrawScreen(screenHandle);
@@ -279,8 +279,8 @@ void TitleScene::TornadoCalculation()
 		count_2++;
 	}
 	// 頂点の移動
-	VertexMove(Vertex2D_1, count_1, amount_1);
-	VertexMove(Vertex2D_2, count_2, amount_2);
+	VertexMove(Vertex2D_1.data(), count_1, amount_1);
+	VertexMove(Vertex2D_2.data(), count_2, amount_2);
 	// 共有頂点データコピー
 	Vertex2D_1[4] = Vertex2D_1[0];
 	Vertex2D_1[5] = Vertex2D_1[2];

@@ -2,6 +2,7 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 #include <vector>
+#include <array>
 
 class  EndhingScene :public IScene{
 public:
@@ -48,6 +49,8 @@ private:
 	Vector3		targetPos;
 	Vector3		velocity;
 
+	bool		isPass;
+
 	/* 竜巻ポリゴン用データ */
 	int			texhandle;
 	int			stormAlpha;
@@ -56,8 +59,8 @@ private:
 	float		stormAlphaTime;
 	float		amount_1;
 	float		amount_2;
-	VERTEX2D	Vertex2D_1[6];
-	VERTEX2D	Vertex2D_2[6];
+	std::array<VERTEX2D, 6>	Vertex2D_1;
+	std::array<VERTEX2D, 6>	Vertex2D_2;
 
 	/* タイトルテキスト用データ */
 	float titleAlpha;
