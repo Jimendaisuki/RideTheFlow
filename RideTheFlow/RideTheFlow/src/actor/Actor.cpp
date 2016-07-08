@@ -774,6 +774,19 @@ CollisionParameter Actor::Bullet_vs_NoBulletArea(const Actor& other)const
 {
 	CollisionParameter colpara;
 	colpara = Player_vs_land(other);
+
+	Sphere sphere;
+	sphere.position = parameter.mat.GetPosition();
+	sphere.radius = parameter.radius;
+
+	if (!colpara.colFlag)
+	{
+		ModelData stage;
+		stage.MHandle = Model::GetInstance().GetHandle(MODEL_ID::TEST_STAGE);
+		stage.MFrameIndex = -1;
+		colpara = Collisin::GetInstace().ModelSphere(stage, sphere);
+	}
+
 	colpara.colID = COL_ID::BULLET_NOBULLETAREA_COL;
 	return colpara;
 }

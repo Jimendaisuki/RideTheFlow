@@ -219,9 +219,9 @@ void Player::Update() {
 
 
 	//parameter.HP -= 5.0f * Time::DeltaTime;
-	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
-	//	moveFlag = !moveFlag;
-	//}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
+		moveFlag = !moveFlag;
+	}
 	if (title || event)
 		moveFlag = false;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);
@@ -1165,8 +1165,8 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::VARISTOR_BULLET_ACTOR)
 	{
-		Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-		Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+		//Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+		//Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 	}
 	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
 	{
@@ -1221,8 +1221,8 @@ void Player::Damage(Actor& bullet, float damage, bool allow)
 		{
 			parameter.HP -= damage;
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+			Effect::GetInstance().DamegeEffect(world, bullet.parent->GetParameter().mat.GetPosition());
 		}
-			
 
 		if (allow && !allowNoDamageFlag) {
 			parameter.HP -= damage;
