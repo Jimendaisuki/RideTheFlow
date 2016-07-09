@@ -22,10 +22,10 @@ float const HEIGHT = 2000.0f;
 /* 竜巻ポリゴン用データ */
 const Vector3 STORM_POS = Vector3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 5.0f * 2.0f, 0.0f);
 const Vector2 SIZE_HALF = Vector2(150, 150);
-const float x[4] = { STORM_POS.x + SIZE_HALF.x / 2.0f, STORM_POS.x - SIZE_HALF.x * 3, STORM_POS.x - SIZE_HALF.x / 2.0f, STORM_POS.x + SIZE_HALF.x * 3 };
-const float y[4] = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y - SIZE_HALF.y };
-const float u[4] = { 0, 0, 1, 1 };
-const float v[4] = { 0, 1, 1, 0 };
+const std::array<float, 4> x = { STORM_POS.x + SIZE_HALF.x / 2.0f, STORM_POS.x - SIZE_HALF.x * 3, STORM_POS.x - SIZE_HALF.x / 2.0f, STORM_POS.x + SIZE_HALF.x * 3 };
+const std::array<float, 4> y = { STORM_POS.y - SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y + SIZE_HALF.y, STORM_POS.y - SIZE_HALF.y };
+const std::array<float, 4> u = { 0, 0, 1, 1 };
+const std::array<float, 4> v = { 0, 1, 1, 0 };
 const int	StormMaxAlpha = 255 / 3;
 const float StormAlphaEndTime = 6.0f;
 /* タイトルテキスト用データ */
@@ -70,6 +70,7 @@ void EndhingScene::Initialize()
 	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage", false , true));
 
 	isTitle = false;
+	isPass = false;
 
 	/* フォグ関係 */
 	SetFogEnable(TRUE);
@@ -124,6 +125,18 @@ void EndhingScene::Initialize()
 void EndhingScene::Update()
 {
 	wa.Update();
+
+	/* イベントカット */
+	if ((!FadePanel::GetInstance().IsAction()) &&
+		(!isPass) &&
+		(GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
+		Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)))
+	{
+		FadePanel::GetInstance().FadeOut();
+		isPass = true;
+	}
+	if (isPass && FadePanel::GetInstance().IsFullBlack())
+		mIsEnd = true;
 
 	switch (status)
 	{
@@ -221,8 +234,8 @@ void EndhingScene::Draw() const
 	wa.Draw();
 
 	/* 竜巻 */
-	DrawPolygon2D(Vertex2D_1, 2, texhandle, true);
-	DrawPolygon2D(Vertex2D_2, 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_1.data(), 2, texhandle, true);
+	DrawPolygon2D(Vertex2D_2.data(), 2, texhandle, true);
 	//DrawPolygon2D(Vertex2D_1, 2, Model::GetInstance().GetHandle(MODEL_ID::TEST_MODEL), true);
 
 	/* テキスト */
@@ -265,8 +278,8 @@ void EndhingScene::TornadoCalculation()
 		count_2++;
 	}
 	// 頂点の移動
-	VertexMove(Vertex2D_1, count_1, amount_1);
-	VertexMove(Vertex2D_2, count_2, amount_2);
+	VertexMove(Vertex2D_1.data(), count_1, amount_1);
+	VertexMove(Vertex2D_2.data(), count_2, amount_2);
 	// 共有頂点データコピー
 	Vertex2D_1[4] = Vertex2D_1[0];
 	Vertex2D_1[5] = Vertex2D_1[2];

@@ -6,7 +6,7 @@
 
 const float WIDTH = 5 / 2;	// â°ïùÇÃîºï™
 
-FlowRoot::FlowRoot(IWorld& world_, Player* player_, Vector2* point_, int piece[]) :
+FlowRoot::FlowRoot(IWorld& world_, Player* player_, Vector2* point_, std::array<int, 10> piece) :
 UIActor(world_),
 player(player_),
 arrowPos(point_),
