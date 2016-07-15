@@ -20,12 +20,12 @@ const Vector2 RES_SIZE_2 = Vector2(1574, 967);
 const Vector2 TEXT_SIZE = Vector2(150.0f, 700.0f);
 const float MOVE_WIDTH = (RES_SIZE_2.x - RES_SIZE_1.x) / 2;
 const float DELEY_TIME = 0.1f;
-const float LX[6] = { 0.0f, WINDOW_WIDTH / 3.0f * 1.3f, WINDOW_WIDTH / 10.0f, 0.0f, WINDOW_WIDTH / 8.0f, WINDOW_WIDTH / 3.0f };
-const float LY[6] = { 0.0f, -WINDOW_HEIGHT / 15.0f * 1.3f, 0, WINDOW_HEIGHT * 3.0f / 7.0f, WINDOW_HEIGHT * 9.0f / 10.0f, WINDOW_HEIGHT };
-const float RX[5] = { WINDOW_WIDTH, WINDOW_WIDTH * 0.9f, WINDOW_WIDTH * 1.1f, WINDOW_WIDTH , WINDOW_WIDTH * 0.8f};
-const float RY[5] = { 0.0f, WINDOW_HEIGHT / 10.0f, WINDOW_HEIGHT * 0.25f, WINDOW_HEIGHT * 0.6f, WINDOW_HEIGHT };
-float LV[6] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-float RV[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+const std::array<float, 6> LX = { 0.0f, WINDOW_WIDTH / 3.0f * 1.3f, WINDOW_WIDTH / 10.0f, 0.0f, WINDOW_WIDTH / 8.0f, WINDOW_WIDTH / 3.0f };
+const std::array<float, 6> LY = { 0.0f, -WINDOW_HEIGHT / 15.0f * 1.3f, 0, WINDOW_HEIGHT * 3.0f / 7.0f, WINDOW_HEIGHT * 9.0f / 10.0f, WINDOW_HEIGHT };
+const std::array<float, 5> RX = { WINDOW_WIDTH, WINDOW_WIDTH * 0.9f, WINDOW_WIDTH * 1.1f, WINDOW_WIDTH, WINDOW_WIDTH * 0.8f };
+const std::array<float, 5> RY = { 0.0f, WINDOW_HEIGHT / 10.0f, WINDOW_HEIGHT * 0.25f, WINDOW_HEIGHT * 0.6f, WINDOW_HEIGHT };
+std::array<float, 6> LV = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+std::array<float, 5> RV = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 MenuPanel::MenuPanel(Scene currentScene) :
 scene(currentScene)
@@ -356,7 +356,10 @@ void MenuPanel::Update()
 				else if (selectNum == 1)
 					status = MENU_PANEL_STATUS::MANUAL;
 				else if (selectNum == 2)
-					status = MENU_PANEL_STATUS::CLOSE;
+				{
+					FadePanel::GetInstance().FadeOut();
+					status = MENU_PANEL_STATUS::NONE;
+				}
 			}
 			else
 			{	// メニューシーン
@@ -392,7 +395,11 @@ void MenuPanel::Update()
 		}
 		break;
 	default:
-		isAction = false;
+		if (!FadePanel::GetInstance().IsAction())
+		{
+			isAction = false;
+			isEnd = true;
+		}
 		break;
 	}
 

@@ -170,7 +170,7 @@ void ShipVaristorEnemy::Attack()
 	{
 		attackRag = 0.0f;
 		arrowCount++;
-		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition, *this, rotate.y, attackAngle,ShipVaristorInitialVelocity));
+		world.Add(ACTOR_ID::ENEMY_BULLET, std::make_shared<VaristorBullet>(world, mPosition, *this, rotate.y, attackAngle, ShipVaristorInitialVelocity, ShipVaristorArrowAccuracy));
 		if (arrowCount >= mArrowNumber)
 		{
 			arrowCount = 0;

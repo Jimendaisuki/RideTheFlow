@@ -14,7 +14,7 @@
 #include "../Player.h"
 #include "../../sound/Sound.h"
 
-VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ,float InitialVec) :
+VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ, float InitialVec, float Accuracy) :
 Actor(world),
 time(0),
 speed(VaristorSpeed),
@@ -29,11 +29,11 @@ noDead(false),
 noDeadTimer(0.0f),
 mInitialVec(InitialVec)
 {
-	mRotateY += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
-	mRotateZ += Random::GetInstance().Range(-VaristorArrowAccuracy, VaristorArrowAccuracy);
+	mRotateY += Random::GetInstance().Range(-Accuracy, Accuracy);
+	mRotateZ += Random::GetInstance().Range(-Accuracy, Accuracy);
 	parameter.id = ACTOR_ID::VARISTOR_BULLET_ACTOR;
 	parameter.isDead = false;
-	parameter.radius = 10.0f;
+	parameter.radius = 10.0f*mScale.x;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -94,6 +94,7 @@ void VaristorBullet::Update()
 void VaristorBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::BALLISTA_ARROW_MODEL, parameter.mat);
+	DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
 }
 
 void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)

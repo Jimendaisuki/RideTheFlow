@@ -13,7 +13,7 @@
 #include "../Player.h"
 #include "../../sound/Sound.h"
 
-CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ,float InitialVec) :
+CannonBullet::CannonBullet(IWorld& world, Vector3 position, Actor& parent_,float rotateY,float attackAngleZ,float InitialVec,float Accuracy) :
 Actor(world),
 time(0),
 speed(CannonSpeed),
@@ -25,11 +25,11 @@ noDead(false),
 noDeadTimer(0.0f),
 mInitialVec(InitialVec)
 {
-	mRotateY += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
-	mRotateZ += Random::GetInstance().Range(-CannonShellAccuracy, CannonShellAccuracy);
+	mRotateY += Random::GetInstance().Range(-Accuracy, Accuracy);
+	mRotateZ += Random::GetInstance().Range(-Accuracy, Accuracy);
 	parameter.id = ACTOR_ID::CANNON_BULLET_ACTOR;
 	parameter.isDead = false;
-	parameter.radius = 10.0f;
+	parameter.radius = 10.0f*mScale.x;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateZ(0) *
@@ -81,6 +81,7 @@ void CannonBullet::Update()
 void CannonBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CANNON_BALL_MODEL, parameter.mat);
+	DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
 }
 
 void CannonBullet::OnCollide(Actor& other, CollisionParameter colpara)

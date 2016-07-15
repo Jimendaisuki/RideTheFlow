@@ -1,6 +1,7 @@
 #pragma once
 #include "UIActor.h"
 #include "../actor/Player.h"
+#include <array>
 
 class PlayerArrow : public UIActor
 {
@@ -22,5 +23,5 @@ private:
 	// 前フレームダッシュフラグ
 	bool		prevDash;
 	// 分割リソースハンドル
-	int	resPiece[10];
+	std::array<int, 10>	resPiece;
 };
