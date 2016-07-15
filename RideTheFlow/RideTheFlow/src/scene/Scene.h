@@ -12,4 +12,5 @@ enum class Scene{
 	Ending,
 	Credit,
 	GameEnd,
+	PV,
 };

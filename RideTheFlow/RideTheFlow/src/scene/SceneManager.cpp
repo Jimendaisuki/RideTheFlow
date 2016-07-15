@@ -3,12 +3,17 @@
 #include"IScene.h"
 #include <algorithm>
 #include "../UIactor/fadePanel/FadePanel.h"
+#include "../time/Time.h"
+#include "../input/GamePad.h"
+#include "../input/Keyboard.h"
 
 const int SceneManager::MaxStageCount = 7;
 
 //コンストラクタ
 SceneManager::SceneManager() :
-	mStageCount(1){
+mStageCount(1),
+timer_(0.0f)
+{
 }
 
 //更新前初期化
@@ -20,6 +25,12 @@ void SceneManager::Initialize(){
 //更新
 void SceneManager::Update(){
 	mCurrentScene->Update();
+	timer_ += Time::DeltaTime;
+	if (Keyboard::GetInstance().AnyTriggerDown() ||
+		GamePad::GetInstance().AnyTriggerDown())
+	{
+		timer_ = 0.0f;
+	}
 	FadePanel::GetInstance().Update();
 }
 
@@ -36,6 +47,21 @@ void SceneManager::End(){
 
 void SceneManager::Change()
 {
+	if (timer_ >= SCENE_END_TIME)
+	{
+		if (FadePanel::GetInstance().IsFullBlack())
+		{
+			Change(Scene::Title);
+			return;
+		}
+		if (!FadePanel::GetInstance().IsAction())
+		{
+			FadePanel::GetInstance().SetOutTime(0.5f);
+			FadePanel::GetInstance().FadeOut();
+			return;
+		}
+	}
+
 	if (mCurrentScene->IsEnd())
 	{
 		Change(mCurrentScene->Next());
@@ -70,7 +96,7 @@ void SceneManager::Change(Scene name){
 
 	mCurrentScene = mScenes[name];
 	mCurrentScene->Initialize();
-
+	timer_ = 0.0f;
 	FadePanel::GetInstance().FadeIn();
 }
 

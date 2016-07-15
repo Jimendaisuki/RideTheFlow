@@ -86,3 +86,11 @@ void Movie::IsGlow(const std::string& handle) const
 	if (m_movies.find(handle) == m_movies.end())
 		throw std::string(handle + "‚Æ‚¢‚¤“®‰æƒnƒ“ƒhƒ‹‚Í“Ç‚İ‚Ü‚ê‚Ä‚¢‚Ü‚¹‚ñ");
 }
+
+void Movie::Clear()
+{
+	for (const auto& movie : m_movies)
+	{
+		DeleteGraph(movie.second);
+	}
+}

@@ -13,7 +13,8 @@ enum TITLE_STATUS
 	TITLE_DRAGON_IN,
 	TITLE_TEXTURE_IN,
 	TITLE_STANDBY,
-	TITLE_END
+	TITLE_END,
+	GO_PV,
 };
 
 public:
@@ -71,4 +72,5 @@ private:
 	float	slideTime;
 
 	bool	isTitle;
+	float	timer;
 };

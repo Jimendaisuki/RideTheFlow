@@ -110,6 +110,7 @@
     <ClCompile Include="src\actor\particle\DashBlueLineParticle.cpp" />
     <ClCompile Include="src\actor\StageGenerator.cpp" />
     <ClCompile Include="src\scene\EventScene.cpp" />
+    <ClCompile Include="src\scene\PVScene.cpp" />
     <ClCompile Include="src\UIactor\CsvReader.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
     <ClCompile Include="src\UIactor\FlowRoot.cpp" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\actor\AirGun.h" />
+    <ClInclude Include="src\scene\PVScene.h" />
     <ClInclude Include="src\UIactor\BloodPlayer.h" />
     <ClInclude Include="src\actor\castle\CastleManager.h" />
     <ClInclude Include="src\actor\castle\CastleVaristor.h" />

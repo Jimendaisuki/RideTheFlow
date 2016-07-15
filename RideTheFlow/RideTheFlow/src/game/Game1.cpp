@@ -8,10 +8,12 @@
 #include "../scene/GamePlayScene.h"
 #include "../scene/CreditScene.h"
 #include "../scene/EndhingScene.h"
+#include "../scene/PVScene.h"
 #include "../Def.h"
 #include "../graphic/Model.h"
 #include "../graphic/Anime.h"
 #include "../graphic/Sprite.h"
+#include "../graphic/Movie.h"
 #include <thread>
 
 Game1::Game1() :
@@ -42,6 +44,7 @@ void Game1::Initialize()
 	mSceneManager.Add(Scene::GamePlay, std::make_shared<GamePlayScene>());
 	mSceneManager.Add(Scene::Ending, std::make_shared<EndhingScene>());
 	mSceneManager.Add(Scene::Credit, std::make_shared<CreditScene>());
+	mSceneManager.Add(Scene::PV, std::make_shared<PVScene>());
 
 	mSceneManager.SetScene(Scene::Demo);
 }
