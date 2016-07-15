@@ -125,11 +125,6 @@ void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		windVec = colpara.colVelosity;
 		isWindCol = true;
 	}
-	if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
-	{
-		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(*this,ArrowPower,true);
-		parameter.isDead = true;
-	}
 	if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
 	{
 		parameter.isDead = true;

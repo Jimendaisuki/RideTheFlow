@@ -57,7 +57,14 @@ public:
 
 private:
 	Vector3 eventVec;
-
+	bool noDamageVaristaFlag;
+	float noDamageVaristaCount;
+	bool noDamageCanonFlag;
+	float noDamageCanonCount;
+	bool noDamageSpearFlag;
+	float noDamageSpearCount;
+	bool noDamageArrowFlag;
+	float noDamageArrowCount;
 	bool spearHit = false;
 	bool spearEndFlag = false;
 	Vector3 spearVec = Vector3(0, 0, 0);
