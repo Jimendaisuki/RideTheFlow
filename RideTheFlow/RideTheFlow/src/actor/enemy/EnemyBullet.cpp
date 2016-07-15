@@ -15,21 +15,18 @@
 
 EnemyBullet::EnemyBullet(IWorld& world, Vector3 position, Vector3 toPoint, Actor& parent_) :
 Actor(world),
+time(0),
+speed(ArrowSpeed),
+distance(0, 0, 0),
 mPosition(position),
+mScale(1.0f,1.0f,1.0f),
 coppyPosition(position),
 mToPoint(toPoint),
 rotate(Vector3::Zero),
 windVec(Vector3::Zero),
-Tornadleft(Vector3::Zero),
-distance(0, 0, 0),
-mScale(1.0f, 1.0f, 1.0f),
-time(0),
-noDeadTimer(0.0f),
-speed(ArrowSpeed),
 isWindCol(false),
-noDead(false),
-isColTornad(false),
-isColFastFlag(true)
+noDeadTimer(0.0f),
+noDead(false)
 {
 	mRandomTarget = Vector3(GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
 		GetRand(ArmyArrowAccuracy * 2) - ArmyArrowAccuracy,
@@ -56,6 +53,7 @@ EnemyBullet::~EnemyBullet()
 void EnemyBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 
 	prevPosition = mPosition;
 
@@ -85,20 +83,7 @@ void EnemyBullet::Update()
 	//流れの向きを加味
 	if (isWindCol)
 		vec = Vector3::Lerp(vec, windVec, ArmyWindPercentage / 100.0f);
-	//竜巻に当たったら
-	if (isColTornad)
-	{
-		if (isColFastFlag)
-		{
-			Vector3 pos = mPosition;
-			pos += vec;
-			vec = pos - prevPosition;
-			vec.Normalize();
-			Tornadleft = -Vector3::Cross(Vector3(0, 0, -1), vec).Normalized()*3.0f;
-			isColFastFlag = false;
-		}
-		vec = Vector3::Lerp(vec, Tornadleft, 1.0f);
-	}
+
 	//移動
 	mPosition += vec;
 
@@ -109,7 +94,6 @@ void EnemyBullet::Update()
 	//進行方向計算
 	vec = mPosition - prevPosition;
 	vec.Normalize();
-
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale*ArrowSize) *
@@ -119,20 +103,19 @@ void EnemyBullet::Update()
 	//流れのフラグをリセット
 	isWindCol = false;
 
-	//noDeadTimer += Time::DeltaTime;
+	noDeadTimer += Time::DeltaTime;
 
-	//if (noDeadTimer>=1.0f)
-	//{
-	//	noDead = true;
-	//	noDeadTimer = 10.0f;
-	//}
-
+	if (noDeadTimer>=1.0f)
+	{
+		noDead = true;
+		noDeadTimer = 10.0f;
+	}
 }
 
 void EnemyBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
-	//DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
+	DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
 }
 
 void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
@@ -142,17 +125,8 @@ void EnemyBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		windVec = colpara.colVelosity;
 		isWindCol = true;
 	}
-	if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
-	{
-		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(*this,ArrowPower,true);
-		parameter.isDead = true;
-	}
-	if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL)
+	if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL&&noDead)
 	{
 		parameter.isDead = true;
-	}
-	if (colpara.colID == COL_ID::TORNAD_BULLET_COL)
-	{
-		isColTornad = true;
 	}
 }

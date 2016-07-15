@@ -15,7 +15,8 @@ BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_S
 Actor(world),
 velocity(Vector3::Zero),
 castleSelect(castle_),
-breakSelect(break_)
+breakSelect(break_),
+pTornado(nullptr)
 {
 	parameter.id = ACTOR_ID::CASTLE_BREAK_ACTOR;
 	parameter.isDead = false;
@@ -65,7 +66,7 @@ void BreakCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
 	{
-		ps_parameter.position = Vector3(colpara.colPos.x, ps_parameter.position.y, colpara.colPos.z);
+		pTornado = static_cast<Tornado*>(const_cast<Actor*>(&other));	
 	}
 }
 
@@ -83,9 +84,18 @@ void BreakCastle::Emissive()
 
 void BreakCastle::TornadoBreakUpdate()
 {
-	//当たり判定セット
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
-	parameter.mat.SetPosition(ps_parameter.position);
+	//竜巻と衝突したなら
+	if (pTornado)
+	{
+		Vector3 tornadoPos = pTornado->GetParameter().mat.GetPosition();
+		ps_parameter.position = Vector3(tornadoPos.x, ps_parameter.position.y, tornadoPos.z);
+	}
+	else
+	{	
+		//当たり判定セット
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
+		parameter.mat.SetPosition(ps_parameter.position);
+	}
 }
 void BreakCastle::WindFlowBreakUpdate()
 {

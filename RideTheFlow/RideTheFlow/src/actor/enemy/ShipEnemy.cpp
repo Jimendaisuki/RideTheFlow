@@ -210,7 +210,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= ShipDamegeTornado;
 		damege = false;
 		breakSelect = BREAK_SELECT::TORNADO;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSizeShip, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, BREAK_SELECT::DAMAGE));
 
@@ -223,7 +223,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 			parameter.HP -= ShipDamegeWind;
 			Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 			world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, BREAK_SELECT::DAMAGE));
-			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+			world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSizeShip, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 			damege = false;
 			breakSelect = BREAK_SELECT::WIND_FLOW;
 		}		
@@ -233,7 +233,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		parameter.HP -= ShipDamegeWindBall;
 		damege = false;
 		breakSelect = BREAK_SELECT::WIND_BALL;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSizeShip, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::SHIP, BREAK_SELECT::DAMAGE));
 

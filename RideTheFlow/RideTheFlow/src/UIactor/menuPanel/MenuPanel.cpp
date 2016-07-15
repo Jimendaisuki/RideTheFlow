@@ -193,8 +193,8 @@ void MenuPanel::Update()
 		// ã≠êßï¬Ç∂ÇÈ
 		if ((scene == Scene::GamePlay) && 
 			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
-			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9) ||
-			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8) ||
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1)))
 		{
 			Close();
 			break;
@@ -202,7 +202,7 @@ void MenuPanel::Update()
 		// Å~É{É^Éì
 		if ((scene == Scene::Menu) &&
 			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
-			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3)))
+			 GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1)))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 			FadePanel::GetInstance().SetOutTime(0.5f);
@@ -270,7 +270,7 @@ void MenuPanel::Update()
 		pages[nowPage] = 1.0f;
 
 		// ã≠êßï¬Ç∂ÇÈ
-		if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+		if (GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8))
 		{
 			pages[nowPage] = 0;
 			if (scene == Scene::Menu)
@@ -288,7 +288,7 @@ void MenuPanel::Update()
 
 		// ñﬂÇÈ
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM3))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM1))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::BACK_SE);
 			if (nowPage <= 1)

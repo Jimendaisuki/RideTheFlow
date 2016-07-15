@@ -110,11 +110,6 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 		windVec = colpara.colVelosity;
 		isWindCol = true;
 	}
-	else if (colpara.colID == COL_ID::SPHERE_SPHERE_COL)
-	{
-		static_cast<Player*>(const_cast<Actor*>(&other))->Damage(*this,VaristorPower);
-		parameter.isDead = true;
-	}
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL)
 	{
 		parameter.isDead = true;
