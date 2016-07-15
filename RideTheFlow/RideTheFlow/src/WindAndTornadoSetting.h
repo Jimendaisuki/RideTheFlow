@@ -35,6 +35,8 @@ static const float SmokeLifeLimit = 2.0f;
 //”
 static const int DamageSmokeNum = 10;
 //‘å‚«‚³
-static const float DamageSmokeSize = 0.05f;
+static const float DamageSmokeSizeCastle = 0.05f;
+static const float DamageSmokeSizeShip = 0.05f;
+//‘å‚«‚³‚É‰Á‚¦‚éƒ‰ƒ“ƒ_ƒ€
 static const float DamageSmokeSizePlusMax = 0.01f;
 static const float DamageSmokeSizePlusMin = -0.02f;

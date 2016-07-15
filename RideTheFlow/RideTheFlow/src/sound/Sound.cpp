@@ -18,6 +18,7 @@ Sound::~Sound()
 // ‰Šú‰»ˆ—
 void Sound::Initialize()
 {
+
 	InitSoundMem();
 	m_BGMs.clear();
 	m_SEs.clear();
@@ -36,6 +37,17 @@ void Sound::LoadSE(const std::string& filename, const SE_ID& id, float volume)
 {
 	m_SEs[id] = LoadSoundMem((WorkFolder::Name + filename).c_str());
 	m_SE_Volumes[id] = volume;
+	SettingSE(id);
+}
+
+// 3D(—§‘Ì‰¹‹¿)‚ÅÄ¶‚µ‚½‚¢SE‚ğ“Ç‚İ‚Ş
+void Sound::LoadSE(const std::string& filename, const SE_ID& id, float volume)
+{
+	SetCreate3DSoundFlag(TRUE);
+	m_SEs[id] = LoadSoundMem((WorkFolder::Name + filename).c_str());
+	m_SE_Volumes[id] = volume;
+	SetCreate3DSoundFlag(FALSE);
+
 	SettingSE(id);
 }
 

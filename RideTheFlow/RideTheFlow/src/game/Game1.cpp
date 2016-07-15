@@ -33,7 +33,7 @@ void Game1::Initialize()
 	// ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
 	mContent.LoadSprite(Sprite::GetInstance(), Model::GetInstance());
 	mContent.LoadSound(Sound::GetInstance());
-	mContent.LoadModel(Model::GetInstance(),false);
+	mContent.LoadModel(Model::GetInstance(), false);
 
 	mSceneManager.Add(Scene::Demo, std::make_shared<TeamLogoScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());
@@ -43,7 +43,6 @@ void Game1::Initialize()
 	mSceneManager.Add(Scene::Ending, std::make_shared<EndhingScene>());
 	mSceneManager.Add(Scene::Credit, std::make_shared<CreditScene>());
 
-	//mSceneManager.SetScene(Scene::Title);
 	mSceneManager.SetScene(Scene::Demo);
 }
 

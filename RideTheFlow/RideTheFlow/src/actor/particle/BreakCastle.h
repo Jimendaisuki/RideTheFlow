@@ -79,4 +79,7 @@ private:
 	//城と壊れ方をコンストラクタで選択
 	CASTLE_SELECT castleSelect;
 	BREAK_SELECT breakSelect;
+
+	//竜巻の動きについていく
+	Tornado* pTornado;
 };
