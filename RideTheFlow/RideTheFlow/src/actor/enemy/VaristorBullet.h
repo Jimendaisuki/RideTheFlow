@@ -21,11 +21,16 @@ private:
 	Vector3 mToPoint;
 	Vector3 seveVec;
 	Vector3 vec;
+	Vector3 Tornadleft;
+
 	float mRotateY;
 	float mRotateZ;
 	float noDeadTimer;
 	float noDead;
 	float mInitialVec;
+
+	bool isColTornad;
+	bool isColFastFlag;
 
 	//１フレーム前の座標
 	Vector3 prevPosition;

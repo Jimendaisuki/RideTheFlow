@@ -56,22 +56,22 @@ CreditScene::~CreditScene()
 void CreditScene::Initialize()
 {
 	mIsEnd = false;
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
-	wa.Add(ACTOR_ID::BEGIN_ACTOR, std::make_shared<CastleManager>(wa));
-	//wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
-	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
-	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
-	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
-	{
-		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
-	}
-	for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
-	{
-		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
-	}
+	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	//wa.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wa));
+	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<MonhanCameraActor>(wa));
+	//wa.Add(ACTOR_ID::BEGIN_ACTOR, std::make_shared<CastleManager>(wa));
+	////wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
+	//wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa));
+	//wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
+	//wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
+	//for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
+	//{
+	//	wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	//}
+	//for (int i = 0; i < CLOUD_HIGH_POSITION_NUM; i++)
+	//{
+	//	wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 1400.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
+	//}
 
 
 	////============================テスト用======================================
@@ -105,14 +105,14 @@ void CreditScene::Initialize()
 
 void CreditScene::Update()
 {
-	if (armyCount < 10)
-		armyCreateTimer += Time::DeltaTime;
-	if (armyCreateTimer > 10.0f)
-	{
-		armyCreateTimer = 0.0f;
-		wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa, House1Pos));
-		armyCount++;
-	}
+	//if (armyCount < 10)
+	//	armyCreateTimer += Time::DeltaTime;
+	//if (armyCreateTimer > 10.0f)
+	//{
+	//	armyCreateTimer = 0.0f;
+	//	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<ArmyEnemy>(wa, House1Pos));
+	//	armyCount++;
+	//}
 	
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
 		mIsEnd = true;
@@ -120,22 +120,22 @@ void CreditScene::Update()
 
 	wa.Update();
 
-	////入力状態を取得
-	//leftstick = GamePad::GetInstance().Stick();
-	//rightstick = GamePad::GetInstance().RightStick();
-	//buttons.clear();
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM1));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM2));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM3));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM4));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM6));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM9));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM10));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM11));
-	//buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM12));
+	//入力状態を取得
+	leftstick = GamePad::GetInstance().Stick();
+	rightstick = GamePad::GetInstance().RightStick();
+	buttons.clear();
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM1));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM2));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM3));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM4));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM6));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM9));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM10));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM11));
+	buttons.push_back(GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM12));
 }
 
 //描画
@@ -181,17 +181,17 @@ void CreditScene::Draw() const
 
 	//TextDraw::Draw(Point(900, 180), Vector3::Blue, Vector2(t));
 
-	////スティックの入力状態
-	//int drawx = 1000;
-	//TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
-	//TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
-	//TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
-	////ボタンの入力状態
-	//TextDraw::Draw(Point(drawx, 260), Vector3::Green, "Buttons");
-	//for (int i = 0; i < 12; i++)
-	//{
-	//	TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
-	//}
+	//スティックの入力状態
+	int drawx = 1000;
+	TextDraw::Draw(Point(drawx, 180), Vector3::Blue, "Sticks");
+	TextDraw::Draw(Point(drawx, 200), Vector3::Blue, leftstick);
+	TextDraw::Draw(Point(drawx, 220), Vector3::Blue, rightstick);
+	//ボタンの入力状態
+	TextDraw::Draw(Point(drawx, 260), Vector3::Green, "Buttons");
+	for (int i = 0; i < 12; i++)
+	{
+		TextDraw::Draw(Point(drawx, 280 + 20 * i), Vector3::Green, Vector2(buttons.at(i)));
+	}
 
 	//ステージの限界の大きさのワイヤー球
 	////DrawSphere3D(Vector3::Zero.ToVECTOR(), 6000, 10, GetColor(0, 125, 125), GetColor(0, 125, 125), 0);

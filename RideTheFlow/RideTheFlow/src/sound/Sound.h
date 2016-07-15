@@ -21,6 +21,11 @@ public:
 	/// 初期化処理
 	///</summary>
 	void Initialize();
+	///<summary>
+	/// 3Dサウンドの初期化処理
+	///</summary>
+	void Initialize3DSound();
+
 
 	///<summary>
 	/// BGMを読み込む
@@ -30,6 +35,11 @@ public:
 	/// SEを読み込む
 	///</summary>
 	void LoadSE(const std::string& filename, const SE_ID& id, float volume = 1.0f);
+	///<summary>
+	/// 3D(立体音響)で再生したいSEを読み込む
+	///</summary>
+	void Load3DSE(const std::string& filename, const SE_ID& id, float volume = 1.0f);
+
 	///<summary>
 	/// 読み込んだBGM、SEをすべて削除する
 	///</summary>

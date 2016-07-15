@@ -36,6 +36,7 @@ Froatinglsland3::~Froatinglsland3()
 void Froatinglsland3::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ISLAND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::LAND3_BULLET_COL);
 	//–³“GŽžŠÔ
 	if (!isCol)
 	{

@@ -50,6 +50,7 @@ void ArmyEnemy::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::ARMYENEMY_STAGE_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ENEMY_COL);
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::ENEMY_WIND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::ENEMY_AIRGUN_COL);
 
 	//敵とプレイヤーの角度を求める
 	playerAngle = atan2(playerMat.GetPosition().y - mPosition.y,
@@ -123,7 +124,7 @@ void ArmyEnemy::Draw() const
 	for (int j = 0; j < 3; j++)
 	{
 		Matrix4 m;
-		m = Matrix4::Scale(mScaleFroat)*Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition-Vector3(-40,0,-40) + Vector3(40 * i, 0, 40 * j));
+		m = Matrix4::Scale(mScaleFroat)*Matrix4::RotateY(rotate.y - 90) * Matrix4::Translate(mPosition + Vector3(-40,0,-40) + Vector3(40 * i, 0, 40 * j));
 		Model::GetInstance().Draw(MODEL_ID::HUMAN_CANNON_MODEL, m);
 	}
 }
@@ -152,5 +153,13 @@ void ArmyEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 		Sound::GetInstance().PlaySE(se);
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::ARMY_ENEMY, BREAK_SELECT::WIND_FLOW));
 
+	}
+	if (colpara.colID == COL_ID::ENEMY_AIRGUN_COL)
+	{
+		//仕様確認
+		parameter.isDead = true;
+		auto se = (SE_ID)Random::GetInstance().Range(SE_ID::SCREAM_1_SE, SE_ID::SCREAM_5_SE);
+		Sound::GetInstance().PlaySE(se);
+		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::ARMY_ENEMY, BREAK_SELECT::WIND_BALL));
 	}
 }

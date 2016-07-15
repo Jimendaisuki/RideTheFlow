@@ -95,22 +95,37 @@ const float normalSpeedAccele = 1.0f;
 
 const float tackleMinus = 3.0f;
 
-const float hpHeal = 0.5f;
+const float hpHeal = 0.75f;
 
 const float MaxHP = 20.0f;
 
+const float varistaNoDamageTime = 3.0f;
+const float canonNoDamageTime = 5.0f;
+const float arrowNoDamageTime = 1.0f;
+const float spearNoDamageTime = 5.0f;
+
 /************************************************************************************************************************/
 
-Player::Player(IWorld& world, bool title_,bool event_,Vector3 position_,Vector3 eventVec_) :
-Actor(world),
-position(position_),
-windFlowPtr(NULL),
-tornadoFlag(false),
-tornadoPtr(NULL),
-title(title_),
-event(event_),
-eventVec(eventVec_)
+Player::Player(IWorld& world, bool title_, bool event_, Vector3 position_, Vector3 eventVec_) :
+	Actor(world),
+	position(position_),
+	windFlowPtr(NULL),
+	tornadoFlag(false),
+	tornadoPtr(NULL),
+	title(title_),
+	event(event_),
+	eventVec(eventVec_)
 {
+
+	noDamageVaristaFlag = false;
+	noDamageVaristaCount = 0.0f;
+	noDamageCanonFlag = false;
+	noDamageCanonCount = 0.0f;
+	noDamageSpearFlag = false;
+	noDamageSpearCount = 0.0f;
+	noDamageArrowFlag = false;
+	noDamageArrowCount = 0.0f;
+
 	//paramterの初期化
 	parameter.isDead = false;
 	parameter.radius = 8.0f;
@@ -127,7 +142,7 @@ eventVec(eventVec_)
 	world.UIAdd(UI_ID::DAMAGE_UI, std::make_shared<Damege>(world, parameter.HP, parameter.HP));
 
 	//操作
-	vec = Vector3(0,0,1);
+	vec = Vector3(0, 0, 1);
 
 	//くねくねさせる為のangle２つ
 	upAngle = 0;
@@ -191,7 +206,7 @@ eventVec(eventVec_)
 	dashSpeed = 1.0f;
 	//加速できる時間
 	dashTime = 0.0f;
-	if (!title && !event){
+	if (!title && !event) {
 		//ダッシュのスタミナゲージUIを追加
 		world.UIAdd(UI_ID::STAMINA_UI, std::make_shared<Stamina>(world, const_cast<float &>(dashMaxTime), dashTime, *this));
 	}
@@ -207,13 +222,12 @@ Player::~Player() {
 		MV1DeleteModel(modelHandle);
 }
 
-
 void Player::Update() {
 	Vector3 beforePos = position;
 
 	if (!initMove&&!FadePanel::GetInstance().IsAction())
 	{
- 		initMove = true;
+		initMove = true;
 		Sound::GetInstance().SetSEVolume(SE_ID::STORMAKED_SE, 1.0f);
 	}
 
@@ -257,7 +271,7 @@ void Player::Update() {
 				padInputFlag = true;
 		}
 
-		if (!title && !event){
+		if (!title && !event) {
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
@@ -271,7 +285,7 @@ void Player::Update() {
 		}
 
 		Vector2 lStick = GamePad::GetInstance().Stick();
-		if (!spearHit){
+		if (!spearHit) {
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || lStick.x < 0.0f) {
 				vec.x += speed * Time::DeltaTime;
 				leftStickMove = true;
@@ -287,8 +301,8 @@ void Player::Update() {
 				}
 			}
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f
-				||(!initMove&&!title&&!event)) {
-					vec.z += speed * Time::DeltaTime;
+				|| (!initMove&&!title&&!event)) {
+				vec.z += speed * Time::DeltaTime;
 				leftStickMove = true;
 				if (!tp.tackleFlag) {
 					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
@@ -317,15 +331,15 @@ void Player::Update() {
 		vec.Normalize();
 		Vector3 trueVec = (cameraFront * vec.z + cameraLeft * vec.x).Normalized();
 
-		if ((!title && !event) && 
-			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) || 
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)) 
+		if ((!title && !event) &&
+			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) ||
+				GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8))
 			&& !tp.tackleFlag
 			&& !dashHealFlag
 			&& !spearHit) {
 			dashTime += tackleMinus;
-				tp.tackleFlag = true;
-				tornadoFlag = false;
+			tp.tackleFlag = true;
+			tornadoFlag = false;
 			animIndex = MV1AttachAnim(modelHandle, 0, -1, FALSE);
 			totalTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 			cameraFront.Normalized();
@@ -335,15 +349,15 @@ void Player::Update() {
 				tp.tackleT = Vector3(cameraFront.x, 0.0f, cameraFront.z);
 			}
 			else {
-				if (!tp.dashFlag){
+				if (!tp.dashFlag) {
 					tp.tornadoTatchFlag = false;
 					tornadoPtr = NULL;
 					windFlowPtr = NULL;
 					tp.tackleT = cameraFront;
 				}
-				else{
+				else {
 					tp.tornadoTatchFlag = true;
-					tp.tackleT = Vector3(cameraFront.x,0.0f,cameraFront.z);
+					tp.tackleT = Vector3(cameraFront.x, 0.0f, cameraFront.z);
 				}
 			}
 
@@ -385,7 +399,7 @@ void Player::Update() {
 					}
 				}
 				else {
-					if (dashPosStorage.size() == 0){
+					if (dashPosStorage.size() == 0) {
 						windFlowPtr = std::make_shared<WindFlow>(world, *this);
 						world.Add(ACTOR_ID::WIND_ACTOR, windFlowPtr);
 						world.Add(ACTOR_ID::DASH_BLUE_LINE_ACTOR, std::make_shared<DashBlueLine>(world, *this));
@@ -411,7 +425,7 @@ void Player::Update() {
 						c.startPos = Vector3(dashPosStorage[0].x, -10000.0f, dashPosStorage[0].z);
 						c.endPos = Vector3(dashPosStorage[0].x, 10000.0f, dashPosStorage[0].z);
 						c.radius = tornadoCreateRadius;
-						if (Collisin::GetInstace().SphereCapsule(s,c).colFlag) {
+						if (Collisin::GetInstace().SphereCapsule(s, c).colFlag) {
 							createTornado = true;
 						}
 					}
@@ -432,7 +446,7 @@ void Player::Update() {
 						windFlowPtr->SetIsDead(true);
 						dashPosStorage.clear();
 						tornadoPosStorage.clear();
-						tornadoFlag = true;				
+						tornadoFlag = true;
 						dashAfter = true;
 						dashAfterTime = 0.0f;
 					}
@@ -446,7 +460,7 @@ void Player::Update() {
 					tackleForTornadoTime = 0.0f;
 				}
 			}
-			else if(!dashAfter){
+			else if (!dashAfter) {
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
 				dashSpeed -= dashAccele * Time::DeltaTime;
@@ -461,7 +475,7 @@ void Player::Update() {
 			}
 
 
-			if (dashAfter){
+			if (dashAfter) {
 				dashTime += Time::DeltaTime;
 				dashSpeed += dashAccele * Time::DeltaTime;
 				trueVec.y = 0;
@@ -469,7 +483,7 @@ void Player::Update() {
 				tp.dashFlag = true;
 
 				dashAfterTime += Time::DeltaTime;
-				if (dashAfterTime > 1.0f){
+				if (dashAfterTime > 1.0f) {
 					dashAfter = false;
 					dashAfterTime = 0.0f;
 				}
@@ -492,7 +506,7 @@ void Player::Update() {
 			if (!waitAnimSet)
 				animIndex = MV1AttachAnim(modelHandle, 1, -1, FALSE);
 			if (!spearHit)
-			tp.animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
+				tp.animTime = MV1GetAttachAnimTotalTime(modelHandle, animIndex);
 			waitAnimSet = true;
 			Vector3 cross = Vector3::Cross(beforeVec.Normalized(), trueVec.Normalized()).Normalized();
 
@@ -506,19 +520,19 @@ void Player::Update() {
 				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
 
 			if (spearHit)forntVec /= 2;
-			
+
 			if (moveFlag)
 				position += forntVec;
 
 			if (!spearHit)
-			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
-				Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f||
-				!initMove) {
-				posStorage.push_back(position);
-				beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
-			}
+				if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) ||
+					Keyboard::GetInstance().KeyStateDown(KEYCODE::D) ||
+					Keyboard::GetInstance().KeyStateDown(KEYCODE::W) ||
+					Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.Length() != 0.0f ||
+					!initMove) {
+					posStorage.push_back(position);
+					beforeVec = (beforeVec * Quaternion::RotateAxis(cross, crossAngle)).Normalized();
+				}
 		}
 		else {
 			dashPosStorage.clear();
@@ -587,7 +601,7 @@ void Player::Update() {
 
 		playerRot.SetUp(up);
 		playerRot.SetLeft(left);
-		if (event)position += eventVec.Normalized() * speed * Time::DeltaTime;	
+		if (event)position += eventVec.Normalized() * speed * Time::DeltaTime;
 		//マトリックスの再計算
 		parameter.mat =
 			Matrix4::Scale(scale) *
@@ -712,24 +726,53 @@ void Player::Update() {
 		allowNoDamageFlag = false;
 		allowNoDamageTime = 0.0f;
 	}
-	if (spearHit){
+	if (spearHit) {
 		if (tp.animTime <
 			totalTime) {
 			tp.animTime += 50.0f * Time::DeltaTime;
 		}
-		else{
+		else {
 			spearEndFlag = true;
 		}
 		if (!spearEndFlag)
-		animBlend += 0.5f * Time::DeltaTime;
+			animBlend += 0.5f * Time::DeltaTime;
 		else
 			animBlend -= 10.0f * Time::DeltaTime;
-		if (animBlend < 0.0f && spearEndFlag){
+		if (animBlend < 0.0f && spearEndFlag) {
 			spearHit = false;
 			waitAnimSet = true;
 		}
 		animBlend = Math::Min(animBlend, 1.0f);
 		animBlend = Math::Max(animBlend, 0.0f);
+	}
+
+	if (noDamageSpearFlag) {
+		noDamageSpearCount += Time::DeltaTime;
+		if (noDamageSpearCount > spearNoDamageTime) {
+			noDamageSpearFlag = false;
+			noDamageSpearCount = 0.0f;
+		}
+	}
+	if (noDamageCanonFlag) {
+		noDamageCanonCount += Time::DeltaTime;
+		if (noDamageCanonCount > canonNoDamageTime) {
+			noDamageCanonFlag = false;
+			noDamageCanonCount = 0.0f;
+		}
+	}
+	if (noDamageVaristaFlag) {
+		noDamageVaristaCount += Time::DeltaTime;
+		if (noDamageVaristaCount > varistaNoDamageTime) {
+			noDamageVaristaFlag = false;
+			noDamageVaristaCount = 0.0f;
+		}
+	}
+	if (noDamageArrowFlag) {
+		noDamageArrowCount += Time::DeltaTime;
+		if (noDamageArrowCount > arrowNoDamageTime) {
+			noDamageArrowFlag = false;
+			noDamageArrowCount = 0.0f;
+		}
 	}
 }
 void Player::Draw() const {
@@ -741,7 +784,7 @@ void Player::Draw() const {
 	Matrix4* localAnimMatrixVec = new Matrix4[MV1GetFrameNum(modelHandle)];
 
 	if (!dead) {
-		if (!spearHit){
+		if (!spearHit) {
 
 			//初期化
 			for (int i = 0; i < boneCount; i++) {
@@ -831,8 +874,8 @@ void Player::Draw() const {
 				for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 					MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 						Matrix4::ToMATRIX(
-						localDrawMatrixVec[count]
-						));
+							localDrawMatrixVec[count]
+							));
 				}
 			}
 			else {
@@ -884,10 +927,10 @@ void Player::Draw() const {
 				for (int count = 0; count < boneCount; count++) {
 					MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 						Matrix4::ToMATRIX(
-						Matrix4::Slerp(
-						localDrawMatrixVec[count]
-						, localAnimDrawMatrixVec[count], animBlend)
-						));
+							Matrix4::Slerp(
+								localDrawMatrixVec[count]
+								, localAnimDrawMatrixVec[count], animBlend)
+							));
 				}
 
 			}
@@ -906,7 +949,7 @@ void Player::Draw() const {
 			//if (tackleFlag)
 			////DrawCapsule3D(position, position + parameter.height, parameter.radius, 8, GetColor(0, 255, 0), GetColor(255, 255, 255), TRUE);
 		}
-		else{
+		else {
 			for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 				localAnimMatrixVec[count] = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
 			}
@@ -933,17 +976,17 @@ void Player::Draw() const {
 				rotateY *
 				Matrix4::Translate(localAnimMatrixVec[0].GetPosition() + position);
 
-			if (!spearEndFlag){
+			if (!spearEndFlag) {
 				for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 					MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 						Matrix4::ToMATRIX(
-						Matrix4::Slerp(
-						deadBeforeLocalMatrix[count]
-						, localAnimMatrixVec[count], animBlend)
-						));
+							Matrix4::Slerp(
+								deadBeforeLocalMatrix[count]
+								, localAnimMatrixVec[count], animBlend)
+							));
 				}
 			}
-			else{
+			else {
 				//初期化
 				for (int i = 0; i < boneCount; i++) {
 					drawVertexVec[i] = vertexVec[i];
@@ -1007,34 +1050,34 @@ void Player::Draw() const {
 						rotateMat *
 						Matrix4::Translate(drawVertexVec[count]);
 				}
-					//相対座標に変換しセット
-					for (int count = 0; count < boneCount; count++) {
-						localDrawMatrixVec[count] = drawMatrixVec[count];
+				//相対座標に変換しセット
+				for (int count = 0; count < boneCount; count++) {
+					localDrawMatrixVec[count] = drawMatrixVec[count];
 
-						Matrix4 beforeInvMat = Matrix4::Identity;
-						//親の逆行列をかけていく
-						for (int count2 = 0; count2 < count; count2++) {
-							beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
-						}
-						localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+					Matrix4 beforeInvMat = Matrix4::Identity;
+					//親の逆行列をかけていく
+					for (int count2 = 0; count2 < count; count2++) {
+						beforeInvMat *= Matrix4::Inverse(localDrawMatrixVec[count2]);
 					}
-					for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++) {
-						Matrix4 ma = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
-						//Matrix4 animSubRotate = Matrix4::Identity;
-						//animSubRotate.SetFront(ma.GetFront().Normalized());
-						//animSubRotate.SetUp(ma.GetUp().Normalized());
-						//animSubRotate.SetLeft(ma.GetLeft().Normalized());
-						//ma = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(ma.GetPosition());
-						localDrawMatrixVec[count] = ma;
-					}
-					for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
-						MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
-							Matrix4::ToMATRIX(
+					localDrawMatrixVec[count] = (drawMatrixVec[count] * beforeInvMat);
+				}
+				for (int count = boneCount; count < MV1GetFrameNum(modelHandle); count++) {
+					Matrix4 ma = Matrix4::ToMatrix4(MV1GetAttachAnimFrameLocalMatrix(modelHandle, animIndex, count + 1));
+					//Matrix4 animSubRotate = Matrix4::Identity;
+					//animSubRotate.SetFront(ma.GetFront().Normalized());
+					//animSubRotate.SetUp(ma.GetUp().Normalized());
+					//animSubRotate.SetLeft(ma.GetLeft().Normalized());
+					//ma = Matrix4::Scale(scale) * animSubRotate * Matrix4::Translate(ma.GetPosition());
+					localDrawMatrixVec[count] = ma;
+				}
+				for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
+					MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
+						Matrix4::ToMATRIX(
 							Matrix4::Slerp(
-							localDrawMatrixVec[count]
-							, localAnimMatrixVec[count], animBlend)
+								localDrawMatrixVec[count]
+								, localAnimMatrixVec[count], animBlend)
 							));
-					}
+				}
 			}
 			//Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 			Model::GetInstance().Draw(modelHandle, Vector3::Zero, 1.0f);
@@ -1070,15 +1113,16 @@ void Player::Draw() const {
 		for (int count = 0; count < MV1GetFrameNum(modelHandle); count++) {
 			MV1SetFrameUserLocalMatrix(modelHandle, count + 1,
 				Matrix4::ToMATRIX(
-				Matrix4::Slerp(
-				deadBeforeLocalMatrix[count]
-				, localAnimMatrixVec[count], animBlend)
-				));
+					Matrix4::Slerp(
+						deadBeforeLocalMatrix[count]
+						, localAnimMatrixVec[count], animBlend)
+					));
 		}
 
 		//Model::GetInstance().Draw(MODEL_ID::TEST_MODEL, Vector3::Zero, 1.0f);
 		Model::GetInstance().Draw(modelHandle, Vector3::Zero, 1.0f);
 	}
+
 
 	SAFE_DELETE_ARRAY(drawVertexVec);
 	SAFE_DELETE_ARRAY(drawMatrixVec);
@@ -1150,13 +1194,13 @@ void Player::ParameterDraw() const {
 }
 void Player::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	if (colpara.colID == COL_ID::PLAYER_STAGE_COL||colpara.colID==COL_ID::PLAYER_LAND_COL){
+	if (colpara.colID == COL_ID::PLAYER_STAGE_COL || colpara.colID == COL_ID::PLAYER_LAND_COL) {
 		position = colpara.colPos;
 	}
-	else if (other.GetParameter().id == ACTOR_ID::TORNADO_ACTOR || other.GetParameter().id == ACTOR_ID::WIND_ACTOR){
+	else if (other.GetParameter().id == ACTOR_ID::TORNADO_ACTOR || other.GetParameter().id == ACTOR_ID::WIND_ACTOR) {
 		tp.tornadoTatchFlag = true;
 	}
-	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag){
+	else if (other.GetParameter().id != ACTOR_ID::TORNADO_ACTOR && !damageFlag) {
 		damageFlag = true;
 	}
 	else if (other.GetParameter().id == ACTOR_ID::MASTER_CASTLE_ACTOR)
@@ -1165,13 +1209,23 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::VARISTOR_BULLET_ACTOR)
 	{
-		//Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-		//Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+		if (!noDamageVaristaFlag) {
+			noDamageVaristaCount = 0;
+			noDamageVaristaFlag = true;
+			Damage(*this, VaristorPower);
+			other.SetIsDead(true);
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
+			Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
+			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
+		}
 	}
 	else if (other.GetParameter().id == ACTOR_ID::CANNON_BULLET_ACTOR)
 	{
-		if (!spearHit){
-			Damage(other,CannonPower);
+		if (!noDamageCanonFlag) {
+			noDamageCanonCount = 0;
+			noDamageCanonFlag = true;
+			Damage(other, CannonPower);
+			other.SetIsDead(true);
 			SpearHitActionStart();
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
@@ -1180,31 +1234,23 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (other.GetParameter().id == ACTOR_ID::ARROW_BULLET_ACTOR)
 	{
-		if (!allowNoDamageFlag) {
+		if (!noDamageArrowFlag) {
+			noDamageArrowCount = 0;
+			noDamageArrowFlag = true;
+			Damage(*this, ArrowPower, true);
+			other.SetIsDead(true);
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
 			Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
 		}
+
 	}
-	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&
-		other.GetParameter().id == ACTOR_ID::DORAGONSPEAR_ACTOR&&
-		colpara.colFlag)
+	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL)
 	{
-		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear())
+		if (static_cast<DoragonSpearEnemy*>(const_cast<Actor*>(&other))->AttackSpear() && !noDamageSpearFlag)
 		{
-			if (!spearHit){
-				Damage(other, spearDamage);
-				SpearHitActionStart();
-				//龍撃槍ダメージ
-				Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-				Sound::GetInstance().PlaySE(SE_ID::DRAGON_SHOUTING_SE);
-				Effect::GetInstance().DamegeEffect(world, other.parent->GetParameter().mat.GetPosition());
-			}
-		}
-	}
-	else if (colpara.colID == COL_ID::PLAYER_DORAGONSPEAR_COL&&colpara.colFlag)
-	{
-		if (!spearHit){
-			Damage(other,spearDamage);
+			noDamageSpearFlag = 0;
+			noDamageSpearFlag = true;
+			Damage(other, spearDamage);
 			SpearHitActionStart();
 			//龍撃槍ダメージ
 			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
@@ -1214,21 +1260,8 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 }
 
+
 void Player::Damage(Actor& bullet, float damage, bool allow)
 {
-	if (!spearHit){
-		if (!allow || !allowNoDamageFlag)
-		{
-			parameter.HP -= damage;
-			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-			Effect::GetInstance().DamegeEffect(world, bullet.parent->GetParameter().mat.GetPosition());
-		}
-
-		if (allow && !allowNoDamageFlag) {
-			parameter.HP -= damage;
-			allowNoDamageFlag = true;
-			Effect::GetInstance().DamegeEffect(world, bullet.parent->GetParameter().mat.GetPosition());
-			Sound::GetInstance().PlaySE(SE_ID::DRAGON_HIT_SE);
-		}
-	}
+	parameter.HP -= damage;
 }

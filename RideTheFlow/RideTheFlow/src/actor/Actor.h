@@ -101,6 +101,12 @@ private:
 	CollisionParameter Castle_vs_AirGun(const Actor& other) const;
 	//敵と空気砲
 	CollisionParameter Enemy_vs_AirGun(const Actor& other) const;
+	//浮島3とバレット
+	CollisionParameter Bullet_vs_Land3(const Actor& other) const;
+	//弾とトルネードのあたり判定
+	CollisionParameter Bullet_vs_Tornad(const Actor& other)const;
+
+
 
 	/* 後で削除
 	// 線と箱の当たり判定

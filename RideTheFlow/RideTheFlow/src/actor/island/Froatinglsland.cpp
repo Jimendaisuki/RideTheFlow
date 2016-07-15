@@ -13,7 +13,7 @@ Actor(world),
 isGameScene(isGameScene_)
 {
 	parameter.HP = lslandHP;
-
+	parameter.id = ACTOR_ID::STAGE_ACTOR;
 	parameter.isDead = false;
 	parameter.radius = 90;
 
@@ -45,6 +45,7 @@ void Froatinglsland::Update()
 		return;
 
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_ISLAND_COL);
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::BULLET_NOBULLETAREA_COL);
 	//–³“GŽžŠÔ
 	if (!isCol)
 	{

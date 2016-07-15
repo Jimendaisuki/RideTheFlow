@@ -63,10 +63,10 @@ castleUpTimer(0.0f)
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor04, *this, 0, scale));
 
 
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY,scale));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0 + rotateY, scale));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY, scale));
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY, scale));
+	//world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY,scale));
+	//world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0 + rotateY, scale));
+	//world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY, scale));
+	//world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY, scale));
 
 	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier01, *this, 180 + rotateY, scale));
 	//world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<SoldierEnemy>(world, castleEnemyPos.Soldier02, *this, 180 + rotateY, scale));
@@ -182,7 +182,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.HP -= CastleDamegeTornado;
 		//ダメージを喰らった時のパーティクル
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSizeCastle, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		//ダメージ食らった時の音
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
@@ -191,7 +191,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::CASTLE_WIND_COL&&damage)
 	{
 		parameter.HP -= CastleDamegeWind;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSizeCastle, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
 		damage = false;
@@ -199,7 +199,7 @@ void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
 	{
 		parameter.HP -= CastleDamageWindBall;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSizeCastle, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
 		damage = false;

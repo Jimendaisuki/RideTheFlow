@@ -104,8 +104,7 @@ void GamePlayScene::Update()
 
 	/* ポーズ表示 */
 	if (!isGameEnd &&
-		(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
-		GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9)))
+		(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) || GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8)))
 	{
 		menu.Action();
 	}

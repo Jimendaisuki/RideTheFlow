@@ -27,7 +27,12 @@ private:
 	Vector3 vec;
 	//ƒ‚ƒfƒ‹‰ñ“]’l
 	Vector3 rotate;
-	
+
+	//—³ŠªŒn
+	Vector3 Tornadleft;
+	bool isColTornad;
+	bool isColFastFlag;
+
 	float time;
 	float speed;
 

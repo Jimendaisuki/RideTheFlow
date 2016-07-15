@@ -15,7 +15,8 @@ BreakCastle::BreakCastle(IWorld& world, const Vector3& position_, const CASTLE_S
 Actor(world),
 velocity(Vector3::Zero),
 castleSelect(castle_),
-breakSelect(break_)
+breakSelect(break_),
+pTornado(nullptr)
 {
 	parameter.id = ACTOR_ID::CASTLE_BREAK_ACTOR;
 	parameter.isDead = false;
@@ -65,7 +66,7 @@ void BreakCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	else if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
 	{
-		ps_parameter.position = Vector3(colpara.colPos.x, ps_parameter.position.y, colpara.colPos.z);
+		pTornado = static_cast<Tornado*>(const_cast<Actor*>(&other));	
 	}
 }
 
@@ -83,9 +84,18 @@ void BreakCastle::Emissive()
 
 void BreakCastle::TornadoBreakUpdate()
 {
-	//当たり判定セット
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
-	parameter.mat.SetPosition(ps_parameter.position);
+	//竜巻と衝突したなら
+	if (pTornado)
+	{
+		Vector3 tornadoPos = pTornado->GetParameter().mat.GetPosition();
+		ps_parameter.position = Vector3(tornadoPos.x, ps_parameter.position.y, tornadoPos.z);
+	}
+	else
+	{	
+		//当たり判定セット
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::TORNADO_CASTLE_COL);
+		parameter.mat.SetPosition(ps_parameter.position);
+	}
 }
 void BreakCastle::WindFlowBreakUpdate()
 {
@@ -131,7 +141,11 @@ void BreakCastle::WindBallBreakEmissive()
 	case CHILD_CASTLE:MasterCastleEmissive(Vector3::Zero, 45.0f * 1.2f); break;
 	case SHIP:ShipEmissive([]{return Vector3::Zero; }); break;
 	case ISLE1: break;
-	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return RandomVelocity() * 10.0f; }); break;
+	case ARMY_ENEMY: ArmyEnemyEmissive([&]{
+						 Random &r = Random::GetInstance();
+						 return Vector3(r.Range(-1.0f, 1.0f), r.Range(0.0f, 1.0f), r.Range(-1.0f, 1.0f)).Normalized() * r.Range(3.0f, 9.0f)
+							 * 20.0f;
+	}); break;
 	default: break;
 	}
 }
@@ -244,7 +258,7 @@ void BreakCastle::ArmyEnemyEmissive(std::function<Vector3()> vecFunc)
 	for (int i = 0; i < 9; i++)
 	{
 		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::HUMAN_BALLISTA_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, vecFunc(), 30.0f*i, 30.0f*i, 4.0f));
+			MODEL_ID::HUMAN_BALLISTA_MODEL, breakSelect, &ps_parameter.position,	Vector3::Zero, vecFunc(), 30.0f*i, 30.0f*i, 4.0f));
 	}
 }
 

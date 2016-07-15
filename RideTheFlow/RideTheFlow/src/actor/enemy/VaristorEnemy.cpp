@@ -131,4 +131,5 @@ void VaristorEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.isDead = true;
 	}
+
 }

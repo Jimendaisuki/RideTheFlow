@@ -131,7 +131,7 @@ void TitleScene::Update()
 	case TITLE_DRAGON_IN:
 		// è»ó™
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8))
 		{
 			Pass();
 		}
@@ -147,7 +147,7 @@ void TitleScene::Update()
 	case TITLE_TEXTURE_IN:
 		// è»ó™
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8))
 		{
 			Pass();
 		}
@@ -184,7 +184,7 @@ void TitleScene::Update()
 
 		// ÉVÅ[ÉìèIóπ
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
-			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
+			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8))
 		{
 			Sound::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			FadePanel::GetInstance().FadeOut();
