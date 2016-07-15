@@ -41,7 +41,7 @@ void Sound::LoadSE(const std::string& filename, const SE_ID& id, float volume)
 }
 
 // 3D(—§‘Ì‰¹‹¿)‚ÅÄ¶‚µ‚½‚¢SE‚ğ“Ç‚İ‚Ş
-void Sound::LoadSE(const std::string& filename, const SE_ID& id, float volume)
+void Sound::Load3DSE(const std::string& filename, const SE_ID& id, float volume)
 {
 	SetCreate3DSoundFlag(TRUE);
 	m_SEs[id] = LoadSoundMem((WorkFolder::Name + filename).c_str());

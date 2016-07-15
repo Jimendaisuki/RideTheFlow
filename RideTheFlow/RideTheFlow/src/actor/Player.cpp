@@ -95,7 +95,7 @@ const float normalSpeedAccele = 1.0f;
 
 const float tackleMinus = 3.0f;
 
-const float hpHeal = 0.5f;
+const float hpHeal = 0.75f;
 
 const float MaxHP = 20.0f;
 
