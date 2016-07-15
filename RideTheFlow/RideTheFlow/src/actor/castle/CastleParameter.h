@@ -22,7 +22,7 @@ const int Rank = 5;
 const float RankUpSecond = 5.0f;
 
 //城が排出する軍隊の時間
-const float SpawnArmyEnemyTime = 50000.0f;
+const float SpawnArmyEnemyTime = 5.0f;
 //城が排出する軍隊の最大軍隊数
 const int SpawnMaxArmyEnemy = 25;
 
@@ -36,7 +36,7 @@ const int SpawnMaxShipEnemey = 5;
 //城の大砲が攻撃してくる範囲
 const float CastleCannonAttackRange = 1000.0f;
 //城の大砲の攻撃クールタイム(秒)
-const float CastleCannonSecondAttack = 1.0f;
+const float CastleCannonSecondAttack = 2.0f;
 //城が一回に出す大砲の弾の数
 const int CastleCannonNumber = 1;
 //城の大砲の旋回速度
@@ -55,7 +55,7 @@ const float CastleCannonBulletAccuracy = 10.0f;
 //城のバリスターが攻撃してくる範囲
 const float CastleVaristorAttackRange = 1000.0f;
 //城のバリスターの攻撃クールタイム(秒)
-const float CastleVaristorSecondAttack = 1.0f;
+const float CastleVaristorSecondAttack = 2.0f;
 //城が一回に出すバリスターの矢の数
 const int CastleVaristorNumber = 1;
 //城のバリスターの旋回速度
