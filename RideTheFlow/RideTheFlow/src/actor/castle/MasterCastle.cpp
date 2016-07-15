@@ -195,7 +195,7 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.HP -= CastleDamegeTornado;
 		damage = false;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		if (parameter.HP <= 0)
 			breakSelect = BREAK_SELECT::TORNADO;
@@ -207,20 +207,18 @@ void MasterCastle::OnCollide(Actor& other, CollisionParameter colpara)
 	{
 		parameter.HP -= CastleDamegeWind;
 		damage = false;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		if (parameter.HP <= 0)
 			breakSelect = BREAK_SELECT::WIND_FLOW;
 		else
 			world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::MASTER_CASTLE, BREAK_SELECT::DAMAGE));
-
-
 	}
 	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL&&damage)
 	{
 		parameter.HP -= CastleDamageWindBall;
 		damage = false;
-		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, Vector3::Zero, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
+		world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, mPosition, DamageSmokeNum, DamageSmokeSize, DamageSmokeSizePlusMin, DamageSmokeSizePlusMax));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_HIT_SE);
 		if (parameter.HP <= 0)
 			breakSelect = BREAK_SELECT::WIND_BALL;

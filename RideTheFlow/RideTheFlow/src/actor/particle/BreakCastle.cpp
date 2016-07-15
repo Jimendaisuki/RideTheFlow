@@ -131,7 +131,11 @@ void BreakCastle::WindBallBreakEmissive()
 	case CHILD_CASTLE:MasterCastleEmissive(Vector3::Zero, 45.0f * 1.2f); break;
 	case SHIP:ShipEmissive([]{return Vector3::Zero; }); break;
 	case ISLE1: break;
-	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return RandomVelocity() * 10.0f; }); break;
+	case ARMY_ENEMY: ArmyEnemyEmissive([&]{
+						 Random &r = Random::GetInstance();
+						 return Vector3(r.Range(-1.0f, 1.0f), r.Range(0.0f, 1.0f), r.Range(-1.0f, 1.0f)).Normalized() * r.Range(3.0f, 9.0f)
+							 * 20.0f;
+	}); break;
 	default: break;
 	}
 }
@@ -244,7 +248,7 @@ void BreakCastle::ArmyEnemyEmissive(std::function<Vector3()> vecFunc)
 	for (int i = 0; i < 9; i++)
 	{
 		AddParticle(std::make_shared<BreakCastleParticle>(
-			MODEL_ID::HUMAN_BALLISTA_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, vecFunc(), 30.0f*i, 30.0f*i, 4.0f));
+			MODEL_ID::HUMAN_BALLISTA_MODEL, breakSelect, &ps_parameter.position,	Vector3::Zero, vecFunc(), 30.0f*i, 30.0f*i, 4.0f));
 	}
 }
 

@@ -207,7 +207,6 @@ Player::~Player() {
 		MV1DeleteModel(modelHandle);
 }
 
-
 void Player::Update() {
 	Vector3 beforePos = position;
 
