@@ -23,7 +23,7 @@ void GameFrame::Run()
 	SetWaitVSyncFlag(TRUE);
 
 	//ウィンドゥモード
-	ChangeWindowMode(TRUE);
+	ChangeWindowMode(FALSE);
 	
 	if (DxLib_Init() == -1)
 	{

@@ -57,4 +57,7 @@ private:
 	//Œ»İ‚ÌƒV[ƒ“
 	IScenePtr mCurrentScene;
 	int mStageCount;
+
+	float timer_;
+	const float SCENE_END_TIME = 60.0f * 3;
 };

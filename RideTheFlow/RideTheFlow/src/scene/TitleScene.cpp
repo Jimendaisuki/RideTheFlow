@@ -67,6 +67,7 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	mIsEnd = false;
+	timer = 0.0f;
 	status = TITLE_STATUS::TITLE_BEGIN;
 	wo.Add(ACTOR_ID::STAGE_ACTOR, std::make_shared<Stage>(wo));
 	wo.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<TitleCameraActor>(wo));
@@ -174,6 +175,13 @@ void TitleScene::Update()
 		pressAlphaTime = (float)((int)pressAlphaTime % 360);
 		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
+		timer += Time::DeltaTime;
+		if (timer >= 30.0f)
+		{
+			FadePanel::GetInstance().FadeOut();
+			status = TITLE_STATUS::GO_PV;
+		}
+
 		// シーン終了
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE) ||
 			GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM9))
@@ -190,6 +198,10 @@ void TitleScene::Update()
 		pressTextAlpha = Math::Clamp(pressTextAlpha, 0.0f, 1.0f);
 		pressTextBackAlpha = pressTextAlpha;
 		pressScale = (1.0f - pressTextAlpha) / 8.0f;
+		if (!FadePanel::GetInstance().IsAction())
+			mIsEnd = true;
+		break;
+	case GO_PV:
 		if (!FadePanel::GetInstance().IsAction())
 			mIsEnd = true;
 		break;
@@ -252,7 +264,11 @@ bool TitleScene::IsEnd() const
 //次のシーンを返す
 Scene TitleScene::Next() const
 {
-	return Scene::Menu;
+	if (status == TITLE_STATUS::GO_PV)
+		return Scene::PV;
+	else
+		return Scene::Menu;
+
 }
 
 void TitleScene::End()

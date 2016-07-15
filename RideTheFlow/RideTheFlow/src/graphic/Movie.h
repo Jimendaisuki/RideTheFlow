@@ -44,6 +44,8 @@ public:
 	///</summary>
 	void Draw() const;
 
+
+	void Clear();
 private:
 	///<summary>
 	/// ƒtƒ@ƒCƒ‹–¼‚Ì'.'‚©‚çŒã‚ğæ‚èœ‚­
