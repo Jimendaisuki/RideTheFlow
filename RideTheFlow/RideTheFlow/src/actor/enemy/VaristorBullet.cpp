@@ -16,18 +16,19 @@
 
 VaristorBullet::VaristorBullet(IWorld& world, Vector3 position, Actor& parent_, float rotateY, float attackAngleZ, float InitialVec, float Accuracy) :
 Actor(world),
-time(0),
-speed(VaristorSpeed),
 mPosition(position),
-mScale(2.0f),
+seveVec(Vector3::Zero),
+windVec(Vector3::Zero),
+Tornadleft(Vector3::Zero),
 mRotateY(rotateY),
 mRotateZ(attackAngleZ),
-windVec(Vector3::Zero),
+mInitialVec(InitialVec),
+speed(VaristorSpeed),
+time(0),
+mScale(2.0f),
 isWindCol(false),
-seveVec(Vector3::Zero),
-noDead(false),
-noDeadTimer(0.0f),
-mInitialVec(InitialVec)
+isColFastFlag(true),
+isColTornad(false)
 {
 	mRotateY += Random::GetInstance().Range(-Accuracy, Accuracy);
 	mRotateZ += Random::GetInstance().Range(-Accuracy, Accuracy);
@@ -51,7 +52,6 @@ VaristorBullet::~VaristorBullet()
 void VaristorBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR, COL_ID::BULLET_NOBULLETAREA_COL);
 	time += VaristorSpeed*Time::DeltaTime;
 	prevPosition = mPosition;
 	//進行方向を計算
@@ -62,13 +62,27 @@ void VaristorBullet::Update()
 	//流れの向きを加味
 	if (isWindCol)
 		vec = Vector3::Lerp(vec, windVec, VaristorWindPercentage / 100.0f);
+	//竜巻
+	if (isColTornad)
+	{
+		if (isColFastFlag)
+		{
+			Vector3 pos = mPosition;
+			pos += vec;
+			vec = pos - prevPosition;
+			vec.Normalize();
+			Tornadleft = -Vector3::Cross(Vector3(0, -1, 0), vec).Normalized()*30.0f;
+			isColFastFlag = false;
+		}
+		vec = Vector3::Lerp(vec, Tornadleft, 75.0f/100.0f);
+	}
+
 	//移動
 	mPosition += vec*VaristorSpeed*Time::DeltaTime;
 	if (parameter.mat.GetPosition().y <= -3600)
 		parameter.isDead = true;
 
 	//mPosition += Vector3(0.0f, coppyPosition.y, 0.0f);
-
 	seveVec = mPosition - prevPosition;
 	seveVec.Normalize();
 	//マトリックス計算
@@ -81,20 +95,12 @@ void VaristorBullet::Update()
 	windVec = Vector3::Zero;
 	isWindCol = false;
 
-
-	//noDeadTimer += Time::DeltaTime;
-
-	//if (noDeadTimer >= 1.0f)
-	//{
-	//	noDead = true;
-	//	noDeadTimer = 10.0f;
-	//}
 }
 
 void VaristorBullet::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::BALLISTA_ARROW_MODEL, parameter.mat);
-	DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
+	//DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
 }
 
 void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
@@ -112,5 +118,9 @@ void VaristorBullet::OnCollide(Actor& other, CollisionParameter colpara)
 	else if (colpara.colID == COL_ID::BULLET_NOBULLETAREA_COL)
 	{
 		parameter.isDead = true;
+	}
+	else if (colpara.colID == COL_ID::TORNAD_BULLET_COL)
+	{
+		isColTornad = true;
 	}
 }

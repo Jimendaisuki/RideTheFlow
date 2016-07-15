@@ -18,13 +18,15 @@ private:
 	Vector3 mRandomTarget;
 	Vector3 mToPoint;
 	Vector3 vec;
+	Vector3 Tornadleft;
+
 	float time;
 	float speed;
 	float mRotateY;
 	float mRotateZ;
-	float noDeadTimer;
-	bool noDead;
 
+	bool isColTornad;
+	bool isColFastFlag;
 	float mInitialVec;
 
 	//１フレーム前の座標
