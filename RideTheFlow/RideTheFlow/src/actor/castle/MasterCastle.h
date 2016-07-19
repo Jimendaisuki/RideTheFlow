@@ -15,6 +15,11 @@ public:
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 public:
+	void DamageWind(Vector3 position);
+	void DamageAirGun(Vector3 position);
+	void DamageTornad(Vector3 position);
+
+public:
 	bool castleRankUp()
 	{
 		return rankUp;
@@ -32,9 +37,13 @@ public:
 	{
 		rankUp = true;
 	}
-	bool RagDead()
+	void SpawnEnemy()
 	{
-		return isDeadRag;
+		spawnEnemyFlag = true;
+	}
+	bool SpawnDecision()
+	{
+		return mSpawnShip;
 	}
 	BREAK_SELECT getBreakSelect()
 	{
@@ -46,25 +55,25 @@ public:
 	}
 
 private:
-	Matrix4 playerMat;
 	Vector3 mScale;
 	Vector3 mPosition;
-	Vector3 toPoint;
 	float mRotateY;
 	float mScaleFloat;
+
+	//€‚Êƒ‰ƒO
 	bool isDeadRag;
-	bool noRankUp;
+
+
 	//Ï‚İd‚È‚ééŠÖŒW
 	bool rankUp;
 	int mRank;
-
 	int testRnak;
-	//oŒ»‚·‚é“GŠÖŒW
-	float spawanArmyTimer;
-	float spawnShipTimer;
-	bool mSpawnShip;
+	bool noRankUp;
 
-	float rankUpHeght;
+	//oŒ»‚·‚é“GŠÖŒW
+	bool mSpawnShip;
+	bool spawnEnemyFlag;
+
 
 	//–³“GŠÖŒW
 	bool damage;

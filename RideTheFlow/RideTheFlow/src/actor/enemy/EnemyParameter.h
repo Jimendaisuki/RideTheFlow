@@ -11,6 +11,15 @@ const float VaristorPower = 2.0f;
 const float DoragonSperarPower = 10.0f;
 
 
+/***流れの影響力***/              //※バリスタと砲弾は敵すべて共通
+//矢が流れの影響を受ける割合
+const float ArmyWindPercentage = 100.0f;
+//砲弾が流れの影響を受ける割合
+const float CannonWindPercentage = 0.0f;
+//バリスタが流れの影響を受ける割合
+const float VaristorWindPercentage = 0.0f;
+
+
 /****敵の攻撃の大きさ****/
 //矢の大きさ
 const float ArrowSize = 4.0f;
@@ -50,65 +59,7 @@ const float NotLookArmyArrorwNum = 0;
 
 //軍隊の攻撃精度
 const float ArmyArrowAccuracy = 75.0f;
-//軍隊の攻撃が流れの影響を受ける割合
-const float ArmyWindPercentage = 100.0f;
 
-
-/****敵バリスタ****/
-
-//バリスタの攻撃クールタイム
-const float VaristorAttackTime = 0.0f;
-//バリスタが一回に発射する矢の数
-const int VaristorArrorwNum = 0;
-//バリスタの攻撃範囲
-const float VaristorRange = 0.0f;
-//バリスタが発射できるZを軸にした最高角度（度）
-const float VaristorAttackMaxAngle = 0.0f;
-//バリスタが発射できるZを軸にした最小角度（度）
-const float VaristorAttackMinAngle = 0.0f;
-//バリスタの初速度
-const float VaristorInitialVelocity = 0.0f;
-//バリスタの旋回速度
-const float VaristorSwingSpeed = 0.0f;
-
-//バリスタからプレイヤーが見えていないときの攻撃クールタイム
-const float NotLookVaristorAttackTime = 0.0f;
-//バリスタからプレイヤーが見えていないときの一回に発射する矢の本数
-const float NotLookVaristorArrowNum = 0;
-
-//バリスタ攻撃精度(小さいほど高精度)
-const float VaristorArrowAccuracy = 0.0f;
-//バリスタの攻撃が流れの影響を受ける割合
-const float VaristorWindPercentage = 0.0f;
-
-
-
-/****敵大砲****/
-
-//大砲の攻撃クールタイム
-const float CannonAttackTime = 0.0f;
-//大砲の攻撃範囲
-const float CannonRange = 0.0f;
-//大砲が一回に発射する砲弾の数
-const int CannonShellNum = 0;
-//大砲の発射できるZを軸にした最高角度（度）
-const float  CannonAttackMaxAngle = 0.0f;
-//大砲の発射できるZを軸にした最低角度（度）
-const float CannonAttackMinAngle = 0.0f;
-//大砲の玉の初速度
-const float CannonInitialVelocity = 0.0f;
-//大砲の旋回速度
-const float ConnonSwingSpeed = 0.0f;
-
-//大砲からプレイヤーが見えていないときの攻撃クールタイム
-const float NotLookCannonAttackTime = 0.0f;
-//大砲からプレイヤーが見えていないときの一回に発射する砲弾の数
-const float NotLookCannonShellNum = 0;
-
-//大砲攻撃精度(小さいほど高精度)
-const float CannonShellAccuracy = 0.0f;
-//大砲の攻撃が流れの影響を受ける割合
-const float CannonWindPercentage = 0.0f;
 
 
 /****敵の船****/
@@ -149,6 +100,7 @@ const float ShipVaristorAttackMinAngle = -90.0f;
 const float ShipVaristorInitialVelocity = 100.0f;
 //船バリスタの旋回速度
 const float ShipVaristorSwingSpeed = 100.0f;
+
 
 
 //船バリスタからプレイヤーが見えていないときの攻撃クールタイム
@@ -194,3 +146,65 @@ const float DoragonSpearWithinTime = 1.0f;
 const float DoragonSpearMaxTime = 10.0f;
 //撃龍槍が完全に出てそこにとどまる時間
 const float DoragonSpearStopTime = 1.0f;
+
+
+
+
+
+
+
+
+
+//ここから下は関係なし//
+
+/****敵バリスタ****/
+
+//バリスタの攻撃クールタイム
+const float VaristorAttackTime = 0.0f;
+//バリスタが一回に発射する矢の数
+const int VaristorArrorwNum = 0;
+//バリスタの攻撃範囲
+const float VaristorRange = 0.0f;
+//バリスタが発射できるZを軸にした最高角度（度）
+const float VaristorAttackMaxAngle = 0.0f;
+//バリスタが発射できるZを軸にした最小角度（度）
+const float VaristorAttackMinAngle = 0.0f;
+//バリスタの初速度
+const float VaristorInitialVelocity = 0.0f;
+//バリスタの旋回速度
+const float VaristorSwingSpeed = 0.0f;
+
+//バリスタからプレイヤーが見えていないときの攻撃クールタイム
+const float NotLookVaristorAttackTime = 0.0f;
+//バリスタからプレイヤーが見えていないときの一回に発射する矢の本数
+const float NotLookVaristorArrowNum = 0;
+
+//バリスタ攻撃精度(小さいほど高精度)
+const float VaristorArrowAccuracy = 0.0f;
+
+
+
+/****敵大砲****/
+
+//大砲の攻撃クールタイム
+const float CannonAttackTime = 0.0f;
+//大砲の攻撃範囲
+const float CannonRange = 0.0f;
+//大砲が一回に発射する砲弾の数
+const int CannonShellNum = 0;
+//大砲の発射できるZを軸にした最高角度（度）
+const float  CannonAttackMaxAngle = 0.0f;
+//大砲の発射できるZを軸にした最低角度（度）
+const float CannonAttackMinAngle = 0.0f;
+//大砲の玉の初速度
+const float CannonInitialVelocity = 0.0f;
+//大砲の旋回速度
+const float ConnonSwingSpeed = 0.0f;
+
+//大砲からプレイヤーが見えていないときの攻撃クールタイム
+const float NotLookCannonAttackTime = 0.0f;
+//大砲からプレイヤーが見えていないときの一回に発射する砲弾の数
+const float NotLookCannonShellNum = 0;
+
+//大砲攻撃精度(小さいほど高精度)
+const float CannonShellAccuracy = 0.0f;

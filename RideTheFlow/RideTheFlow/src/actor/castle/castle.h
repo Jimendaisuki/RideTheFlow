@@ -54,37 +54,30 @@ public:
 private:
 	void CastleEnemyPosSet();
 private:
-	Matrix4 playerMat;
 	Vector3 mPosition;
 	Vector3 mScale;
-	Vector3 startPos;
-	Vector3 endPos;
-	Actor* parent;
+	float mScaleFloat;
+	float mRotateY;
+
+	//é‚ÌˆÚ“®—Ê
 	Vector3 velocity;
 	Vector3 sevePos;
 	Vector3 prevPos;
-	
+
+	//éˆÚ“®
+	Vector3 startPos;
+	Vector3 endPos;
 	bool isLook;
-	bool castleDown;
-	int arrowCount;
-	float attackRag;
-	float mAttackTime;
-	float mSecondAttack;
-	float mArrowNumber;
 	int mRank;
-	float mRotateY;
 	float castleUpTimer;
-	float mScaleFloat;
-	
+
+	//€‚ñ‚¾ƒ‰ƒO
 	float deadRagCount;
 	bool deadRagFlag;
 
-	bool damage;
-	float InvincibleTimer;
 	CastleEnemyPos castleEnemyPos;
 	//€ˆö
 	BREAK_SELECT breakSelect;
 
-	Vector3 test;
 
 };

@@ -13,13 +13,8 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
-public:
-	int GetUpRank()
-	{
-		return rankUpNum;
-	}
 private:
 	float rankUpTimer;
-	int rankUpNum;
-	int count;
+	float spawnArmyTimer;
+	float spawnShipTimer;
 };
