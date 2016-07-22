@@ -106,6 +106,7 @@ void Sound::PlaySEDuplicate(const SE_ID& id, int playtype)
 
 	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[id]) * 255), m_SEs[id]);
 	auto dupHandle = DuplicateSoundMem(m_SEs[id]);
+	SetPlayFinishDeleteSoundMem(true, dupHandle);
 	PlaySoundMem(dupHandle, playtype);
 }
 

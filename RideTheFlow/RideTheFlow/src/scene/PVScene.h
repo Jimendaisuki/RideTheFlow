@@ -32,4 +32,5 @@ private:
 
 	Movie	movie;
 	const float PV_END_TIME = 94.0f;
+	int MovieHandle;
 };
