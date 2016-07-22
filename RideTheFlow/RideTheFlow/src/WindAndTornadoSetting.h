@@ -34,9 +34,9 @@ static const float SmokeLifeLimit = 2.0f;
 
 //城や飛行船がダメージ食らった時の煙
 //数
-static const int DamageSmokeNum = 10;
+static const int DamageSmokeNum = 5;
 //大きさ
-static const float DamageSmokeSizeCastle = 0.05f;
+static const float DamageSmokeSizeCastle = 0.1f;
 static const float DamageSmokeSizeShip = 0.05f;
 //大きさに加えるランダム
 static const float DamageSmokeSizePlusMax = 0.01f;

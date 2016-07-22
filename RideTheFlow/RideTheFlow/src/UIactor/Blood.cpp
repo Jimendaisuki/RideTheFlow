@@ -22,7 +22,7 @@ UIActor(world_)
 	/* ‰Šúİ’è */
 	alpha     = 1.0f;
 	alphaTime = deadTime;
-	scale  = Vector2(0.5f) * Random::GetInstance().Range(0.5f, 1.5f);
+	scale  = Vector2(1.0f) * Random::GetInstance().Range(0.5f, 1.5f);
 	rotate = Random::GetInstance().Range(0.0f, 359.0f);
 
 	/* ƒJƒƒ‰ˆÊ’uæ“¾ */

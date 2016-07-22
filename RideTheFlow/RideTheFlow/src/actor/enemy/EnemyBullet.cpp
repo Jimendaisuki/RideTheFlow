@@ -47,10 +47,13 @@ isColFastFlag(true)
 
 	parent = &parent_;
 
+	ModelHandle = MV1DuplicateModel(Model::GetInstance().GetHandle(MODEL_ID::ARROW_MODEL));
+
 	Sound::GetInstance().PlaySEDuplicate(SE_ID::ARROW_FIRE_SE);
 }
 EnemyBullet::~EnemyBullet()
 {
+	MV1DeleteModel(ModelHandle);
 	parent = nullptr;
 }
 void EnemyBullet::Update()
@@ -130,7 +133,8 @@ void EnemyBullet::Update()
 
 void EnemyBullet::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
+	//Model::GetInstance().Draw(MODEL_ID::ARROW_MODEL, parameter.mat);
+	Model::GetInstance().Draw(ModelHandle, parameter.mat);
 	//DrawSphere3D(parameter.mat.GetPosition().ToVECTOR(), parameter.radius, 4, 1, 1, FALSE);
 }
 

@@ -43,5 +43,7 @@ private:
 	//—¬‚ê‚Æƒqƒbƒg‚µ‚Ä‚¢‚é‚©H
 	bool isWindCol;
 
+	int ModelHandle;
+
 };
 #endif

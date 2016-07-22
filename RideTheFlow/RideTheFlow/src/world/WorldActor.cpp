@@ -59,6 +59,8 @@ void WorldActor::Clear(){
 	//全エフェクトクリア
 	std::for_each(UImanagers.begin(), UImanagers.end(),
 		[](UIActorManagerPair UIpair){UIpair.second->Clear(); });
+
+	colselect.clear();
 }
 
 void WorldActor::SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID){
