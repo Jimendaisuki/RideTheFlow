@@ -22,11 +22,6 @@ public:
 	/// ‰Šú‰»ˆ—
 	///</summary>
 	void Initialize();
-	///<summary>
-	/// 3DƒTƒEƒ“ƒh‚Ì‰Šú‰»ˆ—
-	///</summary>
-	void Initialize3DSound();
-
 
 	///<summary>
 	/// BGM‚ğ“Ç‚İ‚Ş

@@ -23,7 +23,10 @@ mScale(2.8f*scale),
 playerWithin(false),
 attackSpear(false),
 endAttack(false),
-playerWithinTimer(0.0f)
+rotateFlag(false),
+playerWithinTimer(0.0f),
+rotateVelocityX(0.0f),
+rotateX(0.0f)
 {
 	parameter.isDead = false;
 	parameter.radius = 20.0f*scale;
@@ -72,8 +75,12 @@ void CastleDoragonSpear::Update()
 		parameter.radius + 8.0f)
 	{
 		playerWithin = true;
+		rotateVelocityX += 15.0f*Time::DeltaTime;
 	}
-
+	else
+	{
+		rotateVelocityX -= 5.0f*Time::DeltaTime;
+	}
 
 
 	coolTimer += Time::DeltaTime;
@@ -81,7 +88,6 @@ void CastleDoragonSpear::Update()
 		coolTimer >= DoragonSpearAttackTime)
 	{
 		preparationTimer += Time::DeltaTime;
-
 		if (preparationTimer >= DoragonSpearWithinTime)
 		{
 			preparationTimer = 0.0f;
@@ -125,9 +131,14 @@ void CastleDoragonSpear::Update()
 	endPos += castle->GetVelocity();
 
 	mPosition = Vector3::Lerp(startPos, endPos, spearAttackTimer);
+
+	rotateVelocityX = Math::Clamp(rotateVelocityX, 0.0f, 10.0f);
+	rotateX += rotateVelocityX;
+
 	////マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*
+		Matrix4::RotateX(rotateX)*
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
 	//筒にも速度を足す

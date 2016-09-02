@@ -12,6 +12,7 @@ public:
 	virtual void Update() override;
 	virtual void Draw() const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
+
 private:
 	Castle* castle;
 	Matrix4 tubeMat;
@@ -21,6 +22,11 @@ private:
 	Vector3 endPos;
 	Vector3 tubePos;
 	float mScaleFloat;
+
+	float rotateVelocityX;
+	float rotateX;
+	bool rotateFlag;
+
 	//ƒ^ƒCƒ€ŠÖŒW
 	float coolTimer;
 	float preparationTimer;
@@ -33,6 +39,5 @@ private:
 	bool playerWithin;
 	bool attackSpear;
 	bool endAttack;
-
 };
 #endif
