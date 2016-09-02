@@ -194,12 +194,8 @@ void ShipEnemy::Update()
 }
 void ShipEnemy::Draw() const
 {
-<<<<<<< HEAD
-	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
+	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat, alpha);
 	gauge.Draw();
-=======
-	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat,alpha);
->>>>>>> 1f85ceb054141f67a2551a9c9311613bb2a61798
 }
 void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {
