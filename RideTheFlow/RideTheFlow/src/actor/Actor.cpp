@@ -296,7 +296,7 @@ CollisionParameter Actor::Player_vs_ShipEnemy(const Actor& other) const
 
 	//ShipEnemy
 	Sphere shipEnemy;
-	shipEnemy.position = parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*parameter.radius;
+	shipEnemy.position = parameter.mat.GetPosition()/* + parameter.mat.GetUp().Normalized()*parameter.radius*/;
 	shipEnemy.radius = parameter.radius;
 
 	for (int i = 0; i < playerBonePos.size();) {
@@ -307,8 +307,8 @@ CollisionParameter Actor::Player_vs_ShipEnemy(const Actor& other) const
 		if (i >= playerBonePos.size()) {
 			i = playerBonePos.size() - 1;
 		}
-		player.endPos = playerBonePos[i];
-		player.radius = parameter.radius;
+		//player.endPos = playerBonePos[i];
+		player.radius = other.parameter.radius;
 		/* ResultData */
 		colpara = Collisin::GetInstace().SphereCapsule(shipEnemy, player);
 		if (colpara.colFlag) {
@@ -754,10 +754,10 @@ CollisionParameter Actor::Ship_vs_Ship(const Actor& other)const
 {
 	CollisionParameter colpara;
 	Sphere ship1;
-	ship1.radius = parameter.radius*3.0f;
+	ship1.radius = parameter.radius*1.5f;
 	ship1.position = parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f);
 	Sphere ship2;
-	ship2.radius = other.parameter.radius*3.0f;
+	ship2.radius = other.parameter.radius*1.5f;
 	ship2.position = other.parameter.mat.GetPosition() + Vector3(0.0f, other.parameter.radius, 0.0f);
 
 	colpara = Collisin::GetInstace().SphereSphere(ship1, ship2);

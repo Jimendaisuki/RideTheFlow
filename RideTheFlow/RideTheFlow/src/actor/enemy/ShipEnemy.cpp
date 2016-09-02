@@ -46,7 +46,7 @@ breakSelect(BREAK_SELECT::TORNADO)
 		Matrix4::RotateX(0) *
 		Matrix4::RotateY(0) *
 		Matrix4::Translate(position);
-	parameter.radius = 100.0f;
+	parameter.radius = 75.0f;
 	playerDot = 0.0f;
 
 	ShipEnemyPosition();
@@ -185,7 +185,6 @@ void ShipEnemy::Update()
 }
 void ShipEnemy::Draw() const
 {
-	//ƒ‚ƒfƒ‹‚Ì•ûŒü‚ªˆá‚¤
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
 }
 void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
@@ -240,7 +239,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	if (colpara.colID == COL_ID::SHIP_SHIP_COL&&colpara.colFlag)
 	{
-		mPosition += Vector3::Direction(colpara.colPos,parameter.mat.GetPosition()).Normalized();
+		mPosition += Vector3::Direction(colpara.colPos,parameter.mat.GetPosition()).Normalized()*2.0f;
 	}
 }
 
