@@ -45,6 +45,10 @@ Scene TeamLogoScene::Next() const
 {
 	return Scene::Title;
 }
+Scene TeamLogoScene::GetCurrentScene() const
+{
+	return Scene::Logo;
+}
 
 void TeamLogoScene::End(){
 	wa.Clear();

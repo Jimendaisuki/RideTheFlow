@@ -315,6 +315,11 @@ Scene EventScene::Next() const
 	return Scene::GamePlay;
 }
 
+Scene EventScene::GetCurrentScene() const
+{
+	return Scene::Event;
+}
+
 void EventScene::End()
 {
 	wo.Clear();

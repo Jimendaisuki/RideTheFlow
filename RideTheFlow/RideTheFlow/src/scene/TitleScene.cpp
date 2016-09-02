@@ -270,7 +270,10 @@ Scene TitleScene::Next() const
 		return Scene::Menu;
 
 }
-
+Scene TitleScene::GetCurrentScene() const
+{
+	return Scene::Title;
+}
 void TitleScene::End()
 {
 	wo.Clear();

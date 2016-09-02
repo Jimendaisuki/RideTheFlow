@@ -254,7 +254,10 @@ Scene EndhingScene::Next() const
 {
 	return Scene::Title;
 }
-
+Scene EndhingScene::GetCurrentScene() const
+{
+	return Scene::Ending;
+}
 void EndhingScene::End()
 {
 	wa.Clear();

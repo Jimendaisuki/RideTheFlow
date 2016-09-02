@@ -153,6 +153,11 @@ Scene GamePlayScene::Next() const
 		return Scene::Ending;
 }
 
+Scene GamePlayScene::GetCurrentScene() const
+{
+	return Scene::GamePlay;
+}
+
 void GamePlayScene::End()
 {
 	wa.Clear();

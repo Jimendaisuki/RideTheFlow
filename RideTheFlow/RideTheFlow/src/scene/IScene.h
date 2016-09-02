@@ -17,6 +17,8 @@ public:
 	virtual bool IsEnd() const = 0;
 	//移行先のシーンを返す
 	virtual Scene Next() const = 0;
+	//現在のシーンを返す
+	virtual Scene GetCurrentScene() const = 0;
 	//終了時処理
 	virtual void End() = 0;
 };
