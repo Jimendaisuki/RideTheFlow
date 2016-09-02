@@ -333,7 +333,7 @@ void Player::Update() {
 
 		if ((!title && !event) &&
 			(Keyboard::GetInstance().KeyTriggerDown(KEYCODE::LCTRL) ||
-				GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM8))
+				GamePad::GetInstance().ButtonTriggerDown(PADBUTTON::NUM6))
 			&& !tp.tackleFlag
 			&& !dashHealFlag
 			&& !spearHit) {
@@ -376,7 +376,7 @@ void Player::Update() {
 
 		tp.dashFlag = false;
 		if ((!title && !event) && !tp.tackleFlag) {
-			if ((Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM7)) && !spearHit) {
+			if ((Keyboard::GetInstance().KeyTriggerUp(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonTriggerUp(PADBUTTON::NUM5)) && !spearHit) {
 				if (!dashHealFlag) {
 					tornadoFlag = false;
 					dashAfter = true;
@@ -384,7 +384,7 @@ void Player::Update() {
 				}
 			}
 
-			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7)) && !tornadoFlag && !spearHit) {
+			if ((Keyboard::GetInstance().KeyStateDown(KEYCODE::LSHIFT) || GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM5)) && !tornadoFlag && !spearHit) {
 				if (dashHealFlag) {
 					dashPosStorage.clear();
 					tornadoPosStorage.clear();
