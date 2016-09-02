@@ -41,7 +41,6 @@ isColTornad(false)
 	parent = &parent_;
 
 	Sound::GetInstance().PlaySEDuplicate(SE_ID::CANON_FIRE_SE);
-
 }
 CannonBullet::~CannonBullet()
 {

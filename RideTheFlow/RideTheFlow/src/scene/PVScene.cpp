@@ -19,9 +19,6 @@
 //コンストラクタ
 PVScene::PVScene()
 {
-	//WorkFolder::SetWorkFolder("res/");
-	//std::string name = "res/気龍_PV.avi";
-	MovieHandle = OpenMovieToGraph("res/気龍_PV.avi");
 }
 
 //デストラクタ
@@ -38,12 +35,6 @@ void PVScene::Initialize()
 	movie.Load(FILE_NAME);
 	movie.Seek(MOVIE_NAME, 1.0f);
 	movie.Play(MOVIE_NAME);
-
-	//Movie::GetInstance().Seek(MOVIE_NAME, 1.0f);
-	//Movie::GetInstance().Play(MOVIE_NAME);
-
-	//auto a = SeekMovieToGraph(MovieHandle, static_cast<int>(1000));
-	//auto b = PlayMovieToGraph(MovieHandle);
 
 	/* フェード */
 	FadePanel::GetInstance().SetInTime(1.0f);
@@ -66,9 +57,7 @@ void PVScene::Update()
 		return;
 	}
 
-	//auto time = movie.IsTime(MOVIE_NAME);
-	//auto time = Movie::GetInstance().IsTime(MOVIE_NAME);
-	auto time = TellMovieToGraph(MovieHandle) / 1000.0f;
+	auto time = movie.IsTime(MOVIE_NAME);
 	if (time >= PV_END_TIME && !FadePanel::GetInstance().IsAction())
 		FadePanel::GetInstance().FadeOut();
 }
@@ -76,10 +65,7 @@ void PVScene::Update()
 //描画
 void PVScene::Draw() const
 {
-	//movie.Draw();
-	auto a = DrawExtendGraph(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, MovieHandle, FALSE);
-
-	//Movie::GetInstance().Draw();
+	movie.Draw();
 }
 
 //終了しているか？
@@ -97,7 +83,5 @@ Scene PVScene::Next() const
 void PVScene::End()
 {
 	wa.Clear();
-	//PauseMovieToGraph(MovieHandle);
-	//movie.Clear();
-	//Movie::GetInstance().Clear();
+	movie.Clear();
 }

@@ -22,6 +22,12 @@ void Sound::Initialize()
 	InitSoundMem();
 	m_BGMs.clear();
 	m_SEs.clear();
+
+	//dupSE.clear();
+	for (auto& se : dupSE)
+	{
+		se = 0;
+	}
 }
 
 // BGMÇì«Ç›çûÇﬁ
@@ -105,9 +111,17 @@ void Sound::PlaySEDuplicate(const SE_ID& id, int playtype)
 		return;
 
 	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[id]) * 255), m_SEs[id]);
-	auto dupHandle = DuplicateSoundMem(m_SEs[id]);
-	SetPlayFinishDeleteSoundMem(true, dupHandle);
+	int dupHandle = DuplicateSoundMem(m_SEs[id]);
 	PlaySoundMem(dupHandle, playtype);
+
+	for (auto& se : dupSE)
+	{
+		if (se == 0)
+		{
+			se = dupHandle;
+			return;
+		}
+	}
 }
 
 // BGMÇé~ÇﬂÇÈ
@@ -198,6 +212,18 @@ float Sound::IsAllBGMVolume()
 float Sound::IsAllSEVolume()
 {
 	return m_se_volume;
+}
+
+void Sound::Update()
+{
+	for (auto& se : dupSE)
+	{
+		if (CheckSoundMem(se) == 0 && se != 0)
+		{
+			DeleteSoundMem(se);
+			se = 0;
+		}
+	}
 }
 
 void Sound::SettingBGM(const BGM_ID& id)

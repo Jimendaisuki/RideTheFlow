@@ -5,6 +5,7 @@
 #include<memory>
 #include "../particle/BreakCastle.h"
 #include "../tornado/Tornado.h"
+#include "../../UIactor/EnemyHP.h"
 
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
@@ -86,4 +87,6 @@ private:
 	//ƒ^ƒCƒgƒ‹
 	bool mTitle;
 	int mTitleRank;
+
+	EnemyHP		gauge;
 };

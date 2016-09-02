@@ -50,6 +50,8 @@ breakSelect(BREAK_SELECT::TORNADO)
 	playerDot = 0.0f;
 
 	ShipEnemyPosition();
+	
+	gauge.Initialize(parameter.HP, parameter.mat.GetPosition());
 
 	world.UIAdd(UI_ID::ENEMY_POINT_UI, std::make_shared<EnemyPoint>(world, *this));
 
@@ -73,6 +75,7 @@ isTitle(true)
 		Matrix4::RotateY(rotate_.y) *
 		Matrix4::Translate(position_);
 
+	gauge.Initialize(parameter.HP, parameter.mat.GetPosition(), false);
 }
 
 ShipEnemy::~ShipEnemy()
@@ -182,11 +185,13 @@ void ShipEnemy::Update()
 		Quaternion::RotateAxis(Vector3::Up,shipAngle)*
 		Matrix4::Translate(mPosition);
 
+	gauge.Update(parameter.HP, parameter.mat.GetPosition());
 }
 void ShipEnemy::Draw() const
 {
 	//ƒ‚ƒfƒ‹‚Ì•ûŒü‚ªˆá‚¤
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
+	gauge.Draw();
 }
 void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

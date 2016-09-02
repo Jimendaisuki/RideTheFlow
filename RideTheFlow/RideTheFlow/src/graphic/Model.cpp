@@ -554,6 +554,11 @@ int Model::GetHandle(const MODEL_ID& id)
 	return m_models.at(id)->GetHangle();
 }
 
+int Model::GetHandle2D(const MODEL_ID& id)
+{
+	return m_sprites[id][0];
+}
+
 // ３Ｄモデルの物理演算モードをセットする
 void Model::SetPhysics(int mode)
 {

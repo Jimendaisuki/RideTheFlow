@@ -5,6 +5,8 @@
 #include <memory>
 #include "../particle/BreakCastle.h"
 
+#include "../../UIactor/EnemyHP.h"
+
 struct ShipEnemyPos
 {
 	Vector3 spearPos;
@@ -66,5 +68,7 @@ private:
 
 	//Ž€ˆö
 	BREAK_SELECT breakSelect;
+
+	EnemyHP		gauge;
 };
 #endif

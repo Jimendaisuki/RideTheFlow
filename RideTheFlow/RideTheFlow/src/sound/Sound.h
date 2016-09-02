@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Dxlib.h>
+#include <array>
 #include <string>
 #include <unordered_map>
 #include "../actor/ID.h"
@@ -117,6 +118,8 @@ public:
 		return static_cast<int>(m_SEs.size());
 	}
 
+	void Update();
+
 	Sound(const Sound& other);
 	Sound& operator = (const Sound& other);
 
@@ -134,4 +137,6 @@ private:
 	std::unordered_map<SE_ID, float> m_SE_Volumes;		// 各SEボリューム
 	float m_bgm_volume;									// 全BGMボリューム
 	float m_se_volume;									// 全SEボリューム
+
+	std::array<int, 512>				dupSE;			// 同時再生可能SE
 };

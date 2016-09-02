@@ -251,6 +251,8 @@ public:
 	/// モデルハンドルを受け取る
 	///</summary>
 	int GetHandle(const MODEL_ID& id);
+
+	int GetHandle2D(const MODEL_ID& id);
 	///<summary>
 	/// ３Ｄモデルの物理演算モードをセットする
 	///</summary>

@@ -59,6 +59,8 @@ spawnEnemyFlag(false)
 
 	}
 	parent = this;
+
+	gauge.Initialize(parameter.HP, parameter.mat.GetPosition());
 }
 
 MasterCastle::~MasterCastle()
@@ -146,6 +148,8 @@ void MasterCastle::Update()
 		Matrix4::Scale(mScale)*
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
+
+	gauge.Update(parameter.HP, parameter.mat.GetPosition());
 }
 
 void MasterCastle::Draw() const
@@ -153,6 +157,7 @@ void MasterCastle::Draw() const
 	if (!mTitle)
 	{
 		Model::GetInstance().Draw(MODEL_ID::CASTLE_MASTER_MODEL, parameter.mat);
+		gauge.Draw();
 	}
 	else
 	{

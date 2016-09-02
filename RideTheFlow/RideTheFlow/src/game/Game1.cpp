@@ -68,6 +68,8 @@ void Game1::Update()
 	mSceneManager.Change();
 	// シーンを更新
 	mSceneManager.Update();
+
+	Sound::GetInstance().Update();
 }
 
 void Game1::Draw()
