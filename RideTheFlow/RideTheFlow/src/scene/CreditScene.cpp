@@ -114,11 +114,11 @@ void CreditScene::Update()
 	//	armyCount++;
 	//}
 	
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
-		mIsEnd = true;
-	}
+	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::SPACE)){
+	//	mIsEnd = true;
+	//}
 
-	wa.Update();
+	//wa.Update();
 
 	//“ü—Íó‘Ô‚ğæ“¾
 	leftstick = GamePad::GetInstance().Stick();
