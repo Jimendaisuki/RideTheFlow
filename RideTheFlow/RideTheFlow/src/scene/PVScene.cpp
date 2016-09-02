@@ -93,7 +93,10 @@ Scene PVScene::Next() const
 {
 	return Scene::Title;
 }
-
+Scene PVScene::GetCurrentScene() const
+{
+	return Scene::PV;
+}
 void PVScene::End()
 {
 	wa.Clear();

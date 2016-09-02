@@ -12,13 +12,15 @@ const int SceneManager::MaxStageCount = 7;
 //コンストラクタ
 SceneManager::SceneManager() :
 mStageCount(1),
-timer_(0.0f)
+timer_(0.0f),
+resetFalg(false)
 {
 }
 
 //更新前初期化
 void SceneManager::Initialize(){
 	End();
+	resetFalg = false;
 	mScenes.clear();
 }
 
@@ -47,7 +49,14 @@ void SceneManager::End(){
 
 void SceneManager::Change()
 {
-	if (timer_ >= SCENE_END_TIME)
+	if (GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM7)&&
+		GamePad::GetInstance().ButtonStateDown(PADBUTTON::NUM8) &&
+		mCurrentScene->GetCurrentScene()!=Scene::Title)
+	{
+		resetFalg = true;
+	}
+
+	if (timer_ >= SCENE_END_TIME||resetFalg)
 	{
 		if (FadePanel::GetInstance().IsFullBlack())
 		{
@@ -61,6 +70,8 @@ void SceneManager::Change()
 			return;
 		}
 	}
+
+	
 
 	if (mCurrentScene->IsEnd())
 	{
@@ -97,6 +108,7 @@ void SceneManager::Change(Scene name){
 	mCurrentScene = mScenes[name];
 	mCurrentScene->Initialize();
 	timer_ = 0.0f;
+	resetFalg = false;
 	FadePanel::GetInstance().FadeIn();
 }
 

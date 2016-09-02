@@ -113,6 +113,11 @@ Scene MenuScene::Next() const
 	else return Scene::Event;
 }
 
+Scene MenuScene::GetCurrentScene() const
+{
+	return Scene::Menu;
+}
+
 void MenuScene::End()
 {
 	wo.Clear();

@@ -208,6 +208,10 @@ Scene CreditScene::Next() const
 {
 	return Scene::Title;
 }
+Scene CreditScene::GetCurrentScene() const
+{
+	return Scene::Credit;
+}
 
 void CreditScene::End(){
 	wa.Clear();

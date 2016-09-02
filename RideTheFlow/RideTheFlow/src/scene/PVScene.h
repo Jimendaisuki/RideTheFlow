@@ -22,6 +22,8 @@ public:
 	virtual bool IsEnd() const override;
 	//次のシーンを返す
 	virtual Scene Next() const override;
+	//現在のシーンを返す
+	virtual Scene GetCurrentScene() const override;
 	//終了時処理
 	virtual void End()override;
 
