@@ -21,6 +21,7 @@ spearAttackTimer(0),
 spearStopTimer(0),
 mPosition(position),
 mScale(2.0f),
+alpha(0.0f),
 playerWithin(false),
 attackSpear(false),
 endAttack(false)
@@ -69,7 +70,8 @@ void DoragonSpearEnemy::Update()
 		playerWithin = true;
 	}
 
-
+	if (alpha <= 1.0f)
+		alpha += Time::DeltaTime;
 
 	coolTimer += Time::DeltaTime;
 	if (playerWithin&&!attackSpear&&
@@ -141,8 +143,8 @@ void DoragonSpearEnemy::Update()
 
 void DoragonSpearEnemy::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL,parameter.mat);
-	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat);
+	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_MODEL,parameter.mat,alpha);
+	Model::GetInstance().Draw(MODEL_ID::DORAGON_SPEAR_TUBE_MODEL, tubeMat,alpha);
 	////DrawCapsule3D(Vector3::ToVECTOR(parameter.mat.GetPosition()) - parameter.mat.GetLeft().Normalized()*10.0f,
 	//	Vector3::ToVECTOR(parameter.mat.GetPosition() + parameter.mat.GetLeft().Normalized()*30.0f),
 	//	parameter.radius, 20, 255, 255, FALSE);

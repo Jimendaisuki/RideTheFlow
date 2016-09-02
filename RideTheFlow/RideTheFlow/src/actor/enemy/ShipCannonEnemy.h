@@ -26,6 +26,7 @@ private:
 
 	float backDot;
 
+	float alpha;
 	//UŒ‚ŠÖŒW
 	float mSecondAttack;
 	float mArrowNumber;

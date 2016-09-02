@@ -20,6 +20,7 @@ playerAngle(0),
 attackAngle(0),
 playerDot(0),
 backDot(0),
+alpha(0.0f),
 mPosition(position),
 rotate(Vector3::Zero),
 isLook(true),
@@ -63,6 +64,9 @@ void ShipCannonEnemy::Update()
 	Vector3 vec = (playerMat.GetPosition() - mSe->GetParameter().mat.GetPosition()).Normalized();
 	backDot = Vector2::Dot(Vector2(mSe->GetParameter().mat.GetFront().x, mSe->GetParameter().mat.GetFront().z),
 		Vector2(vec.x, vec.z));
+
+	if (alpha <= 1.0f)
+		alpha += Time::DeltaTime;
 
 	//ƒvƒŒƒCƒ„[‚ªŒ©‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	if (isLook)
@@ -147,8 +151,8 @@ void ShipCannonEnemy::Update()
 }
 void ShipCannonEnemy::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat);
-	Model::GetInstance().Draw(MODEL_ID::HUMAN_CANNON_MODEL, enemyMat);
+	Model::GetInstance().Draw(MODEL_ID::CANNON_MODEL, parameter.mat,alpha);
+	Model::GetInstance().Draw(MODEL_ID::HUMAN_CANNON_MODEL, enemyMat,alpha);
 }
 void ShipCannonEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

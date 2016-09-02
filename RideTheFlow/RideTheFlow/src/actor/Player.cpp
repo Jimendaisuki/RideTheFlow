@@ -233,9 +233,9 @@ void Player::Update() {
 
 
 	//parameter.HP -= 5.0f * Time::DeltaTime;
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
-		moveFlag = !moveFlag;
-	}
+	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
+	//	moveFlag = !moveFlag;
+	//}
 	if (title || event)
 		moveFlag = false;
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::PLAYER_STAGE_COL);

@@ -30,6 +30,7 @@ playerAngle(0),
 shipAngle(0),
 isLandDot(0),
 shipLow(1.0f),
+alpha(0.0f),
 mPosition(position),
 invincibleTimer(0.0f),
 isLook(true),
@@ -66,6 +67,8 @@ ShipEnemy::ShipEnemy(IWorld& world, float scale, const Vector3& position_, const
 Actor(world),
 isTitle(true)
 {
+	if (isTitle)
+		alpha = 1.0f;
 	parameter.id = ACTOR_ID::SHIP_ENEMY_ACTOR;
 	parameter.isDead = false;
 	parameter.mat =
@@ -117,6 +120,8 @@ void ShipEnemy::Update()
 		Math::Pow(playerFront.x - mPosition.x, 2))) *
 		180 / 3.1415f;
 
+	if (alpha<=1.0f)
+	alpha += Time::DeltaTime;
 
 	Vector3 vec = (playerMat.GetPosition() - parameter.mat.GetPosition()).Normalized();
 	playerDot = Vector2::Dot(Vector2(parameter.mat.GetFront().x, parameter.mat.GetFront().z), Vector2(vec.x, vec.z));
@@ -189,8 +194,12 @@ void ShipEnemy::Update()
 }
 void ShipEnemy::Draw() const
 {
+<<<<<<< HEAD
 	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat);
 	gauge.Draw();
+=======
+	Model::GetInstance().Draw(MODEL_ID::SHIP_MODEL, parameter.mat,alpha);
+>>>>>>> 1f85ceb054141f67a2551a9c9311613bb2a61798
 }
 void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

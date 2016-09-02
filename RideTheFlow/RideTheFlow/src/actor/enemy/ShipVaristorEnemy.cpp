@@ -20,6 +20,7 @@ playerAngle(0),
 playerDot(0),
 backDot(0),
 attackAngle(0),
+alpha(0.0f),
 mPosition(position),
 rotate(Vector3::Zero),
 isLook(true),
@@ -63,7 +64,8 @@ void ShipVaristorEnemy::Update()
 	Vector3 vec = (playerMat.GetPosition() - mSe->GetParameter().mat.GetPosition()).Normalized();
 	backDot = Vector2::Dot(Vector2(mSe->GetParameter().mat.GetFront().x, mSe->GetParameter().mat.GetFront().z),
 		Vector2(vec.x, vec.z));
-
+	if (alpha <= 1.0f)
+		alpha += Time::DeltaTime;
 	//ƒvƒŒƒCƒ„[‚ªŒ©‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	if (isLook)
 	{
@@ -83,7 +85,7 @@ void ShipVaristorEnemy::Update()
 		Vector3 vec = (playerMat.GetPosition() - parameter.mat.GetPosition()).Normalized();
 		playerDot = Vector2::Dot(Vector2(-parameter.mat.GetFront().x, -parameter.mat.GetFront().z),
 			Vector2(vec.x, vec.z));
-		attackAngle= playerAngle;
+		attackAngle = playerAngle;
 	}
 	else
 	{
@@ -94,7 +96,7 @@ void ShipVaristorEnemy::Update()
 
 	attackRag += Time::DeltaTime;
 	attackTime += Time::DeltaTime;
-	if (backDot >= 0&&mLeft)
+	if (backDot >= 0 && mLeft)
 	{
 		Attack();
 		if (Math::Abs(playerDot) >= 0.1f)
@@ -141,13 +143,13 @@ void ShipVaristorEnemy::Update()
 		Matrix4::Translate(mPosition);
 
 	enemyMat =
-		Quaternion::RotateAxis(Vector3::Up, rotate.y-90) *
+		Quaternion::RotateAxis(Vector3::Up, rotate.y - 90) *
 		Matrix4::Scale(1.0f)*
 		Matrix4::Translate(mPosition + parameter.mat.GetLeft().Normalized()*-5.5f);
 }
 void ShipVaristorEnemy::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, parameter.mat);
+	Model::GetInstance().Draw(MODEL_ID::BALLISTA_MODEL, parameter.mat,alpha);
 }
 void ShipVaristorEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 {

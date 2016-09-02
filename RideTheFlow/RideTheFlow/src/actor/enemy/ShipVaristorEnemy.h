@@ -24,6 +24,7 @@ private:
 	Matrix4 enemyMat;
 	float playerDot;
 
+	float alpha;
 	float backDot;
 
 	//UŒ‚ŠÖŒW
@@ -33,6 +34,7 @@ private:
 	float attackAngle;
 	float attackTime;
 	float attackRag;
+
 	int arrowCount;
 	bool isLook;
 	bool mLeft;
