@@ -50,5 +50,16 @@ void EnemyPoint::Update()
 
 void EnemyPoint::Draw() const
 {
-	Sprite::GetInstance().Draw(SPRITE_ID::ENEMY_SPRITE, drawPosition, Vector2(32, 32), 1.0f, scale, 0, true, false);
+	if (enemy->GetParameter().id == ACTOR_ID::ARMY_ENEMY_ACTOR)
+	{
+		SetDrawBright(255, 255, 0);
+		Sprite::GetInstance().Draw(SPRITE_ID::ENEMY_SPRITE, drawPosition, Vector2(32, 32), 1.0f, scale, 0, true, false);
+		SetDrawBright(255, 255, 255);
+	}
+	else
+	{
+		SetDrawBright(255, 0, 0);
+		Sprite::GetInstance().Draw(SPRITE_ID::ENEMY_SPRITE, drawPosition, Vector2(32, 32), 1.0f, scale, 0, true, false);
+		SetDrawBright(255, 255, 255);
+	}
 }
