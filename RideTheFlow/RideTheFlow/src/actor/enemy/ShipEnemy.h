@@ -42,6 +42,8 @@ private:
 	Matrix4 playerMat;
 	Vector3 isLandPos;
 	ShipEnemyPos shipEnemyPos;
+	//“§–¾“x
+	float alpha;
 	//UŒ‚ŠÖŒW
 	float mSecondAttack;
 	float mArrowNumber;

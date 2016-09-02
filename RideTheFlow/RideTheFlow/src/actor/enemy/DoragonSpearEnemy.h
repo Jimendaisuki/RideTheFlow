@@ -25,6 +25,7 @@ private:
 	Vector3 startPos;
 	Vector3 endPos;
 
+	float alpha;
 	//ƒ^ƒCƒ€ŠÖŒW
 	float coolTimer;
 	float preparationTimer;
