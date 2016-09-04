@@ -37,6 +37,7 @@ Actor::Actor(IWorld& world_) :world(world_)
 	colFunc[COL_ID::SHIP_ISLAND_COL] = std::bind(&Actor::Ship_vs_Island, this, std::placeholders::_1);
 	colFunc[COL_ID::ENEMY_WIND_COL] = std::bind(&Actor::Enemy_vs_Wind, this, std::placeholders::_1);
 	colFunc[COL_ID::CASTLE_WIND_COL] = std::bind(&Actor::Castle_vs_Wind, this, std::placeholders::_1);
+	colFunc[COL_ID::WIND_HOME_COL] = std::bind(&Actor::Wind_vs_Home, this, std::placeholders::_1);
 	colFunc[COL_ID::PLAYER_CASTLE_COL] = std::bind(&Actor::Player_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::MASTERCASTLE_CASTLE_COL] = std::bind(&Actor::MasterCastle_vs_Castle, this, std::placeholders::_1);
 	colFunc[COL_ID::SHIP_SHIP_COL] = std::bind(&Actor::Ship_vs_Ship, this, std::placeholders::_1);
@@ -710,6 +711,49 @@ CollisionParameter Actor::Castle_vs_Wind(const Actor& other) const
 	return colpara;
 
 }
+
+CollisionParameter Actor::Wind_vs_Home(const Actor& other) const
+{
+	CollisionParameter colpara;
+	Sphere castle;
+	castle.position = other.parameter.mat.GetPosition() + Vector3(0.0f, other.parameter.radius, 0.0f);
+	castle.radius = other. parameter.radius;
+
+	WindFlow* w = static_cast<WindFlow*>(const_cast<Actor*>(this));
+	std::vector<Vector3> dashPositions = w->GetDashPositions();
+	int dashPositionSize = dashPositions.size();
+	Vector3 move = w->GetMoveVec();
+
+	if (dashPositionSize < 2)
+	{
+		colpara.colID = COL_ID::CASTLE_WIND_COL;
+		return colpara;
+	}
+
+	Capsule wind;
+	wind.radius = parameter.radius;
+	for (int i = 0; i < dashPositionSize; i++)
+	{
+		wind.startPos = dashPositions.at(i) + move;
+		wind.endPos = wind.startPos;
+		wind.endPos.y = parameter.height.y;
+		colpara = Collisin::GetInstace().SphereCapsule(castle, wind);
+
+		if (colpara.colFlag)
+		{
+			if (i == dashPositionSize - 1)
+				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i) - dashPositions.at(i - 1));
+			else
+				colpara.colVelosity = Vector3::Normalize(dashPositions.at(i + 1) - dashPositions.at(i));
+
+			colpara.colID = COL_ID::WIND_HOME_COL;
+			return colpara;
+		}
+	}
+	colpara.colID = COL_ID::WIND_HOME_COL;
+	return colpara;
+}
+
 
 CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 {
