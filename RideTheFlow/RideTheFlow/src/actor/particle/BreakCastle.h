@@ -20,6 +20,8 @@ enum CASTLE_SELECT
 	ISLE3,
 	//ŒR‘à
 	ARMY_ENEMY,
+	//‰Æ
+	HOME,
 };
 
 //‰ó‚ê•û‚ð‘I‘ð
@@ -71,6 +73,8 @@ private:
 
 	void CastleDamageEmissive(std::function<Vector3()> vecFunc);
 	void ShipDamageEmissive(std::function<Vector3()> vecFunc);
+
+	void HomeEmissive();
 
 	Vector3 RandomVelocity();
 

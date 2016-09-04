@@ -91,6 +91,8 @@ private:
 	CollisionParameter Enemy_vs_Wind(const Actor& other) const;
 	//•—‚Æé‚Ì‚ ‚½‚è”»’è
 	CollisionParameter Castle_vs_Wind(const Actor& other) const;
+	//é‚Æ‰Æ‚Ì‚ ‚½‚è”»’è
+	CollisionParameter Wind_vs_Home(const Actor& other) const;
 
 	//‘D‚Æ‘D‚Ì‚ ‚½‚è”»’è
 	CollisionParameter Ship_vs_Ship(const Actor& other)const;

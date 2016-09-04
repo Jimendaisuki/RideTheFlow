@@ -7,6 +7,7 @@
 #include "../../time/Time.h"
 #include "../../sound/Sound.h"
 #include "../../WindAndTornadoSetting.h"
+#include "../../world/IWorld.h"
 
 ////タックルされた後の移動速度
 //static const float MoveSpeed = 400.0f;
@@ -36,6 +37,8 @@ WindFlow::~WindFlow()
 }
 void WindFlow::Update()
 {
+	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::WIND_HOME_COL);
+
 	//ダッシュ終了までは座標配列を更新
 	int size = player.ReturnDashPosStorage().size();
 	if (size > 0 && !isSetting)

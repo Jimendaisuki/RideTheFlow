@@ -116,8 +116,9 @@ void BreakCastle::TornadoBreakEmissive()
 	case MASTER_CASTLE:MasterCastleEmissive(Vector3::Zero,45.0f * 2.4f); break;
 	case CHILD_CASTLE:MasterCastleEmissive(Vector3::Zero, 45.0f * 1.2f); break;
 	case SHIP: ShipEmissive([]{return Vector3::Zero; }); break;
-	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return Vector3::Zero; }); break;
 	case ISLE1: break;
+	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return Vector3::Zero; }); break;
+	case HOME:HomeEmissive(); break;
 	default: break;
 	}
 }
@@ -127,9 +128,10 @@ void BreakCastle::WindFlowBreakEmissive()
 	{
 	case MASTER_CASTLE:CastleWindFlowBreakEmissive(45.0f * 2.4f); break;
 	case CHILD_CASTLE:CastleWindFlowBreakEmissive(45.0f * 1.2f); break;
-	case SHIP: ShipEmissive([&]{return RandomVelocity(); }); break; break;
+	case SHIP: ShipEmissive([&]{return RandomVelocity(); });  break;
 	case ISLE1: break;
 	case ARMY_ENEMY: ArmyEnemyEmissive([&]{return RandomVelocity(); }); break;
+	case HOME:HomeEmissive(); break;
 	default: break;
 	}
 }
@@ -262,8 +264,16 @@ void BreakCastle::ArmyEnemyEmissive(std::function<Vector3()> vecFunc)
 	}
 }
 
+void BreakCastle::HomeEmissive()
+{
+	AddParticle(std::make_shared<BreakCastleParticle>(MODEL_ID::HOME_MODEL, breakSelect, &ps_parameter.position, Vector3::Zero, RandomVelocity(), 0, 0, 4.8f));
+}
+
 Vector3 BreakCastle::RandomVelocity()
 {
 	Random &r = Random::GetInstance();
 	return Vector3(r.Range(-1.0f, 1.0f), r.Range(-1.0f, 1.0f), r.Range(-1.0f, 1.0f)).Normalized() * r.Range(3.0f, 9.0f);
 }
+
+
+
