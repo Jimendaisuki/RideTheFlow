@@ -113,6 +113,7 @@
     <ClCompile Include="src\scene\EventScene.cpp" />
     <ClCompile Include="src\scene\PVScene.cpp" />
     <ClCompile Include="src\UIactor\CsvReader.cpp" />
+    <ClCompile Include="src\UIactor\EnemyCredit.cpp" />
     <ClCompile Include="src\UIactor\EnemyHP.cpp" />
     <ClCompile Include="src\UIactor\EnemyPoint.cpp" />
     <ClCompile Include="src\UIactor\FlowRoot.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="src\scene\EventScene.h" />
     <ClInclude Include="src\SEVolumeSetting.h" />
     <ClInclude Include="src\UIactor\CsvReader.h" />
+    <ClInclude Include="src\UIactor\EnemyCredit.h" />
     <ClInclude Include="src\UIactor\EnemyHP.h" />
     <ClInclude Include="src\UIactor\EnemyPoint.h" />
     <ClInclude Include="src\UIactor\FlowRoot.h" />
