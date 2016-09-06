@@ -23,7 +23,7 @@ struct ActorParameter
 class Actor{
 public:
 	Actor(IWorld& world_);
-	~Actor();
+	virtual ~Actor();
 	virtual void Update() = 0;
 	virtual void Draw() const = 0;
 	void Collide(COL_ID id, Actor& other);
