@@ -13,7 +13,7 @@ const Vector2 MINI_MAP_SIZE = Vector2(512.0f, 512.0f);
 const Vector2 STAGE_SIZE = Vector2(70 * 240, 70 * 240);
 
 // ミニマップ描画位置
-const Vector2 MAP_DRAW_POSITION = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) - MINI_MAP_SIZE / 2.0f * MINI_MAP_SCALE;
+const Vector2 MAP_DRAW_POSITION = Vector2(WINDOW_WIDTH, 350) - MINI_MAP_SIZE / 2.0f * MINI_MAP_SCALE;
 
 // リサイズ
 const float RE_SIZE_SCALE = MINI_MAP_SIZE.x / 2 / STAGE_SIZE.x * MINI_MAP_SCALE;
