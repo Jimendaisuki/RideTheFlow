@@ -24,6 +24,9 @@ void Content::LoadSprite(Sprite& sprite, Model& model)
 	sprite.Load("minimap.png", SPRITE_ID::MINIMAP_SPRITE);
 	sprite.Load("playerpoint.png", SPRITE_ID::MAP_PLAYER_SPRITE);
 	sprite.Load("enemypoint.png", SPRITE_ID::ENEMY_SPRITE);
+	/* 敵残機 */
+	sprite.Load("castle.png", SPRITE_ID::CASTLE_CREDIT_SPRITE);
+	sprite.Load("ship.png", SPRITE_ID::SHIP_CREDIT_SPRITE);
 	/* スタミナゲージ */
 	sprite.Load("staminagauge.png", SPRITE_ID::STAMINA_SPRITE);
 	sprite.Load("staminaback.png", SPRITE_ID::STAMINA_BACK_SPRITE);

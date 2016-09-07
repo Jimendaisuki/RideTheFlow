@@ -45,7 +45,7 @@ flowAddPosition(Vector3::Zero)
 	{
 		rotXAdd			 = Random::GetInstance().Range(14.0f, 20.0f);
 		rotYAdd			 = Random::GetInstance().Range(18.0f, 24.0f);
-		risingSpeed		 = Random::GetInstance().Range(30.0f, 40.0f);
+		risingSpeed		 = Random::GetInstance().Range(60.0f, 120.0f);
 		tornadeDegree	 = Random::GetInstance().Range(0.0f, 360.0f);
 		tornadeAddRadius = Random::GetInstance().Range(70.0f, 100.0f);
 	}

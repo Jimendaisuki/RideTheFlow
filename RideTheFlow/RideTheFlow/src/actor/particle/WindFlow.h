@@ -5,7 +5,7 @@
 #include "ParticleSystem.h"
 
 //ƒ_ƒbƒVƒ…‚É¶¬‚·‚é—¬‚ê
-class WindFlow :public Actor,public ParticleSystem
+class WindFlow :public Actor, public ParticleSystem,public std::enable_shared_from_this<WindFlow>
 {
 public:
 	//=======Actor======//

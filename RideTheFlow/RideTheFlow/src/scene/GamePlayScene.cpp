@@ -22,6 +22,7 @@
 #include "../CloudSetting.h"
 #include "../actor/FogActor.h"
 #include "../UIactor/MiniMap.h"
+#include "../UIactor/EnemyCredit.h"
 #include "../UIactor/Failure.h"
 
 
@@ -50,6 +51,7 @@ void GamePlayScene::Initialize()
 	wa.Add(ACTOR_ID::EFFECT_ACTOR, std::make_shared<StageGenerator>(wa, "TitleStage"));
 	wa.Add(ACTOR_ID::CAMERA_ACTOR, std::make_shared<FogActor>(wa));
 	wa.UIAdd(UI_ID::MINIMAP_UI, std::make_shared<MiniMap>(wa));
+	wa.UIAdd(UI_ID::CREDIT_UI, std::make_shared<EnemyCredit>(wa));
 
 	for (int i = 0; i < CLOUD_LOW_POSITION_NUM; i++)
 		wa.Add(ACTOR_ID::CLOUD_ACTOR, std::make_shared<Cloud>(wa, Vector3(Random::GetInstance().Range(-5000.0f, 5000.0f), 0.0f, Random::GetInstance().Range(-5000.0f, 5000.0f))));
