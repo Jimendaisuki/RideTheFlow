@@ -89,7 +89,8 @@ private:
 	//タイトル
 	bool mTitle;
 	int mTitleRank;
-
+	
+	// HPバー
 	EnemyHP		gauge;
 
 	std::array<Castle*, 5> castles;

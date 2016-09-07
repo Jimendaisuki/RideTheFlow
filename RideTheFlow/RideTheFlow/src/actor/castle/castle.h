@@ -4,6 +4,7 @@
 #include <memory>
 #include "../../time/Time.h"
 #include "../particle/BreakCastle.h"
+#include "../../UIactor/EnemyHP.h"
 
 struct CastleEnemyPos
 {
@@ -87,5 +88,6 @@ private:
 	//€ˆö
 	BREAK_SELECT breakSelect;
 
-
+	// HPƒo[
+	EnemyHP		gauge;
 };

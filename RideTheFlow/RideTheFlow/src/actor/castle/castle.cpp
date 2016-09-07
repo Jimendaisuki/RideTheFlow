@@ -79,6 +79,8 @@ damageCount(0.0f)
 
 	parent = &_parent;
 
+	gauge.Initialize(parameter.HP, parameter.mat.GetPosition());
+
 	startPos = position;
 	Vector3 pos = parent->GetParameter().mat.GetPosition();
 	endPos = (pos + parent->GetParameter().height) + parameter.height*mRank;
@@ -150,11 +152,14 @@ void Castle::Update()
 	velocity = mPosition - prevPos;
 
 	prevRank = mRank;
+
+	gauge.Update(parameter.HP, parameter.mat.GetPosition());
 }
 
 void Castle::Draw() const
 {
 	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
+	gauge.Draw();
 }
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)

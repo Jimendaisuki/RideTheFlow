@@ -17,7 +17,7 @@ struct UIActorParameter
 class UIActor{
 public:
 	UIActor(IWorld& world_);
-	~UIActor();
+	virtual ~UIActor();
 	virtual void Update() = 0;
 	virtual void Draw() const = 0;
 	virtual bool IsDead() const{ return parameter.isDead; }
