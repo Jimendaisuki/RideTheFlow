@@ -16,8 +16,6 @@ endPos(position),
 mPosition(position),
 mScale(30.0f*scale),
 castleDown(true),
-noColTimer(0),
-noCol(false),
 castleUpTimer(0.0f)
 {
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
@@ -39,6 +37,8 @@ castleUpTimer(0.0f)
 	mRotateY = rotateY;
 	sevePos = mPosition;
 	mScaleFloat = scale;
+	seveRank = mc.getRank();
+	mRank = seveRank;
 }
 
 CastleTop::~CastleTop()
@@ -52,11 +52,14 @@ void CastleTop::Update()
 		playerMat = other.GetParameter().mat;
 	});
 
-	castleUpTimer += 20.0f*Time::DeltaTime;
-	if (mMc->castleRankUp())
+	mRank = mMc->getRank();
+
+	castleUpTimer += 5.0f*Time::DeltaTime;
+	if (seveRank != mRank)
 	{
-		startPos = mPosition;
-		endPos = mPosition + Vector3(0.0f, 34.0f, 0.0f)*mScaleFloat;
+		startPos = parameter.mat.GetPosition();
+		endPos = (mMc->GetParameter().mat.GetPosition() + mMc->GetParameter().height) +
+			(Vector3(0.0f,34.0f,0.0f)*2.4f)*mRank;
 		castleUpTimer = 0.0f;
 	}
 
@@ -70,6 +73,7 @@ void CastleTop::Update()
 	parameter.mat = Matrix4::Scale(mScale)*
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
+	seveRank = mRank;
 }
 
 void CastleTop::Draw() const

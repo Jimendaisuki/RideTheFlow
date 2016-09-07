@@ -29,7 +29,7 @@ mRotateY(rotateY),
 InvincibleTimer(0.0f),
 deadRagTimer(0.0f),
 testRnak(1),
-mRank(Rank),
+mRank(0),
 mTitleRank(titleRank),
 mTitle(title),
 mSpawnShip(spawnShip),
@@ -41,7 +41,7 @@ spawnEnemyFlag(false)
 	parameter.radius = 35 * scale;
 	parameter.HP = MasterCastleHp;
 	parameter.isDead = false;
-	parameter.height = Vector3(0.0f, 70.0f + 34 * testRnak, 0.0f)*scale;
+	parameter.height = Vector3(0.0f, 70.0f, 0.0f)*scale;
 	parameter.mat =
 		Matrix4::Scale(mScale*scale) *
 		Matrix4::RotateZ(0) *
@@ -56,11 +56,13 @@ spawnEnemyFlag(false)
 			parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius, 0.0f)
 			, parameter.radius * 2, *this));
 		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<CastleTop>(world, parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2.0f, 0.0f), *this, rotateY, scale));
-
 	}
 	parent = this;
 
 	gauge.Initialize(parameter.HP, parameter.mat.GetPosition());
+
+	for (auto& castle : castles)
+		castle = nullptr;
 }
 
 MasterCastle::~MasterCastle()
@@ -77,18 +79,29 @@ void MasterCastle::Update()
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CASTLE_WIND_COL);
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::AIR_GUN_ACTOR, COL_ID::CASTLE_AIRGUN_COL);
 
-		//積み重なる城
-		if (rankUp&&Rank >= testRnak)
+		castlesList.remove_if([](Castle* castle){return castle->GetDeadRagFlag(); });
+		int count = 0;
+		for (auto& i : castlesList)
 		{
-			testRnak++;
-			mRank--;
-			world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<Castle>(world,
+			if (i != nullptr)
+			{
+				i->SetRank(count);
+				count++;
+			}
+		}
+		//積み重なる城
+		if (rankUp&&Rank > castlesList.size())
+		{
+			mRank++;
+			auto castle = std::make_shared<Castle>(world,
 				mPosition + Vector3(0.0f, parameter.radius, 0.0f)
-				, *this, Rank - mRank, mRotateY, mScaleFloat));
-			//height更新
-			parameter.height = Vector3(0.0f, (70.0f + 34.0f*testRnak))*mScaleFloat;
+				, *this, mRank, mRotateY, mScaleFloat);
+
+			world.Add(ACTOR_ID::CASTLE_ACTOR, castle);
+			castlesList.push_front(castle.get());
 			rankUp = false;
 		}
+
 
 		//これ以上積みあがれるか
 		if (testRnak >= Rank)
@@ -141,8 +154,8 @@ void MasterCastle::Update()
 			if (deadRagTimer >= 0.5f)
 				parameter.isDead = true;
 		}
-
 	}
+
 	//マトリックス計算
 	parameter.mat =
 		Matrix4::Scale(mScale)*

@@ -19,7 +19,7 @@
 #include "../../sound/Sound.h"
 #include "../../WindAndTornadoSetting.h"
 
-Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY,float scale) :
+Castle::Castle(IWorld& world, Vector3 position, Actor& _parent, int rank, float rotateY, float scale) :
 Actor(world),
 mPosition(position),
 sevePos(position),
@@ -27,17 +27,22 @@ prevPos(Vector3::Zero),
 velocity(Vector3::Zero),
 endPos(Vector3::Zero),
 mRank(rank),
+prevRank(rank),
 mRotateY(rotateY),
 mScaleFloat(scale),
 castleUpTimer(0.0f),
 deadRagCount(0.0f),
 isLook(true),
-deadRagFlag(false)
+deadRagFlag(false),
+deadMasterCastle(false),
+isDamage(false),
+damageCount(0.0f)
 {
+	parameter.HP = BaseCastleHp;
 	mScale = Vector3(30.0f, 30.0f, 30.0f)*scale;
 	parameter.id = ACTOR_ID::CASTLE_ACTOR;
 	parameter.isDead = false;
-	parameter.radius = 17*scale;
+	parameter.radius = 17 * scale;
 	parameter.height = Vector3(0.0f, 34.0f, 0.0f)*scale;
 	parameter.mat =
 		Matrix4::Scale(mScale) *
@@ -49,7 +54,7 @@ deadRagFlag(false)
 	//èÈÇ…èÊÇ¡ÇƒÇ¢ÇÈìGÇÃà íuÇÉZÉbÉg
 	Vector3 enemyScaleSet = Vector3(scale, scale, scale);
 	CastleEnemyPosSet();
-	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90 + rotateY,scale));
+	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon01, *this, -90 + rotateY, scale));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon02, *this, 0 + rotateY, scale));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon03, *this, 90 + rotateY, scale));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleCannon>(world, castleEnemyPos.cannon04, *this, 180 + rotateY, scale));
@@ -59,7 +64,7 @@ deadRagFlag(false)
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor03, *this, 90, scale));
 	world.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<CastleVaristor>(world, castleEnemyPos.varistor04, *this, 0, scale));
 
-	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY,scale));
+	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear01, *this, -90 + rotateY, scale));
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear02, *this, 0 + rotateY, scale));
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear03, *this, 90 + rotateY, scale));
 	world.Add(ACTOR_ID::DORAGONSPEAR_ACTOR, std::make_shared<CastleDoragonSpear>(world, castleEnemyPos.Spear04, *this, 180 + rotateY, scale));
@@ -72,10 +77,11 @@ deadRagFlag(false)
 	world.Add(ACTOR_ID::PARTICLE_ACTOR, std::make_shared<CastleAdd>(world, position, CastleAddSmokeNum, CastleAddSmokeSize, CastleAddSmokeSizePlusMin, CastleAddSmokeSizePlusMax));
 	Sound::GetInstance().PlaySE(SE_ID::CONSTRUCTION_SE);
 
-	startPos = position;
-	endPos =  mPosition + Vector3(0.0f, parameter.radius * 2.0f, 0.0f);
-
 	parent = &_parent;
+
+	startPos = position;
+	Vector3 pos = parent->GetParameter().mat.GetPosition();
+	endPos = (pos + parent->GetParameter().height) + parameter.height*mRank;
 }
 
 
@@ -99,52 +105,98 @@ void Castle::Update()
 	if (parent->GetParameter().isDead)
 	{
 		deadRagFlag = true;
+		deadMasterCastle = true;
 	}
+	if (parameter.HP <= 0)
+		deadRagFlag = true;
+
 	if (deadRagFlag)
 	{
 		deadRagCount += Time::DeltaTime;
+		if (deadMasterCastle)
+			breakSelect = mas->getBreakSelect();
 		//Ç™ÇÍÇ´ÇîÚÇŒÇ∑
 		world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, breakSelect));
 		Sound::GetInstance().PlaySE(SE_ID::CASTLE_BREAK_SE);
 		if (deadRagCount >= 0.1f)
 			parameter.isDead = true;
 	}
-
-	castleUpTimer += 15.0f* Time::DeltaTime;
-	if (mas->castleRankUp())
+	//ñ≥ìGéûä‘
+	if (isDamage)
 	{
-		startPos = mPosition;
-		endPos = mPosition + Vector3(0.0f, parameter.radius * 2.0f, 0.0f);
-		castleUpTimer = 0.0f;
+		damageCount += Time::DeltaTime;
+		if (damageCount >= CastleInvincibleTime)
+		{
+			damageCount = 0.0f;
+			isDamage = false;
+		}
 	}
-
-	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
-	velocity = mPosition - prevPos;
-	breakSelect = mas->getBreakSelect();
 
 	parameter.mat =
 		Matrix4::Scale(mScale) *
 		Matrix4::RotateY(mRotateY)*
 		Matrix4::Translate(mPosition);
+
+	if (prevRank != mRank)
+	{
+		Vector3 pos = parent->GetParameter().mat.GetPosition();
+		startPos = parameter.mat.GetPosition();
+		endPos = (pos + parent->GetParameter().height) + parameter.height*mRank;
+		castleUpTimer = 0.0f;
+	}
+	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
+	castleUpTimer += 5.0f*Time::DeltaTime;
+
+	velocity = mPosition - prevPos;
+
+	prevRank = mRank;
 }
 
 void Castle::Draw() const
 {
-	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);}
+	Model::GetInstance().Draw(MODEL_ID::CASTLE_BASE_MODEL, parameter.mat);
+}
 
 void Castle::OnCollide(Actor& other, CollisionParameter colpara)
 {
-	//if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
-	//{
-	//	static_cast<MasterCastle*>(parent)->DamageTornad(mPosition);
-	//}
-	//if (colpara.colID == COL_ID::CASTLE_WIND_COL)
-	//{
-	//	static_cast<MasterCastle*>(parent)->DamageWind(mPosition);
-	//}
-	if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL)
+	if (!isDamage)
 	{
-		static_cast<MasterCastle*>(parent)->DamageAirGun(mPosition);
+		if (colpara.colID == COL_ID::TORNADO_CASTLE_COL)
+		{
+			isDamage = true;
+			parameter.HP -= CastleDamegeTornado;
+			if (parameter.HP <= 0)
+			{
+				breakSelect = BREAK_SELECT::TORNADO;
+			}
+			else
+				world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>
+				(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, BREAK_SELECT::DAMAGE));
+		}
+		if (colpara.colID == COL_ID::CASTLE_WIND_COL)
+		{
+			isDamage = true;
+			parameter.HP -= CastleDamegeWind;
+			if (parameter.HP <= 0)
+			{
+				breakSelect = BREAK_SELECT::WIND_FLOW;
+			}
+			else
+				world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>
+				(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, BREAK_SELECT::DAMAGE));
+		}
+		if (colpara.colID == COL_ID::CASTLE_AIRGUN_COL)
+		{
+			isDamage = true;
+			parameter.HP -= CastleDamageWindBall;
+			if (parameter.HP <= 0)
+			{
+				breakSelect = BREAK_SELECT::WIND_BALL;
+			}
+			else
+				world.Add(ACTOR_ID::CASTLE_BREAK_ACTOR, std::make_shared<BreakCastle>
+				(world, mPosition, CASTLE_SELECT::CHILD_CASTLE, BREAK_SELECT::DAMAGE));
+		}
 	}
 }
 void Castle::CastleEnemyPosSet()
@@ -152,13 +204,13 @@ void Castle::CastleEnemyPosSet()
 	castleEnemyPos.cannon01 =
 		(parameter.mat.GetFront().Normalized()*-25.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f )*mScaleFloat +
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.cannon02 =
 		(parameter.mat.GetFront().Normalized()*25.0f +
 		parameter.mat.GetLeft().Normalized()*-32.0f +
-		parameter.mat.GetUp().Normalized()*5.0f )*mScaleFloat+
+		parameter.mat.GetUp().Normalized()*5.0f)*mScaleFloat +
 		parameter.mat.GetPosition();
 
 	castleEnemyPos.cannon03 =
@@ -208,19 +260,19 @@ void Castle::CastleEnemyPosSet()
 		(parameter.mat.GetFront().Normalized()*0.0f +
 		parameter.mat.GetLeft().Normalized()*22.0f +
 		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
-		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius * 2, 0.0f);
 
 	castleEnemyPos.Spear03 =
 		(parameter.mat.GetFront().Normalized()*-22.0f +
 		parameter.mat.GetLeft().Normalized()*0.0f +
 		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
-		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius * 2, 0.0f);
 
 	castleEnemyPos.Spear04 =
 		(parameter.mat.GetFront().Normalized()*0.0f +
 		parameter.mat.GetLeft().Normalized()*-22.0f +
 		parameter.mat.GetUp().Normalized()*-15.0f)*mScaleFloat +
-		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius*2, 0.0f);
+		parameter.mat.GetPosition() + Vector3(0.0f, parameter.radius * 2, 0.0f);
 
 	castleEnemyPos.Soldier01 =
 		(parameter.mat.GetFront().Normalized()*27.0f +

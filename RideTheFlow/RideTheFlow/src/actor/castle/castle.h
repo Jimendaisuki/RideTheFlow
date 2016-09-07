@@ -51,6 +51,10 @@ public:
 	{
 		return deadRagFlag;
 	}
+	void SetRank(int rank)
+	{
+		mRank = rank;
+	}
 private:
 	void CastleEnemyPosSet();
 private:
@@ -59,6 +63,9 @@ private:
 	float mScaleFloat;
 	float mRotateY;
 
+	//–³“GŠÔ
+	float damageCount;
+	bool isDamage;
 	//é‚ÌˆÚ“®—Ê
 	Vector3 velocity;
 	Vector3 sevePos;
@@ -69,12 +76,13 @@ private:
 	Vector3 endPos;
 	bool isLook;
 	int mRank;
+	int prevRank;
 	float castleUpTimer;
 
 	//€‚ñ‚¾ƒ‰ƒO
 	float deadRagCount;
 	bool deadRagFlag;
-
+	bool deadMasterCastle;
 	CastleEnemyPos castleEnemyPos;
 	//€ˆö
 	BREAK_SELECT breakSelect;

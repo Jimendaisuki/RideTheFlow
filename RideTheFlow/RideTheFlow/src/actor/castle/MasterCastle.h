@@ -6,7 +6,9 @@
 #include "../particle/BreakCastle.h"
 #include "../tornado/Tornado.h"
 #include "../../UIactor/EnemyHP.h"
-
+#include "castle.h"
+#include <array>
+#include <list>
 class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
 {
 public:
@@ -32,7 +34,7 @@ public:
 	}
 	int getRank()
 	{
-		return Rank - mRank;
+		return castlesList.size();
 	}
 	void RankUp()
 	{
@@ -89,4 +91,9 @@ private:
 	int mTitleRank;
 
 	EnemyHP		gauge;
+
+	std::array<Castle*, 5> castles;
+
+	std::list<Castle*> castlesList;
+
 };

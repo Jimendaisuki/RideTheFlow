@@ -26,9 +26,9 @@ private:
 	Vector3 sevePos;
 	bool castleDown;
 
-	bool noCol;
-	float noColTimer;
+	int seveRank;
 	int mRank;
+
 	float castleUpTimer;
 	float mRotateY;
 	float mScaleFloat;

@@ -5,11 +5,13 @@ const float CastleCameraFrontAttack = 10.0f;
 
 //マスター城のHP
 const float MasterCastleHp = 20.0f;
+//間の城のHP
+const float BaseCastleHp = 10.0f;
 
 //城がトルネードで受けるダメージ
 const float CastleDamegeTornado = 10.0f;
 //城が流れで受けるダメージ
-const float CastleDamegeWind = 5.0f;
+const float CastleDamegeWind = 0.5f;
 //城が空気砲で受けるダメージ
 const float CastleDamageWindBall = 5.0f;
 
@@ -19,7 +21,7 @@ const float CastleInvincibleTime = 3.0f;
 //城の上に積み重なる城の段数
 const int Rank = 5;
 //城が積みあがる時間(秒)
-const float RankUpSecond = 5.0f;
+const float RankUpSecond = 2.0f;
 
 //城が排出する軍隊の時間
 const float SpawnArmyEnemyTime = 5.0f;
