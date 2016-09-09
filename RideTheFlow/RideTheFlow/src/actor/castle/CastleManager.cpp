@@ -23,8 +23,10 @@ CastleManager::~CastleManager()
 
 void CastleManager::Update()
 {
-	//èÈÇ™ñ≥Ç©Ç¡ÇΩ
-	if (world.GetActors(ACTOR_ID::MASTER_CASTLE_ACTOR).empty())return;
+	////èÈÇ™ñ≥Ç©Ç¡ÇΩ
+	//if (world.GetActors(ACTOR_ID::MASTER_CASTLE_ACTOR).empty())return;
+
+	if (world.GetActorCount(ACTOR_ID::MASTER_CASTLE_ACTOR, ACTOR_ID::MASTER_CASTLE_ACTOR) == 0) return;
 	//èÈÇÃêî
 	int masterCount = world.GetActors(ACTOR_ID::MASTER_CASTLE_ACTOR).size();
 

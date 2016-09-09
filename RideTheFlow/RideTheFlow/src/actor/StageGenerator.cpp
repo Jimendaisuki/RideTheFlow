@@ -80,6 +80,9 @@ void StageGenerator::AddActor()
 			world.Add(ACTOR_ID::MASTER_CASTLE_ACTOR, std::make_shared<MasterCastle>(world, position, rotation.y, 2.4f, false, true, 5));
 		break;
 	case 2:	// ‰Æ
+		if (isEndingScene_)
+			break;
+
 		world.Add(ACTOR_ID::CASTLE_ACTOR, std::make_shared<HomeActor>(world, 4.8f, position, rotation));
 		break;
 	case 3: // “‡‚P
