@@ -5,6 +5,7 @@
 #include "../math/Math.h"
 #include <list>
 #include <vector>
+#include "castle\MasterCastle.h"
 
 #include "../graphic/Model.h"
 #include "Player.h"
@@ -761,7 +762,7 @@ CollisionParameter Actor::Player_vs_Castle(const Actor& other)const
 	CollisionParameter colpara2;
 	Capsule castle;
 	castle.startPos = other.parameter.mat.GetPosition();
-	castle.endPos = castle.startPos + other.parameter.height;
+	castle.endPos = castle.startPos + Vector3(0.0f, dynamic_cast<MasterCastle*>(const_cast<Actor*>(&other))->castleHeigh(), 0.0f);
 	castle.radius = 80.0f*2.4f;
 	Sphere player;
 	player.position = parameter.mat.GetPosition();

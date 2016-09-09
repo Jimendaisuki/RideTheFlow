@@ -9,10 +9,10 @@
 #include "castle.h"
 #include <array>
 #include <list>
-class MasterCastle : public Actor,public std::enable_shared_from_this<MasterCastle>
+class MasterCastle : public Actor, public std::enable_shared_from_this<MasterCastle>
 {
 public:
-	MasterCastle(IWorld& world, Vector3 position,float scale, float rotateY, bool spawnShip, bool title,int titleRank);
+	MasterCastle(IWorld& world, Vector3 position, float scale, float rotateY, bool spawnShip, bool title, int titleRank);
 	~MasterCastle();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -27,10 +27,9 @@ public:
 	{
 		return rankUp;
 	}
-	void castleLost()
+	float castleHeigh()
 	{
-		testRnak--;
-		parameter.height = Vector3(0.0f, 70.0f + 34.0f*testRnak, 0.0f);
+		return  70.0f*mScaleFloat + (34.0f*mScaleFloat * castlesList.size());
 	}
 	int getRank()
 	{
@@ -89,7 +88,7 @@ private:
 	//タイトル
 	bool mTitle;
 	int mTitleRank;
-	
+
 	// HPバー
 	EnemyHP		gauge;
 
