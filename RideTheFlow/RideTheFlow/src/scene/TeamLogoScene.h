@@ -29,4 +29,6 @@ public:
 private:
 	bool mIsEnd;
 	World wa;
+
+	int count;
 };

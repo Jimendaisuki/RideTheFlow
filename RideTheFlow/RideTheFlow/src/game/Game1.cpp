@@ -32,10 +32,10 @@ void Game1::Initialize()
 	Sprite::GetInstance().Initialize();
 	Sound::GetInstance().Initialize();
 
-	// ファイルの読み込み
-	mContent.LoadSprite(Sprite::GetInstance(), Model::GetInstance());
-	mContent.LoadSound(Sound::GetInstance());
-	mContent.LoadModel(Model::GetInstance(), false);
+	//// ファイルの読み込み
+	//mContent.LoadSprite(Sprite::GetInstance(), Model::GetInstance());
+	//mContent.LoadSound(Sound::GetInstance());
+	//mContent.LoadModel(Model::GetInstance(), false);
 
 	mSceneManager.Add(Scene::Demo, std::make_shared<TeamLogoScene>());
 	mSceneManager.Add(Scene::Title, std::make_shared<TitleScene>());
@@ -51,6 +51,15 @@ void Game1::Initialize()
 
 void Game1::Update()
 {
+	if (!mIsLoaded)
+	{
+		// ファイルの読み込み
+		mContent.LoadSprite(Sprite::GetInstance(), Model::GetInstance());
+		mContent.LoadSound(Sound::GetInstance());
+		mContent.LoadModel(Model::GetInstance(), false);
+		mIsLoaded = true;
+	}
+
 	// 時間を更新
 	mTime.Update();
 
