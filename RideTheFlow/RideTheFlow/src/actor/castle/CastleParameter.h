@@ -21,7 +21,7 @@ const float CastleInvincibleTime = 3.0f;
 //é‚Ìã‚ÉÏ‚İd‚È‚éé‚Ì’i”
 const int Rank = 5;
 //é‚ªÏ‚İ‚ ‚ª‚éŠÔ(•b)
-const float RankUpSecond = 2.0f;
+const float RankUpSecond = 5.0f;
 
 //é‚ª”ro‚·‚éŒR‘à‚ÌŠÔ
 const float SpawnArmyEnemyTime = 5.0f;

@@ -69,7 +69,7 @@ const float ShipHp = 10.0f;
 //船がトルネードで受けるダメージ
 const float ShipDamegeTornado = 10.0f;
 //船が流れで受けるダメージ
-const float ShipDamegeWind = 5.0f;
+const float ShipDamegeWind = 0.5f;
 //船が空気砲で受けるダメージ
 const float ShipDamegeWindBall = 5.0f;
 
