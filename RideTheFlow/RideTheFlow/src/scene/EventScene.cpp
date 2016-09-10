@@ -214,7 +214,7 @@ void EventScene::Update()
 		Sound::GetInstance().SetSEVolume(SE_ID::SAND_STORM_SE, stormVol);
 		if (currentFogFar < 10000 && stormVol >= 1.0f)
 		{
-			wo.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wo, Vector3(3000.0f, 0.0f, 0.0f), Vector2(100), Vector3::Zero, 800.0f));
+			wo.Add(ACTOR_ID::TORNADO_ACTOR, std::make_shared<Tornado>(wo, Vector3(3000.0f, 0.0f, 0.0f), Vector2(100), Vector3::Zero, 800.0f, true));
 			status = EventScene::EVENT_GONG;
 		}
 		break;

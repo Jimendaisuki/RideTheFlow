@@ -11,7 +11,7 @@ class Tornado : public Actor, public ParticleSystem, public std::enable_shared_f
 {
 public:
 	//=======Actor======//
-	Tornado(IWorld& world, Vector3 position, Vector2 scale, Vector3 velocity, float radius_);
+	Tornado(IWorld& world, Vector3 position, Vector2 scale, Vector3 velocity, float radius_, bool isEvent = false);
 	~Tornado();
 	virtual void Update() override;
 	virtual void Draw() const override;
@@ -33,6 +33,7 @@ private:
 	float	radius;
 
 	bool	isHit;
+	bool	isEvent_;
 
 	float timer;
 };

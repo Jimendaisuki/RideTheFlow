@@ -13,12 +13,13 @@
 
 
 const float TornadoDefaltSpeed = 1000.0f;
-Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_,float radius_) :
+Tornado::Tornado(IWorld& world, Vector3 position_, Vector2 scale_, Vector3 velocity_,float radius_, bool isEvent) :
 Actor(world),
 position(position_.x, -800.0f, position_.z),
 velocity(Vector3(velocity_.x,0.0f,velocity_.z).Normalized()),
 timer(0.0f),
-radius(radius_ * 6.0f)
+radius(radius_ * 6.0f),
+isEvent_(isEvent)
 {
 	ACTIVITYTIME = TornadoLifeLimit;
 	GRAVITY = 0.0f;
@@ -57,10 +58,13 @@ void Tornado::Update()
 		return;
 	}
 
+	if (!isEvent_)
+	{
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR, COL_ID::TORNADO_CASTLE_COL);
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_BREAK_ACTOR, COL_ID::TORNADO_CASTLE_COL);
+		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::TORNAD_BULLET_COL);
+	}
 	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::TORNADO_STAGE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_ACTOR , COL_ID::TORNADO_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::CASTLE_BREAK_ACTOR, COL_ID::TORNADO_CASTLE_COL);
-	world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::TORNAD_BULLET_COL);
 	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::ISLAND_ACTOR , COL_ID::TORNADO_ISLAND_COL);
 
 
