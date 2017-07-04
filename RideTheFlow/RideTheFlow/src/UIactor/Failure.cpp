@@ -28,17 +28,17 @@ void Failure::Update()
 {
 	if (textAlpha < 1)
 	{
-		textAlpha += Time::DeltaTime / 6.0f;
+		textAlpha += Time::GetInstance().deltaTime() / 6.0f;
 		return;
 	}
 	textAlpha = 1;
 
 	if (scale <= 5.0f)
-		scale += Time::DeltaTime / 1.5f;
+		scale += Time::GetInstance().deltaTime() / 1.5f;
 	scale = Math::Clamp(scale, 0.6f, 5.0f);
 
 	if (backAlpha <= 1.0f)
-		backAlpha += Time::DeltaTime / 2.0f;
+		backAlpha += Time::GetInstance().deltaTime() / 2.0f;
 	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
 
 	if ((backAlpha >= 1.0f) && 
@@ -51,7 +51,7 @@ void Failure::Update()
 	if ((backAlpha >= 1.0f) &&
 		(FadePanel::GetInstance().IsAction()))
 	{
-		bgmVol -= Time::DeltaTime / 3.0f;
+		bgmVol -= Time::GetInstance().deltaTime() / 3.0f;
 	}
 
 	bgmVol = Math::Clamp(bgmVol, 0.0f, 1.0f);

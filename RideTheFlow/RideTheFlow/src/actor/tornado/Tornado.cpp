@@ -50,7 +50,7 @@ Tornado::~Tornado()
 
 void Tornado::Update()
 {
-	ACTIVITYTIME -= Time::DeltaTime;
+	ACTIVITYTIME -= Time::GetInstance().deltaTime();
 	if (ACTIVITYTIME <= 0)
 	{
 		parameter.isDead = true;
@@ -71,7 +71,7 @@ void Tornado::Update()
 	isHit = false;
 
 	//velocity.y = -GRAVITY;
-	position += velocity * speed  * Time::DeltaTime;
+	position += velocity * speed  * Time::GetInstance().deltaTime();
 
 	parameter.velocity = Vector3(velocity.x, 0.0f, velocity.z).Normalized() * speed;
 

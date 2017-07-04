@@ -32,7 +32,7 @@ void DashBlueLineParticle::OnUpdate()
 	if (size < 3)
 		return;
 
-	lifeParam.lifeTime += Time::DeltaTime * 2.0f;
+	lifeParam.lifeTime += Time::GetInstance().deltaTime() * 2.0f;
 	//ƒ_ƒbƒVƒ…‚Ì‹OÕ‚ð‚È‚¼‚é
 	//int num = size - (size * (lifeParam.lifeTime / lifeParam.lifeTimeLimit));
 	int num = size * (lifeParam.lifeTime / lifeParam.lifeTimeLimit);

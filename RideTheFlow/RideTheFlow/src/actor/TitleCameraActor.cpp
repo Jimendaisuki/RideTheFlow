@@ -49,7 +49,7 @@ void TitleCameraActor::Update()
 {
 	if (fade)
 	{
-		backAlpha += Time::DeltaTime * 3.0f;
+		backAlpha += Time::GetInstance().deltaTime() * 3.0f;
 		cameraPos += velocity;
 		targetPos += velocity;
 
@@ -73,7 +73,7 @@ void TitleCameraActor::Update()
 			SetLightDirection(-lightPos.Normalized());
 		}
 
-		backAlpha -= Time::DeltaTime * 3.0f;
+		backAlpha -= Time::GetInstance().deltaTime() * 3.0f;
 
 		if (time + 0.1f <= useRoots_C.front().moveTime)
 		{
@@ -119,7 +119,7 @@ void TitleCameraActor::Update()
 				fade = !fade;
 		}
 
-		time += Time::DeltaTime / 2.0f;
+		time += Time::GetInstance().deltaTime() / 2.0f;
 	}
 
 	backAlpha = Math::Clamp(backAlpha, 0.0f, 1.0f);
@@ -331,7 +331,7 @@ void TitleCameraActor::RootUpdate(std::list<SetRoot> root_)
 		rootCount++;
 	}
 
-	backAlpha -= Time::DeltaTime * 5.0f;
+	backAlpha -= Time::GetInstance().deltaTime() * 5.0f;
 
 	if (time + 0.1f <= root_.front().moveTime)
 	{
@@ -375,7 +375,7 @@ void TitleCameraActor::RootUpdate(std::list<SetRoot> root_)
 			fade = !fade;
 	}
 
-	time += Time::DeltaTime;
+	time += Time::GetInstance().deltaTime();
 }
 
 void TitleCameraActor::GetRoot(std::list<SetRoot> root_, int num)

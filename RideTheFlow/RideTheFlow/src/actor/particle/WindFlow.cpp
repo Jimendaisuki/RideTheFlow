@@ -64,7 +64,7 @@ void WindFlow::Update()
 	UpdateParticles();
 
 	//タックルされたら移動
-	move += vec * speed * Time::DeltaTime;
+	move += vec * speed * Time::GetInstance().deltaTime();
 
 	//システム寿命が来たらアクターも寿命に
 	if (ps_parameter.isDead)

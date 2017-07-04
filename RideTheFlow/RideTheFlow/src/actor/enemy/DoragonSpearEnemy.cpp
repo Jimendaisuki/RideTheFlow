@@ -71,13 +71,13 @@ void DoragonSpearEnemy::Update()
 	}
 
 	if (alpha <= 1.0f)
-		alpha += Time::DeltaTime;
+		alpha += Time::GetInstance().deltaTime();
 
-	coolTimer += Time::DeltaTime;
+	coolTimer += Time::GetInstance().deltaTime();
 	if (playerWithin&&!attackSpear&&
 		coolTimer >= DoragonSpearAttackTime)
 	{
-		preparationTimer += Time::DeltaTime;
+		preparationTimer += Time::GetInstance().deltaTime();
 
 		if (preparationTimer >= DoragonSpearWithinTime)
 		{
@@ -95,10 +95,10 @@ void DoragonSpearEnemy::Update()
 	if (attackSpear)
 	{
 		playerWithin = false;
-		spearAttackTimer += (50.0f / DoragonSpearMaxTime)*Time::DeltaTime;
+		spearAttackTimer += (50.0f / DoragonSpearMaxTime)*Time::GetInstance().deltaTime();
 		if (spearAttackTimer >= 1.0f)
 		{
-			spearStopTimer += Time::DeltaTime;
+			spearStopTimer += Time::GetInstance().deltaTime();
 
 			if (spearStopTimer >= DoragonSpearStopTime)
 			{
@@ -112,7 +112,7 @@ void DoragonSpearEnemy::Update()
 	//‘„‚ª–ß‚é‚Æ‚«
 	if (endAttack)
 	{
-		spearAttackTimer -= (1.0f)*Time::DeltaTime;
+		spearAttackTimer -= (1.0f)*Time::GetInstance().deltaTime();
 		if (spearAttackTimer <= 0.0f)
 		{
 			endAttack = false;

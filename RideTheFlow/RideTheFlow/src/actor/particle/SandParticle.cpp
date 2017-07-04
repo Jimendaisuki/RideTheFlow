@@ -45,7 +45,7 @@ void SandParticle::OnUpdate()
 	rotmat.SetUp(up);
 	rotmat.SetLeft(left);
 
-	moveParam.pos += moveParam.vec * moveParam.speed *Time::DeltaTime;
+	moveParam.pos += moveParam.vec * moveParam.speed *Time::GetInstance().deltaTime();
 }
 
 void SandParticle::Draw() const

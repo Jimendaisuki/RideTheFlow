@@ -21,14 +21,14 @@ void Clear::Update()
 {
 	if (textAlpha < 1)
 	{
-		textAlpha += Time::DeltaTime / 2.0f;
+		textAlpha += Time::GetInstance().deltaTime() / 2.0f;
 		return;
 	}
 	textAlpha = 1;
 
 	if (subAlpha < 1)
 	{
-		subAlpha += Time::DeltaTime / 2.0f;
+		subAlpha += Time::GetInstance().deltaTime() / 2.0f;
 		return;
 	}
 	parameter.isDead = true;

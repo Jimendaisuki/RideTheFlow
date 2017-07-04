@@ -156,7 +156,7 @@ void EndhingScene::Update()
 		}
 		break;
 	case EndhingScene::ENDING_CLEAR:
-		currentFog += 6000 * Time::DeltaTime;
+		currentFog += 6000 * Time::GetInstance().deltaTime();
 		targetPos += velocity;
 		cameraPos += velocity;
 		if (currentFog >= 40000)
@@ -165,7 +165,7 @@ void EndhingScene::Update()
 	case EndhingScene::ENDING_END:
 		targetPos += velocity;
 		cameraPos += velocity;
-		currentFog += 8000 * Time::DeltaTime;
+		currentFog += 8000 * Time::GetInstance().deltaTime();
 
 		if (!Sound::GetInstance().IsPlayBGM() &&
 			FadePanel::GetInstance().IsFullBlack())
@@ -198,7 +198,7 @@ void EndhingScene::Update()
 	if (isTitle)
 	{
 		// 竜巻とテキスト描画開始
-		stormAlphaTime += (Time::DeltaTime / StormAlphaEndTime);
+		stormAlphaTime += (Time::GetInstance().deltaTime() / StormAlphaEndTime);
 		stormAlpha = (int)(StormMaxAlpha * stormAlphaTime);
 		stormAlpha = Math::Clamp(stormAlpha, 0, StormMaxAlpha);
 		for (int i = 0; i < 6; i++)
@@ -209,7 +209,7 @@ void EndhingScene::Update()
 
 		titleAlpha = 1.0f;
 		//if (stormAlpha >= StormMaxAlpha / 2)
-		//	titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
+		//	titleAlpha += Time::GetInstance().deltaTime() / TitleAlphaEndTime;
 	}
 	else
 	{
@@ -268,8 +268,8 @@ void EndhingScene::End()
 // 竜巻計算用
 void EndhingScene::TornadoCalculation()
 {
-	amount_1 += Time::DeltaTime / 4.0f;
-	amount_2 += Time::DeltaTime / 16.0f;
+	amount_1 += Time::GetInstance().deltaTime() / 4.0f;
+	amount_2 += Time::GetInstance().deltaTime() / 16.0f;
 	if (amount_1 > 1.0f)
 	{
 		amount_1 = 0.0f;

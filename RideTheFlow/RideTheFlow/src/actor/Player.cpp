@@ -232,7 +232,7 @@ void Player::Update() {
 	}
 
 
-	//parameter.HP -= 5.0f * Time::DeltaTime;
+	//parameter.HP -= 5.0f * Time::GetInstance().deltaTime();
 	//if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
 	//	moveFlag = !moveFlag;
 	//}
@@ -253,7 +253,7 @@ void Player::Update() {
 	if (parameter.HP <= 0)dead = true;
 	if (!dead) {
 		if (parameter.HP < MaxHP)
-			parameter.HP += hpHeal * Time::DeltaTime;
+			parameter.HP += hpHeal * Time::GetInstance().deltaTime();
 		world.SetCollideSelect(shared_from_this(), ACTOR_ID::ENEMY_BULLET, COL_ID::SPHERE_SPHERE_COL);
 
 		auto input = DINPUT_JOYSTATE();
@@ -275,53 +275,53 @@ void Player::Update() {
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
-				rotateLeft += rotateSpeed * Time::DeltaTime;
+				rotateLeft += rotateSpeed * Time::GetInstance().deltaTime();
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
-				rotateLeft -= rotateSpeed * Time::DeltaTime;
+				rotateLeft -= rotateSpeed * Time::GetInstance().deltaTime();
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
-				rotateUp += rotateSpeed * Time::DeltaTime;
+				rotateUp += rotateSpeed * Time::GetInstance().deltaTime();
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
-				rotateUp -= rotateSpeed * Time::DeltaTime;
+				rotateUp -= rotateSpeed * Time::GetInstance().deltaTime();
 		}
 
 		Vector2 lStick = GamePad::GetInstance().Stick();
 		if (!spearHit) {
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::A) || lStick.x < 0.0f) {
-				vec.x += speed * Time::DeltaTime;
+				vec.x += speed * Time::GetInstance().deltaTime();
 				leftStickMove = true;
 				if (!tp.tackleFlag) {
-					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+					animBlend -= waitAnimBlendSpeed * Time::GetInstance().deltaTime();
 				}
 			}
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::D) || lStick.x > 0.0f) {
-				vec.x -= speed * Time::DeltaTime;
+				vec.x -= speed * Time::GetInstance().deltaTime();
 				leftStickMove = true;
 				if (!tp.tackleFlag) {
-					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+					animBlend -= waitAnimBlendSpeed * Time::GetInstance().deltaTime();
 				}
 			}
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W) || lStick.y < 0.0f
 				|| (!initMove&&!title&&!event)) {
-				vec.z += speed * Time::DeltaTime;
+				vec.z += speed * Time::GetInstance().deltaTime();
 				leftStickMove = true;
 				if (!tp.tackleFlag) {
-					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+					animBlend -= waitAnimBlendSpeed * Time::GetInstance().deltaTime();
 				}
 			}
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S) || lStick.y > 0.0f) {
-				vec.z -= speed * Time::DeltaTime;
+				vec.z -= speed * Time::GetInstance().deltaTime();
 				leftStickMove = true;
 				if (!tp.tackleFlag) {
-					animBlend -= waitAnimBlendSpeed * Time::DeltaTime;
+					animBlend -= waitAnimBlendSpeed * Time::GetInstance().deltaTime();
 				}
 			}
 		}
 
 		if (padInputFlag) {
-			rotateLeft += rightStick.y * rotateSpeed * Time::DeltaTime;
-			rotateUp += rightStick.x * rotateSpeed * Time::DeltaTime;
-			vec.x += leftStick.x * speed * Time::DeltaTime;
-			vec.z += leftStick.y * speed * Time::DeltaTime;
+			rotateLeft += rightStick.y * rotateSpeed * Time::GetInstance().deltaTime();
+			rotateUp += rightStick.x * rotateSpeed * Time::GetInstance().deltaTime();
+			vec.x += leftStick.x * speed * Time::GetInstance().deltaTime();
+			vec.z += leftStick.y * speed * Time::GetInstance().deltaTime();
 		}
 		rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
 
@@ -388,14 +388,14 @@ void Player::Update() {
 				if (dashHealFlag) {
 					dashPosStorage.clear();
 					tornadoPosStorage.clear();
-					dashSpeed -= dashAccele * Time::DeltaTime;
-					dashTime -= dashHealSpeed * Time::DeltaTime;
+					dashSpeed -= dashAccele * Time::GetInstance().deltaTime();
+					dashTime -= dashHealSpeed * Time::GetInstance().deltaTime();
 
 					if (tornadoPtr == NULL && windFlowPtr == NULL) {
 						tackleForTornadoTime = 0.0f;
 					}
 					else {
-						tackleForTornadoTime += Time::DeltaTime;
+						tackleForTornadoTime += Time::GetInstance().deltaTime();
 					}
 				}
 				else {
@@ -451,8 +451,8 @@ void Player::Update() {
 						dashAfterTime = 0.0f;
 					}
 
-					dashTime += Time::DeltaTime;
-					dashSpeed += dashAccele * Time::DeltaTime;
+					dashTime += Time::GetInstance().deltaTime();
+					dashSpeed += dashAccele * Time::GetInstance().deltaTime();
 					trueVec.y = 0;
 					trueVec.Normalized();
 					tp.dashFlag = true;
@@ -463,26 +463,26 @@ void Player::Update() {
 			else if (!dashAfter) {
 				dashPosStorage.clear();
 				tornadoPosStorage.clear();
-				dashSpeed -= dashAccele * Time::DeltaTime;
-				dashTime -= dashHealSpeed * Time::DeltaTime;
+				dashSpeed -= dashAccele * Time::GetInstance().deltaTime();
+				dashTime -= dashHealSpeed * Time::GetInstance().deltaTime();
 
 				if (tornadoPtr == NULL && windFlowPtr == NULL) {
 					tackleForTornadoTime = 0.0f;
 				}
 				else {
-					tackleForTornadoTime += Time::DeltaTime;
+					tackleForTornadoTime += Time::GetInstance().deltaTime();
 				}
 			}
 
 
 			if (dashAfter) {
-				dashTime += Time::DeltaTime;
-				dashSpeed += dashAccele * Time::DeltaTime;
+				dashTime += Time::GetInstance().deltaTime();
+				dashSpeed += dashAccele * Time::GetInstance().deltaTime();
 				trueVec.y = 0;
 				trueVec.Normalized();
 				tp.dashFlag = true;
 
-				dashAfterTime += Time::DeltaTime;
+				dashAfterTime += Time::GetInstance().deltaTime();
 				if (dashAfterTime > 1.0f) {
 					dashAfter = false;
 					dashAfterTime = 0.0f;
@@ -492,7 +492,7 @@ void Player::Update() {
 					tackleForTornadoTime = 0.0f;
 				}
 				else {
-					tackleForTornadoTime += Time::DeltaTime;
+					tackleForTornadoTime += Time::GetInstance().deltaTime();
 				}
 			}
 		}
@@ -517,7 +517,7 @@ void Player::Update() {
 			else crossAngle = -rotateAngle;
 			forntVec = (Vector3::Length(trueVec) *
 				beforeVec *
-				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::DeltaTime;
+				Quaternion::RotateAxis(cross, crossAngle)).Normalized() * speed * dashSpeed * Time::GetInstance().deltaTime();
 
 			if (spearHit)forntVec /= 2;
 
@@ -537,20 +537,20 @@ void Player::Update() {
 		else {
 			dashPosStorage.clear();
 			tornadoPosStorage.clear();
-			dashSpeed -= dashAccele * Time::DeltaTime;
+			dashSpeed -= dashAccele * Time::GetInstance().deltaTime();
 
 			// 再生時間を進める
-			tp.animTime += tackleAnimSpeed * Time::DeltaTime;
+			tp.animTime += tackleAnimSpeed * Time::GetInstance().deltaTime();
 			forntVec = tp.tackleT;
-			if (totalTime - tp.animTime < tackleAnimSpeed * Time::DeltaTime * 20.0f && !tp.tackleEndFlag) {
+			if (totalTime - tp.animTime < tackleAnimSpeed * Time::GetInstance().deltaTime() * 20.0f && !tp.tackleEndFlag) {
 				tp.tackleEndFlag = true;
 				posStorage.clear();
 				nonPosStorageVec = -tp.tackleT;
 				beforeVec = tp.tackleT;
 			}
 
-			if (tp.tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::DeltaTime;
-			else animBlend += tackleAnimBlendSpeed * Time::DeltaTime;
+			if (tp.tackleEndFlag)animBlend -= tackleAnimBlendSpeed * Time::GetInstance().deltaTime();
+			else animBlend += tackleAnimBlendSpeed * Time::GetInstance().deltaTime();
 
 			// 再生時間がアニメーションの総再生時間に達したら再生時間を０に戻す
 			if (tp.animTime >= totalTime - 10.0f)
@@ -589,9 +589,9 @@ void Player::Update() {
 
 		////ボーンの情報切り替え
 		//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::Z))
-		//	rotateY += 360.0f * Time::DeltaTime;
+		//	rotateY += 360.0f * Time::GetInstance().deltaTime();
 		//if (Keyboard::GetInstance().KeyStateDown(KEYCODE::X))
-		//	rotateY -= 360.0f * Time::DeltaTime
+		//	rotateY -= 360.0f * Time::GetInstance().deltaTime()
 		Matrix4 playerRot = Matrix4::Identity;
 		Vector3 front = forntVec.Normalized();
 		playerRot.SetFront(front);
@@ -601,7 +601,7 @@ void Player::Update() {
 
 		playerRot.SetUp(up);
 		playerRot.SetLeft(left);
-		if (event)position += eventVec.Normalized() * speed * Time::DeltaTime;
+		if (event)position += eventVec.Normalized() * speed * Time::GetInstance().deltaTime();
 		//マトリックスの再計算
 		parameter.mat =
 			Matrix4::Scale(scale) *
@@ -610,14 +610,14 @@ void Player::Update() {
 
 		//くねくねの角度のスピード
 		if (changeMotion) {
-			upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::DeltaTime;
-			leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::DeltaTime;
+			upAngle -= leftAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::GetInstance().deltaTime();
+			leftAngle -= upAngleSpeed * Random::GetInstance().Range(0.5f, 1.5f) * dashSpeed * Time::GetInstance().deltaTime();
 		}
 		else {
 			upAngle -=
-				angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+				angleSpeed * dashSpeed * Time::GetInstance().deltaTime() * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
 			leftAngle -=
-				angleSpeed * dashSpeed * Time::DeltaTime * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
+				angleSpeed * dashSpeed * Time::GetInstance().deltaTime() * Math::Cos(Math::Degree((Math::Sin(upAngle) + 1) / 2.0f));
 		}
 
 		upAngle = Math::InfinityClamp(upAngle, 0.0f, 360.0f);
@@ -671,7 +671,7 @@ void Player::Update() {
 
 		SAFE_DELETE_ARRAY(copyVertexVec);
 		if (damageFlag) {
-			damageCount += Time::DeltaTime;
+			damageCount += Time::GetInstance().deltaTime();
 			if (damageCount > 0.3f) {
 				damageFlag = false;
 				damageCount = 0;
@@ -680,7 +680,7 @@ void Player::Update() {
 	}
 	else {
 		for (int i = 0; i < boneCount; i++) {
-			vertexVec[i] -= Vector3(0, 1, 0) * speed * Time::DeltaTime;
+			vertexVec[i] -= Vector3(0, 1, 0) * speed * Time::GetInstance().deltaTime();
 		}
 	}
 
@@ -698,11 +698,11 @@ void Player::Update() {
 			animIndex = MV1AttachAnim(modelHandle, 2, -1, FALSE);
 		}
 		else {
-			animBlend += 0.5f * Time::DeltaTime;
+			animBlend += 0.5f * Time::GetInstance().deltaTime();
 			animBlend = Math::Min(animBlend, 1.0f);
 			if (tp.animTime <
 				MV1GetAttachAnimTotalTime(modelHandle, animIndex)) {
-				tp.animTime += 60.0f * Time::DeltaTime;
+				tp.animTime += 60.0f * Time::GetInstance().deltaTime();
 			}
 			else {
 				if (!dead2) {
@@ -718,10 +718,10 @@ void Player::Update() {
 		}
 	}
 	if (dead2 || (tp.animTime > 180.0f && dead)) {
-		position -= Vector3(0.0f, 100.0f, 0.0f) * Time::DeltaTime;
+		position -= Vector3(0.0f, 100.0f, 0.0f) * Time::GetInstance().deltaTime();
 	}
 
-	if (allowNoDamageFlag)allowNoDamageTime += Time::DeltaTime;
+	if (allowNoDamageFlag)allowNoDamageTime += Time::GetInstance().deltaTime();
 	if (allowNoDamageTime > 0.5f) {
 		allowNoDamageFlag = false;
 		allowNoDamageTime = 0.0f;
@@ -729,15 +729,15 @@ void Player::Update() {
 	if (spearHit) {
 		if (tp.animTime <
 			totalTime) {
-			tp.animTime += 50.0f * Time::DeltaTime;
+			tp.animTime += 50.0f * Time::GetInstance().deltaTime();
 		}
 		else {
 			spearEndFlag = true;
 		}
 		if (!spearEndFlag)
-			animBlend += 0.5f * Time::DeltaTime;
+			animBlend += 0.5f * Time::GetInstance().deltaTime();
 		else
-			animBlend -= 10.0f * Time::DeltaTime;
+			animBlend -= 10.0f * Time::GetInstance().deltaTime();
 		if (animBlend < 0.0f && spearEndFlag) {
 			spearHit = false;
 			waitAnimSet = true;
@@ -747,28 +747,28 @@ void Player::Update() {
 	}
 
 	if (noDamageSpearFlag) {
-		noDamageSpearCount += Time::DeltaTime;
+		noDamageSpearCount += Time::GetInstance().deltaTime();
 		if (noDamageSpearCount > spearNoDamageTime) {
 			noDamageSpearFlag = false;
 			noDamageSpearCount = 0.0f;
 		}
 	}
 	if (noDamageCanonFlag) {
-		noDamageCanonCount += Time::DeltaTime;
+		noDamageCanonCount += Time::GetInstance().deltaTime();
 		if (noDamageCanonCount > canonNoDamageTime) {
 			noDamageCanonFlag = false;
 			noDamageCanonCount = 0.0f;
 		}
 	}
 	if (noDamageVaristaFlag) {
-		noDamageVaristaCount += Time::DeltaTime;
+		noDamageVaristaCount += Time::GetInstance().deltaTime();
 		if (noDamageVaristaCount > varistaNoDamageTime) {
 			noDamageVaristaFlag = false;
 			noDamageVaristaCount = 0.0f;
 		}
 	}
 	if (noDamageArrowFlag) {
-		noDamageArrowCount += Time::DeltaTime;
+		noDamageArrowCount += Time::GetInstance().deltaTime();
 		if (noDamageArrowCount > arrowNoDamageTime) {
 			noDamageArrowFlag = false;
 			noDamageArrowCount = 0.0f;
@@ -1182,7 +1182,7 @@ void Player::ParameterDraw() const {
 	DrawFormatString(0, 240, GetColor(255, 255, 255), "Triangle Num %d", MV1GetFrameTriangleNum(ModelHandle, boneSelect));
 
 	//// フレームに半透明要素があるかどうかを描画
-	DrawFormatString(0, 256 + 64, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::DeltaTime));
+	DrawFormatString(0, 256 + 64, GetColor(255, 255, 255), "FPS   %d", (int)(1.0f / Time::GetInstance().deltaTime()));
 
 	float gageColorNum = 255.0f * ((dashMaxTime - dashTime) / dashMaxTime);
 	DWORD gageColor = GetColor(255, gageColorNum, gageColorNum);

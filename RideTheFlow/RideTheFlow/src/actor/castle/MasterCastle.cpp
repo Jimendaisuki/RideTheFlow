@@ -132,7 +132,7 @@ void MasterCastle::Update()
 		//–³“GŽžŠÔ
 		if (!damage)
 		{
-			InvincibleTimer += Time::DeltaTime;
+			InvincibleTimer += Time::GetInstance().deltaTime();
 			if (CastleInvincibleTime <= InvincibleTimer)
 			{
 				InvincibleTimer = 0.0f;
@@ -150,7 +150,7 @@ void MasterCastle::Update()
 
 		if (isDeadRag)
 		{
-			deadRagTimer += Time::DeltaTime;
+			deadRagTimer += Time::GetInstance().deltaTime();
 			if (deadRagTimer >= 0.5f)
 				parameter.isDead = true;
 		}

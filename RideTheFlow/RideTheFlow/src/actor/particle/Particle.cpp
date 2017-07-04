@@ -58,7 +58,7 @@ Particle::Particle(
 void Particle::Update()
 {
 	//Žõ–½ŒvŽZ
-	lifeParam.lifeTime += Time::DeltaTime;
+	lifeParam.lifeTime += Time::GetInstance().deltaTime();
 	if (lifeParam.lifeTime > lifeParam.lifeTimeLimit)
 		lifeParam.isDead = true;
 

@@ -37,7 +37,7 @@ void EnemyHP::Update(const float& nowHp, const Vector3& position)
 		alpha_ = 1.0f + DELAY_TIME;
 
 	if (alpha_ >= 0.0f)
-		alpha_ -= Time::DeltaTime;
+		alpha_ -= Time::GetInstance().deltaTime();
 	else
 		alpha_ = 0.0f;
 

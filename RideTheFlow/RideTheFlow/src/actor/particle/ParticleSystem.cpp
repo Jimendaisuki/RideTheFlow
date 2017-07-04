@@ -44,7 +44,7 @@ void ParticleSystem::UpdateParticles()
 	}
 
 	//システムの寿命計算
-	lifeTime += Time::DeltaTime;
+	lifeTime += Time::GetInstance().deltaTime();
 	if (lifeTime >= ps_parameter.lifeTimeLimit)
 		ps_parameter.isDead = true;
 
@@ -57,7 +57,7 @@ void ParticleSystem::UpdateParticles()
 	});
 
 	//放出
-	emissiveTimer += Time::DeltaTime;
+	emissiveTimer += Time::GetInstance().deltaTime();
 	if (emissiveTimer > ps_parameter.intervalSec)
 	{
 		emissiveTimer = 0.0f;

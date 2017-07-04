@@ -1,21 +1,31 @@
 #include "Time.h"
-#include "../math/Math.h"
-#include <Dxlib.h>
-#include "../Def.h"
 
-float Time::DeltaTime;
+#include <DxLib.h>
 
-Time::Time()
-:
-savetime(0)
-{
-
+Time::Time() :
+	m_LastFrame(0), m_LastTime(0), m_RealtimeSinceStartup(0), m_FrameCount(0), m_DeltaTime(0) {
 }
 
-// çXêVèàóù
-void Time::Update()
-{
-	DeltaTime = (float)((GetNowCount() - Math::Abs(savetime)) / 1000.0f);
-
-	savetime = GetNowCount();
+Time & Time::GetInstance() {
+	static Time instance;
+	return instance;
 }
+
+void Time::update(){
+	m_FrameCount++;
+	m_RealtimeSinceStartup = m_FrameCount / 60;
+
+	float currentFrame = m_FrameCount;
+	if (currentFrame != m_LastFrame) {
+		float currentTime = m_RealtimeSinceStartup;
+		m_DeltaTime = currentTime - m_LastTime;
+		m_LastTime = currentTime;
+		m_LastFrame = currentFrame;
+	}
+}
+
+float Time::deltaTime(){
+	return m_DeltaTime;
+}
+
+

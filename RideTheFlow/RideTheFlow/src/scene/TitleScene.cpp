@@ -139,7 +139,7 @@ void TitleScene::Update()
 		if (slideTime <= 1.0f)
 		{
 			screenPos = Math::Lerp(350.0f, endScreenPos, slideTime);
-			slideTime += Time::DeltaTime / 3.0f;
+			slideTime += Time::GetInstance().deltaTime() / 3.0f;
 		}
 		else
 			status = TITLE_STATUS::TITLE_TEXTURE_IN;
@@ -152,7 +152,7 @@ void TitleScene::Update()
 			Pass();
 		}
 		// 竜巻とテキスト描画開始
-		stormAlphaTime += (Time::DeltaTime / StormAlphaEndTime);
+		stormAlphaTime += (Time::GetInstance().deltaTime() / StormAlphaEndTime);
 		stormAlpha = (int)(StormMaxAlpha * stormAlphaTime);
 		stormAlpha = Math::Clamp(stormAlpha, 0, StormMaxAlpha);
 		for (int i = 0; i < 6; i++)
@@ -162,7 +162,7 @@ void TitleScene::Update()
 		}
 		
 		if (stormAlpha >= StormMaxAlpha / 3)
-			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
+			titleAlpha += Time::GetInstance().deltaTime() / TitleAlphaEndTime;
 
 		if (titleAlpha >= 1.0f)
 			status = TITLE_STATUS::TITLE_STANDBY;
@@ -170,12 +170,12 @@ void TitleScene::Update()
 	case TITLE_STANDBY:
 		// 入力待機
 		if (pressTextAlpha < 1) 
-			pressTextAlpha += Time::DeltaTime;
-		pressAlphaTime += Time::DeltaTime * 60 * 3;
+			pressTextAlpha += Time::GetInstance().deltaTime();
+		pressAlphaTime += Time::GetInstance().deltaTime() * 60 * 3;
 		pressAlphaTime = (float)((int)pressAlphaTime % 360);
 		pressTextBackAlpha = Math::Sin(pressAlphaTime);
 
-		timer += Time::DeltaTime;
+		timer += Time::GetInstance().deltaTime();
 		if (timer >= 30.0f)
 		{
 			FadePanel::GetInstance().FadeOut();
@@ -194,7 +194,7 @@ void TitleScene::Update()
 		break;
 	case TITLE_END:
 		// フェードアウト
-		pressTextAlpha -= Time::DeltaTime;
+		pressTextAlpha -= Time::GetInstance().deltaTime();
 		pressTextAlpha = Math::Clamp(pressTextAlpha, 0.0f, 1.0f);
 		pressTextBackAlpha = pressTextAlpha;
 		pressScale = (1.0f - pressTextAlpha) / 8.0f;
@@ -285,8 +285,8 @@ void TitleScene::End()
 // 竜巻計算用
 void TitleScene::TornadoCalculation()
 {
-	amount_1 += Time::DeltaTime / 4.0f;
-	amount_2 += Time::DeltaTime / 16.0f;
+	amount_1 += Time::GetInstance().deltaTime() / 4.0f;
+	amount_2 += Time::GetInstance().deltaTime() / 16.0f;
 	if (amount_1 > 1.0f)
 	{
 		amount_1 = 0.0f;

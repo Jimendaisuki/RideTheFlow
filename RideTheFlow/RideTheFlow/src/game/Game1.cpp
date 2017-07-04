@@ -61,7 +61,7 @@ void Game1::Update()
 	}
 
 	// 時間を更新
-	mTime.Update();
+	Time::GetInstance().update();
 
 	// 入力の更新
 	Keyboard::GetInstance().Update();

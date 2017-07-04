@@ -52,13 +52,13 @@ void TornadoParticle::OnUpdate()
 	tornadePos = pos;
 
 	//タイマー増加
-	tornadeDegree += tornadeSpeed * Time::DeltaTime;
-	risingSpeed += risingAddSpeed * Time::DeltaTime;
-	tornadeRadius += tornadeAddRadius * Time::DeltaTime;
+	tornadeDegree += tornadeSpeed * Time::GetInstance().deltaTime();
+	risingSpeed += risingAddSpeed * Time::GetInstance().deltaTime();
+	tornadeRadius += tornadeAddRadius * Time::GetInstance().deltaTime();
 
 	//回転の座標を加える前の座標
 	position += tornadeMove;
-	position.y += risingSpeed * Time::DeltaTime;
+	position.y += risingSpeed * Time::GetInstance().deltaTime();
 
 	//回転の座標
 	tornadeAddPosition = Vector3(

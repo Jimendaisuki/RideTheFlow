@@ -27,7 +27,7 @@ void SceneManager::Initialize(){
 //XV
 void SceneManager::Update(){
 	mCurrentScene->Update();
-	timer_ += Time::DeltaTime;
+	timer_ += Time::GetInstance().deltaTime();
 	if (Keyboard::GetInstance().AnyTriggerDown() ||
 		GamePad::GetInstance().AnyTriggerDown())
 	{

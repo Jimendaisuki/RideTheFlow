@@ -30,7 +30,7 @@ timer(0.0f)
 
 void CastleAddParticle::OnUpdate()
 {
-	drawParam.size += addSizeSpeed * Time::DeltaTime;
+	drawParam.size += addSizeSpeed * Time::GetInstance().deltaTime();
 
 	drawParam.alpha = Math::Cos((lifeParam.lifeTime / lifeParam.lifeTimeLimit) * 90);
 

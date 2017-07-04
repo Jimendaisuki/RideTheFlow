@@ -121,7 +121,7 @@ void ShipEnemy::Update()
 		180 / 3.1415f;
 
 	if (alpha<=1.0f)
-	alpha += Time::DeltaTime;
+	alpha += Time::GetInstance().deltaTime();
 
 	Vector3 vec = (playerMat.GetPosition() - parameter.mat.GetPosition()).Normalized();
 	playerDot = Vector2::Dot(Vector2(parameter.mat.GetFront().x, parameter.mat.GetFront().z), Vector2(vec.x, vec.z));
@@ -132,19 +132,19 @@ void ShipEnemy::Update()
 		{
 			if (playerDot >= 0)
 			{
-				shipAngle -= ShipSwingSpeed*Time::DeltaTime;
+				shipAngle -= ShipSwingSpeed*Time::GetInstance().deltaTime();
 			}
 			else
 			{
-				shipAngle += ShipSwingSpeed*Time::DeltaTime;
+				shipAngle += ShipSwingSpeed*Time::GetInstance().deltaTime();
 			}
 		}
 	}
 	
-	mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::DeltaTime;
+	mPosition += parameter.mat.GetLeft().Normalized()*ShipSpeed / shipLow*Time::GetInstance().deltaTime();
 	if (!isLandCol)
 		mPosition += Vector3::Direction(parameter.mat.GetPosition(), playerMat.GetPosition())*
-		Vector3(0.0f, ShipUpDownSpeed, 0.0f)*Time::DeltaTime;
+		Vector3(0.0f, ShipUpDownSpeed, 0.0f)*Time::GetInstance().deltaTime();
 
 	//•‚“‡‚ð‰I‰ñ‚·‚é
 	if (isLandCol)
@@ -155,11 +155,11 @@ void ShipEnemy::Update()
 		shipLow = 0.5f;
 		if (isLandDot <= 0)
 		{
-			shipAngle -= 50.0f*Time::DeltaTime;
+			shipAngle -= 50.0f*Time::GetInstance().deltaTime();
 		}
 		else
 		{
-			shipAngle += 50.0f*Time::DeltaTime;
+			shipAngle += 50.0f*Time::GetInstance().deltaTime();
 		}
 		mPosition += Vector3::Direction(isLandPos, parameter.mat.GetPosition()).Normalized()*Vector3(1,0,1);
 	}
@@ -171,7 +171,7 @@ void ShipEnemy::Update()
 	//–³“GŽžŠÔ
 	if (!damege)
 	{
-		invincibleTimer += Time::DeltaTime;
+		invincibleTimer += Time::GetInstance().deltaTime();
 		if (invincibleTimer >= ShipInvincibleTime)
 		{
 			damege = true;
@@ -205,7 +205,7 @@ void ShipEnemy::OnCollide(Actor& other, CollisionParameter colpara)
 	}
 	if (colpara.colID == COL_ID::PLAYER_SHIPENEMY_COL)
 	{
-		mPosition += Vector3::Direction(colpara.colPos, parameter.mat.GetPosition() + parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*25.0f)*100*Time::DeltaTime;
+		mPosition += Vector3::Direction(colpara.colPos, parameter.mat.GetPosition() + parameter.mat.GetPosition() + parameter.mat.GetUp().Normalized()*25.0f)*100*Time::GetInstance().deltaTime();
 	}
 	if (colpara.colID == COL_ID::SHIP_ISLAND_COL)
 	{

@@ -144,7 +144,7 @@ void EventScene::Update()
 	{
 	case EVENT_BEGIN:
 		if (maxFogFar < 150)
-			maxFogFar += 30 * Time::DeltaTime;
+			maxFogFar += 30 * Time::GetInstance().deltaTime();
 		if (fogTime >= 360)
 		{
 			fogTime = 0;
@@ -170,7 +170,7 @@ void EventScene::Update()
 		targetPos = playerPos;
 		cameraPos += velocity * t;
 		if (t > 0)
-			t -= Time::DeltaTime;
+			t -= Time::GetInstance().deltaTime();
 		t = Math::Clamp(t, 0.0f, 1.0f);
 
 		if ((playerPos - cameraPos).Length() >= 500 && !isTitle &&
@@ -207,7 +207,7 @@ void EventScene::Update()
 		}
 		break;
 	case EventScene::EVENT_STAGE_IN:
-		currentFogFar -= 7500.0f * Time::DeltaTime;
+		currentFogFar -= 7500.0f * Time::GetInstance().deltaTime();
 		
 		stormVol = 10000.0f / currentFogFar;
 		stormVol = Math::Clamp(stormVol, 0.2f, 1.0f);
@@ -243,7 +243,7 @@ void EventScene::Update()
 	if (isTitle)
 	{
 		// 竜巻とテキスト描画開始
-		stormAlphaTime += (Time::DeltaTime / StormAlphaEndTime);
+		stormAlphaTime += (Time::GetInstance().deltaTime() / StormAlphaEndTime);
 		stormAlpha = (int)(StormMaxAlpha * stormAlphaTime);
 		stormAlpha = Math::Clamp(stormAlpha, 0, StormMaxAlpha);
 		for (int i = 0; i < 6; i++)
@@ -253,7 +253,7 @@ void EventScene::Update()
 		}
 
 		if (stormAlpha >= StormMaxAlpha / 2)
-			titleAlpha += Time::DeltaTime / TitleAlphaEndTime;
+			titleAlpha += Time::GetInstance().deltaTime() / TitleAlphaEndTime;
 	}
 	else
 	{
@@ -278,7 +278,7 @@ void EventScene::Update()
 
 	SetFogStartEnd(0, currentFogFar);
 
-	timer += Time::DeltaTime;
+	timer += Time::GetInstance().deltaTime();
 	fogTime += fogPeriod;
 }
 
@@ -334,8 +334,8 @@ void EventScene::End()
 // 竜巻計算用
 void EventScene::TornadoCalculation()
 {
-	amount_1 += Time::DeltaTime / 4.0f;
-	amount_2 += Time::DeltaTime / 16.0f;
+	amount_1 += Time::GetInstance().deltaTime() / 4.0f;
+	amount_2 += Time::GetInstance().deltaTime() / 16.0f;
 	if (amount_1 > 1.0f)
 	{
 		amount_1 = 0.0f;

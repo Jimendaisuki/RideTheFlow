@@ -114,7 +114,7 @@ void Castle::Update()
 
 	if (deadRagFlag)
 	{
-		deadRagCount += Time::DeltaTime;
+		deadRagCount += Time::GetInstance().deltaTime();
 		if (deadMasterCastle)
 			breakSelect = mas->getBreakSelect();
 		//‚ª‚ê‚«‚ð”ò‚Î‚·
@@ -126,7 +126,7 @@ void Castle::Update()
 	//–³“GŽžŠÔ
 	if (isDamage)
 	{
-		damageCount += Time::DeltaTime;
+		damageCount += Time::GetInstance().deltaTime();
 		if (damageCount >= CastleInvincibleTime)
 		{
 			damageCount = 0.0f;
@@ -147,7 +147,7 @@ void Castle::Update()
 		castleUpTimer = 0.0f;
 	}
 	mPosition = Vector3::Lerp(startPos, endPos, castleUpTimer);
-	castleUpTimer += 5.0f*Time::DeltaTime;
+	castleUpTimer += 5.0f*Time::GetInstance().deltaTime();
 
 	velocity = mPosition - prevPos;
 

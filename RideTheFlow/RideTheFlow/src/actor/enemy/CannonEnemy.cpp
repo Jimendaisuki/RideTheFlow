@@ -82,18 +82,18 @@ void CannonEnemy::Update()
 	{
     	if (playerDot > 0)
 		{
-			rotate.y += ConnonSwingSpeed*Time::DeltaTime;
+			rotate.y += ConnonSwingSpeed*Time::GetInstance().deltaTime();
 		}
 		else
 		{
-			rotate.y -= ConnonSwingSpeed*Time::DeltaTime;
+			rotate.y -= ConnonSwingSpeed*Time::GetInstance().deltaTime();
 		}
 	}
 
 
 	//UŒ‚
-	attackRag += Time::DeltaTime;
-	attackTime += Time::DeltaTime;
+	attackRag += Time::GetInstance().deltaTime();
+	attackTime += Time::GetInstance().deltaTime();
 	if (attackTime >= mSecondAttack&&attackRag >= 0.03f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= CannonRange &&
 		abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f&&

@@ -91,21 +91,21 @@ void CastleCannon::Update()
 	{
 		if (playerDot < 0 && angle > -90)
 		{
-			mRotateY -= CastleCannonSwingSpeed*Time::DeltaTime;
-			angle -= CastleCannonSwingSpeed*Time::DeltaTime;
+			mRotateY -= CastleCannonSwingSpeed*Time::GetInstance().deltaTime();
+			angle -= CastleCannonSwingSpeed*Time::GetInstance().deltaTime();
 		}
 		if (playerDot > 0 && angle < 90)
 		{
-			mRotateY += CastleCannonSwingSpeed*Time::DeltaTime;
-			angle += CastleCannonSwingSpeed*Time::DeltaTime;
+			mRotateY += CastleCannonSwingSpeed*Time::GetInstance().deltaTime();
+			angle += CastleCannonSwingSpeed*Time::GetInstance().deltaTime();
 		}
 		angle = Math::Clamp(angle, -90.0f, 90.0f);
 	}
 
 
 	//UŒ‚
-	attackRag += Time::DeltaTime;
-	attackTime += Time::DeltaTime;
+	attackRag += Time::GetInstance().deltaTime();
+	attackTime += Time::GetInstance().deltaTime();
 	if (attackTime >= mSecondAttack&&attackRag >= 0.03f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= CastleCannonAttackRange)
 	{

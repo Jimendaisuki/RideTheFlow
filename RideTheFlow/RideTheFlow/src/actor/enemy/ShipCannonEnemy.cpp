@@ -66,7 +66,7 @@ void ShipCannonEnemy::Update()
 		Vector2(vec.x, vec.z));
 
 	if (alpha <= 1.0f)
-		alpha += Time::DeltaTime;
+		alpha += Time::GetInstance().deltaTime();
 
 	//ƒvƒŒƒCƒ„[‚ªŒ©‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	if (isLook)
@@ -96,8 +96,8 @@ void ShipCannonEnemy::Update()
 			Vector2(vec.x, vec.z));
 	}
 
-	attackRag += Time::DeltaTime;
-	attackTime += Time::DeltaTime;
+	attackRag += Time::GetInstance().deltaTime();
+	attackTime += Time::GetInstance().deltaTime();
 	if (backDot >= 0 && mLeft)
 	{
 		Attack();
@@ -105,11 +105,11 @@ void ShipCannonEnemy::Update()
 		{
 			if (playerDot > 0)
 			{
-				rotate.y += VaristorSwingSpeed*Time::DeltaTime;
+				rotate.y += VaristorSwingSpeed*Time::GetInstance().deltaTime();
 			}
 			else
 			{
-				rotate.y -= VaristorSwingSpeed*Time::DeltaTime;
+				rotate.y -= VaristorSwingSpeed*Time::GetInstance().deltaTime();
 			}
 		}
 	}
@@ -120,11 +120,11 @@ void ShipCannonEnemy::Update()
 		{
 			if (playerDot > 0)
 			{
-				rotate.y += VaristorSwingSpeed*Time::DeltaTime;
+				rotate.y += VaristorSwingSpeed*Time::GetInstance().deltaTime();
 			}
 			else
 			{
-				rotate.y -= VaristorSwingSpeed*Time::DeltaTime;
+				rotate.y -= VaristorSwingSpeed*Time::GetInstance().deltaTime();
 			}
 		}
 	}

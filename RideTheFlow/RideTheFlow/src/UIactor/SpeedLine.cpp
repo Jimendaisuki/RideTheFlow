@@ -107,9 +107,9 @@ SpeedLine::~SpeedLine()
 
 void SpeedLine::Update()
 {
-	position += velocity * (1500 + 100 * speed) * Time::DeltaTime;
+	position += velocity * (1500 + 100 * speed) * Time::GetInstance().deltaTime();
 
-	alphaTime += Time::DeltaTime * (200 + 50 * speed);
+	alphaTime += Time::GetInstance().deltaTime() * (200 + 50 * speed);
 	alpha = Math::Sin(alphaTime);
 	alpha = Math::Clamp(alpha, 0.0f, 0.4f);
 	if (alpha <= 0) parameter.isDead = true;

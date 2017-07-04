@@ -54,8 +54,8 @@ Blood::~Blood()
 
 void Blood::Update()
 {
-	if (alphaTime > 0)	alphaTime -= Time::DeltaTime;
-	else alpha -= Time::DeltaTime;
+	if (alphaTime > 0)	alphaTime -= Time::GetInstance().deltaTime();
+	else alpha -= Time::GetInstance().deltaTime();
 
 	if (alpha <= 0) parameter.isDead = true;
 }

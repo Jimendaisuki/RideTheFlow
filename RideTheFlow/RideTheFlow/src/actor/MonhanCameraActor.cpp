@@ -109,13 +109,13 @@ void MonhanCameraActor::Update()
 			Vector2 rStick = GamePad::GetInstance().RightStick();
 
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::UP) || rStick.y < 0.0f)
-				rotateLeft += rotateSpeed * Time::DeltaTime;
+				rotateLeft += rotateSpeed * Time::GetInstance().deltaTime();
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::DOWN) || rStick.y > 0.0f)
-				rotateLeft -= rotateSpeed * Time::DeltaTime;
+				rotateLeft -= rotateSpeed * Time::GetInstance().deltaTime();
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
-				rotateUp += rotateSpeed * Time::DeltaTime;
+				rotateUp += rotateSpeed * Time::GetInstance().deltaTime();
 			if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
-				rotateUp -= rotateSpeed * Time::DeltaTime;
+				rotateUp -= rotateSpeed * Time::GetInstance().deltaTime();
 			rotateSpeed = 125.0f;
 			rotateUp = (int)rotateUp % 360;
 			rotateLeft = Math::Clamp(rotateLeft, -70.0f, 70.0f);
@@ -136,7 +136,7 @@ void MonhanCameraActor::Update()
 			if ((int)tp.animTime < 170)
 			{
 				if (tackleLeapTimer <= 1.0f)
-					tackleLeapTimer += 12.0f / 20.0f*Time::DeltaTime;
+					tackleLeapTimer += 12.0f / 20.0f*Time::GetInstance().deltaTime();
 				restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
 			}
 			if ((int)tp.animTime >= 170 && posMove2)
@@ -168,7 +168,7 @@ void MonhanCameraActor::Update()
 					}
 				}
 				restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
-				tackleLeapTimer += 3.0f*Time::DeltaTime;
+				tackleLeapTimer += 3.0f*Time::GetInstance().deltaTime();
 				if (tackleLeapTimer >= 3.0f)
 				{
 					posMove2 = false;
@@ -187,7 +187,7 @@ void MonhanCameraActor::Update()
 		}
 		if (!posMove2)
 		{
-			tackleLeapTimer += 1.3f*Time::DeltaTime;
+			tackleLeapTimer += 1.3f*Time::GetInstance().deltaTime();
 			restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, tackleLeapTimer);
 			if (tackleLeapTimer >= 1.0f)
 			{
@@ -226,9 +226,9 @@ void MonhanCameraActor::Update()
 			leapTimer = 0.0f;
 			playerDead = false;
 		}
-		leapTimer += 1.0f/2.0f*Time::DeltaTime;
+		leapTimer += 1.0f/2.0f*Time::GetInstance().deltaTime();
 		restPosition = Vector3::Lerp(posSeveStart, posSeveEnd, leapTimer);
-		cameraTarget -= Vector3(0.0f, 75.0f, 0.0f)*Time::DeltaTime;
+		cameraTarget -= Vector3(0.0f, 75.0f, 0.0f)*Time::GetInstance().deltaTime();
 		if (leapTimer >= 1.0f)
 			leapTimer = 1.0f;
 	}
@@ -276,9 +276,9 @@ Vector3 MonhanCameraActor::DashCmaera()
 	rotateSpeed = 75.0f;
 	Vector2 rStick = GamePad::GetInstance().RightStick();
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::RIGHT) || rStick.x > 0.0f)
-		rotateUp += rotateSpeed * Time::DeltaTime;
+		rotateUp += rotateSpeed * Time::GetInstance().deltaTime();
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::LEFT) || rStick.x < 0.0f)
-		rotateUp -= rotateSpeed * Time::DeltaTime;
+		rotateUp -= rotateSpeed * Time::GetInstance().deltaTime();
 
 
 	float stretchRotate = (rotateLeft - restRotate);

@@ -51,7 +51,7 @@ void CannonBullet::Update()
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
 	world.SetCollideSelect(shared_from_this(), this->GetParameter().id, COL_ID::SPHERE_SPHERE_COL);
 	prevPosition = mPosition;
-	time += CannonSpeed*Time::DeltaTime;
+	time += CannonSpeed*Time::GetInstance().deltaTime();
 	//is•ûŒü‚ğŒvZ
 		vec = Vector3(
 			mInitialVec*Math::Cos(mRotateY),
@@ -79,7 +79,7 @@ void CannonBullet::Update()
 		}
 
 		//ˆÚ“®
-		mPosition += vec*CannonSpeed*Time::DeltaTime;
+		mPosition += vec*CannonSpeed*Time::GetInstance().deltaTime();
 
 		if (parameter.mat.GetPosition().y <= -3500) parameter.isDead = true;
 

@@ -31,8 +31,8 @@ AirGun::~AirGun(){
 
 }
 void AirGun::Update(){
-	range += Vector3::Length(velocity * WindBallSpeed * Time::DeltaTime);
-	position += velocity * WindBallSpeed * Time::DeltaTime;
+	range += Vector3::Length(velocity * WindBallSpeed * Time::GetInstance().deltaTime());
+	position += velocity * WindBallSpeed * Time::GetInstance().deltaTime();
 	if (range > WindBallLimitLength){
 		parameter.isDead = true;
 	}

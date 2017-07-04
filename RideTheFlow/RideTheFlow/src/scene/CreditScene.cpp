@@ -106,7 +106,7 @@ void CreditScene::Initialize()
 void CreditScene::Update()
 {
 	//if (armyCount < 10)
-	//	armyCreateTimer += Time::DeltaTime;
+	//	armyCreateTimer += Time::GetInstance().deltaTime();
 	//if (armyCreateTimer > 10.0f)
 	//{
 	//	armyCreateTimer = 0.0f;

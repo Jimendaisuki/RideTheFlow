@@ -101,11 +101,11 @@ void BreakCastleParticle::TornadoBreak()
 {
 	//‰ñ“]ŒvŽZ
 	if (rotXSpeed < 90.0f)
-		rotXSpeed += rotXAdd * Time::DeltaTime;
+		rotXSpeed += rotXAdd * Time::GetInstance().deltaTime();
 	if (rotXSpeed < 190.0f)
-		rotYSpeed += rotYAdd * Time::DeltaTime;
-	rotX += rotXSpeed * Time::DeltaTime;
-	rotY += rotYSpeed * Time::DeltaTime;
+		rotYSpeed += rotYAdd * Time::GetInstance().deltaTime();
+	rotX += rotXSpeed * Time::GetInstance().deltaTime();
+	rotY += rotYSpeed * Time::GetInstance().deltaTime();
 
 	rotmat =
 		Matrix4::RotateY(rotY) *
@@ -117,11 +117,11 @@ void BreakCastleParticle::TornadoBreak()
 		0.0f,
 		Math::Sin(tornadeDegree) * tornadeRadius);
 	if (tornadeRadius < 300.0f)
-		tornadeRadius += tornadeAddRadius * Time::DeltaTime;
-	tornadeDegree += tornadeSpeed * Time::DeltaTime;
+		tornadeRadius += tornadeAddRadius * Time::GetInstance().deltaTime();
+	tornadeDegree += tornadeSpeed * Time::GetInstance().deltaTime();
 
 	//¸‚Á‚Ä‚¢‚­
-	moveParam.pos.y += risingSpeed * Time::DeltaTime;
+	moveParam.pos.y += risingSpeed * Time::GetInstance().deltaTime();
 
 	mat =
 		Matrix4::Scale(drawParam.size) *
@@ -132,14 +132,14 @@ void BreakCastleParticle::TornadoBreak()
 void BreakCastleParticle::WindFlowBreak()
 {
 	//ˆÚ“®
-	moveParam.vec.y += flowRisingSpeed * Time::DeltaTime;
-	moveParam.pos += moveParam.vec * Time::DeltaTime;
+	moveParam.vec.y += flowRisingSpeed * Time::GetInstance().deltaTime();
+	moveParam.pos += moveParam.vec * Time::GetInstance().deltaTime();
 
 	//‰ñ“]ŒvŽZ
-	flowRotXSpeed += flowRotXAdd * Time::DeltaTime;
-	flowRotYSpeed += flowRotYAdd * Time::DeltaTime;
-	rotX += flowRotXSpeed * Time::DeltaTime;
-	rotY += flowRotYSpeed * Time::DeltaTime;
+	flowRotXSpeed += flowRotXAdd * Time::GetInstance().deltaTime();
+	flowRotYSpeed += flowRotYAdd * Time::GetInstance().deltaTime();
+	rotX += flowRotXSpeed * Time::GetInstance().deltaTime();
+	rotY += flowRotYSpeed * Time::GetInstance().deltaTime();
 
 	rotmat =
 		Matrix4::RotateY(rotY) *
@@ -154,11 +154,11 @@ void BreakCastleParticle::WindFlowBreak()
 void BreakCastleParticle::WindBallBreak()
 {
 	//ˆÚ“®
-	moveParam.pos += moveParam.vec * Time::DeltaTime;
+	moveParam.pos += moveParam.vec * Time::GetInstance().deltaTime();
 
 	//‰ñ“]ŒvŽZ
-	rotX += ballRotXSpeed * Time::DeltaTime;
-	rotY += ballRotYSpeed * Time::DeltaTime;
+	rotX += ballRotXSpeed * Time::GetInstance().deltaTime();
+	rotY += ballRotYSpeed * Time::GetInstance().deltaTime();
 
 	rotmat =
 		Matrix4::RotateY(rotY) *
@@ -173,13 +173,13 @@ void BreakCastleParticle::WindBallBreak()
 void BreakCastleParticle::DamageBreak()
 {
 	//ˆÚ“®
-	moveParam.pos += moveParam.vec * Time::DeltaTime;
+	moveParam.pos += moveParam.vec * Time::GetInstance().deltaTime();
 
 	//‰ñ“]ŒvŽZ
-	flowRotXSpeed += flowRotXAdd * Time::DeltaTime;
-	flowRotYSpeed += flowRotYAdd * Time::DeltaTime;
-	rotX += flowRotXSpeed * Time::DeltaTime;
-	rotY += flowRotYSpeed * Time::DeltaTime;
+	flowRotXSpeed += flowRotXAdd * Time::GetInstance().deltaTime();
+	flowRotYSpeed += flowRotYAdd * Time::GetInstance().deltaTime();
+	rotX += flowRotXSpeed * Time::GetInstance().deltaTime();
+	rotY += flowRotYSpeed * Time::GetInstance().deltaTime();
 
 	rotmat =
 		Matrix4::RotateY(rotY) *

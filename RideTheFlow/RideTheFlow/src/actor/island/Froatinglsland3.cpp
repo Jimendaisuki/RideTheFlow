@@ -40,7 +40,7 @@ void Froatinglsland3::Update()
 	//–³“GŽžŠÔ
 	if (!isCol)
 	{
-		timer += Time::DeltaTime;
+		timer += Time::GetInstance().deltaTime();
 		if (timer >= lslandNoTimer)
 		{
 			isCol = true;

@@ -31,7 +31,7 @@ void CastleManager::Update()
 	int masterCount = world.GetActors(ACTOR_ID::MASTER_CASTLE_ACTOR).size();
 
 	//é‚ÌÏ‚İã‚ª‚è
-	rankUpTimer += Time::DeltaTime;
+	rankUpTimer += Time::GetInstance().deltaTime();
 	if (RankUpSecond <= rankUpTimer)
 	{
 		int rankUpNum = Random::GetInstance().Range(0, masterCount);
@@ -46,7 +46,7 @@ void CastleManager::Update()
 	}
 	//ŒR‘à
 	if (world.GetActorCount(ACTOR_ID::ENEMY_ACTOR,ACTOR_ID::ARMY_ENEMY_ACTOR)<SpawnMaxArmyEnemy)
-	spawnArmyTimer += Time::DeltaTime;
+	spawnArmyTimer += Time::GetInstance().deltaTime();
 
 	if (SpawnArmyEnemyTime <= spawnArmyTimer)
 	{
@@ -62,7 +62,7 @@ void CastleManager::Update()
 
 	//‘D
 	if (world.GetActorCount(ACTOR_ID::SHIP_ENEMY_ACTOR, ACTOR_ID::SHIP_ENEMY_ACTOR)<SpawnMaxShipEnemey)
-		spawnShipTimer += Time::DeltaTime;
+		spawnShipTimer += Time::GetInstance().deltaTime();
 
 	if (SpawnShipEnemyTime <= spawnShipTimer)
 	{

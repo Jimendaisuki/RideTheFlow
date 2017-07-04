@@ -62,16 +62,16 @@ void EnemyBullet::Update()
 
 	prevPosition = mPosition;
 
-	time += Time::DeltaTime * speed;
+	time += Time::GetInstance().deltaTime() * speed;
 	if (coppyPosition.y < mToPoint.y)
 	{
 		float InitialVelocity = sqrt(2 * 9.8f*(mToPoint.y - coppyPosition.y) - mPosition.y);
 		float vertexTime = InitialVelocity / 9.8f;
 		//進行方向を計算
 		vec = Vector3(
-			distance.x / vertexTime * speed * Time::DeltaTime,
+			distance.x / vertexTime * speed * Time::GetInstance().deltaTime(),
 			0.0f,
-			distance.z / vertexTime * speed * Time::DeltaTime);
+			distance.z / vertexTime * speed * Time::GetInstance().deltaTime());
 		mPosition.y = InitialVelocity*time - 9.8f / 2.0f * pow(time, 2);
 	}
 	else
@@ -79,9 +79,9 @@ void EnemyBullet::Update()
 		float vertexTime = sqrt((2 * (coppyPosition.y - mToPoint.y)) / 9.8f);
 		//進行方向を計算
 		vec = Vector3(
-			distance.x / vertexTime * speed * Time::DeltaTime,
+			distance.x / vertexTime * speed * Time::GetInstance().deltaTime(),
 			0.0f,
-			distance.z / vertexTime * speed * Time::DeltaTime);
+			distance.z / vertexTime * speed * Time::GetInstance().deltaTime());
 		mPosition.y = -(1.0f / 2.0f) * 9.8f*pow(time, 2);
 	}
 
@@ -122,7 +122,7 @@ void EnemyBullet::Update()
 	//流れのフラグをリセット
 	isWindCol = false;
 
-	//noDeadTimer += Time::DeltaTime;
+	//noDeadTimer += Time::GetInstance().deltaTime();
 
 	//if (noDeadTimer>=1.0f)
 	//{

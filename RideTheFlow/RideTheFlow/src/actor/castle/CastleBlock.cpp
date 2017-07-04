@@ -47,12 +47,12 @@ void CastleBlock::Update()
 		tornadePos = pos;
 	});
 
-	timer += Time::DeltaTime;
+	timer += Time::GetInstance().deltaTime();
 	if (timer > 10.0f)
 		parameter.isDead = true;
-	tornadeDegree += tornadeSpeed * Time::DeltaTime;
-	risingSpeed += risingAddSpeed * Time::DeltaTime;
-	tornadeRadius += tornadeAddRadius * Time::DeltaTime;
+	tornadeDegree += tornadeSpeed * Time::GetInstance().deltaTime();
+	risingSpeed += risingAddSpeed * Time::GetInstance().deltaTime();
+	tornadeRadius += tornadeAddRadius * Time::GetInstance().deltaTime();
 
 	////ƒ‚ƒfƒ‹‰ñ“]
 	//rotate += Vector3(
@@ -62,7 +62,7 @@ void CastleBlock::Update()
 
 	//‰ñ“]‰Á‚¦‚é‘O‚ÌÀ•W
 	position += tornadeMove;
-	position.y += risingSpeed * Time::DeltaTime;
+	position.y += risingSpeed * Time::GetInstance().deltaTime();
 
 	//‰ñ“]‰Á‚¦‚½Œã‚ÌÀ•W
 	tornadeAddPosition = Vector3(

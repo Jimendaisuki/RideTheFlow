@@ -60,8 +60,8 @@ void Cloud::Update()
 	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
 	//world.SetCollideSelect(shared_from_this(), ACTOR_ID::TORNADO_ACTOR, COL_ID::CLOUD_TORNADO_COL);
 
-	moveChangeTimer += Time::DeltaTime;
-	windOutTimer += Time::DeltaTime;
+	moveChangeTimer += Time::GetInstance().deltaTime();
+	windOutTimer += Time::GetInstance().deltaTime();
 	//一定時間に達した場合、ランダムに移動方向を変化させる
 	if (moveChangeTimer >= moveChangeTime)
 	{
@@ -80,7 +80,7 @@ void Cloud::Update()
 	//流れから離れた場合、３秒かけてスピードを落とす
 	if (windOutTimer <= 3.0f)
 	{
-		moveSpeed -= 80.0f * (3.0f - windOutTimer) * Time::DeltaTime;
+		moveSpeed -= 80.0f * (3.0f - windOutTimer) * Time::GetInstance().deltaTime();
 	}
 
 	//セルフビルボード計算
@@ -92,7 +92,7 @@ void Cloud::Update()
 	parameter.mat.SetLeft(left);
 
 	//移動
-	position += moveVec * moveSpeed * Time::DeltaTime;
+	position += moveVec * moveSpeed * Time::GetInstance().deltaTime();
 	parameter.mat.SetPosition(position);
 }
 void Cloud::Draw() const

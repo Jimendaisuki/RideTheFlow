@@ -88,7 +88,7 @@ void GamePlayScene::Update()
 	// I—¹‚µ‚Ä‚½‚çˆÈ‰ºÈ—ª
 	if (isGameEnd)
 	{
-		bgmVol -= Time::DeltaTime;
+		bgmVol -= Time::GetInstance().deltaTime();
 		bgmVol = Math::Clamp(bgmVol, 0.0f, 1.0f);
 		Sound::GetInstance().SetBGMVolume(BGM_ID::INGAME_BGM, bgmVol);
 		Sound::GetInstance().SetAllSEVolume(bgmVol);

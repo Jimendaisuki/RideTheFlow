@@ -99,12 +99,12 @@ void MenuPanel::Update()
 		{
 			if (backAlpha < 0.7f)
 			{
-				backAlpha += Time::DeltaTime * 4;
+				backAlpha += Time::GetInstance().deltaTime() * 4;
 				backAlpha = Math::Clamp(backAlpha, 0.0f, 0.7f);
 			}
 		}
 		// 処理
-		time += Time::DeltaTime;
+		time += Time::GetInstance().deltaTime();
 		rollAlpha = time;
 		alphaTime = time;
 
@@ -121,7 +121,7 @@ void MenuPanel::Update()
 		break;
 	case OPEN:		// 巻物開く
 		// 処理
-		time += Time::DeltaTime;
+		time += Time::GetInstance().deltaTime();
 
 		if (!Sound::GetInstance().IsPlaySE(SE_ID::MENU_ROLL_SE))
 			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
@@ -141,14 +141,14 @@ void MenuPanel::Update()
 		// MANUAL → SELECT
 		if (pages[prePage] > 0.0f)
 		{
-			pages[prePage] -= Time::DeltaTime;
+			pages[prePage] -= Time::GetInstance().deltaTime();
 			break;
 		}
 		pages[prePage] = 0.0f;
 		// OPEN → SELECT
 		if (textAlpha < 1.0f)
 		{
-			textAlpha += Time::DeltaTime;
+			textAlpha += Time::GetInstance().deltaTime();
 			break;
 		}
 		textAlpha = 1.0f;
@@ -248,7 +248,7 @@ void MenuPanel::Update()
 		// SELECT → MANUAL
 		if (textAlpha > 0.0f)
 		{
-			textAlpha -= Time::DeltaTime * 2.0f;
+			textAlpha -= Time::GetInstance().deltaTime() * 2.0f;
 			//for (int i = 0; i < 3; i++)
 			//	selects[selectNum] = textAlpha;
 			break;
@@ -257,14 +257,14 @@ void MenuPanel::Update()
 		// フェードアウト
 		if (pages[prePage] > 0.0f)
 		{
-			pages[prePage] -= Time::DeltaTime;
+			pages[prePage] -= Time::GetInstance().deltaTime();
 			break;
 		}
 		pages[prePage] = 0.0f;
 		// フェードイン
 		if (pages[nowPage] < 1.0f) 
 		{
-			pages[nowPage] += Time::DeltaTime;
+			pages[nowPage] += Time::GetInstance().deltaTime();
 			break;
 		}
 		pages[nowPage] = 1.0f;
@@ -320,15 +320,15 @@ void MenuPanel::Update()
 	case CLOSE:		// 巻物閉じる
 		if (textAlpha > 0.0f)
 		{
-			textAlpha -= Time::DeltaTime;
+			textAlpha -= Time::GetInstance().deltaTime();
 			for (int i = 0; i < 3; i++)
 			{
-				selects[i] -= Time::DeltaTime;
+				selects[i] -= Time::GetInstance().deltaTime();
 				selects[i] = Math::Clamp(selects[i], 0.0f, 1.0f);
 			}
 			break;
 		}
-		time -= Time::DeltaTime;
+		time -= Time::GetInstance().deltaTime();
 		if (!Sound::GetInstance().IsPlaySE(SE_ID::MENU_ROLL_SE))
 			Sound::GetInstance().PlaySE(SE_ID::MENU_ROLL_SE);
 
@@ -345,8 +345,8 @@ void MenuPanel::Update()
 		}
 		break;
 	case PUSH:
-		selects[selectNum] -= Time::DeltaTime * 2.5f;
-		textScale += Time::DeltaTime / 5.0;
+		selects[selectNum] -= Time::GetInstance().deltaTime() * 2.5f;
+		textScale += Time::GetInstance().deltaTime() / 5.0;
 		if (selects[selectNum] <= 0.0f)
 		{
 			if (scene == Scene::GamePlay)
@@ -377,14 +377,14 @@ void MenuPanel::Update()
 	case END:		// フェードアウトから終了
 		if (rollAlpha > 0.0f)
 		{
-			rollAlpha -= Time::DeltaTime;
+			rollAlpha -= Time::GetInstance().deltaTime();
 			alphaTime = rollAlpha;
 		}
 		else
 		{
 			if (backAlpha > 0)
 			{
-				backAlpha -= Time::DeltaTime * 3;
+				backAlpha -= Time::GetInstance().deltaTime() * 3;
 				break;
 			}
 			tornadoAlpha = 0;
@@ -431,7 +431,7 @@ void MenuPanel::Update()
 		
 		tornadoVel[i] *= Random::GetInstance().Range(0.8f, 1.3f);
 		tornadoVel[i] = Math::Clamp(tornadoVel[i], -100.0f, 100.0f);
-		tornadoPos[i].x += tornadoVel[i] * Time::DeltaTime;
+		tornadoPos[i].x += tornadoVel[i] * Time::GetInstance().deltaTime();
 	}
 }
 

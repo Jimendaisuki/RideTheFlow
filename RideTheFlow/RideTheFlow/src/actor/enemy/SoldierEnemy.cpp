@@ -74,8 +74,8 @@ void SoldierEnemy::Update()
 	 isLook = true;
 	 
 	 //UŒ‚
-	 attackRag += Time::DeltaTime;
-	 attackTime += Time::DeltaTime;
+	 attackRag += Time::GetInstance().deltaTime();
+	 attackTime += Time::GetInstance().deltaTime();
 	 if (attackTime >= mSecondAttack&&attackRag >= 0.3f&&arrowCount < mArrowNumber&&
 	 	Vector3::Distance(playerMat.GetPosition(), mPosition) <= CastleSoldierAttackRange &&
 	 	abs(playerMat.GetPosition().y - mPosition.y) >= 2.0f)

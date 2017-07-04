@@ -83,8 +83,8 @@ void ArmyEnemy::Update()
 	isLook = true;
 
 	//UŒ‚
-	attackRag += Time::DeltaTime;
-	attackTime += Time::DeltaTime;
+	attackRag += Time::GetInstance().deltaTime();
+	attackTime += Time::GetInstance().deltaTime();
 
 	if (attackTime >= mSecondAttack&&attackRag >= 0.0f&&arrowCount < mArrowNumber&&
 		Vector3::Distance(playerMat.GetPosition(), mPosition) <= ArmyRange &&
@@ -103,13 +103,13 @@ void ArmyEnemy::Update()
 	{
 		//ˆÚ“®
 		mPosition += Vector3::Direction(mPosition, player->GetParameter().mat.GetPosition()).Normalized()*
-			Vector3(1, 0, 1)*ArmySpeed*Time::DeltaTime;
+			Vector3(1, 0, 1)*ArmySpeed*Time::GetInstance().deltaTime();
 	}
-	downTime += Time::DeltaTime;
+	downTime += Time::GetInstance().deltaTime();
 	if (downTime >= 1.0f)
 	{
 
-		mPosition.y -= 50.0f*Time::DeltaTime;
+		mPosition.y -= 50.0f*Time::GetInstance().deltaTime();
 		downTime = 3.0f;
 	}
 	parameter.mat =

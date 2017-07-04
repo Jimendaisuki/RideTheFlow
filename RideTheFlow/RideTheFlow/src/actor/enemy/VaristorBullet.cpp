@@ -52,7 +52,7 @@ VaristorBullet::~VaristorBullet()
 void VaristorBullet::Update()
 {
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::BULLET_WIND_COL);
-	time += VaristorSpeed*Time::DeltaTime;
+	time += VaristorSpeed*Time::GetInstance().deltaTime();
 	prevPosition = mPosition;
 	//is•ûŒü‚ğŒvZ
 	vec = Vector3(
@@ -78,7 +78,7 @@ void VaristorBullet::Update()
 	}
 
 	//ˆÚ“®
-	mPosition += vec*VaristorSpeed*Time::DeltaTime;
+	mPosition += vec*VaristorSpeed*Time::GetInstance().deltaTime();
 	if (parameter.mat.GetPosition().y <= -3600)
 		parameter.isDead = true;
 

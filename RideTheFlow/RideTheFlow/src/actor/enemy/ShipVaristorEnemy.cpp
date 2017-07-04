@@ -65,7 +65,7 @@ void ShipVaristorEnemy::Update()
 	backDot = Vector2::Dot(Vector2(mSe->GetParameter().mat.GetFront().x, mSe->GetParameter().mat.GetFront().z),
 		Vector2(vec.x, vec.z));
 	if (alpha <= 1.0f)
-		alpha += Time::DeltaTime;
+		alpha += Time::GetInstance().deltaTime();
 	//ƒvƒŒƒCƒ„[‚ªŒ©‚¦‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	if (isLook)
 	{
@@ -94,8 +94,8 @@ void ShipVaristorEnemy::Update()
 			Vector2(vec.x, vec.z));
 	}
 
-	attackRag += Time::DeltaTime;
-	attackTime += Time::DeltaTime;
+	attackRag += Time::GetInstance().deltaTime();
+	attackTime += Time::GetInstance().deltaTime();
 	if (backDot >= 0 && mLeft)
 	{
 		Attack();
@@ -103,11 +103,11 @@ void ShipVaristorEnemy::Update()
 		{
 			if (playerDot > 0)
 			{
-				rotate.y += ShipConnonSwingSpeed*Time::DeltaTime;
+				rotate.y += ShipConnonSwingSpeed*Time::GetInstance().deltaTime();
 			}
 			else
 			{
-				rotate.y -= ShipConnonSwingSpeed*Time::DeltaTime;
+				rotate.y -= ShipConnonSwingSpeed*Time::GetInstance().deltaTime();
 			}
 		}
 	}
@@ -118,11 +118,11 @@ void ShipVaristorEnemy::Update()
 		{
 			if (playerDot > 0)
 			{
-				rotate.y += ShipConnonSwingSpeed*Time::DeltaTime;
+				rotate.y += ShipConnonSwingSpeed*Time::GetInstance().deltaTime();
 			}
 			else
 			{
-				rotate.y -= ShipConnonSwingSpeed*Time::DeltaTime;
+				rotate.y -= ShipConnonSwingSpeed*Time::GetInstance().deltaTime();
 			}
 		}
 	}

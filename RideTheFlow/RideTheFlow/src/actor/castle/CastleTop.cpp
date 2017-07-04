@@ -54,7 +54,7 @@ void CastleTop::Update()
 
 	mRank = mMc->getRank();
 
-	castleUpTimer += 5.0f*Time::DeltaTime;
+	castleUpTimer += 5.0f*Time::GetInstance().deltaTime();
 	if (seveRank != mRank)
 	{
 		startPos = parameter.mat.GetPosition();

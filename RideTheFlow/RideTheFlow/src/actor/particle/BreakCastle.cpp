@@ -101,7 +101,7 @@ void BreakCastle::WindFlowBreakUpdate()
 {
 	//“–‚½‚è”»’èƒZƒbƒg
 	world.SetCollideSelect(shared_from_this(), ACTOR_ID::WIND_ACTOR, COL_ID::CLOUD_WIND_COL);
-	ps_parameter.position += velocity * Time::DeltaTime;
+	ps_parameter.position += velocity * Time::GetInstance().deltaTime();
 	parameter.mat.SetPosition(ps_parameter.position);
 }
 void BreakCastle::WindBallBreakUpdate()

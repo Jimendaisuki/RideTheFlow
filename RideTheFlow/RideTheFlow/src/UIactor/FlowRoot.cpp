@@ -43,7 +43,7 @@ void FlowRoot::Update()
 	// ”­¶ŽžŠÔ
 	if (deadTime > 0)
 	{
-		deadTime -= Time::DeltaTime;
+		deadTime -= Time::GetInstance().deltaTime();
 		flowCount -= 0.5f;
 	}
 	else

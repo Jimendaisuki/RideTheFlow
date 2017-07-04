@@ -25,11 +25,11 @@ void FadePanel::Update()
 	switch (status)
 	{
 	case FADE_STATUS::FadeIn:
-		alpha -= (Time::DeltaTime / actionTime);
+		alpha -= (Time::GetInstance().deltaTime() / actionTime);
 		if (IsFullClear()) status = FADE_STATUS::STANDBY;
 		break;
 	case FADE_STATUS::FadeOut:
-		alpha += (Time::DeltaTime / actionTime);
+		alpha += (Time::GetInstance().deltaTime() / actionTime);
 		if (IsFullBlack()) status = FADE_STATUS::STANDBY;
 		break;
 	default:
